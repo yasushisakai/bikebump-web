@@ -30,11 +30,12 @@ api_router.get('/fences',(req,res)=>{
 api_router.get('/fences/add',(req,res)=>{
 
   //
-  // example url /fences/add?u=userid&lat=49&lng=-71&a=2
+  // example url fences/add?u=userid&lat=49&lng=-71&r=10&a=2
   //
 
   // read the file
-  var fences_path = path.resolve(json_path,'fences.json')
+  var fences_path = path.resolve(json_path,'fences.json');
+
   fs.readFile(fences_path,(err,data)=>{
     if(err) console.error(err);
 
@@ -43,18 +44,26 @@ api_router.get('/fences/add',(req,res)=>{
     var latitude = parseFloat(req.query.lat);
     var longitude = parseFloat(req.query.lng);
     var newFence = {
-        user:req.query.u,
+        id:uuid.v4(), // overkill??
+        userid:req.query.u,
         coordinates:{lat:latitude,lng:longitude},
-        answer:parseInt(req.query.a),
-        id:uuid.v4(), // I know its overkill
+        radius:req.query.r,
+        answer:[
+            {
+                userid:req.query.u,
+                question: '0',
+                answer: parseInt(req.query.a),
+                timestamp:Date.now() // TODO: redundant !!
+            }
+        ],
         timestamp:Date.now()
-      }
+      };
 
     // push it
     fences.push(newFence);
 
     // and rewrite it
-    fs.writeFile(fences_path,JSON.stringify(fences),(err)=>{
+    fs.writeFile(fences_path,JSON.stringify(fences,null, 4),(err)=>{
       if(err){
         console.error(err);
         process.exit(1);
@@ -64,6 +73,25 @@ api_router.get('/fences/add',(req,res)=>{
   });
 });
 
+api_router.get('/fences/flush',(req,res)=>{
+    var fences_path = path.resolve(json_path,'fences.json');
+    fs.writeFile(fences_path,JSON.stringify([]),(err)=>{
+        if(err){
+            console.error(err);
+            process.exit(1);
+        }
+        res.json([]);
+    });
+});
+
+// add answer to existing fence
+api_router.get('/fences/answer',(req,res)=>{
+
+    // TODO: implement answer amendment
+    // design question on model
+
+});
+
 // delete fence
 
 // modify fence
@@ -71,6 +99,44 @@ api_router.get('/fences/add',(req,res)=>{
 //
 // QUESTIONS
 //
+
+// get questions
+api_router.get('/questions',(req,res)=>{
+  fs.readFile(path.resolve(json_path,'questions.json'),(err,data)=>{
+    if(err) console.error(err);
+    else{
+      res.json(JSON.parse(data));
+    }
+  });
+});
+
+// get question from id
+api_router.get('/questions/:id',(req,res)=>{
+  fs.readFile(path.resolve(json_path,'questions.json'),(err,data)=>{
+    if(err) console.error(err);
+    else{
+      question = JSON.parse(data)[parseInt(req.params.id)];
+      res.json(question);
+    }
+  });
+});
+
+// get child question from parent id
+api_router.get('/questions/:id/children',(req,res)=>{
+  fs.readFile(path.resolve(json_path,'questions.json'),(err,data)=>{
+    if(err) console.error(err);
+    else{
+      var questions_json = JSON.parse(data);
+
+      // include if the parent_id matches
+      var child_questions = questions_json.filter((q) => {
+        return q.parent_id == req.params.id
+      });
+
+      res.json(child_questions);
+    }
+  });
+});
 
 
 module.exports = api_router;

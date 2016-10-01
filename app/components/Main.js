@@ -1,16 +1,22 @@
-var React = require('react');
-var Question = require('./Question');
-var Option = require('./Option');
+import React, {PropTypes} from 'react';
+import QuestionContainer from '../container/QuestionContainer';
 
-function Main(){
-  return(
-    <Question text="question text">
-      <Option text="option 0"/>
-      <Option text="option 1"/>
-      <Option text="option 2"/>
-      <Option text="option 3"/>
-    </Question>
-  );
+function Main(props) {
+
+    let loginText = props.isLoggedIn ? 'logged in' : 'anon';
+
+    return (
+        <div className="app">
+            {loginText}
+            <h1>Main</h1>
+            <QuestionContainer/>
+        </div>
+    )
 }
+
+Main.PropTypes = {
+    isLoggedIn: PropTypes.bool.isRequired
+};
+
 
 module.exports = Main;

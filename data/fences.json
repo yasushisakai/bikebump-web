@@ -1,1 +1,20 @@
-[{"user":"userid","coordinates":{"lat":10,"lng":10},"answer":[0],"id":"fenceid","timestamp":"when"},{"user":"yetanotheruserid","coordinates":{"lat":15,"lng":20},"answer":[3],"id":"anotherfenceid","timestamp":"then"},{"user":"addeduserid","coordinates":{"lat":20,"lng":30},"answer":[1],"id":2,"timestamp":1475278390874},{"user":"addeduserid","coordinates":{"lat":20,"lng":30},"answer":[1],"id":"9","timestamp":1475278754263},{"user":"userid","coordinates":{"lat":49,"lng":null},"answer":2,"id":"f04a7c6a-eb7e-4971-826e-a48196a286f8","timestamp":1475279872739}]
+[
+    {
+        "id": "04484f64-1300-47d3-b73a-18c9f27a3962",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3554791,
+            "lng": -71.102913
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475354599890
+            }
+        ],
+        "timestamp": 1475354599890
+    }
+]
