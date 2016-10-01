@@ -3,12 +3,16 @@ var PropTypes = React.PropTypes;
 var axios = require('axios');
 
 var config = require('../config');
-var GeoLocationHelpers = require('../utilities/GeoLocationHelpers');
+var GeoLocationHelper = require('../utilities/GeoLocationHelpers');
 var Question = require('../components/Question');
 var Option = require('../components/Option');
 
 //
 // design question : where do we implement the logic to select which question??
+//
+
+//
+// Refactor in es2015 to make it look more pretty
 //
 
 var QuestionContainer = React.createClass({
@@ -23,7 +27,8 @@ var QuestionContainer = React.createClass({
             isInFence: false,
             latitude: null,
             longitude: null,
-            radius: 5 // in meters
+            radius: 5, // in meters
+            fences : null
         }
     },
     getDefaultProps: function () {
@@ -50,6 +55,18 @@ var QuestionContainer = React.createClass({
             .catch(function (err) {
                 console.error(err)
             }));
+    },
+    getFences: function(){
+        let fencesURL = config.api_root + 'fences';
+        return axios.get(fencesURL);
+    },
+    checkIsInsideFences:function(){
+        this.getFences()
+            .then(function(response){
+                let data = response.data;
+                GeoLocationHelper.includingFences(data,this.state.latitude,this.state.longitude);
+            })
+
     },
     addFence: function (optionIndex) {
         // fences/add?u=userid&lat=49&lng=-71&r=10&a=2
@@ -86,7 +103,7 @@ var QuestionContainer = React.createClass({
     },
     componentDidMount: function () {
         this.setQuestion();
-        GeoLocationHelpers.getLatLng(this);
+        GeoLocationHelper.getLatLng(this);
     },
     render: function () {
         var options = this.setOptions();
