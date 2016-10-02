@@ -1,6 +1,6 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var MainContainer = require('./container/MainContainer');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import MainContainer from './container/MainContainer'
 
 
 ReactDOM.render(

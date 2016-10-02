@@ -1,23 +1,27 @@
-import React, {PropTypes} from 'react';
-import QuestionContainer from '../container/QuestionContainer';
+// created at 2016.10.02
+// by yasushisakai
 
-export function Main(props) {
+import React, {PropTypes} from 'react'
+
+//
+// Main Stateless Function
+//
+export default function Main(props) {
 
     let loginText = props.isLoggedIn ? 'logged in' : 'anon';
 
     return (
-        <div className="app">
+        <div className="main">
             {loginText}
             <h1>Main</h1>
-            <QuestionContainer/>
+            {props.children}
         </div>
-    )
-}
-
-Main.propTypes = {
-    isLoggedIn: PropTypes.bool.isRequired
+    );
 };
 
+Main.propTypes = {
+    isLoggedIn : PropTypes.bool.isRequired
+};
 Main.defaultProps = {
-    isLoggedIn: false
+    isLoggedIn : false
 };

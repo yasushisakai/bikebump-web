@@ -1,14 +1,23 @@
-var React = require('react');
-var PropTypes = React.PropTypes;
+// created at 2016.10.02
+// by yasushisakai
 
-var Question = function(props) {
+import React, {PropTypes} from 'react'
+
+//
+// Question Stateless Function
+//
+export default function Question(props) {
     return (
-        <div className="questionText">{props.text}</div>
-    )
+        <div className="question">
+        <span className="question-text"> {props.text} </span>
+            {props.children}
+        </div>
+    );
 };
 
-Question.PropTypes = {
-	text : PropTypes.string.isRequired
+Question.propTypes = {
+    text : PropTypes.string.isRequired
 };
-
-module.exports = Question;
+Question.defaultProps = {
+    text : "question text"
+};

@@ -1,28 +1,21 @@
-import React from 'react';
+// created at 2016.10.02
+// by yasushisakai
 
-let PropTypes = React.PropTypes;
+import React, {PropTypes} from 'react'
 
-
-function Option(props) {
+//
+// Option Stateless Function
+//
+export default function Option(props) {
     return (
-        <button type='button' onClick={this.props.onClick}>{this.props.text}</button>
+        <button type="button" onClick={props.onClick}>{props.text}</button>
     );
-}
+};
 
-Option
+Option.propTypes = {
+    text : PropTypes.string.isRequired,
+    onClick : PropTypes.func.isRequired
+};
 
-var Option = React.createClass({
-    PropTypes: {
-        text: PropTypes.string,
-        id: PropTypes.number,
-        onClick: PropTypes.func.isRequired,
-    },
-    render: function () {
-        return (
-            //<div className="option">{this.props.text}</div>
-            <button type='button' onClick={this.props.onClick}>{this.props.text}</button>
-        )
-    }
-});
-
-module.exports = Option;
+Option.defaultProps = {
+};
