@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import QuestionContainer from '../container/QuestionContainer';
 
-function Main(props) {
+export function Main(props) {
 
     let loginText = props.isLoggedIn ? 'logged in' : 'anon';
 
@@ -14,9 +14,10 @@ function Main(props) {
     )
 }
 
-Main.PropTypes = {
+Main.propTypes = {
     isLoggedIn: PropTypes.bool.isRequired
 };
 
-
-module.exports = Main;
+Main.defaultProps = {
+    isLoggedIn: false
+};

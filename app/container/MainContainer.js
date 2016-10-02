@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Main from '../components/Main';
 
 
-class MainContainer extends React.Component {
+export class MainContainer extends Component {
 
     constructor(props){
         super(props);
@@ -18,5 +18,3 @@ class MainContainer extends React.Component {
 
     }
 }
-
-module.exports = MainContainer;

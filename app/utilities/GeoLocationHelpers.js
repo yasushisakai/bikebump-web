@@ -1,5 +1,6 @@
-class GeoLocationHelper {
 
+
+export class GeoLocationHelper {
 
     //
     // gets the lat lng coordinates asking the browser
@@ -49,6 +50,3 @@ class GeoLocationHelper {
     }
 
 }
-
-
-module.exports = GeoLocationHelper;
