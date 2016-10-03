@@ -2,18 +2,19 @@
 // by yasushisakai
 
 import React, {PropTypes} from 'react'
+import StatusBar from './StatusBar';
+
 
 //
 // Main Stateless Function
 //
 export default function Main(props) {
 
-    let loginText = props.isLoggedIn ? 'logged in' : 'anon';
+    let userName = props.isLoggedIn ? 'someone' : 'nobody';
 
     return (
         <div className="main">
-            {loginText}
-            <h1>Main</h1>
+            <StatusBar userId={userName}/>
             {props.children}
         </div>
     );

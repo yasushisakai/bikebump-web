@@ -1,14 +1,24 @@
 [
   {
-    "id":"0",
-    "text":"What is the current condition",
-    "options":["Fantastic","Good","Bad","Deadly"],
-    "parent_id":""
+    "id": "0",
+    "text": "How is the road ?",
+    "options": [
+      "Fantastic",
+      "Good",
+      "Bad",
+      "Deadly"
+    ],
+    "parent_id": ""
   },
   {
-    "id":"1",
-    "text":"Child question",
-    "options":["option 1","option 2","option 3","option 4"],
-    "parent_id":"0"
+    "id": "1",
+    "text": "Child question",
+    "options": [
+      "option 1",
+      "option 2",
+      "option 3",
+      "option 4"
+    ],
+    "parent_id": "0"
   }
 ]

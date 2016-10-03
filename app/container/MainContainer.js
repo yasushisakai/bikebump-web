@@ -32,7 +32,8 @@ export default class MainContainer extends Component{
     render(){
         return(
             <Main isLoggedIn={this.state.isLoggedIn} >
-                <QuestionContainer isLandScale = {this.state.isLandScape}/>
+
+                <QuestionContainer isLandscape = {this.state.isLandScape}/>
             </Main>
         );
     }

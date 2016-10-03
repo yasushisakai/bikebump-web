@@ -3,7 +3,7 @@
 
 import React, {Component, PropTypes} from 'react';
 import axios from 'axios';
-import config from '../config';
+import Config from '../config';
 import GeoLocationHelper from '../utilities/GeoLocationHelper'
 
 import Question from '../components/Question';
@@ -45,7 +45,7 @@ export default class QuestionContainer extends Component {
             console.error('QuestionContainer.getQuestionFromAPI: question id undefined');
         }
 
-        let path = config.api_root + 'questions/' + id;
+        let path = Config.api_root() + 'questions/' + id;
 
         return axios.get(path)
             .then((response)=> {
@@ -58,7 +58,7 @@ export default class QuestionContainer extends Component {
 
     static getFenceListFromAPI() {
 
-        let path = config.api_root + 'fences/';
+        let path = Config.api_root() + 'fences/';
 
         return axios.get(path)
             .then((response)=> {
@@ -139,7 +139,7 @@ export default class QuestionContainer extends Component {
 
         if (this.state.fenceId == null) {
             //fences/add?u=userid&lat=49&lng=-71&r=10&a=2
-            let new_fence_url = config.api_root + 'fences/add?' +
+            let new_fence_url = Config.api_root() + 'fences/add?' +
                 'u=' + this.state.userId +
                 '&lat=' + this.state.lat +
                 '&lng=' + this.state.lng +
@@ -153,7 +153,7 @@ export default class QuestionContainer extends Component {
 
         } else {
             //fences/:id/append?u=userid&q=0&a=2
-            let new_fence_url = config.api_root + 'fences/'+
+            let new_fence_url = Config.api_root() + 'fences/' +
                 this.state.fenceId + '/append?' +
                 'u=' + this.state.userId +
                 '&q=' + this.state.questionId +
@@ -205,7 +205,7 @@ export default class QuestionContainer extends Component {
             this.state.options === 0
         );
 
-        console.log(this.props.isLandScape);
+        console.log(this.props.isLandscape);
 
         return (
             <div className="question-container">
@@ -213,10 +213,15 @@ export default class QuestionContainer extends Component {
                     ? <Question text={this.state.text}/>
                     :
                     <Question text={this.state.text}>
-                        <div className="buttons">
+                        <div className="info">
+                            <span className="info-coordinates">
+                                latitude:{this.state.lat},
+                                longitude:{this.state.lng}
+                                </span>
+                        </div>
+                        <div className="buttons-group">
                             {this.renderOptions()}
                         </div>
-                        <div> latitude:{this.state.lat}, longitude:{this.state.lng} </div>
                     </Question>
                 }
             </div>
@@ -224,9 +229,8 @@ export default class QuestionContainer extends Component {
     }
 }
 
-QuestionContainer
-    .propTypes = {
-    isLandScape : PropTypes.bool.isRequired
+QuestionContainer.propTypes = {
+    isLandscape: PropTypes.bool.isRequired
 };
 QuestionContainer
     .defaultProps = {};
