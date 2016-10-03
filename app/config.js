@@ -1,5 +1,3 @@
-
-
 var Env = require('./utilities/Env');
 
 var Config;
@@ -19,7 +17,6 @@ Config = {
         return api_root;
     }
 };
-
 
 module.exports = Config;
 
