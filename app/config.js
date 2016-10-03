@@ -1,14 +1,16 @@
 
+
+var Env = require('./utilities/Env');
+
 var Config;
 
 Config = {
     isRemote:function(){
-        return __dirname.startsWith('/home')
+        return Env.isRemote;
     },
     api_root:function(){
         let api_root = '/api/';
-        if(Config.isRemote()){
-            console.log(Config.isRemote());
+        if(Env.isRemote){
             api_root = 'https://bikebump.yasushisakai.com'+api_root;
         }else{
             api_root = 'http://localhost:8080'+api_root;
