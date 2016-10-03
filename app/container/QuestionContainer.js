@@ -205,6 +205,8 @@ export default class QuestionContainer extends Component {
             this.state.options === 0
         );
 
+        console.log(this.props.isLandScape);
+
         return (
             <div className="question-container">
                 { this.isLoading
@@ -223,6 +225,8 @@ export default class QuestionContainer extends Component {
 }
 
 QuestionContainer
-    .propTypes = {};
+    .propTypes = {
+    isLandScape : PropTypes.bool.isRequired
+};
 QuestionContainer
     .defaultProps = {};

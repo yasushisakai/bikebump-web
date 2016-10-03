@@ -12,15 +12,27 @@ export default class MainContainer extends Component{
     
     constructor(props){
         super(props);
+
+
         this.state = {
-            isLoggedIn : false
-        }
+            isLoggedIn : false,
+            isLandScape : window.innerHeight < window.innerWidth
+        };
+
+        // set a event listener
+        window.addEventListener("resize",()=>{
+           if(this.state.isLandScape != window.innerHeight < window.innerWidth){
+               this.setState({
+                   isLandScape: !this.state.isLandScape
+               })
+           }
+        });
     }
 
     render(){
         return(
             <Main isLoggedIn={this.state.isLoggedIn} >
-                <QuestionContainer />
+                <QuestionContainer isLandScale = {this.state.isLandScape}/>
             </Main>
         );
     }
