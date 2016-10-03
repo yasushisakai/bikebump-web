@@ -1,7 +1,7 @@
 // created at 2016.10.02
 // by yasushisakai
 
-import React, {PropTypes} from 'react'
+import React, {PropTypes} from 'react';
 
 //
 // Option Stateless Function
