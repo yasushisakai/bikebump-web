@@ -13,6 +13,9 @@ Config = {
             api_root = 'http://localhost:8080'+api_root;
         }
 
+        // TODO: reconsider.. well actually maybe not?
+        api_root = 'https://bikebump.yasushisakai.com/api';
+
         return api_root;
     }
 };
