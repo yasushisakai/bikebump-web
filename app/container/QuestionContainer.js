@@ -71,9 +71,7 @@ export default class QuestionContainer extends Component {
     }
 
     updateCoordinatesAndFences() {
-        // TODO: breakdown this funtion into smaller pieces?
-
-        console.log('tick');
+        // TODO: breakdown this function into smaller pieces?
 
         var promises = [];
 
@@ -134,8 +132,6 @@ export default class QuestionContainer extends Component {
 
 
     handleButtonClick(index) {
-        console.log(this.state);
-        console.log('hit button index: ' + index);
 
         if (this.state.fenceId == null) {
             //fences/add?u=userid&lat=49&lng=-71&r=10&a=2
@@ -204,8 +200,6 @@ export default class QuestionContainer extends Component {
             this.state.text.startsWith('loading') ||
             this.state.options === 0
         );
-
-        console.log(this.props.isLandscape);
 
         return (
             <div className="question-container">

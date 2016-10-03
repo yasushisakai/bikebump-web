@@ -3,6 +3,8 @@
 node_modules/
 dist/
 
+data/
+
 # webfaction stuff
 bin/
 lib/
