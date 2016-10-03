@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "startdev": "webpack & node server.js",
-    "convert": "webpack -p"
+    "convert": "webpack -p",
+    "convertdev": "webpack"
   },
   "author": "Yasushi Sakai",
   "license": "MIT",
