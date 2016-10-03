@@ -11,6 +11,8 @@ app.get('*',(req,res)=>{
   res.send('you\'ve landed on a random address');
 });
 
-app.listen(19651,()=>{
-  console.log("server on, listening to 8080");
+var portNum = 19651;
+
+app.listen(portNum,()=>{
+  console.log("server on, listening to "+portNum);
 });
