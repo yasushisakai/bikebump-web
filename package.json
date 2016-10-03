@@ -4,7 +4,7 @@
   "description": "yet another bottom up approach on urban planning",
   "main": "index.js",
   "scripts": {
-    "startdev": "webpack & node server.js"
+    "startdev": "webpack & node server.js",
     "convert": "webpack -p"
   },
   "author": "Yasushi Sakai",
