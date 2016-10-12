@@ -46,5 +46,59 @@
             }
         ],
         "timestamp": 1476277710097
+    },
+    {
+        "id": "bc26098e-25d3-4729-86f3-7020f82a0cad",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3609023,
+            "lng": -71.0875111
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476286067446
+            }
+        ],
+        "timestamp": 1476286067446
+    },
+    {
+        "id": "8c0b9e09-40ae-461b-ba3b-7d5a83c6fb5b",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3608404,
+            "lng": -71.0877368
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476286092173
+            }
+        ],
+        "timestamp": 1476286092173
+    },
+    {
+        "id": "9fa74ab2-66c5-4464-b5bd-9376590f95b2",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3608404,
+            "lng": -71.0877368
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476286092928
+            }
+        ],
+        "timestamp": 1476286092928
     }
 ]
