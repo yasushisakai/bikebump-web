@@ -1,9 +1,12 @@
 .DS_Store
 
 node_modules/
-dist/
 
 data/
+
+# distribution
+/dist/*
+!/dist/style.css
 
 # webfaction stuff
 bin/
@@ -36,5 +39,3 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-
-!/dist/style.css
