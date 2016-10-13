@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MainContainer from './container/MainContainer'
+import {routes} from './routes';
+
 
 
 ReactDOM.render(
-  <MainContainer/>,
+  routes,
   document.getElementById('root')
 );
