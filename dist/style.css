@@ -1,0 +1,48 @@
+body{
+    margin:0;
+    padding:0;
+    font-family: sans-serif;
+}
+
+#root{
+    height:100%;
+    background: #ffffff;
+}
+
+.question{
+    margin-top: 80px;
+    text-align: left;
+    width:80%;
+    padding:5px;
+}
+
+.status-bar{
+    background-color: black;
+    color: white;
+    font-family: sans-serif ;
+    padding:5px;
+}
+
+.status-user{
+    font-size: 0.6em;
+}
+
+.question-text{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+button{
+    width:20%;
+    height:20%;
+    margin:2px;
+
+    background-color: #ffffff;
+
+    border :0.5px solid;
+    color : black;
+}
+
+.info-coordinates{
+    font-size:0.6em;
+}

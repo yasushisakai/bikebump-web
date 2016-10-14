@@ -33,7 +33,6 @@ export default class MainContainer extends Component{
         console.log(__dirname);
         return(
             <Main isLoggedIn={this.state.isLoggedIn} >
-
                 <QuestionContainer isLandscape = {this.state.isLandScape}/>
             </Main>
         );

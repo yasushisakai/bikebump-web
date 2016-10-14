@@ -201,6 +201,9 @@ export default class QuestionContainer extends Component {
             this.state.options === 0
         );
 
+        console.log(this.state.fenceId);
+        let isInFence = this.state.fenceId != null;
+
         return (
             <div className="question-container">
                 { this.isLoading
@@ -212,6 +215,7 @@ export default class QuestionContainer extends Component {
                                 latitude:{this.state.lat},
                                 longitude:{this.state.lng}
                                 </span>
+                            <span className="info-coordinates">am in a fence? {isInFence ? 'yup': 'nope'}</span>
                         </div>
                         <div className="buttons-group">
                             {this.renderOptions()}

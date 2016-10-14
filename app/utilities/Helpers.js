@@ -2,6 +2,8 @@
 
 export default class Helpers {
 
+    
+
     static isMobile(){
         return(
             navigator.userAgent.match(/Android/i)
