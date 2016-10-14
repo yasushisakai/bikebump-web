@@ -5,7 +5,7 @@ Config = {
 
         console.log(window.location.href);
 
-        return !window.location.href.split(':')[2].startsWith('8080');
+        return window.location.href.startsWith('https');
     },
     api_root:function(){
 
