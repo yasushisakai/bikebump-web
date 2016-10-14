@@ -2,7 +2,9 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var fs = require('fs');
-var Config = require('./app/config');
+var process = require('process');
+
+var isRemote = process.argv[2]+'' != 'local';
 
 app.use('/', express.static('dist'));
 
@@ -16,8 +18,8 @@ app.get('*', (req, res)=> {
 
 });
 
-var portNum = Config.isRemote() ? 19651 : 8080;
+var portNum = isRemote ? 19651 : 8080;
 
 app.listen(portNum, ()=> {
-    console.log((Config.isRemote()? 'remote': 'local')+"server on, listening to " + portNum);
+    console.log((isRemote? 'remote': 'local')+" server on, listening to " + portNum);
 });
