@@ -12,7 +12,6 @@ data/
 bin/
 lib/
 run/
-hello-world.js
 
 # might as well ignore every intellij stuff
 .idea/

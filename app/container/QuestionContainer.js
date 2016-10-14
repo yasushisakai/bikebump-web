@@ -5,6 +5,7 @@ import React, {Component, PropTypes} from 'react';
 import axios from 'axios';
 import Config from '../config';
 import GeoLocationHelper from '../utilities/GeoLocationHelper'
+import Helpers from '../utilities/Helpers';
 
 import Question from '../components/Question';
 import Option from '../components/Option'
@@ -39,36 +40,8 @@ export default class QuestionContainer extends Component {
 
     }
 
-    static getQuestionListFromAPI(id) {
 
-        if (typeof(id) == 'undefined') {
-            console.error('QuestionContainer.getQuestionFromAPI: question id undefined');
-        }
 
-        let path = Config.api_root() + 'questions/' + id;
-
-        return axios.get(path)
-            .then((response)=> {
-                return response.data
-            })
-            .catch((err)=> {
-                console.error(err);
-            });
-    }
-
-    static getFenceListFromAPI() {
-
-        let path = Config.api_root() + 'fences/';
-
-        return axios.get(path)
-            .then((response)=> {
-                return response.data
-            })
-            .catch((err)=> {
-                console.error(err);
-                return []
-            });
-    }
 
     updateCoordinatesAndFences() {
         // TODO: breakdown this function into smaller pieces?
@@ -76,7 +49,7 @@ export default class QuestionContainer extends Component {
         var promises = [];
 
         // get the list of fences
-        promises.push(QuestionContainer.getFenceListFromAPI());
+        promises.push(Helpers.getFenceListFromAPI());
 
         // get the current coordinates
         promises.push(GeoLocationHelper.getGeoLocation());
@@ -117,7 +90,7 @@ export default class QuestionContainer extends Component {
             id = this.state.questionId;
         }
 
-        QuestionContainer.getQuestionListFromAPI(id)
+        Helpers.getQuestionListFromAPI(id)
             .then((data)=> {
                 this.setState({
                     questionId: id,

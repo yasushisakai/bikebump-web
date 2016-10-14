@@ -25,52 +25,34 @@
                 "question": "0",
                 "answer": 0,
                 "timestamp": 1475478600026
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475479267281
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476461766829
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476461770850
             }
         ],
         "timestamp": 1475478492391
     },
     {
-        "id": "91756583-f978-4200-bfd3-473f1aa4e604",
+        "id": "c7a844ca-4629-4349-b300-a54ff5ac0447",
         "userid": "0",
         "coordinates": {
-            "lat": 42.3553889,
-            "lng": -71.1030459
-        },
-        "radius": "10",
-        "answer": [
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 2,
-                "timestamp": 1476277710097
-            }
-        ],
-        "timestamp": 1476277710097
-    },
-    {
-        "id": "bc26098e-25d3-4729-86f3-7020f82a0cad",
-        "userid": "0",
-        "coordinates": {
-            "lat": 42.3609023,
-            "lng": -71.0875111
-        },
-        "radius": "10",
-        "answer": [
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 2,
-                "timestamp": 1476286067446
-            }
-        ],
-        "timestamp": 1476286067446
-    },
-    {
-        "id": "8c0b9e09-40ae-461b-ba3b-7d5a83c6fb5b",
-        "userid": "0",
-        "coordinates": {
-            "lat": 42.3608404,
-            "lng": -71.0877368
+            "lat": 42.3553989,
+            "lng": -71.103027
         },
         "radius": "10",
         "answer": [
@@ -78,35 +60,83 @@
                 "userid": "0",
                 "question": "0",
                 "answer": 1,
-                "timestamp": 1476286092173
-            }
-        ],
-        "timestamp": 1476286092173
-    },
-    {
-        "id": "9fa74ab2-66c5-4464-b5bd-9376590f95b2",
-        "userid": "0",
-        "coordinates": {
-            "lat": 42.3608404,
-            "lng": -71.0877368
-        },
-        "radius": "10",
-        "answer": [
+                "timestamp": 1475479359531
+            },
             {
                 "userid": "0",
                 "question": "0",
                 "answer": 1,
-                "timestamp": 1476286092928
+                "timestamp": 1475485801875
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475500957953
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475500960050
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475500960661
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475500961832
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475618004003
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475618938529
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475709627142
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476125425982
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476300739363
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476300740823
             }
         ],
-        "timestamp": 1476286092928
+        "timestamp": 1475479359531
     },
     {
-        "id": "3bc662f0-e566-418e-9b1d-77ff64092c7a",
+        "id": "4839ea4c-47f2-4945-b579-48db2862b093",
         "userid": "0",
         "coordinates": {
-            "lat": 42.360902700000004,
-            "lng": -71.08725910000001
+            "lat": 42.3553989,
+            "lng": -71.103027
         },
         "radius": "10",
         "answer": [
@@ -114,15 +144,3543 @@
                 "userid": "0",
                 "question": "0",
                 "answer": 3,
-                "timestamp": 1476396521548
+                "timestamp": 1475479366691
+            }
+        ],
+        "timestamp": 1475479366691
+    },
+    {
+        "id": "2cd0087f-2503-43a9-bf76-80823c671fde",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553812,
+            "lng": -71.1027582
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475479893795
+            }
+        ],
+        "timestamp": 1475479893795
+    },
+    {
+        "id": "8b1072c1-16f9-4bf0-ba51-f65af8bbe08e",
+        "userid": "0",
+        "coordinates": {
+            "lat": 37.2995549,
+            "lng": -79.2973638
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475500941450
+            }
+        ],
+        "timestamp": 1475500941450
+    },
+    {
+        "id": "16d1db98-9d11-40e3-a58e-3bd32137d6f8",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.35534268,
+            "lng": -71.10258805
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475508317090
+            }
+        ],
+        "timestamp": 1475508317090
+    },
+    {
+        "id": "e1e694a4-5b4a-4c2a-9698-925a80613a1d",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3551494,
+            "lng": -71.1035048
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475516923233
+            }
+        ],
+        "timestamp": 1475516923233
+    },
+    {
+        "id": "1a3d7117-1555-482a-a331-c96dd72f4e8f",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3551494,
+            "lng": -71.1035048
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475516928722
+            }
+        ],
+        "timestamp": 1475516928722
+    },
+    {
+        "id": "5d4917bd-0478-4ffd-9a3e-6f0344284ab7",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3550093,
+            "lng": -71.1034727
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475516952780
+            }
+        ],
+        "timestamp": 1475516952780
+    },
+    {
+        "id": "d90fd373-ef3b-45b9-95f6-c2a7ec442937",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.360915999999996,
+            "lng": -71.0872452
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475527127705
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475528695982
             },
             {
                 "userid": "0",
                 "question": "0",
                 "answer": 1,
-                "timestamp": 1476396532541
+                "timestamp": 1475618756735
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475766350065
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475766435187
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475873428980
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475873432133
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475873432354
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476306489046
             }
         ],
-        "timestamp": 1476396521548
+        "timestamp": 1475527127705
+    },
+    {
+        "id": "2683e559-c1b5-44f9-987b-e87658cfbc4e",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3567079,
+            "lng": -71.0952508
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475601376695
+            }
+        ],
+        "timestamp": 1475601376695
+    },
+    {
+        "id": "0a7faacd-3671-47cb-9d60-c40b2357a725",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3570005,
+            "lng": -71.0943213
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475601441493
+            }
+        ],
+        "timestamp": 1475601441493
+    },
+    {
+        "id": "5dd6e037-c7b3-4792-b2d8-53ae800151be",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3570005,
+            "lng": -71.0943213
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475601442434
+            }
+        ],
+        "timestamp": 1475601442434
+    },
+    {
+        "id": "45093c28-0111-4a7f-a1f6-72755dd25565",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.36230484,
+            "lng": -71.08489457
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475606016130
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475606156378
+            }
+        ],
+        "timestamp": 1475606016130
+    },
+    {
+        "id": "ad18cd56-75f2-4bd3-93ad-d301afea0553",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3623478,
+            "lng": -71.0846436
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475606173194
+            }
+        ],
+        "timestamp": 1475606173194
+    },
+    {
+        "id": "288f27f2-466c-4799-91ea-973cc9ce0e99",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.362355,
+            "lng": -71.0854789
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475606964193
+            }
+        ],
+        "timestamp": 1475606964193
+    },
+    {
+        "id": "d3898fd0-0799-4092-bce5-de5065086abf",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3560619,
+            "lng": -71.098506
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617538024
+            }
+        ],
+        "timestamp": 1475617538024
+    },
+    {
+        "id": "e0def62f-2f72-4637-952b-dadcb98ccfb6",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3560619,
+            "lng": -71.098506
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617545440
+            }
+        ],
+        "timestamp": 1475617545440
+    },
+    {
+        "id": "6f7f0476-fa83-4cde-b880-3e3214b5ed5a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3560619,
+            "lng": -71.098506
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617548154
+            }
+        ],
+        "timestamp": 1475617548154
+    },
+    {
+        "id": "dfd2958c-c0ce-49be-8f6f-d832ffc0b416",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3560619,
+            "lng": -71.098506
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617562576
+            }
+        ],
+        "timestamp": 1475617562576
+    },
+    {
+        "id": "74adbab7-59eb-4676-b829-77dccbbe1483",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356101,
+            "lng": -71.0991872
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617567758
+            }
+        ],
+        "timestamp": 1475617567758
+    },
+    {
+        "id": "f9c4c791-c61d-437b-a21c-901471b5a3f6",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3559094,
+            "lng": -71.0994257
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617576457
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1476124367256
+            }
+        ],
+        "timestamp": 1475617576457
+    },
+    {
+        "id": "cd772af7-4a5c-40a5-afb9-73a9ab9268ad",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3559094,
+            "lng": -71.0994257
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617585232
+            }
+        ],
+        "timestamp": 1475617585232
+    },
+    {
+        "id": "e63af17e-9ed0-484d-9d94-ee40245a03be",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3558188,
+            "lng": -71.099756
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617585891
+            }
+        ],
+        "timestamp": 1475617585891
+    },
+    {
+        "id": "6833904d-97dc-4943-9aa5-a8801d42ee7e",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3558188,
+            "lng": -71.099756
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617588072
+            }
+        ],
+        "timestamp": 1475617588072
+    },
+    {
+        "id": "4afb687e-d1ed-4245-9d77-aaf7a506aabf",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3556895,
+            "lng": -71.0996924
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617596421
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475957259592
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1476110266477
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476124370217
+            }
+        ],
+        "timestamp": 1475617596421
+    },
+    {
+        "id": "c85277bf-3d32-4036-97ef-87629a948180",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3556895,
+            "lng": -71.0996924
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617597381
+            }
+        ],
+        "timestamp": 1475617597381
+    },
+    {
+        "id": "a614cc5f-9dfe-46ff-9a5c-7e154d3c0ca0",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3556885,
+            "lng": -71.0994989
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617606583
+            }
+        ],
+        "timestamp": 1475617606583
+    },
+    {
+        "id": "b0ca6c16-a87c-4c72-8906-b54a7269b7c6",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3556885,
+            "lng": -71.0994989
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617606895
+            }
+        ],
+        "timestamp": 1475617606895
+    },
+    {
+        "id": "bc431858-ebe7-4ee5-b04a-1c5d849850e2",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3556885,
+            "lng": -71.0994989
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617627363
+            }
+        ],
+        "timestamp": 1475617627363
+    },
+    {
+        "id": "d5fb2e23-1f25-45cf-a8c3-8afa6b99b945",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3556885,
+            "lng": -71.0994989
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617627365
+            }
+        ],
+        "timestamp": 1475617627365
+    },
+    {
+        "id": "7e097acf-1229-4e64-a6e0-855444e983bc",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3555915,
+            "lng": -71.1002777
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617627367
+            }
+        ],
+        "timestamp": 1475617627367
+    },
+    {
+        "id": "5f6fc22b-1c60-49af-8bf8-fbd2f5a75703",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3555915,
+            "lng": -71.1002777
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617627921
+            }
+        ],
+        "timestamp": 1475617627921
+    },
+    {
+        "id": "8bcd0b2c-b422-4acd-b784-ef5f50eac2c4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3555956,
+            "lng": -71.1001432
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617636959
+            }
+        ],
+        "timestamp": 1475617636959
+    },
+    {
+        "id": "d5abb5ba-476e-4dee-9f3e-533939f052ee",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553753,
+            "lng": -71.0999842
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617646488
+            }
+        ],
+        "timestamp": 1475617646488
+    },
+    {
+        "id": "0c4e67bd-92d3-4402-ba59-2f54016840a7",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553753,
+            "lng": -71.0999842
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617647068
+            }
+        ],
+        "timestamp": 1475617647068
+    },
+    {
+        "id": "8a09f60d-74d5-4faf-8dfa-59ab51e7a89e",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553753,
+            "lng": -71.0999842
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617647600
+            }
+        ],
+        "timestamp": 1475617647600
+    },
+    {
+        "id": "533421d4-eccc-4712-9532-33a9399958e7",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3554858,
+            "lng": -71.1000538
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617656582
+            }
+        ],
+        "timestamp": 1475617656582
+    },
+    {
+        "id": "e8703aa0-3607-4a15-9af6-4c6cd76cfe71",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3554858,
+            "lng": -71.1000538
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617657141
+            }
+        ],
+        "timestamp": 1475617657141
+    },
+    {
+        "id": "04f1db43-2fac-4c96-b94a-48872c89468d",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553752,
+            "lng": -71.1007052
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617666800
+            }
+        ],
+        "timestamp": 1475617666800
+    },
+    {
+        "id": "1e0d6e85-3641-423a-8ca2-186ddd2c0c86",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553752,
+            "lng": -71.1007052
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617667589
+            }
+        ],
+        "timestamp": 1475617667589
+    },
+    {
+        "id": "cb132b46-4229-4948-a55b-e9b90f49edc5",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553752,
+            "lng": -71.1007052
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617668614
+            }
+        ],
+        "timestamp": 1475617668614
+    },
+    {
+        "id": "08d5888c-86dd-429b-aea7-f2f86400b1cb",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3554265,
+            "lng": -71.1008399
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617676950
+            }
+        ],
+        "timestamp": 1475617676950
+    },
+    {
+        "id": "1f1cfa1b-a03b-45cb-b18e-9bb973b5cdb1",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3554265,
+            "lng": -71.1008399
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617677949
+            }
+        ],
+        "timestamp": 1475617677949
+    },
+    {
+        "id": "642dafc9-4472-4700-b84c-87fee0b5a24c",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3552981,
+            "lng": -71.1009617
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617686936
+            }
+        ],
+        "timestamp": 1475617686936
+    },
+    {
+        "id": "18f3d062-5cb7-4690-af15-eaa0c91aba1b",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3552981,
+            "lng": -71.1009617
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617687787
+            }
+        ],
+        "timestamp": 1475617687787
+    },
+    {
+        "id": "f0c1c609-66e5-4602-a9cc-c223ed40a5ef",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3551743,
+            "lng": -71.1010541
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617697108
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475967066893
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476110418047
+            }
+        ],
+        "timestamp": 1475617697108
+    },
+    {
+        "id": "473fb5a3-fc0b-480f-8217-93f655813ff2",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3551743,
+            "lng": -71.1010541
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617698129
+            }
+        ],
+        "timestamp": 1475617698129
+    },
+    {
+        "id": "1720c2ab-c2aa-44f7-ab93-e10f799db4bc",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3552813,
+            "lng": -71.1011369
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617708272
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476110277395
+            }
+        ],
+        "timestamp": 1475617708272
+    },
+    {
+        "id": "6f398e0d-76c0-43cc-adab-b465d444903c",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3552813,
+            "lng": -71.1011369
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475617709061
+            }
+        ],
+        "timestamp": 1475617709061
+    },
+    {
+        "id": "8d378881-62e2-48b7-9e41-df822f51115a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3551257,
+            "lng": -71.101473
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617716782
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617727465
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617735784
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617737018
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617740008
+            }
+        ],
+        "timestamp": 1475617716782
+    },
+    {
+        "id": "49410d94-1d96-41fa-b41b-5e5a2df748df",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3551257,
+            "lng": -71.101473
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475617717685
+            }
+        ],
+        "timestamp": 1475617717685
+    },
+    {
+        "id": "00ad4481-c54f-46a2-82ce-c303f62dd7c4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3549195,
+            "lng": -71.1023948
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617767483
+            }
+        ],
+        "timestamp": 1475617767483
+    },
+    {
+        "id": "8417864e-d18d-4bfd-bc02-270a4db3dc77",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3549195,
+            "lng": -71.1023948
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617768403
+            }
+        ],
+        "timestamp": 1475617768403
+    },
+    {
+        "id": "007efc35-45a9-4e16-ac68-32daf2c77194",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3549195,
+            "lng": -71.1023948
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475617775604
+            }
+        ],
+        "timestamp": 1475617775604
+    },
+    {
+        "id": "0aacdbee-cb76-4d68-b681-1a8f6263fe46",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3549092,
+            "lng": -71.1025277
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475617784256
+            }
+        ],
+        "timestamp": 1475617784256
+    },
+    {
+        "id": "b0a12bcf-0cc3-4f06-9534-119cadd2b560",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3557414,
+            "lng": -71.103869
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475675236383
+            }
+        ],
+        "timestamp": 1475675236383
+    },
+    {
+        "id": "f0f5cdbc-fde4-4935-ab2c-0b5e5153edc1",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553006,
+            "lng": -71.1046243
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475675246829
+            }
+        ],
+        "timestamp": 1475675246829
+    },
+    {
+        "id": "64efec53-2d4c-47fc-b6e1-67a57fd16ad0",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3549972,
+            "lng": -71.1053978
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475675271393
+            }
+        ],
+        "timestamp": 1475675271393
+    },
+    {
+        "id": "6e92f3d2-3ff8-44e2-81d6-ea9d242719c2",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3566511,
+            "lng": -71.0964349
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475708849885
+            }
+        ],
+        "timestamp": 1475708849885
+    },
+    {
+        "id": "30dd046a-0619-4cf3-9aca-bc78d3c6b759",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3566511,
+            "lng": -71.0964349
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475708859204
+            }
+        ],
+        "timestamp": 1475708859204
+    },
+    {
+        "id": "1ce6b186-f348-4a26-86c4-dfd5c0c8b9a3",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3605686,
+            "lng": -71.0950898
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475776471379
+            }
+        ],
+        "timestamp": 1475776471379
+    },
+    {
+        "id": "8889211d-ca1d-400e-9c49-4586ea9b4240",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3609799,
+            "lng": -71.095851
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475776494395
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475776506166
+            }
+        ],
+        "timestamp": 1475776494395
+    },
+    {
+        "id": "db3bef6f-028c-4b9f-8634-ff6c5b2595a2",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3609977,
+            "lng": -71.0961289
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475776518277
+            }
+        ],
+        "timestamp": 1475776518277
+    },
+    {
+        "id": "f48f3487-5bf1-449f-89e9-ea8852027e1f",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3613762,
+            "lng": -71.0968751
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475776559466
+            }
+        ],
+        "timestamp": 1475776559466
+    },
+    {
+        "id": "a1fd3608-aa88-4ae3-952e-306fa780a292",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3613769,
+            "lng": -71.0969442
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475776566033
+            }
+        ],
+        "timestamp": 1475776566033
+    },
+    {
+        "id": "f8dd3d96-76fd-4459-8154-eb080f6a8c1e",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3616595,
+            "lng": -71.0968528
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475776592549
+            }
+        ],
+        "timestamp": 1475776592549
+    },
+    {
+        "id": "3afad0a6-66be-4027-acbd-b911ff4b3b5a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3616595,
+            "lng": -71.0968528
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475776593472
+            }
+        ],
+        "timestamp": 1475776593472
+    },
+    {
+        "id": "63f4ab18-8685-4290-b425-d475ae4cec91",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3616595,
+            "lng": -71.0968528
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475776597301
+            }
+        ],
+        "timestamp": 1475776597301
+    },
+    {
+        "id": "36710656-989a-49b8-822e-4bbe88ff00c5",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3616595,
+            "lng": -71.0968528
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475776599772
+            }
+        ],
+        "timestamp": 1475776599772
+    },
+    {
+        "id": "7afff3fb-b263-4c63-befa-3c9d6b7df158",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3620802,
+            "lng": -71.0966843
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475776607321
+            }
+        ],
+        "timestamp": 1475776607321
+    },
+    {
+        "id": "a555f07c-e4ec-4e89-aa01-e04e6d4a4480",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.362587,
+            "lng": -71.096643
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475776645684
+            }
+        ],
+        "timestamp": 1475776645684
+    },
+    {
+        "id": "e3af907e-c787-4b97-b4af-788c25524dc4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3646265,
+            "lng": -71.0966206
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475777971332
+            }
+        ],
+        "timestamp": 1475777971332
+    },
+    {
+        "id": "bfb62545-6433-4e4c-9405-fc45ea43a403",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3646265,
+            "lng": -71.0966206
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475777972868
+            }
+        ],
+        "timestamp": 1475777972868
+    },
+    {
+        "id": "9b3c908c-9e16-4fc8-8952-21757dc05641",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3644938,
+            "lng": -71.0967135
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475778059698
+            }
+        ],
+        "timestamp": 1475778059698
+    },
+    {
+        "id": "384d95fe-d73e-4de1-bb77-89e12c1368bd",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3625822,
+            "lng": -71.0998703
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475783313624
+            }
+        ],
+        "timestamp": 1475783313624
+    },
+    {
+        "id": "775c4a9a-277b-4873-b5a5-9440bbb0ce0f",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3623939,
+            "lng": -71.0999711
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475783329606
+            }
+        ],
+        "timestamp": 1475783329606
+    },
+    {
+        "id": "919bf844-7364-437f-8861-2245be75bc74",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.362297,
+            "lng": -71.1000684
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475783335457
+            }
+        ],
+        "timestamp": 1475783335457
+    },
+    {
+        "id": "b19b96ed-e041-40b2-b858-d4315ba7ab57",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3621655,
+            "lng": -71.0998249
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475783385854
+            }
+        ],
+        "timestamp": 1475783385854
+    },
+    {
+        "id": "c3034acb-5066-4174-a73e-fd4a78e69c86",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3621655,
+            "lng": -71.0998249
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475783386766
+            }
+        ],
+        "timestamp": 1475783386766
+    },
+    {
+        "id": "74471f5a-6d92-43b3-9bda-9fa0e306d0fb",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3599982,
+            "lng": -71.0899329
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475789167774
+            }
+        ],
+        "timestamp": 1475789167774
+    },
+    {
+        "id": "c9e29d2a-69ed-4aa8-9a26-c323c311f488",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3601484,
+            "lng": -71.0903996
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475789188006
+            }
+        ],
+        "timestamp": 1475789188006
+    },
+    {
+        "id": "b67ec7bb-9cf0-4404-8e39-1c2227c9a929",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3599875,
+            "lng": -71.0905391
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475789222870
+            }
+        ],
+        "timestamp": 1475789222870
+    },
+    {
+        "id": "15e69621-b2f3-4550-a036-d9effd298fda",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3597736,
+            "lng": -71.0912355
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475789253278
+            }
+        ],
+        "timestamp": 1475789253278
+    },
+    {
+        "id": "d976e08f-bd09-49f2-8961-5f1dcb3bac5a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3596301,
+            "lng": -71.0916997
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475789277217
+            }
+        ],
+        "timestamp": 1475789277217
+    },
+    {
+        "id": "f5947d49-b118-4895-9e8e-8b60a2b28b6a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3594999,
+            "lng": -71.0920247
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475789297478
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475789317672
+            }
+        ],
+        "timestamp": 1475789297478
+    },
+    {
+        "id": "0fc51b4d-2aaa-4cd9-b259-43b6bbb4b316",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3593004,
+            "lng": -71.0928139
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475789351172
+            }
+        ],
+        "timestamp": 1475789351172
+    },
+    {
+        "id": "3174ea74-a432-40a8-923d-ddff65ef73d1",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3584119,
+            "lng": -71.093046
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475789537306
+            }
+        ],
+        "timestamp": 1475789537306
+    },
+    {
+        "id": "01aff53b-b0fd-49a2-b355-a54d5e198c34",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3583049,
+            "lng": -71.0941601
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475789719703
+            }
+        ],
+        "timestamp": 1475789719703
+    },
+    {
+        "id": "b22c1e80-11fc-4d97-bf25-e4cfd103e329",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3559376,
+            "lng": -71.09734879999999
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475873636455
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873642263
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475873642596
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475958071978
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475966784920
+            }
+        ],
+        "timestamp": 1475873636455
+    },
+    {
+        "id": "4934d027-3e59-4907-bf9e-175338194c20",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3559376,
+            "lng": -71.09734879999999
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873637045
+            }
+        ],
+        "timestamp": 1475873637045
+    },
+    {
+        "id": "851938fe-2bb8-460d-ba95-dac6c25a8a1f",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3559376,
+            "lng": -71.09734879999999
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475873637436
+            }
+        ],
+        "timestamp": 1475873637436
+    },
+    {
+        "id": "8c51bda0-9636-4966-8c16-06a77aa76c70",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3559376,
+            "lng": -71.09734879999999
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873638452
+            }
+        ],
+        "timestamp": 1475873638452
+    },
+    {
+        "id": "1d8af5ce-701a-4d32-843e-2a36cd456806",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475873752869
+            }
+        ],
+        "timestamp": 1475873752869
+    },
+    {
+        "id": "4f0df25a-0c7f-42e3-9360-b0e0afea76a8",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873753110
+            }
+        ],
+        "timestamp": 1475873753110
+    },
+    {
+        "id": "05b2910e-f559-4536-92b2-860599735138",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475873753375
+            }
+        ],
+        "timestamp": 1475873753375
+    },
+    {
+        "id": "28321e91-35e5-4f62-adba-4e105cb32cbe",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475873753614
+            }
+        ],
+        "timestamp": 1475873753614
+    },
+    {
+        "id": "501f689c-3f74-499d-9157-e06cc553ab98",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475873753862
+            }
+        ],
+        "timestamp": 1475873753862
+    },
+    {
+        "id": "3db03e7e-b2b6-4375-9f88-bb253a672b80",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873754167
+            }
+        ],
+        "timestamp": 1475873754167
+    },
+    {
+        "id": "841a6b49-c9a7-490c-b56a-9fc6866f92d7",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873754295
+            }
+        ],
+        "timestamp": 1475873754295
+    },
+    {
+        "id": "86c1e0d9-ce5b-468d-92a6-e9b21f27476a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873754438
+            }
+        ],
+        "timestamp": 1475873754438
+    },
+    {
+        "id": "88b19e25-6b44-4b58-b5ef-7aef4c9177ad",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873754582
+            }
+        ],
+        "timestamp": 1475873754582
+    },
+    {
+        "id": "f1817c52-4ae6-4170-ae9d-f01d171e9fb4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356320499999995,
+            "lng": -71.0975307
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873754743
+            }
+        ],
+        "timestamp": 1475873754743
+    },
+    {
+        "id": "3841240f-0d1a-48f2-8171-b5d2c6c7f036",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3560352,
+            "lng": -71.0974944
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475873806534
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475873806775
+            }
+        ],
+        "timestamp": 1475873806534
+    },
+    {
+        "id": "e02e504f-1800-4b58-9c53-9a4f23d3f168",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3592193,
+            "lng": -71.0879858
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475882635179
+            }
+        ],
+        "timestamp": 1475882635179
+    },
+    {
+        "id": "237cfd59-6821-4ef2-b966-af80e04f8ea9",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3608459,
+            "lng": -71.1023208
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475945751129
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475945763199
+            }
+        ],
+        "timestamp": 1475945751129
+    },
+    {
+        "id": "65323f83-a5d7-4525-a780-b121f1371dde",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3608459,
+            "lng": -71.1023208
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475945751860
+            }
+        ],
+        "timestamp": 1475945751860
+    },
+    {
+        "id": "1e017805-afdb-4766-9001-53793bfe5e1f",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3608459,
+            "lng": -71.1023208
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475945752909
+            }
+        ],
+        "timestamp": 1475945752909
+    },
+    {
+        "id": "39be2221-d76b-4770-85a6-2a030feb76dc",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3608459,
+            "lng": -71.1023208
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475945757229
+            }
+        ],
+        "timestamp": 1475945757229
+    },
+    {
+        "id": "62122f38-d63a-403c-8a48-d83c5398217f",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3607707,
+            "lng": -71.1022389
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475945771240
+            }
+        ],
+        "timestamp": 1475945771240
+    },
+    {
+        "id": "e354a5a7-1b4d-47f1-9080-b80f111321c2",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3607707,
+            "lng": -71.1022389
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475945772289
+            }
+        ],
+        "timestamp": 1475945772289
+    },
+    {
+        "id": "1101a8be-6241-4477-9075-0940f97f672f",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3607707,
+            "lng": -71.1022389
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475945776809
+            }
+        ],
+        "timestamp": 1475945776809
+    },
+    {
+        "id": "b6bc5af0-1634-4939-b9a9-b3d6466c4f7b",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3607707,
+            "lng": -71.1022389
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475945777808
+            }
+        ],
+        "timestamp": 1475945777808
+    },
+    {
+        "id": "9085589c-a453-4522-b9aa-76d76baa7f70",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3607761,
+            "lng": -71.1019117
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475945783572
+            }
+        ],
+        "timestamp": 1475945783572
+    },
+    {
+        "id": "bf1ec79a-40bd-4c3d-8f04-d4336c005e70",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3607761,
+            "lng": -71.1019117
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475945788610
+            }
+        ],
+        "timestamp": 1475945788610
+    },
+    {
+        "id": "740e4b1b-ab6e-4b26-beff-20c31cc7fe09",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3606044,
+            "lng": -71.1021906
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475945791659
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476297140501
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476297144574
+            }
+        ],
+        "timestamp": 1475945791659
+    },
+    {
+        "id": "ae86314f-a0eb-4cac-a019-87ff04d5386a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3606044,
+            "lng": -71.1021906
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475945793080
+            }
+        ],
+        "timestamp": 1475945793080
+    },
+    {
+        "id": "ae70c0cc-e723-49d1-ad21-4e7014203425",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3606044,
+            "lng": -71.1021906
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475945796086
+            }
+        ],
+        "timestamp": 1475945796086
+    },
+    {
+        "id": "941526f6-140e-423b-8907-a4ced1d25f90",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3601332,
+            "lng": -71.102234
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475945801115
+            }
+        ],
+        "timestamp": 1475945801115
+    },
+    {
+        "id": "6fd7699d-e167-4299-8a75-a2fd9db319a5",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3601332,
+            "lng": -71.102234
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475945805976
+            }
+        ],
+        "timestamp": 1475945805976
+    },
+    {
+        "id": "43d57895-89cf-4375-8a07-556e2b1a9f54",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3604035,
+            "lng": -71.102408
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475945823291
+            }
+        ],
+        "timestamp": 1475945823291
+    },
+    {
+        "id": "548f1b59-ba8a-49a2-98c1-e9502ad41208",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3603585,
+            "lng": -71.1025716
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475945838864
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475945845317
+            }
+        ],
+        "timestamp": 1475945838864
+    },
+    {
+        "id": "576023ef-64c6-4ba0-8409-77125300b4be",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3600873,
+            "lng": -71.1026556
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475945858325
+            }
+        ],
+        "timestamp": 1475945858325
+    },
+    {
+        "id": "ac512c47-3230-42e3-8b95-db35b8da50ac",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3600849,
+            "lng": -71.1024235
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475945873788
+            }
+        ],
+        "timestamp": 1475945873788
+    },
+    {
+        "id": "8bd95d32-6a28-4e89-885c-ccba3d6ffca1",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3597101,
+            "lng": -71.1034912
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475945916844
+            }
+        ],
+        "timestamp": 1475945916844
+    },
+    {
+        "id": "16cb0d4a-e50c-47a6-8e35-ea7f2ce8c137",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3590651,
+            "lng": -71.1038925
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475945962054
+            }
+        ],
+        "timestamp": 1475945962054
+    },
+    {
+        "id": "2530e16b-8cdc-41b1-bb8c-161068a958c0",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3589302,
+            "lng": -71.1039783
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475945987404
+            }
+        ],
+        "timestamp": 1475945987404
+    },
+    {
+        "id": "a46a422d-81ed-4e13-b608-320cf527d2da",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3587546,
+            "lng": -71.1044197
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475946008242
+            }
+        ],
+        "timestamp": 1475946008242
+    },
+    {
+        "id": "cbad1d07-06f2-47e7-bc73-cd29e7ac687f",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3583009,
+            "lng": -71.1045608
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475946041493
+            }
+        ],
+        "timestamp": 1475946041493
+    },
+    {
+        "id": "3f22d83b-9f97-4836-bca4-ce96873e3eb2",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3583009,
+            "lng": -71.1045608
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475946042195
+            }
+        ],
+        "timestamp": 1475946042195
+    },
+    {
+        "id": "bacdd9c6-bae4-4a14-8304-da168ac5c825",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3583009,
+            "lng": -71.1045608
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475946042744
+            }
+        ],
+        "timestamp": 1475946042744
+    },
+    {
+        "id": "4e1978d2-b33e-4760-bb14-6d01b1fee37c",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3576039,
+            "lng": -71.103578
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475946131447
+            }
+        ],
+        "timestamp": 1475946131447
+    },
+    {
+        "id": "5fcaaf12-6ad8-4ab6-8761-b74a3663892c",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3576039,
+            "lng": -71.103578
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475946132978
+            }
+        ],
+        "timestamp": 1475946132978
+    },
+    {
+        "id": "7896296b-be08-4f40-81f5-f5a817cb2f7b",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553088,
+            "lng": -71.1029342
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475947637042
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1476364528189
+            }
+        ],
+        "timestamp": 1475947637042
+    },
+    {
+        "id": "237db140-fbc2-41e4-ab74-82955fd3be8d",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3553405,
+            "lng": -71.1031199
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475949318979
+            }
+        ],
+        "timestamp": 1475949318979
+    },
+    {
+        "id": "9f093451-d492-4f3f-833d-85f752666f5d",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356436099999996,
+            "lng": -71.096291
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475955903097
+            }
+        ],
+        "timestamp": 1475955903097
+    },
+    {
+        "id": "89ec2ee1-9887-4de5-9c6c-c5b814cf53c4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356436099999996,
+            "lng": -71.096291
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475955906291
+            }
+        ],
+        "timestamp": 1475955906291
+    },
+    {
+        "id": "7166c0f7-0041-4f61-ae28-05e2b74667c4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356436099999996,
+            "lng": -71.096291
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475955906900
+            }
+        ],
+        "timestamp": 1475955906900
+    },
+    {
+        "id": "a65377f6-ed28-46e4-aa47-4dcdacb7070d",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356436099999996,
+            "lng": -71.096291
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475955907260
+            }
+        ],
+        "timestamp": 1475955907260
+    },
+    {
+        "id": "5a946809-a7e1-4ff6-8247-9754021c16f4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356436099999996,
+            "lng": -71.096291
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475955907716
+            }
+        ],
+        "timestamp": 1475955907716
+    },
+    {
+        "id": "70cb6adf-ca5d-454a-83ef-985b4dafcd91",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.356436099999996,
+            "lng": -71.096291
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475955907943
+            }
+        ],
+        "timestamp": 1475955907943
+    },
+    {
+        "id": "33ffb718-7a18-49c0-a654-402fc0b6e443",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3548003,
+            "lng": -71.1025709
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475957268572
+            }
+        ],
+        "timestamp": 1475957268572
+    },
+    {
+        "id": "6f71a3b4-2140-49c3-b17b-bc282cce6de4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3548003,
+            "lng": -71.1025709
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475957275847
+            }
+        ],
+        "timestamp": 1475957275847
+    },
+    {
+        "id": "c2d5ab97-7f08-4048-a266-51fb00d3e4fd",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3555565,
+            "lng": -71.0995942
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475957745519
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475957873949
+            }
+        ],
+        "timestamp": 1475957745519
+    },
+    {
+        "id": "fb8f51c8-7aed-4d3d-b8fd-b97aa5570d6b",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3552829,
+            "lng": -71.0994655
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475957754810
+            }
+        ],
+        "timestamp": 1475957754810
+    },
+    {
+        "id": "72537e59-063a-4504-9348-d69966c09639",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3558829,
+            "lng": -71.0992136
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475957934303
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475966942740
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475966942983
+            }
+        ],
+        "timestamp": 1475957934303
+    },
+    {
+        "id": "de70cc66-f80c-4fd5-b7f4-fa287b7a4753",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3563432,
+            "lng": -71.0968063
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475958155526
+            }
+        ],
+        "timestamp": 1475958155526
+    },
+    {
+        "id": "33f4fc97-7989-4b73-aec0-380d3d69276c",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3571682,
+            "lng": -71.093846
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475958338955
+            }
+        ],
+        "timestamp": 1475958338955
+    },
+    {
+        "id": "62428ef8-fbb2-40f2-8033-1b2ba84d3db8",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3571682,
+            "lng": -71.093846
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475958355786
+            }
+        ],
+        "timestamp": 1475958355786
+    },
+    {
+        "id": "89685ce4-1d66-4055-900f-48485cf53362",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3574575,
+            "lng": -71.0931134
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475958412689
+            }
+        ],
+        "timestamp": 1475958412689
+    },
+    {
+        "id": "e3584889-5b3f-4eca-af79-64f61e4244b1",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.358186,
+            "lng": -71.0904912
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475958649051
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475966211487
+            }
+        ],
+        "timestamp": 1475958649051
+    },
+    {
+        "id": "91d61b95-0b5b-4f77-bba9-43de901eea90",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.359331,
+            "lng": -71.087126
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475958897492
+            }
+        ],
+        "timestamp": 1475958897492
+    },
+    {
+        "id": "5bf56ddd-11df-4dc7-bf52-053f2b07247a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3603606,
+            "lng": -71.0864074
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475959057292
+            }
+        ],
+        "timestamp": 1475959057292
+    },
+    {
+        "id": "a907f2c9-6e3b-463e-92f9-d153b9615edf",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.35993726664691,
+            "lng": -71.08561068685803
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475962196793
+            }
+        ],
+        "timestamp": 1475962196793
+    },
+    {
+        "id": "83865c33-558a-4821-880a-06347aea1dc5",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.36016557090204,
+            "lng": -71.08588445938292
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475962248709
+            }
+        ],
+        "timestamp": 1475962248709
+    },
+    {
+        "id": "788baf0c-14ad-4230-9670-5be3fcf2f2cf",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3587137,
+            "lng": -71.08921
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475966096298
+            }
+        ],
+        "timestamp": 1475966096298
+    },
+    {
+        "id": "d3ea72dd-5f69-44c6-9639-a401e3807477",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3587137,
+            "lng": -71.08921
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475966096839
+            }
+        ],
+        "timestamp": 1475966096839
+    },
+    {
+        "id": "ac0b9db5-d48a-4be7-916b-f18266050c7b",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3587137,
+            "lng": -71.08921
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475966104613
+            }
+        ],
+        "timestamp": 1475966104613
+    },
+    {
+        "id": "0124e2b0-c00d-47cb-a5f8-f0014e3df2b6",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.358647,
+            "lng": -71.089449
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475966132763
+            }
+        ],
+        "timestamp": 1475966132763
+    },
+    {
+        "id": "9f8f835a-53fe-4175-a60b-c7541802aff9",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3582987,
+            "lng": -71.0897822
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475966161012
+            }
+        ],
+        "timestamp": 1475966161012
+    },
+    {
+        "id": "be3c4139-b20e-481a-8411-47a612c71fb7",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3574148,
+            "lng": -71.0926902
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475966387350
+            }
+        ],
+        "timestamp": 1475966387350
+    },
+    {
+        "id": "7545cee6-471a-47ff-898b-d4e369d31def",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3575453,
+            "lng": -71.0925354
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475966465914
+            }
+        ],
+        "timestamp": 1475966465914
+    },
+    {
+        "id": "da066fae-5526-4cea-af4a-9e9655521207",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3559728,
+            "lng": -71.0926746
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475966663764
+            }
+        ],
+        "timestamp": 1475966663764
+    },
+    {
+        "id": "8052162c-bd20-4d3d-a98e-a58e97611cbd",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3559728,
+            "lng": -71.0926746
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475966664803
+            }
+        ],
+        "timestamp": 1475966664803
+    },
+    {
+        "id": "10ec36bf-165b-450f-adcd-d1e4ca4e72ba",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3562684,
+            "lng": -71.0962302
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475966701200
+            }
+        ],
+        "timestamp": 1475966701200
+    },
+    {
+        "id": "04cc64ac-0d2b-4d50-ad97-71adbd5d6f40",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3561052,
+            "lng": -71.0970283
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475966749062
+            }
+        ],
+        "timestamp": 1475966749062
+    },
+    {
+        "id": "9b5d9f54-e085-4b87-a728-bb5aeb25dd36",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3561052,
+            "lng": -71.0970283
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475966749693
+            }
+        ],
+        "timestamp": 1475966749693
+    },
+    {
+        "id": "39f3a10a-e233-4f12-b786-58e5426d7f86",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3560183,
+            "lng": -71.0971297
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475966760081
+            }
+        ],
+        "timestamp": 1475966760081
+    },
+    {
+        "id": "94715740-0aa9-4505-973a-368d91386bdd",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3560183,
+            "lng": -71.0971297
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475966760502
+            }
+        ],
+        "timestamp": 1475966760502
+    },
+    {
+        "id": "dff58c3e-bf98-4a54-9d2d-d4d7b6eb66bb",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.355476,
+            "lng": -71.0982102
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475966840471
+            }
+        ],
+        "timestamp": 1475966840471
+    },
+    {
+        "id": "49d410a8-b537-4f55-afba-0c964265d466",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.355696,
+            "lng": -71.0990793
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 3,
+                "timestamp": 1475966902461
+            }
+        ],
+        "timestamp": 1475966902461
+    },
+    {
+        "id": "1438feab-8243-42fe-9ca3-8e7f8c077334",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3554094,
+            "lng": -71.1005363
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1475967036487
+            }
+        ],
+        "timestamp": 1475967036487
+    },
+    {
+        "id": "d5ac136e-196e-48c5-a3bb-7cfd10358665",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.35508441925049,
+            "lng": -71.10117673873901
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475967091444
+            }
+        ],
+        "timestamp": 1475967091444
+    },
+    {
+        "id": "6f86fbda-eee6-48a8-8950-ad18feaf99a7",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3551207,
+            "lng": -71.1031585
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1475967257066
+            }
+        ],
+        "timestamp": 1475967257066
+    },
+    {
+        "id": "ff38ae52-2158-4346-86d5-ac9ec9da3660",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3552614,
+            "lng": -71.1032903
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1475967307765
+            }
+        ],
+        "timestamp": 1475967307765
+    },
+    {
+        "id": "a91057a1-f163-4296-a4e7-d557634b50fa",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3562042,
+            "lng": -71.0987289
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476110426033
+            }
+        ],
+        "timestamp": 1476110426033
+    },
+    {
+        "id": "a134c754-531e-4b94-a813-b783f261e14a",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.34821,
+            "lng": -71.0874287
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476119467089
+            }
+        ],
+        "timestamp": 1476119467089
+    },
+    {
+        "id": "9b8a03d9-b66b-4ade-a3ba-7dd153ea66f0",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3563277,
+            "lng": -71.0963648
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476124088214
+            }
+        ],
+        "timestamp": 1476124088214
+    },
+    {
+        "id": "2ec2bb05-903a-4c4d-b8dd-769918757069",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3612859,
+            "lng": -71.1002091
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476297295202
+            }
+        ],
+        "timestamp": 1476297295202
+    },
+    {
+        "id": "77916724-7f27-4ae0-9b7f-5c317a34d05d",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.361325,
+            "lng": -71.1003345
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476297324549
+            }
+        ],
+        "timestamp": 1476297324549
+    },
+    {
+        "id": "ea6d386b-458d-4374-83bd-78b0394c4846",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3611152,
+            "lng": -71.0996866
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476299969973
+            }
+        ],
+        "timestamp": 1476299969973
+    },
+    {
+        "id": "3e84733d-de3a-4f15-a142-ecb639daae3e",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3611152,
+            "lng": -71.0996866
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476299971243
+            }
+        ],
+        "timestamp": 1476299971243
+    },
+    {
+        "id": "d87d6cc7-f46c-44e6-8191-0f4f96df56a4",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3587553,
+            "lng": -71.0998272
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476300311878
+            },
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 1,
+                "timestamp": 1476300332047
+            }
+        ],
+        "timestamp": 1476300311878
+    },
+    {
+        "id": "4952e2cb-8522-45b9-861d-28952aa21f85",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3583683,
+            "lng": -71.0993138
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 2,
+                "timestamp": 1476300371012
+            }
+        ],
+        "timestamp": 1476300371012
+    },
+    {
+        "id": "c40b9dc5-6f65-4b3d-aaad-cb5b8d5349ae",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3582421,
+            "lng": -71.0994525
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1476300406186
+            }
+        ],
+        "timestamp": 1476300406186
+    },
+    {
+        "id": "31a73ac5-ca7b-4a9a-8c8c-6686ab876605",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.3575039,
+            "lng": -71.1001499
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1476300489523
+            }
+        ],
+        "timestamp": 1476300489523
+    },
+    {
+        "id": "00c078b5-5ee7-4b04-8bb1-ff8248a576c1",
+        "userid": "0",
+        "coordinates": {
+            "lat": 42.36113845142167,
+            "lng": -71.08754164775337
+        },
+        "radius": "10",
+        "answer": [
+            {
+                "userid": "0",
+                "question": "0",
+                "answer": 0,
+                "timestamp": 1476306728359
+            }
+        ],
+        "timestamp": 1476306728359
     }
 ]

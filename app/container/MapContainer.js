@@ -7,8 +7,10 @@ import React, {Component} from 'react';
 
 import MapComponent from '../components/MapCompoment'
 import QuestionContainer from './QuestionContainer';
+import axios from 'axios';
 
-import GeoLocationHelper from '../utilities/GeoLocationHelper'
+import GeoLocationHelper from '../utilities/GeoLocationHelper';
+import Helper from '../utilities/Helpers';
 
 //
 // MapContainer class
@@ -20,34 +22,45 @@ export default class MapContainer extends Component {
 
         this.state = {
             fences: [],
-            lat : 42,
+            lat: 42,
             lng: -71,
         };
 
-        console.log(this.state.lat);
-        GeoLocationHelper.getGeoLocation()
-            .then(function(position){
-                this.setState({
-                    lat:position.latitude,
-                    lng:position.longitude
-                });
-            }.bind(this));
+        var promises = [];
 
-        QuestionContainer.getFenceListFromAPI()
-            .then((data)=>{
-                let coordinates = data.map(obj=>{
-                   return [obj.coordinates.lat,obj.coordinates.lng]
-                });
+        // get the list of fences
+        promises.push(Helper.getFenceListFromAPI());
 
-                this.setState({
-                    fences:coordinates
-                })
-            })
+        // get the current coordinates
+        promises.push(GeoLocationHelper.getGeoLocation());
+        Promise.all(promises).then(objs => {
+
+            let fenceResults = [0,1,2,3].map(()=>{return []});
+
+            // TODO: organize this mess!
+            for (let i = 0; i < objs[0].length; i++) {
+                let coordinates = [objs[0][i].coordinates.lat,objs[0][i].coordinates.lng,];
+                for (let j = 0; j < objs[0][i].answer.length; j++) {
+                    if (objs[0][i].answer[j].question === '0') {
+                        fenceResults[objs[0][i].answer[j].answer].push(coordinates);
+                    }
+                }
+            }
+
+            console.log(fenceResults);
+
+            this.setState({
+                lat: objs[1].latitude,
+                lng: objs[1].longitude,
+                fences: fenceResults
+            });
+
+        });
 
     }
 
-    componentDidMount(){
-    }
+    // componentDidMount() {
+    // }
 
     // componentDidMount(){}
     // componentDidUpdate(){}
@@ -56,10 +69,8 @@ export default class MapContainer extends Component {
 
     render() {
 
-        console.log(this.state.lat);
-
         return (
-          <MapComponent lat={this.state.lat} lng={this.state.lng} fences={this.state.fences}/>
+            <MapComponent lat={this.state.lat} lng={this.state.lng} fences={this.state.fences}/>
         );
     }
 }
