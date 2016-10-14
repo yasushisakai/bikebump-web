@@ -12,3 +12,9 @@ bike bump uses node.js react and express
     - this will convert all of the js files to one index_bundle.js file and put it into dist folder
     - then start the server by running server.js file
 1. goto localhost:8080 and confirm its running
+
+
+## how to update
+
+1. ```npm install``` to install additional dependencies
+2. ```npm run startdev```
