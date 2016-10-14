@@ -3,6 +3,8 @@ var Config;
 Config = {
     isRemote:function(){
 
+        console.log(window.location.href);
+
         return !window.location.href.split(':')[2].startsWith('8080');
     },
     api_root:function(){
