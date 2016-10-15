@@ -9,7 +9,9 @@ import React, {PropTypes} from 'react'
 export default function Question(props) {
     return (
         <div className="question">
-        <span className="question-text"> {props.text} </span>
+        <div id="questionText" className="question-text">
+            <div className="vertical-center">{props.text}</div>
+        </div>
             {props.children}
         </div>
     );

@@ -6,7 +6,7 @@ data/
 
 # distribution
 /dist/*
-!/dist/style.css
+!/dist/*.css
 
 # webfaction stuff
 bin/

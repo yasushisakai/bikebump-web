@@ -1,12 +1,12 @@
 [
   {
     "id": "0",
-    "text": "How is the road ?",
+    "text": "How is the road condition?",
     "options": [
-      "Fantastic",
-      "Good",
-      "Bad",
-      "Deadly"
+      ["Fantastic","#30A9DE"],
+      ["Good","#EFDC05"],
+      ["Bad","#E53A40"],
+      ["Deadly","#090707","#FFFFFF"]
     ],
     "parent_id": ""
   },
@@ -14,10 +14,10 @@
     "id": "1",
     "text": "Child question",
     "options": [
-      "option 1",
-      "option 2",
-      "option 3",
-      "option 4"
+      ["option 1","#D499B9"],
+      ["option 2","#9055A2"],
+      ["option 3","#2E294E"],
+      ["option 4","#011638"]
     ],
     "parent_id": "0"
   }

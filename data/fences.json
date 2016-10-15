@@ -258,72 +258,6 @@
         "timestamp": 1475516952780
     },
     {
-        "id": "d90fd373-ef3b-45b9-95f6-c2a7ec442937",
-        "userid": "0",
-        "coordinates": {
-            "lat": 42.360915999999996,
-            "lng": -71.0872452
-        },
-        "radius": "10",
-        "answer": [
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 2,
-                "timestamp": 1475527127705
-            },
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 2,
-                "timestamp": 1475528695982
-            },
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 1,
-                "timestamp": 1475618756735
-            },
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 1,
-                "timestamp": 1475766350065
-            },
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 1,
-                "timestamp": 1475766435187
-            },
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 0,
-                "timestamp": 1475873428980
-            },
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 0,
-                "timestamp": 1475873432133
-            },
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 0,
-                "timestamp": 1475873432354
-            },
-            {
-                "userid": "0",
-                "question": "0",
-                "answer": 2,
-                "timestamp": 1476306489046
-            }
-        ],
-        "timestamp": 1475527127705
-    },
-    {
         "id": "2683e559-c1b5-44f9-987b-e87658cfbc4e",
         "userid": "0",
         "coordinates": {
@@ -3682,5 +3616,6 @@
             }
         ],
         "timestamp": 1476306728359
-    }
+    },
+
 ]

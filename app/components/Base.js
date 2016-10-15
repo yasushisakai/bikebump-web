@@ -12,7 +12,7 @@ import React, {PropTypes} from 'react'
 export default function Base(props) {
 
     return (
-        <div className="base">
+        <div className="base grid">
             {props.children}
         </div>
     );

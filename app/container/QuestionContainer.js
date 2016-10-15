@@ -9,6 +9,7 @@ import Helpers from '../utilities/Helpers';
 
 import Question from '../components/Question';
 import Option from '../components/Option'
+import InfoBox from '../components/InfoBox';
 
 //
 // QuestionContainer class
@@ -40,9 +41,6 @@ export default class QuestionContainer extends Component {
 
     }
 
-
-
-
     updateCoordinatesAndFences() {
         // TODO: breakdown this function into smaller pieces?
 
@@ -67,11 +65,16 @@ export default class QuestionContainer extends Component {
             if (includingFences.length == 0) {
                 fenceId = null;
                 this.setQuestion('0');
+
+
             } else {
                 // select the fence id;
                 fenceId = includingFences[0].id;
+                console.log(fenceId);
                 // setQuestionId
-                this.setQuestion('0'); //same
+                // todo: logic to change question
+                this.setQuestion('0'); //same question
+
             }
 
             this.setState({
@@ -82,6 +85,21 @@ export default class QuestionContainer extends Component {
                 includingFences: includingFences
             });
 
+
+            console.log(fenceId);
+
+            let qText = document.getElementById('infoBox');
+            Helpers.show(qText);
+            Helpers.fade(qText);
+
+            if (fenceId != null) {
+                let dominantAnswer = this.getDominantAnswer();
+                this.changeBackgroundColor(dominantAnswer);
+            } else {
+                // setColor color to white
+                let root = document.getElementById('root');
+                root.style.backgroundColor = 'white';
+            }
         });
     }
 
@@ -103,6 +121,47 @@ export default class QuestionContainer extends Component {
             });
     }
 
+    getDominantAnswer() {
+
+        let answerCount = [0, 0, 0, 0];
+
+        for (let i = 0; i < this.state.includingFences.length; i++) {
+            for (let j = 0; j < this.state.includingFences[i].answer.length; j++) {
+                let response = this.state.includingFences[i].answer[j];
+                if (response.question == this.state.questionId) {
+                    answerCount[response.answer]++;
+                }
+            }
+        }
+
+        return answerCount.indexOf(Math.max.apply(null, answerCount));
+
+    }
+
+    // todo: may not need to ask for the question
+    changeBackgroundColor(answerId) {
+        Helpers.getQuestionListFromAPI(this.state.questionId)
+            .then((question)=> {
+
+                let newColor = question.options[answerId][1];
+                // change background color to...
+
+                let root = document.getElementById('root');
+                root.style.backgroundColor = newColor;
+
+            });
+    }
+
+    getStatus(){
+
+        if(this.state.fenceId == null){
+            return 'no fence found near'
+        }else{
+            let answer = this.state.options[this.getDominantAnswer()][0];
+            return 'most people say this place is '+answer+ '. Fence Id:'+this.state.fenceId;
+        }
+
+    }
 
     handleButtonClick(index) {
 
@@ -117,8 +176,11 @@ export default class QuestionContainer extends Component {
             axios.get(new_fence_url).then((response)=> {
                 this.setState({
                     fences: this.state.fences.push(response.data)
-                })
-            })
+                });
+
+                console.log("added fence");
+            }).then(this.updateCoordinatesAndFences);
+
 
         } else {
             //fences/:id/append?u=userid&q=0&a=2
@@ -132,7 +194,10 @@ export default class QuestionContainer extends Component {
                 this.setState({
                     fences: this.state.fences.push(response.data)
                 });
-            });
+
+                console.log("append fence");
+
+            }).then(this.updateCoordinatesAndFences);
         }
 
     }
@@ -140,7 +205,7 @@ export default class QuestionContainer extends Component {
     componentDidMount() {
         this.setQuestion();
         this.updateCoordinatesAndFences();
-        this.interval = setInterval(this.updateCoordinatesAndFences, 10000); // millisec
+        this.interval = setInterval(this.updateCoordinatesAndFences, 7000); // millisec
     }
 
     componentWillUnmount() {
@@ -155,7 +220,7 @@ export default class QuestionContainer extends Component {
             options.push(
                 <Option
                     key={i}
-                    text={this.state.options[i]}
+                    options={this.state.options[i]}
                     onClick={this.handleButtonClick.bind(this, i)}
                 />
             );
@@ -174,24 +239,17 @@ export default class QuestionContainer extends Component {
             this.state.options === 0
         );
 
-        console.log(this.state.fenceId);
         let isInFence = this.state.fenceId != null;
 
         return (
-            <div className="question-container">
+            <div className="question-container grid__col grid__col--2-of-2">
                 { this.isLoading
                     ? <Question text={this.state.text}/>
                     :
                     <Question text={this.state.text}>
-                        <div className="info">
-                            <span className="info-coordinates">
-                                latitude:{this.state.lat},
-                                longitude:{this.state.lng}
-                                </span>
-                            <span className="info-coordinates">am in a fence? {isInFence ? 'yup': 'nope'}</span>
-                        </div>
                         <div className="buttons-group">
                             {this.renderOptions()}
+                            <InfoBox lat={this.state.lat} lng={this.state.lng} status={this.getStatus()}/>
                         </div>
                     </Question>
                 }

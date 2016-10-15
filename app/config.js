@@ -3,8 +3,6 @@ var Config;
 Config = {
     isRemote:function(){
 
-        console.log(window.location.href);
-
         return window.location.href.startsWith('https');
     },
     api_root:function(){
