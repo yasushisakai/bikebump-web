@@ -13,8 +13,9 @@ export default function InfoBox(props) {
 
     return (
         <div id="infoBox" className="infobox">
-            location({props.lat},{props.lng})
-            {props.status}
+            <div className="circle red indicator"></div>
+            <span className="info-location"> location({props.lat.toFixed(3)},{props.lng.toFixed(3)}) </span>
+            <span className="info-status">{props.status}</span>
         </div>
     );
 };

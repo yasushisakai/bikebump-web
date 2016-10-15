@@ -7,6 +7,8 @@ body{
     padding:0;
     font-family: sans-serif;
     height:100%;
+
+    font-size:16px;
 }
 
 #root{
@@ -40,10 +42,10 @@ body{
 
 .button{
     text-align: center;
-    height:19%;
+    height:18%;
     width:100%;
     display: flex;
-    margin-bottom:5%;
+    margin-bottom:4%;
     border:0;
     display: table;
 }
@@ -73,7 +75,7 @@ small resolution
 */
 @media only screen and (min-device-width:480px) {
     .question-text{
-        font-size: 2.5em;
+        font-size: 3.5em;
     }
     .button {
         font-size: 3em;
@@ -87,7 +89,7 @@ small resolution
 
 @media only screen and (min-width:1224px){
     .question-text{
-        font-size: 4em;
+        font-size: 5em;
     }
     .button {
         font-size: 3.5em;
@@ -97,4 +99,26 @@ small resolution
         font-size:2em;
         line-height:2em;
     }
+}
+
+/*
+
+circles
+
+*/
+
+
+.circle{
+    border-radius: 50%;
+}
+
+
+.red{
+    background: #E53A40;
+    border:none;
+}
+
+.indicator{
+    width:50px;
+    height:50px;
 }
