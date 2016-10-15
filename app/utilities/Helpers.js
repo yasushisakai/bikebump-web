@@ -19,26 +19,27 @@ export default class Helpers {
             });
     }
 
-    static fade(element){
+    static fade(element) {
         var op = 1;
-        var timer = setInterval(function(){
-            if(op <= 0.1){
+        var timer = setInterval(function () {
+            if (op <= 0.1) {
                 clearInterval(timer);
-                element.style.display= 'none';
+                element.style.display = 'none';
             }
 
             element.style.opacity = op;
-            element.style.filter = 'alpha(opacity='+op *100 +')';
-            op -= op*0.01;
+            element.style.filter = 'alpha(opacity=' + op * 100 + ')';
+            op -= op * 0.01;
 
-        },50);
+        }, 50);
     }
 
-    static show(element){
-        element.style.display = 'table';
-        element.style.opacity = 1;
-        element.style.filter = 'alpha(opacity=100)';
-
+    static show(element) {
+        if (element.style.display == 'none') {
+            element.style.display = 'table';
+            element.style.opacity = 1;
+            element.style.filter = 'alpha(opacity=100)';
+        }
     }
 
     static getQuestionListFromAPI(id) {
