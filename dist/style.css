@@ -18,17 +18,19 @@ body{
 }
 
 .main{
-    padding: 0 56px 0 56px;
+    padding: 0 5% 0 5%;
 }
 
 .question-container .question{
+    width:100%;
     height:100%;
 }
 
 .question-text{
-    height:196px;
+    height:10%;
     padding: auto 0 auto 0;
     display:table;
+    font-size:1.5em;
 }
 
 .vertical-center{
@@ -38,9 +40,9 @@ body{
 
 .buttons-group {
     position:absolute;
-    top:196px;
-    left:56px;
-    right:56px;
+    top:10%;
+    left:5%;
+    right:5%;
     bottom:0;
 }
 
@@ -52,6 +54,8 @@ body{
     margin-bottom:4%;
     border:0;
     display: table;
+    font-size: 2.2em;
+    font-weight:bold;
 }
 
 
@@ -76,18 +80,18 @@ body{
 small resolution
 
 */
-@media only screen and (min-device-width:480px) {
-    .question-text{
-        font-size: 3.5em;
-    }
-    .button {
-        font-size: 3em;
-        font-weight: bold;
-    }
-    .infobox {
-        font-size: 2em;
-    }
-}
+/*@media only screen and (min-device-width:480px) {*/
+    /*.question-text{*/
+        /*font-size: 3.5em;*/
+    /*}*/
+    /*.button {*/
+        /*font-size: 3em;*/
+        /*font-weight: bold;*/
+    /*}*/
+    /*.infobox {*/
+        /*font-size: 2em;*/
+    /*}*/
+/*}*/
 
 @media only screen and (min-width:1224px) {
     .question-text {
@@ -96,21 +100,36 @@ small resolution
 
     .button {
         font-size: 3.5em;
-        font-weight: bold;
     }
 
     .infobox {
+        float:right;
         font-size: 2em;
     }
 }
 
 @media only screen and (orientation: landscape){
+    .question-text{
+        padding-top:3%;
+        font-size:1.5em;
+    }
     .button{
-        width:22%;
+        width:23%;
         height:80%;
         margin-bottom:2%;
         margin-right:2%;
         float:left;
+        font-size:1.1em;
+        font-weight: bold;
+    }
+
+    .buttons-group{
+        top:15%;
+    }
+
+    .infobox{
+        float:left;
+        font-size:0.8em;
     }
 }
 
@@ -122,7 +141,7 @@ circles
 
 
 .circle{
-    clear: both;
+    float:left;
     border-radius: 50%;
 }
 
@@ -133,6 +152,7 @@ circles
 }
 
 .indicator{
-    width:50px;
-    height:50px;
+    width:15px;
+    height:15px;
+    margin-right:10px;
 }
