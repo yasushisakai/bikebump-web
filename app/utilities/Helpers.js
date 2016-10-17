@@ -22,24 +22,23 @@ export default class Helpers {
     static fade(element) {
         var op = 1;
         var timer = setInterval(function () {
-            if (op <= 0.1) {
-                clearInterval(timer);
-                element.style.display = 'none';
-            }
 
             element.style.opacity = op;
             element.style.filter = 'alpha(opacity=' + op * 100 + ')';
             op -= op * 0.01;
 
+            if (op <= 0.1) {
+                clearInterval(timer);
+                //element.style.display = 'none';
+            }
+
         }, 50);
     }
 
     static show(element) {
-        if (element.style.display == 'none') {
-            element.style.display = 'table';
+            element.style.display = 'initial';
             element.style.opacity = 1;
             element.style.filter = 'alpha(opacity=100)';
-        }
     }
 
     static getQuestionListFromAPI(id) {

@@ -14,6 +14,10 @@ body{
 #root{
     height:100%;
     background: #ffffff;
+
+}
+
+.main{
     padding: 0 56px 0 56px;
 }
 
@@ -51,7 +55,6 @@ body{
 }
 
 
-
 .button-text{
     display: table-cell;
     vertical-align: middle;
@@ -82,22 +85,32 @@ small resolution
         font-weight: bold;
     }
     .infobox {
-        font-size: 0.8em;
-        line-height: 1.0em;
+        font-size: 2em;
     }
 }
 
-@media only screen and (min-width:1224px){
-    .question-text{
+@media only screen and (min-width:1224px) {
+    .question-text {
         font-size: 5em;
     }
+
     .button {
         font-size: 3.5em;
         font-weight: bold;
     }
-    .infobox{
-        font-size:2em;
-        line-height:2em;
+
+    .infobox {
+        font-size: 2em;
+    }
+}
+
+@media only screen and (orientation: landscape){
+    .button{
+        width:23%;
+        height:80%;
+        margin-bottom:2%;
+        margin-right:2%;
+        float:left;
     }
 }
 
@@ -109,6 +122,7 @@ circles
 
 
 .circle{
+    clear: both;
     border-radius: 50%;
 }
 

@@ -88,9 +88,10 @@ export default class QuestionContainer extends Component {
 
             console.log(fenceId);
 
-            let qText = document.getElementById('infoBox');
-            Helpers.show(qText);
-            Helpers.fade(qText);
+            let indicator = document.getElementById('coordination-indicator');
+            // Helpers.show(indicator);
+            Helpers.fade(indicator);
+            console.log("fade");
 
             if (fenceId != null) {
                 let dominantAnswer = this.getDominantAnswer();
@@ -158,7 +159,8 @@ export default class QuestionContainer extends Component {
             return 'no fence found near'
         }else{
             let answer = this.state.options[this.getDominantAnswer()][0];
-            return 'most people say this place is '+answer+ '. Fence Id:'+this.state.fenceId;
+            return 'most people say this place is '+answer + '.';
+            // Fence Id:'+this.state.fenceId;
         }
 
     }
@@ -242,7 +244,7 @@ export default class QuestionContainer extends Component {
         let isInFence = this.state.fenceId != null;
 
         return (
-            <div className="question-container grid__col grid__col--2-of-2">
+            <div className="question-container">
                 { this.isLoading
                     ? <Question text={this.state.text}/>
                     :
