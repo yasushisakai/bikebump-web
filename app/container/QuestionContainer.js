@@ -127,10 +127,10 @@ export default class QuestionContainer extends Component {
         let answerCount = [0, 0, 0, 0];
 
         for (let i = 0; i < this.state.includingFences.length; i++) {
-            for (let j = 0; j < this.state.includingFences[i].answer.length; j++) {
-                let response = this.state.includingFences[i].answer[j];
+            for (let j = 0; j < this.state.includingFences[i].answers.length; j++) {
+                let response = this.state.includingFences[i].answers[j];
                 if (response.question == this.state.questionId) {
-                    answerCount[response.answer]++;
+                    answerCount[response.value]++;
                 }
             }
         }

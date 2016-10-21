@@ -53,11 +53,11 @@ api_router.get('/fences/add', (req, res)=> {
             userid: req.query.u,
             coordinates: {lat: latitude, lng: longitude},
             radius: req.query.r,
-            answer: [
+            answers: [
                 {
                     userid: req.query.u,
                     question: '0',
-                    answer: parseInt(req.query.a),
+                    value: parseInt(req.query.a),
                     timestamp: Date.now() // TODO: redundant !!
                 }
             ],
@@ -100,10 +100,10 @@ api_router.get('/fences/:id/append', (req, res)=> {
 
         for (var i = 0; i < fences.length; i++) {
             if (fences[i].id === req.params.id) {
-                fences[i].answer.push({
+                fences[i].answers.push({
                     userid: req.query.u,
                     question: req.query.q,
-                    answer: parseInt(req.query.a),
+                    value: parseInt(req.query.a),
                     timestamp: Date.now()
                 });
                 break;

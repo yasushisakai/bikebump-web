@@ -8,7 +8,7 @@
     "start": "webpack && npm run convertserver && node ./bin/start.js",
     "convert": "webpack -p",
     "convertdev": "webpack",
-    "convertserver": "babel ./server/ -d ./bin && babel ./app/utilities -d ./bin/utilities",
+    "convertserver": "babel ./server/ -d ./bin && babel ./app/config.js -o ./bin/config.js && babel ./app/utilities -d ./bin/utilities",
     "roadCheckerTest":"npm run convertserver && node ./bin/roadMatching.js"
 
   },

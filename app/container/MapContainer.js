@@ -36,13 +36,12 @@ export default class MapContainer extends Component {
         Promise.all(promises).then(objs => {
 
             let fenceResults = [0,1,2,3].map(()=>{return []});
-
-            // TODO: organize this mess!
+            
             for (let i = 0; i < objs[0].length; i++) {
                 let coordinates = [objs[0][i].coordinates.lat,objs[0][i].coordinates.lng,];
-                for (let j = 0; j < objs[0][i].answer.length; j++) {
-                    if (objs[0][i].answer[j].question === '0') {
-                        fenceResults[objs[0][i].answer[j].answer].push(coordinates);
+                for (let j = 0; j < objs[0][i].answers.length; j++) {
+                    if (objs[0][i].answers[j].question === '0') {
+                        fenceResults[objs[0][i].answers[j].value].push(coordinates);
                     }
                 }
             }
