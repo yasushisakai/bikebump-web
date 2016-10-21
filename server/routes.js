@@ -168,7 +168,7 @@ api_router.get('/questions/:id', (req, res)=> {
     fs.readFile(path.resolve(json_path, 'questions.json'), (err, data)=> {
         if (err) console.error(err);
         else {
-            question = JSON.parse(data)[parseInt(req.params.id)];
+            var question = JSON.parse(data)[parseInt(req.params.id)];
             res.json(question);
         }
     });

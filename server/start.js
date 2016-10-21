@@ -8,7 +8,7 @@ var isRemote = process.argv[2]+'' != 'local';
 
 app.use('/', express.static('dist'));
 
-var api_router = require('./app/api/routes');
+var api_router = require(__dirname+'/api_routes');
 app.use('/api', api_router);
 
 app.get('*', (req, res)=> {
