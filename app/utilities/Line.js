@@ -8,6 +8,18 @@ export default class Line{
         this.en = _en;
     }
 
+    static fromPoint(_point,_direction,_length){
+        // extends a point in front and back
+
+
+        let unitizedDirection = _direction.unitize();
+        let st = _point.add(unitizedDirection.multiply(_length*0.5));
+        let en = _point.add(unitizedDirection.flip().multiply(_length*0.5));
+
+        return new Line(st,en);
+
+    }
+
     getLength(){
         let delta = this.en.subtract(this.st);
         return Math.sqrt(Math.pow(delta.x,2)+Math.pow(delta.y,2));
@@ -20,6 +32,14 @@ export default class Line{
     getPointAt(_t){
         let delta = this.en.subtract(this.st);
         return delta.multiply(_t).add(this.st);
+    }
+
+    //
+    // this will modify this
+    //
+    move(_vector){
+        this.st.move(_vector);
+        this.en.move(_vector);
     }
     
     getClosestPointTo(_point) {
@@ -35,6 +55,10 @@ export default class Line{
         
         return this.getPointAt(t);
 
+    }
+    
+    getArray(){
+       return [this.st.toArray(),this.en.toArray()]
     }
 
 }

@@ -26,6 +26,24 @@ export default class Helpers {
         return _rad * 180 / Math.PI;
     }
 
+    static getColor(_t){
+
+        const green = 56;
+
+        let r = Helpers.convertColorValuesToHex((255*_t).toFixed(0));
+        let g = Helpers.convertColorValuesToHex(green);
+        let b = Helpers.convertColorValuesToHex((255*(1.0-_t)).toFixed(0));
+
+        return '#'+r+g+b;
+    }
+
+    static convertColorValuesToHex(_num){
+        let hexString = Number(_num).toString(16);
+
+        return hexString.length == 1 ? '0' + hexString : hexString;
+
+    }
+
     static fade(element) {
         var op = 1;
         var timer = setInterval(function () {
@@ -51,8 +69,6 @@ export default class Helpers {
     static getFenceListFromAPI() {
 
         let path = config.api_root() + 'fences/';
-
-        console.log(path);
 
         return axios.get(path)
             .then((response)=> {
@@ -83,8 +99,6 @@ export default class Helpers {
 
     static getRoadsFromAPI(){
         let path = config.api_root() + 'roads/';
-
-        console.log(path);
 
         return axios.get(path)
             .then((response)=> {

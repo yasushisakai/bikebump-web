@@ -10,12 +10,16 @@ export default class Point extends L.Point {
         super(_x, _y);
     }
 
-    static fromArray(_arry){
-        return new Point(_arry[0],_arry[1]);
+    static fromArray(_arry) {
+        return new Point(_arry[0], _arry[1]);
     }
 
     static fromPointLeaflet(_LPoint) {
         return new Point(_LPoint.x, _LPoint.y);
+    }
+    
+    flip(){
+        return new Point(-this.x, -this.y);
     }
 
     subtract(_other) {
@@ -23,7 +27,19 @@ export default class Point extends L.Point {
     }
 
     add(_other) {
-        return new Point(this.x + _other.x, this.y + _other.y);
+
+        if (typeof _other === 'number') {
+            return new Point(this.x + _other, this.y + _other);
+            
+        } else {
+            return new Point(this.x + _other.x, this.y + _other.y);
+
+        }
+    }
+
+    move(_point){
+        this.x += _point.x;
+        this.y += _point.y;
     }
 
     divide(_scalar) {
@@ -34,7 +50,7 @@ export default class Point extends L.Point {
         return new Point(this.x * _scalar, this.y * _scalar);
     }
 
-    distanceTo(_point){
+    distanceTo(_point) {
         return _point.subtract(this).getLength();
     }
 
@@ -60,6 +76,10 @@ export default class Point extends L.Point {
 
         return Math.acos(unitizedSelf.dot(unitizedOther));
 
+    }
+
+    toArray() {
+        return [this.x, this.y];
     }
 
 }
