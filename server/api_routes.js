@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var uuid = require('node-uuid');
 
-var json_path = path.resolve(__dirname, '../../', 'data');
+var json_path = path.resolve(__dirname, '../', 'data');
 var api_router = express.Router();
 
 // TODO:rewrite in es2015 or es6

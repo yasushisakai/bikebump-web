@@ -2,13 +2,15 @@
   "name": "bikebump",
   "version": "1.0.0",
   "description": "yet another bottom up approach on urban planning",
-  "main": "index.js",
+  "main": "./bin/start.js",
   "scripts": {
-    "startdev": "webpack & node start.js local",
-    "start": "webpack & node start.js",
+    "startdev": "webpack && npm run convertserver && node ./bin/start.js local",
+    "start": "webpack && npm run convertserver && node ./bin/start.js",
     "convert": "webpack -p",
     "convertdev": "webpack",
-    "convertserver": "babel ./server/start.js -o start.js & babel ./server/routes.js -o api_routes.js"
+    "convertserver": "babel ./server/ -d ./bin && babel ./app/utilities -d ./bin/utilities",
+    "roadCheckerTest":"npm run convertserver && node ./bin/roadMatching.js"
+
   },
   "author": "Yasushi Sakai",
   "license": "MIT",

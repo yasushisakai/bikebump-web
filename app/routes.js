@@ -9,7 +9,7 @@ import NotFound from './components/NotFound'
 
 //
 // this handles the routing for the app
-// for the api endpoint urls look inside /api/routes.js
+// for the api endpoint urls look inside /api/api_routes.js
 //
 
 // TODO: login stuff

@@ -1,24 +1,26 @@
-var express = require('express');
-var app = express();
-var path = require('path');
-var fs = require('fs');
-var process = require('process');
+import express from 'express';
+import path from 'path';
+import process from 'process';
+import api_router from './api_routes';
 
-var isRemote = process.argv[2]+'' != 'local';
+let app = express();
+let isRemote = process.argv[2]+'' != 'local';
 
-app.use('/', express.static('dist'));
 
-var api_router = require(__dirname+'/api_routes');
+console.log(__dirname);
+
+// root and static file serving
+app.use('/', express.static(path.resolve(__dirname,'../','dist')));
+
+// api
 app.use('/api', api_router);
 
+// others, 404 and others will be handled by the app side ./app/routes.js
 app.get('*', (req, res)=> {
-    //res.send('you\'ve landed on a random address');
-
-    res.sendFile(path.resolve(__dirname,'dist','index.html'));
-
+    res.sendFile(path.resolve(__dirname,'../dist','index.html'));
 });
 
-var portNum = isRemote ? 19651 : 8080;
+var portNum = isRemote ? 19651 : 8080; // from the server hosing servers
 
 app.listen(portNum, ()=> {
     console.log((isRemote? 'remote': 'local')+" server on, listening to " + portNum);

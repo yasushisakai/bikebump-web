@@ -1,13 +1,14 @@
 /**
  * Created by yasushisakai on 10/20/16.
  */
-import L from 'leaflet';
+//import L from 'leaflet';
 
 
-export default class Point extends L.Point {
+export default class Point {
 
     constructor(_x, _y) {
-        super(_x, _y);
+        this.x = _x;
+        this.y = _y;
     }
 
     static fromArray(_arry) {

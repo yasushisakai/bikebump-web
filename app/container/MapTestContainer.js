@@ -8,7 +8,6 @@ import Leaflet from 'leaflet';
 import {Map, TileLayer, Polyline, Marker, Circle} from 'react-leaflet';
 import Line from '../utilities/Line';
 import Point from '../utilities/Point';
-import Road from '../utilities/Road';
 
 import Helpers from '../utilities/Helpers';
 import GeolocationHelpers from '../utilities/GeoLocationHelper';
