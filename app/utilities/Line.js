@@ -48,10 +48,19 @@ export default class Line{
     }
     
     getClosestPointTo(_point) {
-        let len = this.getLength();
 
-        let pointToEnd = this.en.subtract(_point);
-        let angle = this.getDirection().angle(pointToEnd);
+        //
+        // this assumes every thing is in lat lng coordinates
+        // converts to world coordinates and compares them
+        //
+
+        let meInWorld = new Line(this.st.latLngToWorld(),this.en.latLngToWorld());
+        let ptInWorld = _point.latLngToWorld();
+        
+        let len = meInWorld.getLength();
+
+        let pointToEnd = meInWorld.en.subtract(ptInWorld);
+        let angle = meInWorld.getDirection().angle(pointToEnd);
 
 
         let t = 1.0 - (pointToEnd.getLength() * Math.cos(angle) / len);

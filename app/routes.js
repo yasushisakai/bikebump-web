@@ -5,6 +5,7 @@ import Base from './components/Base'
 import MainContainer from './container/MainContainer'
 import MapContainer from './container/MapContainer'
 import MapTestContainer from './container/MapTestContainer'
+import MapAllRoads from './container/MapAllRoads'
 import NotFound from './components/NotFound'
 
 //
@@ -17,8 +18,9 @@ export const routes = (
     <Router history={browserHistory}>
         <Route path="/" component={Base}>
             <IndexRoute component={MainContainer}/>
-            <Route path="map" component={MapContainer}/>
-            <Route path="map_test" component={MapTestContainer}/>
+            <Route path="heat" component={MapContainer}/>
+            <Route path="map" component={MapTestContainer}/>
+            <Route path="map_all" component={MapAllRoads}/>
             <Route path="*" component={NotFound}/>
         </Route>
     </Router>

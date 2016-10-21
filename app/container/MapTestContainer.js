@@ -83,7 +83,7 @@ export default class MapTestContainer extends Component {
         //report.values = fence.answers.map((answer)=>{ return answer.value });
 
         const circleOffset = 2; // meters
-        const parallelOffset = 0.00008;
+        const parallelOffset = 0.00002;
 
         let center = new Point(fence.coordinates.lat, fence.coordinates.lng);
         let roadPoint = new Point(fence.closestRoad.closestPt.x, fence.closestRoad.closestPt.y);
@@ -112,7 +112,7 @@ export default class MapTestContainer extends Component {
         result.push(<Polyline key={fence.id+'-pl'} positions={centerToRoadLine.getArray()} weight={1} opacity={0.2}
                               color="#FFFFFF"/>);
 
-        result.push(<Polyline key={fence.id+'-plr'} positions={parallelLine.getArray()} weight={2} opacity={1}
+        result.push(<Polyline key={fence.id+'-plr'} positions={parallelLine.getArray()} weight={3} opacity={0.8}
                               color={Helpers.getColor(valueAve)}/>);
 
 
@@ -124,7 +124,7 @@ export default class MapTestContainer extends Component {
                 center={center.toArray()}
                 radius={parseInt(fence.radius)+index*circleOffset}
                 color={Helpers.getColor(obj/3.0)}
-                weight={1}
+                weight={2}
                 opacity={1}
                 fill={false}
             />)
