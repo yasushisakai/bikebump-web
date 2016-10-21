@@ -3,8 +3,15 @@ var fs = require('fs');
 var path = require('path');
 var uuid = require('node-uuid');
 
+var Point = require('./utilities/Point');
+
 var json_path = path.resolve(__dirname, '../', 'data');
 var api_router = express.Router();
+
+
+var RoadMatcher = require('./roadMatching');
+
+var roadMatcher = new RoadMatcher();
 
 // TODO:rewrite in es2015 or es6
 
@@ -63,6 +70,11 @@ api_router.get('/fences/add', (req, res)=> {
             ],
             timestamp: Date.now()
         };
+
+        // get the closest Road info
+        var closestRoad = roadMatcher.findClosestRoad(new Point(latitude,longitude));
+        newFence.closestRoad = closestRoad;
+
 
         // push it
         fences.push(newFence);

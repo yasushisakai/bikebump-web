@@ -70,7 +70,6 @@ export default class QuestionContainer extends Component {
             } else {
                 // select the fence id;
                 fenceId = includingFences[0].id;
-                console.log(fenceId);
                 // setQuestionId
                 // todo: logic to change question
                 this.setQuestion('0'); //same question
@@ -91,7 +90,6 @@ export default class QuestionContainer extends Component {
             let indicator = document.getElementById('coordination-indicator');
             // Helpers.show(indicator);
             Helpers.fade(indicator);
-            console.log("fade");
 
             if (fenceId != null) {
                 let dominantAnswer = this.getDominantAnswer();
@@ -118,7 +116,7 @@ export default class QuestionContainer extends Component {
                 })
             })
             .catch(()=> {
-                console.log('error in setQuestion');
+                console.error('error in setQuestion');
             });
     }
 
@@ -180,7 +178,6 @@ export default class QuestionContainer extends Component {
                     fences: this.state.fences.push(response.data)
                 });
 
-                console.log("added fence");
             }).then(this.updateCoordinatesAndFences);
 
 
@@ -196,8 +193,6 @@ export default class QuestionContainer extends Component {
                 this.setState({
                     fences: this.state.fences.push(response.data)
                 });
-
-                console.log("append fence");
 
             }).then(this.updateCoordinatesAndFences);
         }

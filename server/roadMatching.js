@@ -75,7 +75,7 @@ export default class RoadMatching{
         let result = {};
         
         result.road = closestRoad;
-        result.closetPt = closestPt;
+        result.closestPt = closestPt;
         result.distance = minDistance;
         result.roadLine = roadLine;
 
@@ -87,7 +87,7 @@ export default class RoadMatching{
 
         let newFences = [];
 
-        fs.readFile(path.resolve(this.jsonPath,'fences.json'),(err,data)=>{
+        fs.readFile(path.resolve(this.jsonPath,'fences_server_backup.json'),(err,data)=>{
 
             if(err){
                 console.error(err);
@@ -163,8 +163,5 @@ let roadMatching = new RoadMatching();
 
 let home = new Point(42.355459, -71.103052);
 console.log(roadMatching.findClosestRoad(home));
-
-//roadMatching.checkFenceJSON();
-//roadMatching.refactorFenceJSON();
 
 module.exports = RoadMatching;

@@ -36,7 +36,7 @@ export default class MapContainer extends Component {
         Promise.all(promises).then(objs => {
 
             let fenceResults = [0,1,2,3].map(()=>{return []});
-            
+
             for (let i = 0; i < objs[0].length; i++) {
                 let coordinates = [objs[0][i].coordinates.lat,objs[0][i].coordinates.lng,];
                 for (let j = 0; j < objs[0][i].answers.length; j++) {
@@ -45,8 +45,6 @@ export default class MapContainer extends Component {
                     }
                 }
             }
-
-            console.log(fenceResults);
 
             this.setState({
                 lat: objs[1].latitude,
