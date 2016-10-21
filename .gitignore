@@ -4,6 +4,7 @@ node_modules/
 
 data/
 !data/questions.json
+!data/roads.json
 
 # distribution
 /dist/*

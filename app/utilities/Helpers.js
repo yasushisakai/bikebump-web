@@ -5,18 +5,25 @@ import config from '../config'
 export default class Helpers {
 
 
-    static getFenceListFromAPI() {
+    static unique(arr){
+        let u={};
+        let a=[];
 
-        let path = config.api_root() + 'fences/';
+        for(let i=0, l=arr.length;i<l;++i){
+            if(!u.hasOwnProperty(arr[i])){
+                a.push(arr[i]);
+                u[arr[i]] = 1;
+            }
+        }
+        return a;
+    }
 
-        return axios.get(path)
-            .then((response)=> {
-                return response.data
-            })
-            .catch((err)=> {
-                console.error(err);
-                return []
-            });
+    static toRadians(_deg){
+        return _deg * Math.PI /180;
+    }
+
+    static toDegrees(_rad){
+        return _rad * 180 / Math.PI;
     }
 
     static fade(element) {
@@ -41,6 +48,22 @@ export default class Helpers {
             element.style.filter = 'alpha(opacity=100)';
     }
 
+    static getFenceListFromAPI() {
+
+        let path = config.api_root() + 'fences/';
+
+        console.log(path);
+
+        return axios.get(path)
+            .then((response)=> {
+                return response.data
+            })
+            .catch((err)=> {
+                console.error(err);
+                return []
+            });
+    }
+
     static getQuestionListFromAPI(id) {
 
         if (typeof(id) == 'undefined') {
@@ -48,6 +71,20 @@ export default class Helpers {
         }
 
         let path = config.api_root() + 'questions/' + id;
+
+        return axios.get(path)
+            .then((response)=> {
+                return response.data
+            })
+            .catch((err)=> {
+                console.error(err);
+            });
+    }
+
+    static getRoadsFromAPI(){
+        let path = config.api_root() + 'roads/';
+
+        console.log(path);
 
         return axios.get(path)
             .then((response)=> {

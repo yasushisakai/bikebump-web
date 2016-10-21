@@ -5,17 +5,24 @@ Config = {
 
         return window.location.href.startsWith('https');
     },
-    api_root:function(){
 
-        let api_root = '/api/';
+    url_root:function(){
 
         if(this.isRemote()){
-            api_root = 'https://bikebump.yasushisakai.com'+api_root;
+            return 'https://bikebump.yasushisakai.com/';
         }else{
-            api_root = 'http://localhost:8080'+api_root;
+            return 'http://localhost:8080/';
         }
 
-        return api_root;
+    },
+
+    img_root:function(){
+        return this.url_root()+'static/img/'
+    },
+
+    api_root:function(){
+
+        return this.url_root()+'api/'
     }
 };
 

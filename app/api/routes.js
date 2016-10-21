@@ -98,10 +98,10 @@ api_router.get('/fences/:id/append', (req, res)=> {
 
         var fences = JSON.parse(data);
 
-        for(var i=0;i<fences.length;i++){
-            if(fences[i].id === req.params.id){
+        for (var i = 0; i < fences.length; i++) {
+            if (fences[i].id === req.params.id) {
                 fences[i].answer.push({
-                    userid:req.query.u,
+                    userid: req.query.u,
                     question: req.query.q,
                     answer: parseInt(req.query.a),
                     timestamp: Date.now()
@@ -187,6 +187,19 @@ api_router.get('/questions/:id/children', (req, res)=> {
             });
 
             res.json(child_questions);
+        }
+    });
+});
+
+//
+// roads data was taken from OSM using Nina's geobits
+//
+
+api_router.get('/roads', (req, res)=> {
+    fs.readFile(path.resolve(json_path, 'roads.json'), (err, data)=> {
+        if (err) console.error(err);
+        else {
+            res.json(JSON.parse(data));
         }
     });
 });

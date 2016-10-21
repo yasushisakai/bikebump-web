@@ -45,6 +45,8 @@ export default class GeoLocationHelper {
     //
     static includingFences(fences,lat,lng){
 
+        console.log(fences);
+
         return fences.filter((object)=>{
             let distance = GeoLocationHelper.distFromLatLng(object.coordinates.lat,object.coordinates.lng,lat,lng);
             return distance < object.radius;
