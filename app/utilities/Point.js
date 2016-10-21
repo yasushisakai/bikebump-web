@@ -15,6 +15,10 @@ export default class Point {
         return new Point(_arry[0], _arry[1]);
     }
 
+    static fromObj(obj){
+        return new Point(obj.x,obj.y);
+    }
+
     static fromPointLeaflet(_LPoint) {
         return new Point(_LPoint.x, _LPoint.y);
     }

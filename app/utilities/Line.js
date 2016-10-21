@@ -19,6 +19,11 @@ export default class Line{
         return new Line(st,en);
 
     }
+    
+    static fromObj(obj){
+
+        return new Line(Point.fromObj(obj.st), Point.fromObj(obj.en));
+    }
 
     getLength(){
         let delta = this.en.subtract(this.st);

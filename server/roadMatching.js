@@ -161,7 +161,4 @@ export default class RoadMatching{
 
 let roadMatching = new RoadMatching();
 
-let home = new Point(42.355459, -71.103052);
-console.log(roadMatching.findClosestRoad(home));
-
 module.exports = RoadMatching;

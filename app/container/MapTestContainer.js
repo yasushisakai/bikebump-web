@@ -24,37 +24,27 @@ export default class MapTestContainer extends Component {
         this.state = {
             isLoading: true,
             location: [],
-            roads: [],
+            fences: [],
             zoom: 20,
-            roadsToDraw: [],
-            reports: []
         };
+
+        let mapbox_yasushi = {};
+        mapbox_yasushi.url = 'https://api.mapbox.com/styles/v1/yasushisakai/ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAwNjUzM28weHRuMnJ4a2kifQ.ooHi0pGR-SdDraWzTRCoVA';
+        mapbox_yasushi.attribution = '&copy; Mapbox &copy; OpenStreetMap &copy; DigitalGlobe';
 
         this.mapTile = {};
         this.mapTile.url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
         this.mapTile.attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+
+
+        this.mapTile.url = mapbox_yasushi.url;
+        this.mapTile.attribution = mapbox_yasushi.attribution
 
         this.icon = Leaflet.icon({
             iconUrl: Config.img_root() + 'white_cross.png',
             iconSize: [5, 5],
             iconAnchor: [3, 3]
         });
-
-
-        //
-        // a little test
-        //
-
-        this.home = new Point(42.355459, -71.103052);
-
-        let p1 = new Point(0, 0);
-        let p2 = new Point(4, 4);
-
-        let line = new Line(p1, p2);
-
-        let point = new Point(0, 2);
-
-        let closestPoint = line.getClosestPointTo(point);
 
 
     }
@@ -64,7 +54,7 @@ export default class MapTestContainer extends Component {
 
         let promises = [];
 
-        promises.push(Helpers.getRoadsFromAPI());
+        promises.push(Helpers.getFenceListFromAPI());
         promises.push(GeolocationHelpers.getGeoLocation());
 
         Promise.all(promises)
@@ -72,68 +62,11 @@ export default class MapTestContainer extends Component {
 
                 let location = [obj[1].latitude, obj[1].longitude];
 
-                let closestRoad, closestPt = new Point(0, 0), roadLine, minDistance = 100000000;
-
-                // TODO: able to use huge reduce?
-
-                obj[0].map((road, index)=> {
-
-                    if (road.geometry.type = "LineString") {
-
-                        for (let i = 0, l = road.geometry.coordinates.length - 1; i < l; ++i) {
-                            let st = Point.fromArray(road.geometry.coordinates[i]);
-                            let en = Point.fromArray(road.geometry.coordinates[i + 1]);
-                            let line = new Line(st, en);
-
-                            let closePoint = line.getClosestPointTo(this.home);
-                            let distance = closePoint.distanceTo(this.home);
-                            if (minDistance > distance) {
-                                minDistance = distance;
-                                closestRoad = road;
-                                closestPt = closePoint;
-                                roadLine = line;
-                            }
-                        }
-
-                    } else {
-
-                        road.geometry.coordinates.map((partialRoad)=> {
-
-                            for (let i = 0, l = partialRoad.length - 1; i < l; ++i) {
-                                let st = Point.fromArray(partialRoad[i]);
-                                let en = Point.fromArray(partialRoad[i + 1]);
-                                let line = new Line(st, en);
-
-                                let closePoint = line.getClosestPointTo(this.home);
-                                let distance = closePoint.distanceTo(this.home);
-                                if (minDistance > distance) {
-                                    minDistance = distance;
-                                    closestRoad = road;
-                                    closestPt = closePoint;
-                                    roadLine = line;
-                                }
-                            }
-
-                        });
-
-                    }
-                });
-
-                // information to know
-                let report = {};
-                report.center = this.home;
-                report.radius = 10;
-                report.roadPoint = closestPt;
-                report.values = [3, 2, 1, 0, 3, 2,2,2,2];
-                report.road = closestRoad.name;
-                report.roadLine = roadLine;
 
                 this.setState({
                     isLoading: false,
                     location: location,
-                    roads: obj[0],
-                    roadsToDraw: [closestRoad],
-                    reports: [report]
+                    fences: obj[0]
                 });
 
             });
@@ -141,39 +74,55 @@ export default class MapTestContainer extends Component {
     }
 
 
-    drawReport(report) {
+    drawFence(fence) {
+
+        // becareful of these
+        //report.center = new Point(fence.coordinates.lat,fence.coordinates.lng);
+        //report.radius = parseInt(fence.radius);
+
+        //report.values = fence.answers.map((answer)=>{ return answer.value });
 
         const circleOffset = 2; // meters
         const parallelOffset = 0.00008;
 
-        let centerToRoadLine = new Line(report.center, report.roadPoint);
+        let center = new Point(fence.coordinates.lat, fence.coordinates.lng);
+        let roadPoint = new Point(fence.closestRoad.closestPt.x, fence.closestRoad.closestPt.y);
+        let roadLine = Line.fromObj(fence.closestRoad.roadLine);
+
+        let centerToRoadLine = new Line(center, roadPoint);
         centerToRoadLine.en.move(centerToRoadLine.getDirection().unitize().multiply(-parallelOffset));
-        
-        let parallelLine = Line.fromPoint(centerToRoadLine.en, report.roadLine.getDirection(), 0.001);
+
+
+        let parallelLine = Line.fromPoint(centerToRoadLine.en, roadLine.getDirection(), 0.0001);
 
 
         let result = [];
 
         // marker
-        result.push(<Marker key={'marker'+0} position={report.center.toArray()} icon={this.icon}/>);
+        result.push(<Marker key={fence.id+'-m'} position={center.toArray()} icon={this.icon}/>);
 
+        let values = fence.answers.map((answer)=> {
+            return answer.value;
+        });
 
-        let valueAve = report.values.reduce((prev,curr)=>{return prev+(curr/3.0)},0)/report.values.length;
+        let valueAve = values.reduce((prev, curr)=> {
+                return prev + (curr / 3.0)
+            }, 0) / values.length;
 
-        result.push(<Polyline key={'pl'+0} positions={centerToRoadLine.getArray()} weight={1} opacity={0.2}
+        result.push(<Polyline key={fence.id+'-pl'} positions={centerToRoadLine.getArray()} weight={1} opacity={0.2}
                               color="#FFFFFF"/>);
 
-        result.push(<Polyline key={'plr'+0} positions={parallelLine.getArray()} weight={2} opacity={1}
-                              color={Helpers.getColor(valueAve)} />);
+        result.push(<Polyline key={fence.id+'-plr'} positions={parallelLine.getArray()} weight={2} opacity={1}
+                              color={Helpers.getColor(valueAve)}/>);
 
 
         // circles
-        report.values.map((obj, index)=> {
+        values.map((obj, index)=> {
 
             result.push(<Circle
-                key={index}
-                center={report.center.toArray()}
-                radius={report.radius+index*circleOffset}
+                key={fence.id+'-a_'+index}
+                center={center.toArray()}
+                radius={parseInt(fence.radius)+index*circleOffset}
                 color={Helpers.getColor(obj/3.0)}
                 weight={1}
                 opacity={1}
@@ -184,6 +133,12 @@ export default class MapTestContainer extends Component {
         return result;
     }
 
+    drawFences() {
+
+        return this.state.fences.map((fence)=> {
+            return this.drawFence(fence);
+        });
+    }
 
     render() {
 
@@ -195,7 +150,7 @@ export default class MapTestContainer extends Component {
         } else {
             return (
                 <Map center={this.state.location} zoom={this.state.zoom} style={{height: "100vh"}}>
-                    {this.drawReport(this.state.reports[0])}
+                    {this.drawFences()}
                     <TileLayer
                         attribution={this.mapTile.attribution}
                         url={this.mapTile.url}
