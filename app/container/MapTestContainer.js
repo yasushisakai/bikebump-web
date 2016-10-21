@@ -5,7 +5,7 @@
 
 import React, {Component} from 'react';
 import Leaflet from 'leaflet';
-import {Map, TileLayer, Polyline, Marker} from 'react-leaflet';
+import {Map, TileLayer, Polyline, Marker, Circle} from 'react-leaflet';
 import Line from '../utilities/Line';
 import Point from '../utilities/Point';
 import Road from '../utilities/Road';
@@ -123,8 +123,13 @@ export default class MapTestContainer extends Component {
 
 
     render() {
+        let icon = Leaflet.icon({
+            iconUrl: Config.img_root() + 'white_cross.png',
+            iconSize: [10,10],
+            iconAnchor:[5,5]
+        });
 
-        //let icon = Leaflet.Icon({iconUrl: Config.img_root() + 'white_cross.png'});
+        console.log(icon);
 
         if (this.state.isLoading) {
             return (
@@ -133,6 +138,8 @@ export default class MapTestContainer extends Component {
         } else {
             return (
                 <Map center={this.state.location} zoom={this.state.zoom} style={{height: "100vh"}}>
+                    <Marker position={[this.home.x,this.home.y]} icon={icon}/>
+                    <Circle center={[this.home.x,this.home.y]} radius={10} weight={1} color="#FFFFFF" fill={false} />
                     {this.drawLines()}
                     <TileLayer
                         attribution={this.mapTile.attribution}
