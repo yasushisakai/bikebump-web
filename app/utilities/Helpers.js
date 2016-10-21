@@ -28,11 +28,11 @@ export default class Helpers {
 
     static getColor(_t){
 
-        const green = 56;
+        const blue = 56;
 
         let r = Helpers.convertColorValuesToHex((255*_t).toFixed(0));
-        let g = Helpers.convertColorValuesToHex(green);
-        let b = Helpers.convertColorValuesToHex((255*(1.0-_t)).toFixed(0));
+        let b = Helpers.convertColorValuesToHex(blue);
+        let g = Helpers.convertColorValuesToHex((255*(1.0-_t)).toFixed(0));
 
         return '#'+r+g+b;
     }

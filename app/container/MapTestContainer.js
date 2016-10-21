@@ -25,7 +25,7 @@ export default class MapTestContainer extends Component {
             isLoading: true,
             location: [],
             fences: [],
-            zoom: 20,
+            zoom: 15,
         };
 
         let mapbox_yasushi = {};
@@ -37,8 +37,8 @@ export default class MapTestContainer extends Component {
         this.mapTile.attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
 
 
-        this.mapTile.url = mapbox_yasushi.url;
-        this.mapTile.attribution = mapbox_yasushi.attribution
+         //this.mapTile.url = mapbox_yasushi.url;
+         //this.mapTile.attribution = mapbox_yasushi.attribution
 
         this.icon = Leaflet.icon({
             iconUrl: Config.img_root() + 'white_cross.png',
@@ -83,7 +83,7 @@ export default class MapTestContainer extends Component {
         //report.values = fence.answers.map((answer)=>{ return answer.value });
 
         const circleOffset = 2; // meters
-        const parallelOffset = 0.00002;
+        const parallelOffset = 0.000025;
 
         let center = new Point(fence.coordinates.lat, fence.coordinates.lng);
         let roadPoint = new Point(fence.closestRoad.closestPt.x, fence.closestRoad.closestPt.y);
@@ -93,7 +93,7 @@ export default class MapTestContainer extends Component {
         centerToRoadLine.en.move(centerToRoadLine.getDirection().unitize().multiply(-parallelOffset));
 
 
-        let parallelLine = Line.fromPoint(centerToRoadLine.en, roadLine.getDirection(), 0.0001);
+        let parallelLine = Line.fromPoint(centerToRoadLine.en, roadLine.getDirection(), 0.00015);
 
 
         let result = [];
@@ -110,10 +110,10 @@ export default class MapTestContainer extends Component {
             }, 0) / values.length;
 
         result.push(<Polyline key={fence.id+'-pl'} positions={centerToRoadLine.getArray()} weight={1} opacity={0.2}
-                              color="#FFFFFF"/>);
+                              color="#FFFFFF" lineCap="butt" />);
 
-        result.push(<Polyline key={fence.id+'-plr'} positions={parallelLine.getArray()} weight={3} opacity={0.8}
-                              color={Helpers.getColor(valueAve)}/>);
+        result.push(<Polyline key={fence.id+'-plr'} positions={parallelLine.getArray()} weight={4} opacity={0.9}
+                              color={Helpers.getColor(valueAve)} lineCap="butt"/>);
 
 
         // circles
@@ -125,7 +125,7 @@ export default class MapTestContainer extends Component {
                 radius={parseInt(fence.radius)+index*circleOffset}
                 color={Helpers.getColor(obj/3.0)}
                 weight={2}
-                opacity={1}
+                opacity={0.3}
                 fill={false}
             />)
         });
@@ -149,7 +149,7 @@ export default class MapTestContainer extends Component {
             );
         } else {
             return (
-                <Map center={this.state.location} zoom={this.state.zoom} style={{height: "100vh"}}>
+                <Map center={this.state.location} zoom={this.state.zoom} maxZoom={30} style={{height: "100vh"}}>
                     {this.drawFences()}
                     <TileLayer
                         attribution={this.mapTile.attribution}
