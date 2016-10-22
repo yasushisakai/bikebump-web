@@ -14,7 +14,6 @@ export default class RoadMatching {
 
     }
 
-
     findClosestRoad(_point) {
 
         let closestRoad, closestPt, roadLine, minDistance = 100000000;
@@ -24,6 +23,8 @@ export default class RoadMatching {
         this.roads.map((road, index)=> {
 
             if (road.geometry.type == "LineString") {
+
+                // TODO : repeating code error prone
 
                 for (let i = 0, l = road.geometry.coordinates.length - 1; i < l; ++i) {
                     let st = Point.fromArray(road.geometry.coordinates[i]);
@@ -35,7 +36,7 @@ export default class RoadMatching {
                     }
 
                     let closePoint = line.getClosestPointTo(_point);
-                    let distance = closePoint.distanceTo(_point);
+                    let distance = closePoint.distanceToInMeters(_point);
                     if (minDistance > distance) {
                         minDistance = distance;
                         closestRoad = road;
@@ -48,6 +49,8 @@ export default class RoadMatching {
 
                 road.geometry.coordinates.map((partialRoad)=> {
 
+                    // TODO: repeated code here
+
                     for (let i = 0, l = partialRoad.length - 1; i < l; ++i) {
                         let st = Point.fromArray(partialRoad[i]);
                         let en = Point.fromArray(partialRoad[i + 1]);
@@ -58,7 +61,7 @@ export default class RoadMatching {
                         }
 
                         let closePoint = line.getClosestPointTo(_point);
-                        let distance = closePoint.distanceTo(_point);
+                        let distance = closePoint.distanceToInMeters(_point);
                         if (minDistance > distance) {
                             minDistance = distance;
                             closestRoad = road;
@@ -84,8 +87,8 @@ export default class RoadMatching {
     }
 
     checkFenceJSON() {
+        console.log('scanning fences without closest roads');
 
-        let newFences = [];
 
         fs.readFile(path.resolve(this.jsonPath, 'fences.json'), (err, data)=> {
 
@@ -95,13 +98,19 @@ export default class RoadMatching {
 
             let fences = JSON.parse(data);
 
+            let newFences = [];
+
             fences.map((fence)=> {
 
-                delete fence.closestRoad; // delete what we have
+                delete fence.closestRoad; // delete what ever we have
 
                 let pt = new Point(fence.coordinates.lat, fence.coordinates.lng);
-                fence.closestRoad = this.findClosestRoad(pt); //(update)
 
+                let closestRoad = this.findClosestRoad(pt);
+
+                if(closestRoad.distance < 30) { // threshold in meters
+                    fence.closestRoad = closestRoad; // geo fences far from roads will not have a closest road
+                }
 
                 newFences.push(fence);
             });
@@ -110,7 +119,7 @@ export default class RoadMatching {
                 if (err) console.error(err);
             });
 
-            console.log('conversion complete');
+            console.log('scanning and modifying complete');
 
         });
 
@@ -161,6 +170,5 @@ export default class RoadMatching {
 
 let roadMatching = new RoadMatching();
 roadMatching.checkFenceJSON();
-//roadMatching.refactorFenceJSON();
 
 module.exports = RoadMatching;

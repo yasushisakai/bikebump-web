@@ -21,7 +21,7 @@ export default class GeoLocationHelper {
     };
 
     //
-    // calculates the distance between two latlng values in meters
+    // calculates the distance between two latlng values in Meters
     // http://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
     //
     static distFromLatLng(lat1, lng1, lat2, lng2) {

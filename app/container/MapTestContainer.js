@@ -14,18 +14,31 @@ import GeolocationHelpers from '../utilities/GeoLocationHelper';
 
 import Config from '../config';
 
+
 //
 // MapTestContainer class
 //
 export default class MapTestContainer extends Component {
 
+
     constructor(props) {
         super(props);
+
+        this.circleOffset = 2.0; // meters, space between the report circles
+        // TODO: show them in actual metrics meters?
+        this.parallelOffset = 0.000025; // the offset distance from the road to the side (in latlng)
+        this.closeLineLength = 0.00020; // length of the closest Road Line (in latlng)
+        this.markerIcon = Leaflet.icon({
+            iconUrl: Config.img_root() + 'white_cross.png',
+            iconSize: [5, 5],
+            iconAnchor: [3, 3]
+        });
+
         this.state = {
             isLoading: true,
             location: [],
             fences: [],
-            zoom: 15,
+            zoom: 16
         };
 
         let mapbox_yasushi = {};
@@ -37,15 +50,8 @@ export default class MapTestContainer extends Component {
         this.mapTile.attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
 
 
-         //this.mapTile.url = mapbox_yasushi.url;
-         //this.mapTile.attribution = mapbox_yasushi.attribution
-
-        this.icon = Leaflet.icon({
-            iconUrl: Config.img_root() + 'white_cross.png',
-            iconSize: [5, 5],
-            iconAnchor: [3, 3]
-        });
-
+        //this.mapTile.url = mapbox_yasushi.url;
+        //this.mapTile.attribution = mapbox_yasushi.attribution
 
     }
 
@@ -73,56 +79,60 @@ export default class MapTestContainer extends Component {
 
     }
 
+    drawClosestRoad(fence, averageValue) {
 
-    drawFence(fence) {
+        let tags = [];
 
-        // becareful of these
-        //report.center = new Point(fence.coordinates.lat,fence.coordinates.lng);
-        //report.radius = parseInt(fence.radius);
-
-        //report.values = fence.answers.map((answer)=>{ return answer.value });
-
-        const circleOffset = 2; // meters
-        const parallelOffset = 0.000025;
-
-        let center = new Point(fence.coordinates.lat, fence.coordinates.lng);
         let roadPoint = new Point(fence.closestRoad.closestPt.x, fence.closestRoad.closestPt.y);
         let roadLine = Line.fromObj(fence.closestRoad.roadLine);
 
-        let centerToRoadLine = new Line(center, roadPoint);
-        centerToRoadLine.en.move(centerToRoadLine.getDirection().unitize().multiply(-parallelOffset));
+        let centerToRoadLine = new Line(Point.fromLatLngObj(fence.coordinates), roadPoint);
+
+        centerToRoadLine.en.move(centerToRoadLine.getDirection().unitize().multiply(-this.parallelOffset));
+
+        let parallelLine = Line.fromPoint(centerToRoadLine.en, roadLine.getDirection(), this.closeLineLength);
 
 
-        let parallelLine = Line.fromPoint(centerToRoadLine.en, roadLine.getDirection(), 0.00015);
+        tags.push(<Polyline key={fence.id+'-pl'} positions={centerToRoadLine.getArray()} weight={1} opacity={0.2}
+                            color="#FFFFFF" lineCap="butt"/>);
+
+        tags.push(<Polyline key={fence.id+'-plr'} positions={parallelLine.getArray()} weight={3} opacity={0.8}
+                            color={Helpers.getColor(averageValue)} lineCap="butt"/>);
 
 
-        let result = [];
+        return tags;
 
-        // marker
-        result.push(<Marker key={fence.id+'-m'} position={center.toArray()} icon={this.icon}/>);
+    }
 
+
+    drawFence(fence) {
+        
+        let tags = []; // this will contain the react tags
+
+        let center = Point.fromLatLngObj(fence.coordinates);
         let values = fence.answers.map((answer)=> {
             return answer.value;
         });
-
-        let valueAve = values.reduce((prev, curr)=> {
+        let valueAverage = values.reduce((prev, curr)=> {
                 return prev + (curr / 3.0)
             }, 0) / values.length;
 
-        result.push(<Polyline key={fence.id+'-pl'} positions={centerToRoadLine.getArray()} weight={1} opacity={0.2}
-                              color="#FFFFFF" lineCap="butt" />);
+        //
+        // closest road indicator (if it has one)
+        //
+        if (fence.hasOwnProperty('closestRoad')) {
+            tags.push(...this.drawClosestRoad(fence, valueAverage));
+        }
 
-        result.push(<Polyline key={fence.id+'-plr'} positions={parallelLine.getArray()} weight={4} opacity={0.9}
-                              color={Helpers.getColor(valueAve)} lineCap="butt"/>);
-
-
+        //
         // circles
+        //
         values.map((obj, index)=> {
 
-            result.push(<Circle
+            tags.push(<Circle
                 key={fence.id+'-a_'+index}
                 center={center.toArray()}
-                radius={parseInt(fence.radius)+index*circleOffset}
+                radius={parseInt(fence.radius)+index*this.circleOffset}
                 color={Helpers.getColor(obj/3.0)}
                 weight={2}
                 opacity={0.3}
@@ -130,7 +140,12 @@ export default class MapTestContainer extends Component {
             />)
         });
 
-        return result;
+        //
+        // marker (x)
+        //
+        tags.push(<Marker key={fence.id+'-m'} position={center.toArray()} icon={this.markerIcon}/>);
+
+        return tags;
     }
 
     drawFences() {
@@ -149,7 +164,7 @@ export default class MapTestContainer extends Component {
             );
         } else {
             return (
-                <Map center={this.state.location} zoom={this.state.zoom} maxZoom={30} style={{height: "100vh"}}>
+                <Map center={this.state.location} zoom={this.state.zoom} maxZoom={18} style={{height: "100vh"}}>
                     {this.drawFences()}
                     <TileLayer
                         attribution={this.mapTile.attribution}

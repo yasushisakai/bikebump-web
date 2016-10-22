@@ -1,5 +1,4 @@
 import Point from './Point'
-import Helpers from './Helpers';
 
 export default class Line{
 
@@ -9,8 +8,7 @@ export default class Line{
     }
 
     static fromPoint(_point,_direction,_length){
-        // extends a point in front and back
-
+        // extends a point in both directions
 
         let unitizedDirection = _direction.unitize();
         let st = _point.add(unitizedDirection.multiply(_length*0.5));
@@ -21,13 +19,19 @@ export default class Line{
     }
     
     static fromObj(obj){
-
         return new Line(Point.fromObj(obj.st), Point.fromObj(obj.en));
     }
 
+    static fromArray(_stArry,_enArry){
+        return new Line(Point.fromArray(_stArry),Point.fromArray(_enArry));
+    }
+
     getLength(){
-        let delta = this.en.subtract(this.st);
-        return Math.sqrt(Math.pow(delta.x,2)+Math.pow(delta.y,2));
+        return this.st.distanceTo(this.en);
+    }
+
+    getLengthInMeters(){
+        return this.st.distanceToInMeters(this.en);
     }
     
     getDirection(){
@@ -40,7 +44,7 @@ export default class Line{
     }
 
     //
-    // this will modify this
+    // this will modify the line!
     //
     move(_vector){
         this.st.move(_vector);

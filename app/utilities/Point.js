@@ -1,8 +1,9 @@
 /**
  * Created by yasushisakai on 10/20/16.
  */
-//import L from 'leaflet';
 import Helpers from './Helpers';
+import GeoLocationHelpers from './GeoLocationHelper';
+
 
 export default class Point {
 
@@ -20,6 +21,10 @@ export default class Point {
 
     static fromObj(obj) {
         return new Point(obj.x, obj.y);
+    }
+
+    static fromLatLngObj(obj){
+        return new Point(obj.lat,obj.lng);
     }
 
     flip() {
@@ -54,7 +59,17 @@ export default class Point {
         return new Point(this.x * _scalar, this.y * _scalar);
     }
 
-    distanceTo(_point) {
+    distanceTo(_point){
+        return _point.subtract(this).getLength();
+    }
+
+    distanceToInMeters(_latLng){
+        // this assumes that you are using LatLng values;
+
+        return GeoLocationHelpers.distFromLatLng(this.x,this.y,_latLng.x,_latLng.y);
+    }
+
+    distanceToWorld(_point) {
         return _point.latLngToWorld().subtract(this.latLngToWorld()).getLength();
     }
 
