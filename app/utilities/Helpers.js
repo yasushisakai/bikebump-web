@@ -80,6 +80,19 @@ export default class Helpers {
             });
     }
 
+    static checkFenceHash(hash){
+
+        let path = config.api_root() + 'fences/hash?' + hash;
+
+        return axios.get(path)
+            .then((response)=> {
+                return response.data.result
+            })
+            .catch((err)=> {
+                console.error(err);
+            });
+    }
+
     static getQuestionListFromAPI(id) {
 
         if (typeof(id) == 'undefined') {

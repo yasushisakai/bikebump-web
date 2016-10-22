@@ -25,6 +25,14 @@ api_router.get('/', (req, res)=> {
 // FENCES
 //
 
+// check for fence hash
+var hash = uuid.v4();
+console.log('initial fence hash is'+ hash);
+
+api_router.get('/fences/check',(req,res)=>{
+    res.json({result:req.query.hash == hash});
+});
+
 // get fences
 api_router.get('/fences', (req, res)=> {
     fs.readFile(path.resolve(json_path, 'fences.json'), (err, data)=> {
@@ -85,11 +93,15 @@ api_router.get('/fences/add', (req, res)=> {
                 console.error(err);
                 process.exit(1);
             }
+
+            // new hash for fences;
+            hash = uuid.v4();
+
             res.json(newFence); // we don't want to resend the whole fence again
+
+            console.log('fence added. fence hash: '+hash);
         });
     });
-
-    console.log('added a fence');
 
 });
 
@@ -128,7 +140,13 @@ api_router.get('/fences/:id/append', (req, res)=> {
                 console.error(err);
                 process.exit(1);
             }
+
+            hash = uuid.v4();
+
             res.json(fences[i]); // we don't want to resend the whole fence again
+
+            console.log('fence modified. fence hash: '+ hash);
+
         });
     });
 
