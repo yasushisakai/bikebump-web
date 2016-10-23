@@ -1,11 +1,11 @@
 import React from 'react';
 import {browserHistory ,Router, Route, IndexRoute} from 'react-router';
 
-import Base from './components/Base'
+import BaseContainer from './container/BaseContainer'
 import MainContainer from './container/MainContainer'
+import HeatMapContainer from './container/HeatMapContainer'
 import MapContainer from './container/MapContainer'
-import MapTestContainer from './container/MapTestContainer'
-import MapAllRoads from './container/MapAllRoads'
+import MapAllRoadContainer from './container/MapAllRoadContainer'
 import NotFound from './components/NotFound'
 
 //
@@ -16,11 +16,11 @@ import NotFound from './components/NotFound'
 // TODO: login stuff
 export const routes = (
     <Router history={browserHistory}>
-        <Route path="/" component={Base}>
+        <Route path="/" component={BaseContainer}>
             <IndexRoute component={MainContainer}/>
-            <Route path="heat" component={MapContainer}/>
-            <Route path="map" component={MapTestContainer}/>
-            <Route path="map_all" component={MapAllRoads}/>
+            <Route path="heat_map" component={HeatMapContainer}/>
+            <Route path="map" component={MapContainer}/>
+            <Route path="map_all" component={MapAllRoadContainer}/>
             <Route path="*" component={NotFound}/>
         </Route>
     </Router>

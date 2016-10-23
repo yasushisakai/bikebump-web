@@ -51,7 +51,10 @@ export default class QuestionContainer extends Component {
     }
 
 
-    checkIncludingFence(state) {
+    // this sets the closest including fence,
+    // receives a object that has lat, lng properties
+    // returns null if there is not including fence
+    updateIncludingFence(state) {
 
         let here = new Point(state.lat, state.lng);
         let minDistance = 100000000000;
@@ -75,6 +78,7 @@ export default class QuestionContainer extends Component {
 
     }
 
+    // gets the most frequent answer value
     dominantAnswer(questionId) {
 
         if (typeof questionId == 'undefined') {
@@ -96,7 +100,6 @@ export default class QuestionContainer extends Component {
 
     }
 
-
     updateFences() {
 
         return Helpers.checkFenceHash(this.state.fenceHash)
@@ -110,6 +113,23 @@ export default class QuestionContainer extends Component {
 
     }
 
+    updateQuestion(_id) {
+
+        let id = typeof _id == 'undefined' ? '0' : _id;
+
+        if (id != this.state.questionId) {
+            return Helpers.getQuestionListFromAPI(id)
+                .then((data)=> {
+
+                    this.question.text = data.text;
+                    this.question.options = data.options;
+
+                    return Promise.resolve({changed:true,id:id});
+                })
+        } else {
+            return Promise.resolve({changed:false,id:id});
+        }
+    }
 
     update() {
 
@@ -120,7 +140,7 @@ export default class QuestionContainer extends Component {
         //
         // TODO: logic to change the question
         //
-        promises.push(this.setQuestion());
+        promises.push(this.updateQuestion());
 
         Promise.all(promises)
             .then(objects=> {
@@ -135,7 +155,7 @@ export default class QuestionContainer extends Component {
                 state.lat = objects[1].latitude;
                 state.lng = objects[1].longitude;
 
-                this.checkIncludingFence(state);
+                this.updateIncludingFence(state);
 
                 if (objects[2].changed) {
 
@@ -161,23 +181,6 @@ export default class QuestionContainer extends Component {
 
     }
 
-    setQuestion(_id) {
-
-        let id = typeof _id == 'undefined' ? '0' : _id;
-
-        if (id != this.state.questionId) {
-            return Helpers.getQuestionListFromAPI(id)
-                .then((data)=> {
-
-                    this.question.text = data.text;
-                    this.question.options = data.options;
-
-                    return Promise.resolve({changed:true,id:id});
-                })
-        } else {
-            return Promise.resolve({changed:false,id:id});
-        }
-    }
 
     changeBackgroundColor(dominantAnswer) {
 
@@ -191,14 +194,13 @@ export default class QuestionContainer extends Component {
 
         if (!(this.includingFence == null || dominantAnswer == -1)) {
 
-            this.currentStatus = 'most people say this place is ' + this.question.options[dominantAnswer][0] + '.';
-
+            this.currentStatus =
+                'most people say this place is ' +
+                this.question.options[dominantAnswer][0] + '.';
         }
-
     }
 
     handleButtonClick(index) {
-
 
         //
         // creating a new fence
@@ -244,9 +246,6 @@ export default class QuestionContainer extends Component {
                 '&a=' + index;
 
             for (let i = 0, l = this.fences.length; i < l; ++i) {
-
-                // TODO: what to do when there are multiple including fences??
-                // currently just getting the first one, perhaps the closest one?
 
                 if (this.fences[i].id == this.includingFence.id) {
                     let newAnswer = {
@@ -305,7 +304,7 @@ export default class QuestionContainer extends Component {
     }
 
     render() {
-
+        
         if (this.state.isLoading) {
             return (
                 <Loading text="location data"/>

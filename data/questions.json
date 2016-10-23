@@ -3,10 +3,10 @@
     "id": "0",
     "text": "How is your riding experience?",
     "options": [
-      ["Fantastic","#00FF38"],
-      ["Good","#54A838","#F7F7F7"],
-      ["Bad","#A85538","#F7F7F7"],
-      ["Deadly","#FF0038"]
+      ["Fantastic","#62d926"],
+      ["Good","#c7d926"],
+      ["Bad","#d98826"],
+      ["Deadly","#d92626"]
     ],
     "parent_id": ""
   },
