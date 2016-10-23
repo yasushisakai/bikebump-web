@@ -88,6 +88,8 @@ export default class QuestionContainer extends Component {
 
         let indexCount = [0, 0, 0, 0];
 
+        if(this.includingFence==null) return -1;
+
         this.includingFence.answers.map((answer)=> {
             if (answer.question == questionId) {
                 indexCount[answer.value]++;
@@ -162,10 +164,6 @@ export default class QuestionContainer extends Component {
                     let id = objects[2].id;
                     state.questionId = id;
 
-
-                    let dominant = this.dominantAnswer(id);
-                    this.changeBackgroundColor(dominant);
-                    this.setStatus(dominant);
                 }
 
                 state.isLoading = false;
@@ -197,6 +195,8 @@ export default class QuestionContainer extends Component {
             this.currentStatus =
                 'most people say this place is ' +
                 this.question.options[dominantAnswer][0] + '.';
+        }else{
+            this.currentStatus = '';
         }
     }
 
@@ -221,8 +221,6 @@ export default class QuestionContainer extends Component {
 
                 this.fences.push(response.fence);
                 this.includingFence = response.fence;
-
-                this.changeBackgroundColor(index);
 
                 this.setState({
                     fenceHash: response.data.hash
@@ -255,10 +253,6 @@ export default class QuestionContainer extends Component {
                         timestamp: Date.now()
                     };
                     this.fences[i].answers.push(newAnswer);
-
-                    let dominant = this.dominantAnswer(this.state.questionId);
-                    this.changeBackgroundColor(dominant);
-                    this.setStatus(dominant);
 
                     break;
                 }
@@ -304,6 +298,12 @@ export default class QuestionContainer extends Component {
     }
 
     render() {
+
+        let dominant = this.dominantAnswer(this.state.questionId);
+        this.changeBackgroundColor(dominant);
+        this.setStatus(dominant);
+
+        console.log(this.includingFence);
         
         if (this.state.isLoading) {
             return (
