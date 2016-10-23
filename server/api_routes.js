@@ -3,8 +3,16 @@ var fs = require('fs');
 var path = require('path');
 var uuid = require('node-uuid');
 
-var json_path = path.resolve(__dirname, '../../', 'data');
+var Point = require('./utilities/Point');
+
+var json_path = path.resolve(__dirname, '../', 'data');
 var api_router = express.Router();
+
+
+var RoadMatcher = require('./roadMatching');
+
+var roadMatcher = new RoadMatcher();
+
 
 // TODO:rewrite in es2015 or es6
 
@@ -18,12 +26,25 @@ api_router.get('/', (req, res)=> {
 // FENCES
 //
 
+// check for fence hash
+var hash = uuid.v4();
+console.log('initial fence hash is' + hash);
+
+api_router.get('/fences/check', (req, res)=> {
+    res.json({result: req.query.hash == hash});
+});
+
 // get fences
 api_router.get('/fences', (req, res)=> {
     fs.readFile(path.resolve(json_path, 'fences.json'), (err, data)=> {
         if (err) console.error(err);
         else {
-            res.json(JSON.parse(data));
+
+            let result = {};
+            result.hash = hash;
+            result.fences = JSON.parse(data);
+
+            res.json(result);
         }
     });
 });
@@ -48,21 +69,29 @@ api_router.get('/fences/add', (req, res)=> {
 
         var latitude = parseFloat(req.query.lat);
         var longitude = parseFloat(req.query.lng);
+
         var newFence = {
             id: uuid.v4(), // overkill??
             userid: req.query.u,
             coordinates: {lat: latitude, lng: longitude},
             radius: req.query.r,
-            answer: [
+            answers: [
                 {
                     userid: req.query.u,
                     question: '0',
-                    answer: parseInt(req.query.a),
+                    value: parseInt(req.query.a),
                     timestamp: Date.now() // TODO: redundant !!
                 }
             ],
             timestamp: Date.now()
         };
+
+        // get the closest Road info
+        var closestRoad = roadMatcher.findClosestRoad(new Point(latitude, longitude));
+
+        if (closestRoad.distance < roadMatcher.distanceThreshold) {
+            newFence.closestRoad = closestRoad;
+        }
 
         // push it
         fences.push(newFence);
@@ -73,11 +102,15 @@ api_router.get('/fences/add', (req, res)=> {
                 console.error(err);
                 process.exit(1);
             }
-            res.json(newFence); // we don't want to resend the whole fence again
+
+            // new hash for fences;
+            hash = uuid.v4();
+
+            res.json({hash: hash, fence: newFence}); // the new hash and new fence
+
+            console.log('fence added. fence hash: ' + hash);
         });
     });
-
-    console.log('added a fence');
 
 });
 
@@ -98,12 +131,12 @@ api_router.get('/fences/:id/append', (req, res)=> {
 
         var fences = JSON.parse(data);
 
-        for(var i=0;i<fences.length;i++){
-            if(fences[i].id === req.params.id){
-                fences[i].answer.push({
-                    userid:req.query.u,
+        for (var i = 0; i < fences.length; i++) {
+            if (fences[i].id === req.params.id) {
+                fences[i].answers.push({
+                    userid: req.query.u,
                     question: req.query.q,
-                    answer: parseInt(req.query.a),
+                    value: parseInt(req.query.a),
                     timestamp: Date.now()
                 });
                 break;
@@ -116,26 +149,31 @@ api_router.get('/fences/:id/append', (req, res)=> {
                 console.error(err);
                 process.exit(1);
             }
-            res.json(fences[i]); // we don't want to resend the whole fence again
+
+            hash = uuid.v4();
+
+            res.json({hash: hash});
+
+            console.log('fence modified. fence hash: ' + hash);
+
         });
     });
 
 });
 
-
 //
 // flush
 //
-api_router.get('/fences/flush', (req, res)=> {
-    var fences_path = path.resolve(json_path, 'fences.json');
-    fs.writeFile(fences_path, JSON.stringify([]), (err)=> {
-        if (err) {
-            console.error(err);
-            process.exit(1);
-        }
-        res.json([]);
-    });
-});
+// api_router.get('/fences/flush', (req, res)=> {
+//     var fences_path = path.resolve(json_path, 'fences.json');
+//     fs.writeFile(fences_path, JSON.stringify([]), (err)=> {
+//         if (err) {
+//             console.error(err);
+//             process.exit(1);
+//         }
+//         res.json([]);
+//     });
+// });
 
 // add answer to existing fence
 api_router.get('/fences/answer', (req, res)=> {
@@ -168,7 +206,7 @@ api_router.get('/questions/:id', (req, res)=> {
     fs.readFile(path.resolve(json_path, 'questions.json'), (err, data)=> {
         if (err) console.error(err);
         else {
-            question = JSON.parse(data)[parseInt(req.params.id)];
+            var question = JSON.parse(data)[parseInt(req.params.id)];
             res.json(question);
         }
     });
@@ -187,6 +225,19 @@ api_router.get('/questions/:id/children', (req, res)=> {
             });
 
             res.json(child_questions);
+        }
+    });
+});
+
+//
+// roads data was taken from OSM using Nina's geobits
+//
+
+api_router.get('/roads', (req, res)=> {
+    fs.readFile(path.resolve(json_path, 'roads.json'), (err, data)=> {
+        if (err) console.error(err);
+        else {
+            res.json(JSON.parse(data));
         }
     });
 });

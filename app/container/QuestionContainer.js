@@ -6,10 +6,13 @@ import axios from 'axios';
 import Config from '../config';
 import GeoLocationHelper from '../utilities/GeoLocationHelper'
 import Helpers from '../utilities/Helpers';
+import Point from '../utilities/Point';
 
+import Loading from '../components/Loading';
 import Question from '../components/Question';
 import Option from '../components/Option'
 import InfoBox from '../components/InfoBox';
+
 
 //
 // QuestionContainer class
@@ -18,196 +21,260 @@ export default class QuestionContainer extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
 
-            userId: '0',
+        this.interval;
+
+        this.userId = '0';
+
+        this.question = {};
+        this.question.text = '';
+        this.question.options = [];
+        this.question.radius = 10;
+
+        this.fences = [];
+        // this should be just one... (closest and included)
+        this.includingFence = null;
+
+        this.currentStatus = '';
+
+        // changing the state by setState(state) will run render function
+        this.state = {
+            isLoading: true,
             lat: null,
             lng: null,
-
-            questionId: '0',
-            fenceId: null,
-            text: 'loading question...',
-            options: [],
-            radius: 10, //meters
-
-            fences: [],
-            includingFences: []
-
+            questionId: '-1',
+            fenceHash: ''
         };
 
-        this.isLoading = true;
-        this.interval;
-        this.updateCoordinatesAndFences = this.updateCoordinatesAndFences.bind(this);
+        this.update = this.update.bind(this);
 
     }
 
-    updateCoordinatesAndFences() {
-        // TODO: breakdown this function into smaller pieces?
 
-        var promises = [];
+    // this sets the closest including fence,
+    // receives a object that has lat, lng properties
+    // returns null if there is not including fence
+    updateIncludingFence(state) {
 
-        // get the list of fences
-        promises.push(Helpers.getFenceListFromAPI());
+        let here = new Point(state.lat, state.lng);
+        let minDistance = 100000000000;
 
-        // get the current coordinates
-        promises.push(GeoLocationHelper.getGeoLocation());
+        this.includingFence = null;
 
-        Promise.all(promises).then(objs => {
+        this.fences.map((fence)=> {
 
+            let center = new Point(fence.coordinates.lat, fence.coordinates.lng);
 
-            let includingFences = GeoLocationHelper.includingFences(
-                objs[0],
-                objs[1].latitude,
-                objs[1].longitude
-            );
+            let distance = here.distanceToInMeters(center);
 
-            let fenceId;
-            if (includingFences.length == 0) {
-                fenceId = null;
-                this.setQuestion('0');
-
-
-            } else {
-                // select the fence id;
-                fenceId = includingFences[0].id;
-                console.log(fenceId);
-                // setQuestionId
-                // todo: logic to change question
-                this.setQuestion('0'); //same question
-
-            }
-
-            this.setState({
-                fenceId: fenceId,
-                fences: objs[0],
-                lat: objs[1].latitude,
-                lng: objs[1].longitude,
-                includingFences: includingFences
-            });
-
-
-            console.log(fenceId);
-
-            let indicator = document.getElementById('coordination-indicator');
-            // Helpers.show(indicator);
-            Helpers.fade(indicator);
-            console.log("fade");
-
-            if (fenceId != null) {
-                let dominantAnswer = this.getDominantAnswer();
-                this.changeBackgroundColor(dominantAnswer);
-            } else {
-                // setColor color to white
-                let root = document.getElementById('root');
-                root.style.backgroundColor = 'white';
-            }
-        });
-    }
-
-    setQuestion(id) {
-        if (typeof(id) == 'undefined') {
-            id = this.state.questionId;
-        }
-
-        Helpers.getQuestionListFromAPI(id)
-            .then((data)=> {
-                this.setState({
-                    questionId: id,
-                    text: data.text,
-                    options: data.options
-                })
-            })
-            .catch(()=> {
-                console.log('error in setQuestion');
-            });
-    }
-
-    getDominantAnswer() {
-
-        let answerCount = [0, 0, 0, 0];
-
-        for (let i = 0; i < this.state.includingFences.length; i++) {
-            for (let j = 0; j < this.state.includingFences[i].answer.length; j++) {
-                let response = this.state.includingFences[i].answer[j];
-                if (response.question == this.state.questionId) {
-                    answerCount[response.answer]++;
+            if (distance < parseFloat(fence.radius)) {
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    this.includingFence = fence;
                 }
             }
-        }
 
-        return answerCount.indexOf(Math.max.apply(null, answerCount));
+        });
 
     }
 
-    // todo: may not need to ask for the question
-    changeBackgroundColor(answerId) {
-        Helpers.getQuestionListFromAPI(this.state.questionId)
-            .then((question)=> {
+    // gets the most frequent answer value
+    dominantAnswer(questionId) {
 
-                let newColor = question.options[answerId][1];
-                // change background color to...
+        if (typeof questionId == 'undefined') {
+            questionId = this.state.questionId
+        }
 
-                let root = document.getElementById('root');
-                root.style.backgroundColor = newColor;
+
+        let indexCount = [0, 0, 0, 0];
+
+        if(this.includingFence==null) return -1;
+
+        this.includingFence.answers.map((answer)=> {
+            if (answer.question == questionId) {
+                indexCount[answer.value]++;
+            }
+        });
+
+        let dominant = indexCount.indexOf(Math.max(...indexCount));
+
+        return dominant;
+
+    }
+
+    updateFences() {
+
+        return Helpers.checkFenceHash(this.state.fenceHash)
+            .then(result=> {
+                if (result) {
+                    return Promise.resolve(null);
+                } else {
+                    return Helpers.getFenceListFromAPI();
+                }
+            })
+
+    }
+
+    updateQuestion(_id) {
+
+        let id = typeof _id == 'undefined' ? '0' : _id;
+
+        if (id != this.state.questionId) {
+            return Helpers.getQuestionListFromAPI(id)
+                .then((data)=> {
+
+                    this.question.text = data.text;
+                    this.question.options = data.options;
+
+                    return Promise.resolve({changed:true,id:id});
+                })
+        } else {
+            return Promise.resolve({changed:false,id:id});
+        }
+    }
+
+    update() {
+
+        let promises = [];
+        promises.push(this.updateFences());
+        promises.push(GeoLocationHelper.getGeoLocation());
+
+        //
+        // TODO: logic to change the question
+        //
+        promises.push(this.updateQuestion());
+
+        Promise.all(promises)
+            .then(objects=> {
+
+                let state = {};
+
+                if (objects[0] != null) {
+                    this.fences = objects[0].fences;
+                    state.fenceHash = objects[0].hash;
+                }
+
+                state.lat = objects[1].latitude;
+                state.lng = objects[1].longitude;
+
+                this.updateIncludingFence(state);
+
+                if (objects[2].changed) {
+
+                    let id = objects[2].id;
+                    state.questionId = id;
+
+                }
+
+                state.isLoading = false;
+
+                this.setState(state);
+
+                console.log('update');
+
+                return Promise.resolve(true);
 
             });
+
+
     }
 
-    getStatus(){
 
-        if(this.state.fenceId == null){
-            return 'no fence found near'
+    changeBackgroundColor(dominantAnswer) {
+
+        let newColor = dominantAnswer == -1 ? '#FFFFFF' : this.question.options[dominantAnswer][1];
+        let root = document.getElementById('root');
+        root.style.backgroundColor = newColor;
+
+    }
+
+    setStatus(dominantAnswer) {
+
+        if (!(this.includingFence == null || dominantAnswer == -1)) {
+
+            this.currentStatus =
+                'most people say this place is ' +
+                this.question.options[dominantAnswer][0] + '.';
         }else{
-            let answer = this.state.options[this.getDominantAnswer()][0];
-            return 'most people say this place is '+answer + '.';
-            // Fence Id:'+this.state.fenceId;
+            this.currentStatus = '';
         }
-
     }
 
     handleButtonClick(index) {
 
-        if (this.state.fenceId == null) {
+        //
+        // creating a new fence
+        //
+        if (this.includingFence == null) {
+            //
             //fences/add?u=userid&lat=49&lng=-71&r=10&a=2
+            //
+
             let new_fence_url = Config.api_root() + 'fences/add?' +
-                'u=' + this.state.userId +
+                'u=' + this.userId +
                 '&lat=' + this.state.lat +
                 '&lng=' + this.state.lng +
-                '&r=' + this.state.radius +
+                '&r=' + this.question.radius +
                 '&a=' + index;
+
             axios.get(new_fence_url).then((response)=> {
+
+                this.fences.push(response.fence);
+                this.includingFence = response.fence;
+
                 this.setState({
-                    fences: this.state.fences.push(response.data)
+                    fenceHash: response.data.hash
                 });
 
-                console.log("added fence");
-            }).then(this.updateCoordinatesAndFences);
+            });
 
 
+            //
+            // adding a new response to a existing fence
+            //
         } else {
+            //
             //fences/:id/append?u=userid&q=0&a=2
+            //
+
             let new_fence_url = Config.api_root() + 'fences/' +
-                this.state.fenceId + '/append?' +
-                'u=' + this.state.userId +
+                this.includingFence.id + '/append?' +
+                'u=' + this.userId +
                 '&q=' + this.state.questionId +
                 '&a=' + index;
 
+            for (let i = 0, l = this.fences.length; i < l; ++i) {
+
+                if (this.fences[i].id == this.includingFence.id) {
+                    let newAnswer = {
+                        userid: this.userId,
+                        question: this.state.questionId,
+                        value: index,
+                        timestamp: Date.now()
+                    };
+                    this.fences[i].answers.push(newAnswer);
+
+                    break;
+                }
+            }
+
             axios.get(new_fence_url).then((response)=> {
+
+                console.log(new_fence_url);
+
+
                 this.setState({
-                    fences: this.state.fences.push(response.data)
+                    fenceHash: response.data.hash
                 });
 
-                console.log("append fence");
-
-            }).then(this.updateCoordinatesAndFences);
+            });
         }
 
     }
 
     componentDidMount() {
-        this.setQuestion();
-        this.updateCoordinatesAndFences();
-        this.interval = setInterval(this.updateCoordinatesAndFences, 7000); // millisec
+        this.update();
+        this.interval = setInterval(this.update, 7000);
     }
 
     componentWillUnmount() {
@@ -216,47 +283,44 @@ export default class QuestionContainer extends Component {
 
     renderOptions() {
 
-        let options = [];
+        return this.question.options.map((option, index)=> {
 
-        for (let i = 0; i < this.state.options.length; i++) {
-            options.push(
+            return (
                 <Option
-                    key={i}
-                    options={this.state.options[i]}
-                    onClick={this.handleButtonClick.bind(this, i)}
+                    key={index}
+                    options={this.question.options[index]}
+                    onClick={this.handleButtonClick.bind(this,index)}
                 />
             );
-        }
 
-        return options
+        });
 
     }
 
     render() {
 
-        // check if it's still loading stuff
-        this.isLoading = (
-            (this.state.lat == null || this.state.lng == null) ||
-            this.state.text.startsWith('loading') ||
-            this.state.options === 0
-        );
+        let dominant = this.dominantAnswer(this.state.questionId);
+        this.changeBackgroundColor(dominant);
+        this.setStatus(dominant);
 
-        let isInFence = this.state.fenceId != null;
-
-        return (
-            <div className="question-container">
-                { this.isLoading
-                    ? <Question text={this.state.text}/>
-                    :
-                    <Question text={this.state.text}>
+        console.log(this.includingFence);
+        
+        if (this.state.isLoading) {
+            return (
+                <Loading text="location data"/>
+            )
+        } else {
+            return (
+                <div className="question-container">
+                    <Question text={this.question.text}>
                         <div className="buttons-group">
                             {this.renderOptions()}
-                            <InfoBox lat={this.state.lat} lng={this.state.lng} status={this.getStatus()}/>
+                            <InfoBox lat={this.state.lat} lng={this.state.lng} status={this.currentStatus}/>
                         </div>
                     </Question>
-                }
-            </div>
-        )
+                </div>
+            )
+        }
     }
 }
 

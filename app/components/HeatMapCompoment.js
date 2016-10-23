@@ -59,7 +59,7 @@ export default function MapComponent(props) {
     normal.attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> and the Contributers';
 
     let mapbox_yasushi = {};
-    mapbox_yasushi.url = 'https://api.mapbox.com/styles/v1/yasushisakai/ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAwNjUzM28weHRuMnJ4a2kifQ.ooHi0pGR-SdDraWzTRCoVA';
+    mapbox_yasushi.url = 'http://api.mapbox.com/styles/v1/yasushisakai/ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAwNjUzM28weHRuMnJ4a2kifQ.ooHi0pGR-SdDraWzTRCoVA';
     mapbox_yasushi.attribution = '&copy; Mapbox &copy; OpenStreetMap &copy; DigitalGlobe';
 
     let darkmap = {};
