@@ -5,12 +5,12 @@ import config from '../config'
 export default class Helpers {
 
 
-    static unique(arr){
-        let u={};
-        let a=[];
+    static unique(arr) {
+        let u = {};
+        let a = [];
 
-        for(let i=0, l=arr.length;i<l;++i){
-            if(!u.hasOwnProperty(arr[i])){
+        for (let i = 0, l = arr.length; i < l; ++i) {
+            if (!u.hasOwnProperty(arr[i])) {
                 a.push(arr[i]);
                 u[arr[i]] = 1;
             }
@@ -18,26 +18,26 @@ export default class Helpers {
         return a;
     }
 
-    static toRadians(_deg){
-        return _deg * Math.PI /180;
+    static toRadians(_deg) {
+        return _deg * Math.PI / 180;
     }
 
-    static toDegrees(_rad){
+    static toDegrees(_rad) {
         return _rad * 180 / Math.PI;
     }
 
-    static getColor(_t){
+    static getColor(_t) {
 
         const blue = 56;
 
-        let r = Helpers.convertColorValuesToHex((255*_t).toFixed(0));
+        let r = Helpers.convertColorValuesToHex((255 * _t).toFixed(0));
         let b = Helpers.convertColorValuesToHex(blue);
-        let g = Helpers.convertColorValuesToHex((255*(1.0-_t)).toFixed(0));
+        let g = Helpers.convertColorValuesToHex((255 * (1.0 - _t)).toFixed(0));
 
-        return '#'+r+g+b;
+        return '#' + r + g + b;
     }
 
-    static convertColorValuesToHex(_num){
+    static convertColorValuesToHex(_num) {
         let hexString = Number(_num).toString(16);
 
         return hexString.length == 1 ? '0' + hexString : hexString;
@@ -61,28 +61,26 @@ export default class Helpers {
     }
 
     static show(element) {
-            element.style.display = 'initial';
-            element.style.opacity = 1;
-            element.style.filter = 'alpha(opacity=100)';
+        element.style.display = 'initial';
+        element.style.opacity = 1;
+        element.style.filter = 'alpha(opacity=100)';
     }
 
     static getFenceListFromAPI() {
 
         let path = config.api_root() + 'fences/';
-
-        return axios.get(path)
-            .then((response)=> {
-                return response.data
-            })
-            .catch((err)=> {
-                console.error(err);
-                return []
-            });
+        
+        return axios.get(path).then((response)=>{
+            return Promise.resolve(response.data);
+        }).catch((err)=>{
+            console.error(err);
+        });
+        
     }
 
-    static checkFenceHash(hash){
+    static checkFenceHash(hash) {
 
-        let path = config.api_root() + 'fences/hash?' + hash;
+        let path = config.api_root() + 'fences/check?' + hash;
 
         return axios.get(path)
             .then((response)=> {
@@ -95,10 +93,6 @@ export default class Helpers {
 
     static getQuestionListFromAPI(id) {
 
-        if (typeof(id) == 'undefined') {
-            console.error('QuestionContainer.getQuestionFromAPI: question id undefined');
-        }
-
         let path = config.api_root() + 'questions/' + id;
 
         return axios.get(path)
@@ -110,7 +104,7 @@ export default class Helpers {
             });
     }
 
-    static getRoadsFromAPI(){
+    static getRoadsFromAPI() {
         let path = config.api_root() + 'roads/';
 
         return axios.get(path)

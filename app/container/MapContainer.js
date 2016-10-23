@@ -29,13 +29,14 @@ export default class MapContainer extends Component {
         var promises = [];
 
         // get the list of fences
+        // using old api calls
         promises.push(Helper.getFenceListFromAPI());
 
         // get the current coordinates
         promises.push(GeoLocationHelper.getGeoLocation());
         Promise.all(promises).then(objs => {
 
-            let fenceResults = [0,1,2,3].map(()=>{return []});
+            let fenceResults = [0,1,2,3].map(()=>{return []})
 
             for (let i = 0; i < objs[0].length; i++) {
                 let coordinates = [objs[0][i].coordinates.lat,objs[0][i].coordinates.lng,];
@@ -55,9 +56,6 @@ export default class MapContainer extends Component {
         });
 
     }
-
-    // componentDidMount() {
-    // }
 
     // componentDidMount(){}
     // componentDidUpdate(){}

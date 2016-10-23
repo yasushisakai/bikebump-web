@@ -12,6 +12,8 @@ export default class RoadMatching {
         // this sits in memory
         this.roads = JSON.parse(fs.readFileSync(path.resolve(this.jsonPath, 'roads.json')));
 
+        this.distanceThreshold = 30;
+
     }
 
     findClosestRoad(_point) {
@@ -87,9 +89,6 @@ export default class RoadMatching {
     }
 
     checkFenceJSON() {
-        console.log('scanning fences without closest roads');
-
-
         fs.readFile(path.resolve(this.jsonPath, 'fences.json'), (err, data)=> {
 
             if (err) {
@@ -102,27 +101,50 @@ export default class RoadMatching {
 
             fences.map((fence)=> {
 
-                delete fence.closestRoad; // delete what ever we have
-
-                let pt = new Point(fence.coordinates.lat, fence.coordinates.lng);
+                let pt = Point.fromLatLngObj(fence.coordinates);
 
                 let closestRoad = this.findClosestRoad(pt);
+                if (closestRoad.distance > this.distanceThreshold) { // threshold in meters
+                    closestRoad = null; // geo fences far from roads will not have a closest road
+                }
 
-                if(closestRoad.distance < 30) { // threshold in meters
-                    fence.closestRoad = closestRoad; // geo fences far from roads will not have a closest road
+                if (fence.hasOwnProperty('closestRoad')) {
+
+                    if (closestRoad == null) {
+                        console.log('deleting existing closest road');
+
+                        delete fence.closestRoad;
+
+
+                    } else {
+
+                        if (fence.closestRoad.road.id != closestRoad.road.id) {
+                            console.log('different road assigned');
+
+                            delete fence.closestRoad;
+                            fence.closestRoad = closestRoad;
+                        }
+                    }
+
+                } else {
+
+                    if (closestRoad != null) {
+                        console.log('assigning closest road');
+
+                        fence.closestRoad = closestRoad;
+                    }
+
                 }
 
                 newFences.push(fence);
             });
 
             fs.writeFile(path.resolve(this.jsonPath, 'fences.json'), JSON.stringify(newFences, null, 4), (err, data)=> {
-                if (err) console.error(err);
+                if (err) {
+                    return Promise.resolve(err);
+                }
             });
-
-            console.log('scanning and modifying complete');
-
         });
-
     }
 
     refactorFenceJSON() {
@@ -165,10 +187,6 @@ export default class RoadMatching {
 
     }
 
-
 }
-
-let roadMatching = new RoadMatching();
-roadMatching.checkFenceJSON();
 
 module.exports = RoadMatching;

@@ -13,6 +13,7 @@ var RoadMatcher = require('./roadMatching');
 
 var roadMatcher = new RoadMatcher();
 
+
 // TODO:rewrite in es2015 or es6
 
 api_router.get('/', (req, res)=> {
@@ -27,10 +28,10 @@ api_router.get('/', (req, res)=> {
 
 // check for fence hash
 var hash = uuid.v4();
-console.log('initial fence hash is'+ hash);
+console.log('initial fence hash is' + hash);
 
-api_router.get('/fences/check',(req,res)=>{
-    res.json({result:req.query.hash == hash});
+api_router.get('/fences/check', (req, res)=> {
+    res.json({result: req.query.hash == hash});
 });
 
 // get fences
@@ -38,7 +39,12 @@ api_router.get('/fences', (req, res)=> {
     fs.readFile(path.resolve(json_path, 'fences.json'), (err, data)=> {
         if (err) console.error(err);
         else {
-            res.json(JSON.parse(data));
+
+            let result = {};
+            result.hash = hash;
+            result.fences = JSON.parse(data);
+
+            res.json(result);
         }
     });
 });
@@ -63,6 +69,7 @@ api_router.get('/fences/add', (req, res)=> {
 
         var latitude = parseFloat(req.query.lat);
         var longitude = parseFloat(req.query.lng);
+
         var newFence = {
             id: uuid.v4(), // overkill??
             userid: req.query.u,
@@ -80,9 +87,11 @@ api_router.get('/fences/add', (req, res)=> {
         };
 
         // get the closest Road info
-        var closestRoad = roadMatcher.findClosestRoad(new Point(latitude,longitude));
-        newFence.closestRoad = closestRoad;
+        var closestRoad = roadMatcher.findClosestRoad(new Point(latitude, longitude));
 
+        if (closestRoad.distance < roadMatcher.distanceThreshold) {
+            newFence.closestRoad = closestRoad;
+        }
 
         // push it
         fences.push(newFence);
@@ -97,9 +106,9 @@ api_router.get('/fences/add', (req, res)=> {
             // new hash for fences;
             hash = uuid.v4();
 
-            res.json(newFence); // we don't want to resend the whole fence again
+            res.json({hash: hash, fence: newFence}); // the new hash and new fence
 
-            console.log('fence added. fence hash: '+hash);
+            console.log('fence added. fence hash: ' + hash);
         });
     });
 
@@ -143,29 +152,28 @@ api_router.get('/fences/:id/append', (req, res)=> {
 
             hash = uuid.v4();
 
-            res.json(fences[i]); // we don't want to resend the whole fence again
+            res.json({hash: hash});
 
-            console.log('fence modified. fence hash: '+ hash);
+            console.log('fence modified. fence hash: ' + hash);
 
         });
     });
 
 });
 
-
 //
 // flush
 //
-api_router.get('/fences/flush', (req, res)=> {
-    var fences_path = path.resolve(json_path, 'fences.json');
-    fs.writeFile(fences_path, JSON.stringify([]), (err)=> {
-        if (err) {
-            console.error(err);
-            process.exit(1);
-        }
-        res.json([]);
-    });
-});
+// api_router.get('/fences/flush', (req, res)=> {
+//     var fences_path = path.resolve(json_path, 'fences.json');
+//     fs.writeFile(fences_path, JSON.stringify([]), (err)=> {
+//         if (err) {
+//             console.error(err);
+//             process.exit(1);
+//         }
+//         res.json([]);
+//     });
+// });
 
 // add answer to existing fence
 api_router.get('/fences/answer', (req, res)=> {

@@ -6,7 +6,7 @@
 // GeoLocationHelper class
 //
 export default class GeoLocationHelper {
-
+    
     //
     // gets the lat lng coordinates asking the browser
     // returns a "Promise"

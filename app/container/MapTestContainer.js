@@ -37,9 +37,11 @@ export default class MapTestContainer extends Component {
         this.state = {
             isLoading: true,
             location: [],
-            fences: [],
-            zoom: 16
+            zoom: 16,
+            fenceHash: '' // we just need this
         };
+
+        this.fences = [];
 
         let mapbox_yasushi = {};
         mapbox_yasushi.url = 'https://api.mapbox.com/styles/v1/yasushisakai/ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAwNjUzM28weHRuMnJ4a2kifQ.ooHi0pGR-SdDraWzTRCoVA';
@@ -50,8 +52,8 @@ export default class MapTestContainer extends Component {
         this.mapTile.attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
 
 
-        //this.mapTile.url = mapbox_yasushi.url;
-        //this.mapTile.attribution = mapbox_yasushi.attribution
+        this.mapTile.url = mapbox_yasushi.url;
+        this.mapTile.attribution = mapbox_yasushi.attribution
 
     }
 
@@ -68,11 +70,12 @@ export default class MapTestContainer extends Component {
 
                 let location = [obj[1].latitude, obj[1].longitude];
 
+                this.fences = obj[0].fences;
 
                 this.setState({
                     isLoading: false,
                     location: location,
-                    fences: obj[0]
+                    fenceHash: obj[0].hash
                 });
 
             });
@@ -106,7 +109,7 @@ export default class MapTestContainer extends Component {
 
 
     drawFence(fence) {
-        
+
         let tags = []; // this will contain the react tags
 
         let center = Point.fromLatLngObj(fence.coordinates);
@@ -150,13 +153,15 @@ export default class MapTestContainer extends Component {
 
     drawFences() {
 
-        return this.state.fences.map((fence)=> {
+        console.log(this.fences.length);
+
+        return this.fences.map((fence)=> {
             return this.drawFence(fence);
         });
+
     }
 
     render() {
-
 
         if (this.state.isLoading) {
             return (
