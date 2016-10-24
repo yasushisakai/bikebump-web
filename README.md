@@ -13,11 +13,14 @@ bike bump uses node.js react and express
     - then start the server by running server.js file
 1. goto localhost:8080 and confirm its running
 
-## how to update
+## for team members
+
+### how to update
 
 1. ```npm install``` to install additional dependencies
 2. ```npm run startdev```
 
-## branches
+### branches
 1. the ```production``` branch is for the server, which is the stable one
 2. ``` dev ``` is for weird experiments
+3. feel free to make your branch to explore
