@@ -3,16 +3,17 @@
 node_modules/
 
 data/
+!data/questions.json
+!data/roads.json
 
 # distribution
 /dist/*
-!/dist/style.css
+!/dist/*.css
 
 # webfaction stuff
 bin/
 lib/
 run/
-hello-world.js
 
 # might as well ignore every intellij stuff
 .idea/

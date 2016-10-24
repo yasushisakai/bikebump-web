@@ -14,7 +14,6 @@ export default function Main(props) {
 
     return (
         <div className="main">
-            <StatusBar userId={userName}/>
             {props.children}
         </div>
     );

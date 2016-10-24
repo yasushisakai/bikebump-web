@@ -1,48 +1,158 @@
+html{
+    height:100%;
+}
+
 body{
     margin:0;
     padding:0;
     font-family: sans-serif;
+    height:100%;
+
+    font-size:16px;
 }
 
 #root{
     height:100%;
     background: #ffffff;
+
 }
 
-.question{
-    margin-top: 80px;
-    text-align: left;
-    width:80%;
-    padding:5px;
+.main{
+    padding: 0 5% 0 5%;
 }
 
-.status-bar{
-    background-color: black;
-    color: white;
-    font-family: sans-serif ;
-    padding:5px;
-}
-
-.status-user{
-    font-size: 0.6em;
+.question-container .question{
+    width:100%;
+    height:100%;
 }
 
 .question-text{
-    font-size: 1.5em;
-    font-weight: bold;
+    height:10%;
+    padding: auto 0 auto 0;
+    display:table;
+    font-size:1.5em;
 }
 
-button{
-    width:20%;
-    height:20%;
-    margin:2px;
-
-    background-color: #ffffff;
-
-    border :0.5px solid;
-    color : black;
+.vertical-center{
+    display: table-cell;
+    vertical-align:middle;
 }
 
-.info-coordinates{
-    font-size:0.6em;
+.buttons-group {
+    position:absolute;
+    top:10%;
+    left:5%;
+    right:5%;
+    bottom:0;
+}
+
+.button{
+    text-align: center;
+    height:18%;
+    width:100%;
+    display: flex;
+    margin-bottom:4%;
+    border:0;
+    display: table;
+    font-size: 2.2em;
+    font-weight:bold;
+}
+
+
+.button-text{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    border:1px solid #FFFFFF;
+}
+
+.button:hover{
+    cursor: hand;
+}
+.button:active{
+    background-color:#2e2e2e;
+}
+
+
+
+/*
+
+small resolution
+
+*/
+/*@media only screen and (min-device-width:480px) {*/
+    /*.question-text{*/
+        /*font-size: 3.5em;*/
+    /*}*/
+    /*.button {*/
+        /*font-size: 3em;*/
+        /*font-weight: bold;*/
+    /*}*/
+    /*.infobox {*/
+        /*font-size: 2em;*/
+    /*}*/
+/*}*/
+
+@media only screen and (min-width:1224px) {
+    .question-text {
+        font-size: 5em;
+    }
+
+    .button {
+        font-size: 3.5em;
+    }
+
+    .infobox {
+        float:right;
+        font-size: 2em;
+    }
+}
+
+@media only screen and (orientation: landscape){
+    .question-text{
+        padding-top:3%;
+        font-size:1.5em;
+    }
+    .button{
+        width:23%;
+        height:80%;
+        margin-bottom:2%;
+        margin-right:2%;
+        float:left;
+        font-size:1.1em;
+        font-weight: bold;
+    }
+
+    .buttons-group{
+        top:15%;
+    }
+
+    .infobox{
+        float:left;
+        font-size:0.8em;
+    }
+}
+
+/*
+
+circles
+
+*/
+
+
+.circle{
+    float:left;
+    border-radius: 50%;
+}
+
+
+.red{
+    background: #E53A40;
+    border:none;
+}
+
+.indicator{
+    width:15px;
+    height:15px;
+    margin-right:10px;
 }
