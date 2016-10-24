@@ -24,3 +24,7 @@ bike bump uses node.js react and express
 1. the ```production``` branch is for the server, which is the stable one
 2. ``` dev ``` is for weird experiments
 3. feel free to make your branch to explore
+
+
+### react program to get you started
+http://www.reactjsprogram.com/
