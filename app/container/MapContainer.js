@@ -38,7 +38,7 @@ export default class MapContainer extends Component {
         this.state = {
             isLoading: true,
             location: [],
-            zoom: 16,
+            zoom: 15,
             fenceHash: '' // we just need this
         };
 
@@ -170,7 +170,7 @@ export default class MapContainer extends Component {
             );
         } else {
             return (
-                <Map center={this.state.location} zoom={this.state.zoom} maxZoom={20} style={{height: "100vh"}}>
+                <Map center={this.state.location} zoom={this.state.zoom} maxZoom={18} style={{height: "100vh"}}>
                     {this.drawFences()}
                     <TileLayer
                         attribution={this.mapTile.attribution}
