@@ -14,14 +14,21 @@ import NotFound from './components/NotFound'
 // for the api endpoint urls look inside /api/api_routes.js
 
 // TODO: login stuff
+
+function requireAuth() {
+    if (!localStorage.token) {
+        window.location="/";
+        }
+    }
+
 export const routes = (
     <Router history={browserHistory}>
         <Route path="/" component={BaseContainer}>
-            <IndexRoute component={MainContainer}/>
-            <Route path="login" component={Login}/>
-            <Route path="heat_map" component={HeatMapContainer}/>
-            <Route path="map" component={MapContainer}/>
-            <Route path="map_all" component={MapAllRoadContainer}/>
+            <IndexRoute component={Login}/>
+            <Route path="app" component={MainContainer} onEnter={requireAuth}/>
+            <Route path="heat_map" component={HeatMapContainer} onEnter={requireAuth}/>
+            <Route path="map" component={MapContainer} onEnter={requireAuth}/>
+            <Route path="map_all" component={MapAllRoadContainer} onEnter={requireAuth}/>
             <Route path="*" component={NotFound}/>
         </Route>
     </Router>
