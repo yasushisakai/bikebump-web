@@ -8,6 +8,7 @@ if(root.requestFullScreen){
     root.requestFullScreen();
 }
 
+
 ReactDOM.render(
   routes,
   root

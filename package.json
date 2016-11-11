@@ -17,10 +17,15 @@
   "dependencies": {
     "axios": "^0.14.0",
     "express": "^4.14.0",
+    "favicon": "0.0.2",
     "leaflet": "^0.7.7",
     "node-uuid": "^1.4.7",
     "react": "^15.3.2",
+    "react-auth": "^1.0.0",
     "react-dom": "^15.3.2",
+    "react-google-button": "^0.1.0",
+    "react-google-login": "^2.5.4",
+    "react-google-login-component": "^0.5.2",
     "react-leaflet": "^0.10.2",
     "react-router": "^2.8.1"
   },
