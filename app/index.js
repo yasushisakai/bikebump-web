@@ -10,6 +10,6 @@ if(root.requestFullScreen){
 
 
 ReactDOM.render(
-  routes,
-  root
+    routes,
+    root
 );

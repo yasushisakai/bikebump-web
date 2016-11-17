@@ -10,7 +10,6 @@
     "convertdev": "webpack",
     "convertserver": "babel ./server/ -d ./bin && babel ./app/config.js -o ./bin/config.js && babel ./app/utilities -d ./bin/utilities",
     "roadCheckerTest":"npm run convertserver && node ./bin/roadMatching.js"
-
   },
   "author": "Yasushi Sakai",
   "license": "MIT",
