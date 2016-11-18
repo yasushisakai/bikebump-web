@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import Point from './utilities/Point';
-import Line from './utilities/Line';
+import Point from '../geometry/Point';
+import Line from '../geometry/Line';
 
-export default class RoadMatching {
+export default class RoadHelper {
 
     constructor() {
 
@@ -16,7 +16,7 @@ export default class RoadMatching {
 
     }
 
-    findClosestRoad(_point) {
+    findClosest(_point) {
 
         let closestRoad, closestPt, roadLine, minDistance = 100000000;
 
@@ -103,7 +103,7 @@ export default class RoadMatching {
 
                 let pt = Point.fromLatLngObj(fence.coordinates);
 
-                let closestRoad = this.findClosestRoad(pt);
+                let closestRoad = this.findClosest(pt);
                 if (closestRoad.distance > this.distanceThreshold) { // threshold in meters
                     closestRoad = null; // geo fences far from roads will not have a closest road
                 }
@@ -189,4 +189,4 @@ export default class RoadMatching {
 
 }
 
-module.exports = RoadMatching;
+module.exports = RoadHelper;

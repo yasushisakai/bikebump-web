@@ -12,7 +12,12 @@ export default class GeoLocationHelper {
     // returns a "Promise"
     //
     static getGeoLocation(){
+
+        // returns null if called by server
+        if(typeof navigator=='undefined') return null;
+
         return new Promise(function(resolve,reject){
+
             navigator.geolocation.getCurrentPosition(
                 (position)=>{resolve(position.coords);},
                 (error) =>{reject(error);},

@@ -4,7 +4,7 @@
 // by yasushisakai
 
 import React, {Component} from 'react';
-import BaseComponent from '../components/BaseComponent'
+import Base from '../components/Base'
 
 //
 // BaseContainer class
@@ -30,9 +30,9 @@ export default class BaseContainer extends Component {
 
     render() {
         return (
-            <BaseComponent>
+            <Base>
                 {this.props.children}
-            </BaseComponent>
+            </Base>
         );
     }
 }

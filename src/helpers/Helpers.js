@@ -1,9 +1,8 @@
 import axios from 'axios';
-import config from '../config'
+import config from '../settings/config'
 
 
 export default class Helpers {
-
 
     static unique(arr) {
         let u = {};
@@ -26,17 +25,6 @@ export default class Helpers {
         return _rad * 180 / Math.PI;
     }
 
-    // static getColor(_t) {
-    //
-    //     const blue = 56;
-    //
-    //     let r = Helpers.convertColorValuesToHex((255 * _t).toFixed(0));
-    //     let b = Helpers.convertColorValuesToHex(blue);
-    //     let g = Helpers.convertColorValuesToHex((255 * (1.0 - _t)).toFixed(0));
-    //
-    //     return '#' + r + g + b;
-    // }
-
     static convertColorValuesToHex(_num) {
         let hexString = Number(_num).toString(16);
 
@@ -44,7 +32,6 @@ export default class Helpers {
 
     }
 
-    //
     // http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
     static hslToRgb(h, s, l) {
         let r, g, b;
@@ -91,28 +78,6 @@ export default class Helpers {
 
         },'');
 
-    }
-
-    static fade(element) {
-        var op = element == null ? 1 : element.style.opacity;
-        var timer = setInterval(function () {
-
-            element.style.opacity = op;
-            element.style.filter = 'alpha(opacity=' + op * 100 + ')';
-            op -= op * 0.01;
-
-            if (op <= 0.1) {
-                clearInterval(timer);
-                //element.style.display = 'none';
-            }
-
-        }, 50);
-    }
-
-    static show(element) {
-        element.style.display = 'initial';
-        element.style.opacity = 1;
-        element.style.filter = 'alpha(opacity=100)';
     }
 
     static getFenceListFromAPI() {
@@ -163,17 +128,5 @@ export default class Helpers {
             .catch((err)=> {
                 console.error(err);
             });
-    }
-
-    static isMobile() {
-        return (
-            navigator.userAgent.match(/Android/i)
-            || navigator.userAgent.match(/webOS/i)
-            || navigator.userAgent.match(/iPhone/i)
-            || navigator.userAgent.match(/iPad/i)
-            || navigator.userAgent.match(/iPod/i)
-            || navigator.userAgent.match(/BlackBerry/i)
-            || navigator.userAgent.match(/Windows Phone/i)
-        );
     }
 }

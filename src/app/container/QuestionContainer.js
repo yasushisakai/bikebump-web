@@ -3,10 +3,10 @@
 
 import React, {Component, PropTypes} from 'react';
 import axios from 'axios';
-import Config from '../config';
-import GeoLocationHelper from '../utilities/GeoLocationHelper'
-import Helpers from '../utilities/Helpers';
-import Point from '../utilities/Point';
+import Config from '../settings/config';
+import GeoLocationHelper from '../../helpers/GeoLocationHelper'
+import Helpers from '../../helpers/Helpers';
+import Point from '../../geometry/Point';
 
 import Loading from '../components/Loading';
 import Question from '../components/Question';

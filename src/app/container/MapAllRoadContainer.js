@@ -6,13 +6,13 @@
 import React, {Component} from 'react';
 import Leaflet from 'leaflet';
 import {Map, TileLayer, Polyline, Marker, Circle} from 'react-leaflet';
-import Line from '../utilities/Line';
-import Point from '../utilities/Point';
+import Line from '../../geometry/Line';
+import Point from '../../geometry/Point';
 
-import Helpers from '../utilities/Helpers';
-import GeolocationHelpers from '../utilities/GeoLocationHelper';
+import Helpers from '../../helpers/Helpers';
+import GeolocationHelpers from '../../helpers/GeoLocationHelper';
 
-import Config from '../config';
+import Config from '../settings/config';
 
 //
 // MapTestContainer class

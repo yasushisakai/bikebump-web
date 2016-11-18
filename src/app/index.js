@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {browserHistory ,Router, Route, IndexRoute} from 'react-router';
 
 import BaseContainer from './container/BaseContainer'
@@ -9,20 +10,16 @@ import MapAllRoadContainer from './container/MapAllRoadContainer'
 import Login from './container/GoogleLogin'
 import NotFound from './components/NotFound'
 
-//
-// this handles the routing for the app
-// for the api endpoint urls look inside /api/api_routes.js
-//
 
-// TODO: login stuff
+const root = document.getElementById('root');
 
 function requireAuth() {
     if (!localStorage.token) {
         window.location="/";
-        }
     }
+}
 
-export const routes = (
+const routes = (
     <Router history={browserHistory}>
         <Route path="/" component={BaseContainer}>
             <IndexRoute component={Login}/>
@@ -36,4 +33,7 @@ export const routes = (
 );
 
 
-
+ReactDOM.render(
+    routes,
+    root
+);

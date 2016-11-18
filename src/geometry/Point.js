@@ -1,8 +1,8 @@
 /**
  * Created by yasushisakai on 10/20/16.
  */
-import Helpers from './Helpers';
-import GeoLocationHelpers from './GeoLocationHelper';
+import Helpers from '../helpers/Helpers';
+import GeoLocationHelpers from '../helpers/GeoLocationHelper';
 
 
 export default class Point {

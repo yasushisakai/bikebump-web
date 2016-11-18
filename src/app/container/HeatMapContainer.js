@@ -9,8 +9,8 @@ import MapComponent from '../components/HeatMapCompoment'
 import QuestionContainer from './QuestionContainer';
 import axios from 'axios';
 
-import GeoLocationHelper from '../utilities/GeoLocationHelper';
-import Helper from '../utilities/Helpers';
+import GeoLocationHelper from '../../helpers/GeoLocationHelper';
+import Helper from '../../helpers/Helpers';
 
 //
 // MapContainer class
