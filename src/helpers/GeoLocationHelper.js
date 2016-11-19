@@ -5,14 +5,19 @@
 //
 // GeoLocationHelper class
 //
-export default class GeoLocationHelper {
+class GeoLocationHelper {
     
     //
     // gets the lat lng coordinates asking the browser
     // returns a "Promise"
     //
     static getGeoLocation(){
+
+        // returns null if called by server
+        if(typeof navigator=='undefined') return null;
+
         return new Promise(function(resolve,reject){
+
             navigator.geolocation.getCurrentPosition(
                 (position)=>{resolve(position.coords);},
                 (error) =>{reject(error);},
@@ -51,3 +56,5 @@ export default class GeoLocationHelper {
         })
     }
 }
+
+module.exports = GeoLocationHelper;

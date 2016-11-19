@@ -9,7 +9,7 @@ var json_path = path.resolve(__dirname, '../', 'data');
 var api_router = express.Router();
 
 
-var RoadMatcher = require('./roadMatching');
+var RoadMatcher = require('./../helpers/RoadHelper');
 
 var roadMatcher = new RoadMatcher();
 
@@ -56,7 +56,7 @@ api_router.get('/fences', (req, res)=> {
 api_router.get('/fences/add', (req, res)=> {
 
     //
-    // example url fences/add?u=userid&lat=49&lng=-71&r=10&a=2
+    // example url
     //
 
     // read the file
@@ -87,7 +87,7 @@ api_router.get('/fences/add', (req, res)=> {
         };
 
         // get the closest Road info
-        var closestRoad = roadMatcher.findClosestRoad(new Point(latitude, longitude));
+        var closestRoad = roadMatcher.findClosest(new Point(latitude, longitude));
 
         if (closestRoad.distance < roadMatcher.distanceThreshold) {
             newFence.closestRoad = closestRoad;
