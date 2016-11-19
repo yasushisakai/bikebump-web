@@ -17,6 +17,10 @@ class Point {
 
     }
 
+    /**
+     * static create functions
+     */
+
     static fromArray(_arry) {
         return new Point(_arry[0], _arry[1]);
     }
@@ -28,6 +32,7 @@ class Point {
     static fromLatLngObj(obj){
         return new Point(obj.lat,obj.lng);
     }
+
 
     flip() {
         return new Point(-this.x, -this.y);
@@ -48,6 +53,11 @@ class Point {
         }
     }
 
+    /**
+     * move
+     * this changes the point!
+     * @param _point
+     */
     move(_point) {
         this.x += _point.x;
         this.y += _point.y;
@@ -86,6 +96,12 @@ class Point {
         return new Point(this.x / len, this.y / len);
     }
 
+    /**
+     * latLngToWorld
+     * changes the coordinate system to World from LatLng
+     * ref: https://developers.google.com/maps/documentation/javascript/examples/map-coordinates
+     * @returns {Point}
+     */
     latLngToWorld() {
         let sinY = Math.sin(Helpers.toRadians(this.x));
 
@@ -97,6 +113,11 @@ class Point {
         );
     }
 
+    /**
+     * worldToLatLng
+     * changes the coordinate system to LatLng from World
+     * @returns {Point}
+     */
     worldToLatLng() {
         let lng = ((this.x / this.TILESIZE) - 0.5) * 360.0;
         let rady = Math.exp((this.y / this.TILESIZE - 0.5) * -(4.0 * Math.PI));
@@ -106,7 +127,6 @@ class Point {
             lng
         )
     }
-
 
     dot(_other) {
         return this.x * _other.x + this.y * _other.y;

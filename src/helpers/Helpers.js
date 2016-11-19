@@ -1,30 +1,41 @@
-let axios=require('axios');
-let Config=require('../app/settings/config');
-
-
+/**
+ * Helpers class
+ */
 class Helpers {
 
-    static unique(arr) {
+    /**
+     * uniquify
+     *
+     * gets rid of redundant elements inside a array
+     * @param array
+     * @returns {Array}
+     */
+    static uniquify(array) {
         let u = {};
         let a = [];
 
-        for (let i = 0, l = arr.length; i < l; ++i) {
-            if (!u.hasOwnProperty(arr[i])) {
-                a.push(arr[i]);
-                u[arr[i]] = 1;
+        for (let i = 0, l = array.length; i < l; ++i) {
+            if (!u.hasOwnProperty(array[i])) {
+                a.push(array[i]);
+                u[array[i]] = 1;
             }
         }
         return a;
     }
 
-    static toRadians(_deg) {
-        return _deg * Math.PI / 180;
+    static toRadians(degrees) {
+        return degrees * Math.PI / 180;
     }
 
-    static toDegrees(_rad) {
-        return _rad * 180 / Math.PI;
+    static toDegrees(radians) {
+        return radians * 180 / Math.PI;
     }
 
+    /**
+     * convertColorValuesToHex
+     * @param _num
+     * @returns {string}
+     */
     static convertColorValuesToHex(_num) {
         let hexString = Number(_num).toString(16);
 
@@ -32,7 +43,15 @@ class Helpers {
 
     }
 
-    // http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+    /**
+     * hslToRgb
+     * converts a hsl color to rgb
+     * ref: http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+     * @param h
+     * @param s
+     * @param l
+     * @returns {*[]} : rgb value
+     */
     static hslToRgb(h, s, l) {
         let r, g, b;
 
@@ -58,6 +77,12 @@ class Helpers {
         return [r * 255, g * 255, b * 255];
     }
 
+    /**
+     * getColor
+     * returns a rgb color value from a parameter t value (0<t<1)
+     * @param t
+     * @returns {string}
+     */
     static getColor(t) {
 
         let minHueValue = 0.0;

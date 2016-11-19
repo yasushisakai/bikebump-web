@@ -1,11 +1,15 @@
-// created at 2016.10.03
-// by yasushisakai
+/**
+ * bikebump
+ * StatusBar.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {PropTypes} from 'react'
 
-//
-// StatusBar Stateless Function
-//
+/**
+ * StatusBar Stateless Function
+ */
 export default function StatusBar(props) {
     return (
         <div className="status-bar">
