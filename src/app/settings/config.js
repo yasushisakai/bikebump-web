@@ -1,13 +1,21 @@
-export default class Config{
-    constructor() {
-        this.isRemote = window.location.href.startsWith('https');
+/**
+ * Config class
+ */
 
-        if(this.isRemote) {
-            this.url_root = this.isRemote ? 'https://bikebump.yasushisakai.com/' : 'http://localhost:8080/'
-        }
+// FIXME: duplicate across multiple Containers should be a singleton
+class Config {
+    constructor(window) {
+        let location = window.location;
 
-        this.img_root = this.url_root + 'static/img/';
-        this.api_root = this.url_root + 'api/';
+        this.isRemote = location.protocol == 'https';
+        this.url_root = location.protocol + '//' + location.hostname;
+
+        if(!this.isRemote) this.url_root += ':8080';
+
+        this.img_root = this.url_root + '/static/img/';
+        this.api_root = this.url_root + '/api/';
+
     }
-};
+}
 
+module.exports = Config;

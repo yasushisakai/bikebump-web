@@ -4,7 +4,7 @@
 // by yasushisakai
 
 import React, {Component} from 'react';
-import Base from '../components/Base'
+import Base from '../components/Base';
 
 //
 // BaseContainer class

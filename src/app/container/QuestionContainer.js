@@ -14,6 +14,8 @@ import Option from '../components/Option'
 import InfoBox from '../components/InfoBox';
 
 
+let config = new Config(window);
+
 //
 // QuestionContainer class
 //
@@ -46,6 +48,7 @@ export default class QuestionContainer extends Component {
             fenceHash: ''
         };
 
+
         this.update = this.update.bind(this);
 
     }
@@ -61,21 +64,21 @@ export default class QuestionContainer extends Component {
 
         this.includingFence = null;
 
-        this.fences.map((fence)=> {
+        if (this.fences != null) {
+            this.fences.map((fence)=> {
 
-            let center = new Point(fence.coordinates.lat, fence.coordinates.lng);
+                let center = new Point(fence.coordinates.lat, fence.coordinates.lng);
 
-            let distance = here.distanceToInMeters(center);
+                let distance = here.distanceToInMeters(center);
 
-            if (distance < parseFloat(fence.radius)) {
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    this.includingFence = fence;
+                if (distance < parseFloat(fence.radius)) {
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        this.includingFence = fence;
+                    }
                 }
-            }
-
-        });
-
+            });
+        }
     }
 
     // gets the most frequent answer value
@@ -88,7 +91,7 @@ export default class QuestionContainer extends Component {
 
         let indexCount = [0, 0, 0, 0];
 
-        if(this.includingFence==null) return -1;
+        if (this.includingFence == null) return -1;
 
         this.includingFence.answers.map((answer)=> {
             if (answer.question == questionId) {
@@ -104,12 +107,18 @@ export default class QuestionContainer extends Component {
 
     updateFences() {
 
-        return Helpers.checkFenceHash(this.state.fenceHash)
-            .then(result=> {
+        return axios.get(config.api_root+'fences/check?' + this.state.fenceHash)
+            .then(response=> {
+
+                let result = response.data;
+
                 if (result) {
                     return Promise.resolve(null);
                 } else {
-                    return Helpers.getFenceListFromAPI();
+                    return axios.get(config.api_root+'fences')
+                        .then((response)=>{
+                            return Promise.resolve(response.data);
+                        })
                 }
             })
 
@@ -120,16 +129,20 @@ export default class QuestionContainer extends Component {
         let id = typeof _id == 'undefined' ? '0' : _id;
 
         if (id != this.state.questionId) {
-            return Helpers.getQuestionListFromAPI(id)
-                .then((data)=> {
+
+            return axios.get(config.api_root + 'questions/' + id)
+                .then((response)=> {
+
+                    let data = response.data;
 
                     this.question.text = data.text;
                     this.question.options = data.options;
 
-                    return Promise.resolve({changed:true,id:id});
+                    return Promise.resolve({changed: true, id: id});
                 })
+                .catch((err)=> {console.error(err);})
         } else {
-            return Promise.resolve({changed:false,id:id});
+            return Promise.resolve({changed: false, id: id});
         }
     }
 
@@ -195,7 +208,7 @@ export default class QuestionContainer extends Component {
             this.currentStatus =
                 'most people say this place is ' +
                 this.question.options[dominantAnswer][0] + '.';
-        }else{
+        } else {
             this.currentStatus = '';
         }
     }
@@ -210,7 +223,7 @@ export default class QuestionContainer extends Component {
             //fences/add?u=userid&lat=49&lng=-71&r=10&a=2
             //
 
-            let new_fence_url = Config.api_root() + 'fences/add?' +
+            let new_fence_url = config.api_root + 'fences/add?' +
                 'u=' + this.userId +
                 '&lat=' + this.state.lat +
                 '&lng=' + this.state.lng +
@@ -237,7 +250,7 @@ export default class QuestionContainer extends Component {
             //fences/:id/append?u=userid&q=0&a=2
             //
 
-            let new_fence_url = Config.api_root() + 'fences/' +
+            let new_fence_url = config.api_root + 'fences/' +
                 this.includingFence.id + '/append?' +
                 'u=' + this.userId +
                 '&q=' + this.state.questionId +
@@ -289,7 +302,7 @@ export default class QuestionContainer extends Component {
                 <Option
                     key={index}
                     options={this.question.options[index]}
-                    onClick={this.handleButtonClick.bind(this,index)}
+                    onClick={this.handleButtonClick.bind(this, index)}
                 />
             );
 
@@ -303,8 +316,6 @@ export default class QuestionContainer extends Component {
         this.changeBackgroundColor(dominant);
         this.setStatus(dominant);
 
-        console.log(this.includingFence);
-        
         if (this.state.isLoading) {
             return (
                 <Loading text="location data"/>

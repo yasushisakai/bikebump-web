@@ -8,6 +8,7 @@ import React, {Component} from 'react';
 import MapComponent from '../components/HeatMapCompoment'
 import QuestionContainer from './QuestionContainer';
 import axios from 'axios';
+import Config from '../../app/settings/config';
 
 import GeoLocationHelper from '../../helpers/GeoLocationHelper';
 import Helper from '../../helpers/Helpers';
@@ -28,9 +29,11 @@ export default class MapContainer extends Component {
 
         var promises = [];
 
+        let config = Config(window);
+
         // get the list of fences
         // using old api calls
-        promises.push(Helper.getFenceListFromAPI());
+        promises.push(axios(config.api_root+'fences'));
 
         // get the current coordinates
         promises.push(GeoLocationHelper.getGeoLocation());

@@ -1,22 +1,33 @@
-import express from 'express';
-import path from 'path';
-import api_router from './api_routes';
+let express =require('express');
+let path =require('path');
+let api_endpoints =require('./api_endpoint');
 
-let app = express();
-let isRemote = process.env.REMOTE;
+const app = express();
+const isRemote = process.env.REMOTE;
+const portNum = 8080;
 
-// root and static file serving
-app.use('/', express.static(path.resolve(__dirname,'../','dist')));
 
-// api
-app.use('/api', api_router);
+let distRoot = path.resolve(__dirname,'../../dist');
 
-// others, 404 and others will be handled by the app side ./app/routes.js
+/**
+ * react app
+ */
+app.use('/', express.static(distRoot));
+
+
+/**
+ * API
+ */
+app.use('/api', api_endpoints);
+
+/**
+ * The 404 Not Found
+ * send back to react-side to show 404 etc.
+ */
 app.get('*', (req, res)=> {
-    res.sendFile(path.resolve(__dirname,'../dist','index.html'));
+    res.sendFile(path.resolve(distRoot,'index.html'));
 });
 
-let portNum = 8080; // from the server hosing servers
 
 app.listen(portNum, ()=> {
     console.log((isRemote? 'remote': 'local')+" server on, listening to " + portNum);

@@ -1,8 +1,8 @@
-import axios from 'axios';
-import config from '../settings/config'
+let axios=require('axios');
+let Config=require('../app/settings/config');
 
 
-export default class Helpers {
+class Helpers {
 
     static unique(arr) {
         let u = {};
@@ -79,54 +79,6 @@ export default class Helpers {
         },'');
 
     }
-
-    static getFenceListFromAPI() {
-
-        let path = config.api_root() + 'fences/';
-
-        return axios.get(path).then((response)=> {
-            return Promise.resolve(response.data);
-        }).catch((err)=> {
-            console.error(err);
-        });
-
-    }
-
-    static checkFenceHash(hash) {
-
-        let path = config.api_root() + 'fences/check?' + hash;
-
-        return axios.get(path)
-            .then((response)=> {
-                return response.data.result
-            })
-            .catch((err)=> {
-                console.error(err);
-            });
-    }
-
-    static getQuestionListFromAPI(id) {
-
-        let path = config.api_root() + 'questions/' + id;
-
-        return axios.get(path)
-            .then((response)=> {
-                return response.data
-            })
-            .catch((err)=> {
-                console.error(err);
-            });
-    }
-
-    static getRoadsFromAPI() {
-        let path = config.api_root() + 'roads/';
-
-        return axios.get(path)
-            .then((response)=> {
-                return response.data
-            })
-            .catch((err)=> {
-                console.error(err);
-            });
-    }
 }
+
+module.exports = Helpers;

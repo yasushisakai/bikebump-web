@@ -5,7 +5,7 @@
 //
 // GeoLocationHelper class
 //
-export default class GeoLocationHelper {
+class GeoLocationHelper {
     
     //
     // gets the lat lng coordinates asking the browser
@@ -56,3 +56,5 @@ export default class GeoLocationHelper {
         })
     }
 }
+
+module.exports = GeoLocationHelper;

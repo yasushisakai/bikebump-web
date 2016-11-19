@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import Point from '../geometry/Point';
-import Line from '../geometry/Line';
+let fs =require('fs');
+let path =require('path');
+let Point =require('../geometry/Point');
+let Line =require('../geometry/Line');
 
-export default class RoadHelper {
+class RoadHelper {
 
     constructor() {
 
-        this.jsonPath = path.resolve(__dirname, '../', 'data');
+        this.jsonPath = path.resolve(__dirname, '../../', 'data');
 
         // this sits in memory
         this.roads = JSON.parse(fs.readFileSync(path.resolve(this.jsonPath, 'roads.json')));
@@ -105,7 +105,7 @@ export default class RoadHelper {
 
                 let closestRoad = this.findClosest(pt);
                 if (closestRoad.distance > this.distanceThreshold) { // threshold in meters
-                    closestRoad = null; // geo fences far from roads will not have a closest road
+                    closestRoad = null; // geo fences far =require(roads will not have a closest road
                 }
 
                 if (fence.hasOwnProperty('closestRoad')) {

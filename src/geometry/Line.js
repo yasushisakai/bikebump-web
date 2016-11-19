@@ -1,6 +1,6 @@
-import Point from './Point'
+let Point=require('./Point');
 
-export default class Line{
+class Line{
 
     constructor(_st,_en){
         this.st = _st;

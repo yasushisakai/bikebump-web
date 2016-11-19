@@ -6,13 +6,11 @@
 import React, {Component} from 'react';
 import Leaflet from 'leaflet';
 import {Map, TileLayer, Polyline, Marker, Circle} from 'react-leaflet';
-import Line from '../../geometry/Line';
-import Point from '../../geometry/Point';
 
-import Helpers from '../../helpers/Helpers';
 import GeolocationHelpers from '../../helpers/GeoLocationHelper';
 
 import Config from '../settings/config';
+import axios from 'axios';
 
 //
 // MapTestContainer class
@@ -38,7 +36,6 @@ export default class MapAllRoads extends Component {
             iconAnchor: [3, 3]
         });
 
-
     }
 
 
@@ -46,7 +43,8 @@ export default class MapAllRoads extends Component {
 
         let promises = [];
 
-        promises.push(Helpers.getRoadsFromAPI());
+        let config = Config(window);
+        promises.push(axios.get(config.api_root + 'roads/'));
         promises.push(GeolocationHelpers.getGeoLocation());
 
         Promise.all(promises)

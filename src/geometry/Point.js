@@ -1,11 +1,13 @@
 /**
  * Created by yasushisakai on 10/20/16.
  */
-import Helpers from '../helpers/Helpers';
-import GeoLocationHelpers from '../helpers/GeoLocationHelper';
+let Helpers=require('../helpers/Helpers');
+let GeoLocationHelpers=require('../helpers/GeoLocationHelper');
 
-
-export default class Point {
+/**
+ * Point class
+ */
+class Point {
 
     constructor(_x, _y) {
         this.x = _x;
