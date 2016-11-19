@@ -26,9 +26,9 @@ bike bump uses node.js react and express
 3. feel free to make your branch to explore
 
 
-### react program to get you started
-http://www.reactjsprogram.com/
 
 ## json files you can start with
-https://github.com/yasushisakai/bikebump/releases/download/v0.0.4/data.zip
+https://github.com/yasushisakai/bikebump/releases/download/v0.0.5/put_in_root.zip
 
+## javascript programming style convention
+https://github.com/airbnb/javascript
