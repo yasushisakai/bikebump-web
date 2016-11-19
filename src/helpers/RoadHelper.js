@@ -1,8 +1,13 @@
+
+// not using 'import' node.js does not support it.
 let fs =require('fs');
 let path =require('path');
 let Point =require('../geometry/Point');
 let Line =require('../geometry/Line');
 
+/**
+ * RoadHelper class
+ */
 class RoadHelper {
 
     constructor() {
@@ -12,15 +17,22 @@ class RoadHelper {
         // this sits in memory
         this.roads = JSON.parse(fs.readFileSync(path.resolve(this.jsonPath, 'roads.json')));
 
-        this.distanceThreshold = 30;
+        this.distanceThreshold = 30; // used to chip off unrelavent reports
 
     }
 
+    /**
+     * findClosest
+     * finds the closest road from `this.roads`.
+     * Note that this always gives the closest road however far the road is.
+     * @param _point : LatLng value (but Point class)
+     * @returns {{}} : the closest road w/ the closest Point, distance and roadLine(a segment of the road)
+     */
     findClosest(_point) {
 
         let closestRoad, closestPt, roadLine, minDistance = 100000000;
 
-        // TODO: able to use huge reduce?
+        // TODO: able to use huge 'reduce'?
 
         this.roads.map((road, index)=> {
 
@@ -88,6 +100,12 @@ class RoadHelper {
 
     }
 
+    /**
+     * checkFencesJSON
+     * looks through the 'fences.json' file to see weather there are
+     * fences that may be associated to a road.
+     * Use when roads.json is updated
+     */
     checkFenceJSON() {
         fs.readFile(path.resolve(this.jsonPath, 'fences.json'), (err, data)=> {
 
@@ -147,6 +165,10 @@ class RoadHelper {
         });
     }
 
+    /**
+     * refactorFenceJSON
+     * *obsolete*
+     */
     refactorFenceJSON() {
 
         let newFences = [];

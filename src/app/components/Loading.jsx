@@ -1,15 +1,15 @@
-// bikebump
-// Loading
-// by yasushisakai
-// 10/22/16
+/**
+ * bikebump
+ * Loading.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React from 'react'
 
-//
-// Loading Stateless Function
-//
 
 var styles = {
+
   // possible spinner to be implemented
   // loader: {
   //   border: '16px solid #f3f3f3',
@@ -20,7 +20,8 @@ var styles = {
   //   webkitAnimation: 'spin 2s linear infinite',
   //   animation: 'spin 2s linear infinite',
   // },
-  text: {
+
+    text: {
     color: "#51E36A"
   },
   content: {
@@ -30,7 +31,11 @@ var styles = {
   image: {
     paddingLeft: "80px"
   }
-}
+};
+
+/**
+ * Loading Stateless Function
+ */
 export default function Loading(props) {
 
     return (

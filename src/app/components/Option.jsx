@@ -1,11 +1,15 @@
-// created at 2016.10.02
-// by yasushisakai
+/**
+ * bikebump
+ * Option.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {PropTypes} from 'react';
 
-//
-// Option Stateless Function
-//
+/**
+ * Option Stateless Function
+ */
 export default function Option(props) {
 
     let text = props.options[0];

@@ -1,9 +1,18 @@
+/**
+ * bikebump
+ * GoogleLogin.jsx
+ * by collin
+ * 10/13/16
+ */
+
 import React, { Component } from 'react';
 import { GoogleLogin } from 'react-google-login-component';
 import { Router, Link , browserHistory} from 'react-router';
 
 
-
+/**
+ * Login class
+ */
 class Login extends Component {
 
     responseGoogle(googleUser) {

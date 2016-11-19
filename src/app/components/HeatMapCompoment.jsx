@@ -1,16 +1,18 @@
-// bikebump
-// MapComponent
-// by yasushisakai
-// 10/13/16
+/**
+ * bikebump
+ * HeatMapComponent.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React from 'react'
 
 import {Map, TileLayer, Circle} from 'react-leaflet';
 import HeatmapLayer from 'react-leaflet-heatmap-layer'
 
-//
-// MapComponent Stateless Function
-//
+/**
+ * MapComponent Stateless Function
+ */
 export default function MapComponent(props) {
 
     let position = [props.lat, props.lng];

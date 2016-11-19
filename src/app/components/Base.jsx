@@ -1,14 +1,16 @@
-// bikebump
-// Base
-// by yasushisakai
-// 10/13/16
+/**
+ * bikebump
+ * Base
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {PropTypes} from 'react'
 
 
-//
-// Main Stateless Function
-//
+/**
+ * Main Stateless Function
+ */
 export default function Base(props) {
 
     return (

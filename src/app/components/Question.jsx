@@ -1,11 +1,15 @@
-// created at 2016.10.02
-// by yasushisakai
+/**
+ * bikebump
+ * Question.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {PropTypes} from 'react'
 
-//
-// Question Stateless Function
-//
+/**
+ * Question Stateless Function
+ */
 export default function Question(props) {
     return (
         <div className="question">

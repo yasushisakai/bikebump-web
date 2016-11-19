@@ -1,14 +1,16 @@
-// bikebump
-// NotFound
-// by yasushisakai
-// 10/13/16
+/**
+ * bikebump
+ * NotFound.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {PropTypes} from 'react'
 
 
-//
-// NotFound Stateless Function
-//
+/**
+ * NotFound Stateless Function
+ */
 export default function NotFound(props) {
 
     return (

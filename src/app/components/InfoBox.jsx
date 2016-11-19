@@ -1,14 +1,16 @@
-// bikebump
-// InfoBox
-// by yasushisakai
-// 10/14/16
+/**
+ * bikebump
+ * Infobox.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {PropTypes} from 'react'
 
 
-//
-// InfoBox Stateless Function
-//
+/**
+ * InfoBox Stateless Function
+ */
 export default function InfoBox(props) {
 
     return (

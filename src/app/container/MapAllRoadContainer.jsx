@@ -1,7 +1,9 @@
-// bikebump
-// MapTestContainer
-// 10/20/16
-// by yasushisakai
+/**
+ * bikebump
+ * MapAllRoadContainer.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {Component} from 'react';
 import Leaflet from 'leaflet';
@@ -12,9 +14,9 @@ import GeolocationHelpers from '../../helpers/GeoLocationHelper';
 import Config from '../settings/config';
 import axios from 'axios';
 
-//
-// MapTestContainer class
-//
+/**
+ * MapTestContainer class
+ */
 export default class MapAllRoads extends Component {
 
     constructor(props) {

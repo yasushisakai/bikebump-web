@@ -1,14 +1,16 @@
-// bikebump
-// Map
-// by yasushisakai
-// 10/13/16
+/**
+ * bikebump
+ * Map.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {PropTypes} from 'react'
 
 
-//
-// Map Stateless Function
-//
+/**
+ * Map Stateless Function
+ */
 export default function Map(props) {
 
     return (

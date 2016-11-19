@@ -1,14 +1,16 @@
-// bikebump
-// BaseContainer
-// 10/23/16
-// by yasushisakai
+/**
+ * bikebump
+ * BaseContainer.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {Component} from 'react';
 import Base from '../components/Base';
 
-//
-// BaseContainer class
-//
+/**
+ * BaseContainer class
+ */
 export default class BaseContainer extends Component {
 
     constructor(props) {

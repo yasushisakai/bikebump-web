@@ -1,36 +1,40 @@
-// bikebump
-// MapTestContainer
-// 10/20/16
-// by yasushisakai
+/**
+ * bikebump
+ * MapContainer.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {Component} from 'react';
 import Leaflet from 'leaflet';
 import {Map, TileLayer, Polyline, Marker, Circle} from 'react-leaflet';
-import Line from '../utilities/Line';
-import Point from '../utilities/Point';
+import Line from '../../geometry/Line';
+import Point from '../../geometry/Point';
 import Loading from '../components/Loading';
 
-import Helpers from '../utilities/Helpers';
-import GeolocationHelpers from '../utilities/GeoLocationHelper';
+import Helpers from '../../helpers/Helpers';
+import GeolocationHelpers from '../../helpers/GeoLocationHelper';
 
-import Config from '../config';
+import Config from '../settings/config';
+import axios from 'axios';
 
-
-//
-// MapTestContainer class
-//
+/**
+ * MapTestContainer class
+ */
 export default class MapContainer extends Component {
 
 
     constructor(props) {
         super(props);
 
+        this.config = new Config(window);
+
         this.circleOffset = 2.0; // meters, space between the report circles
         // TODO: show them in actual metrics meters?
         this.parallelOffset = 0.000025; // the offset distance from the road to the side (in latlng)
         this.closeLineLength = 0.00020; // length of the closest Road Line (in latlng)
         this.markerIcon = Leaflet.icon({
-            iconUrl: Config.img_root() + 'white_cross.png',
+            iconUrl: this.config.img_root + 'white_cross.png',
             iconSize: [5, 5],
             iconAnchor: [3, 3]
         });
@@ -52,18 +56,16 @@ export default class MapContainer extends Component {
         this.mapTile.url = 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png';
         this.mapTile.attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
 
-        if(Config.isRemote()) {
+        if(this.config.isRemote) {
             this.mapTile.url = mapbox_yasushi.url;
             this.mapTile.attribution = mapbox_yasushi.attribution
         }
     }
 
-
     componentDidMount() {
-
         let promises = [];
 
-        promises.push(Helpers.getFenceListFromAPI());
+        promises.push(axios.get(this.config.api_root+'fences'));
         promises.push(GeolocationHelpers.getGeoLocation());
 
         Promise.all(promises)
@@ -71,7 +73,8 @@ export default class MapContainer extends Component {
 
                 let location = [obj[1].latitude, obj[1].longitude];
 
-                this.fences = obj[0].fences;
+
+                this.fences = obj[0].data.fences;
 
                 this.setState({
                     isLoading: false,

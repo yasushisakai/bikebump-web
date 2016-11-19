@@ -1,7 +1,9 @@
-// bikebump
-// MapContainer
-// 10/13/16
-// by yasushisakai
+/**
+ * bikebump
+ * HeatMapContainer.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {Component} from 'react';
 
@@ -13,9 +15,9 @@ import Config from '../../app/settings/config';
 import GeoLocationHelper from '../../helpers/GeoLocationHelper';
 import Helper from '../../helpers/Helpers';
 
-//
-// MapContainer class
-//
+/**
+ * MapContainer class
+ */
 export default class MapContainer extends Component {
 
     constructor(props) {

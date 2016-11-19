@@ -1,13 +1,17 @@
-// created at 2016.10.02
-// by yasushisakai
+/**
+ * bikebump
+ * MapContainer.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {Component} from 'react';
 import Main from '../components/Main';
 import QuestionContainer from './QuestionContainer';
 
-//
-// MainContainer class
-//
+/**
+ * MainContainer class
+ */
 export default class MainContainer extends Component{
     
     constructor(props){

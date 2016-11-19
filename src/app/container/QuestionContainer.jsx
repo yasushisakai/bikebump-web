@@ -1,11 +1,14 @@
-// created at 2016.10.02
-// by yasushisakai
+/**
+ * bikebump
+ * QuestionContainer.jsx
+ * by yasushisakai
+ * 10/13/16
+ */
 
 import React, {Component, PropTypes} from 'react';
 import axios from 'axios';
 import Config from '../settings/config';
 import GeoLocationHelper from '../../helpers/GeoLocationHelper'
-import Helpers from '../../helpers/Helpers';
 import Point from '../../geometry/Point';
 
 import Loading from '../components/Loading';
@@ -16,9 +19,9 @@ import InfoBox from '../components/InfoBox';
 
 let config = new Config(window);
 
-//
-// QuestionContainer class
-//
+/**
+ * QuestionContainer class
+ */
 export default class QuestionContainer extends Component {
 
     constructor(props) {
