@@ -8,12 +8,9 @@
 import React, {Component} from 'react';
 
 import MapComponent from '../components/HeatMapCompoment'
-import QuestionContainer from './QuestionContainer';
 import axios from 'axios';
 import Config from '../../app/settings/config';
-
 import GeoLocationHelper from '../../helpers/GeoLocationHelper';
-import Helper from '../../helpers/Helpers';
 
 /**
  * MapContainer class
