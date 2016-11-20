@@ -9,10 +9,12 @@ const portNum = 8080;
 
 let distRoot = path.resolve(__dirname,'../../dist');
 
+app.use(express.static(distRoot));
+
 /**
  * react app
  */
-app.use('/', express.static(distRoot));
+//app.use('/', express.static(distRoot));
 
 
 /**

@@ -27,8 +27,9 @@ const routes = (
             <Route path="heat_map" component={HeatMapContainer} onEnter={requireAuth}/>
             <Route path="map" component={MapContainer} onEnter={requireAuth}/>
             <Route path="map_all" component={MapAllRoadContainer} onEnter={requireAuth}/>
-            <Route path="*" component={NotFound}/>
+            <Route path="users/:user" component={HeatMapContainer} onEnter={requireAuth}/>
         </Route>
+        <Route path="*" component={NotFound}/>
     </Router>
 );
 

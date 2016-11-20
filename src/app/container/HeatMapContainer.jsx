@@ -28,7 +28,7 @@ export default class MapContainer extends Component {
 
         var promises = [];
 
-        let config = Config(window);
+        let config = new Config(window);
 
         // get the list of fences
         // using old api calls
