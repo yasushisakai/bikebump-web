@@ -1,9 +1,10 @@
-const express =require('express');
-const fs =require('fs');
-const path =require('path');
-const uuid =require('node-uuid');
-const Point =require('../geometry/Point');
-const RoadHelper =require('../helpers/RoadHelper');
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const uuid = require('node-uuid');
+const axios = require('axios');
+const Point = require('../geometry/Point');
+const RoadHelper = require('../helpers/RoadHelper');
 
 const dataPath = path.resolve(__dirname, '../../', 'data');
 const roadHelper = new RoadHelper();
@@ -27,7 +28,6 @@ endpoints.get('/', (req, res)=> {
 const fencePath = path.resolve(dataPath, 'fences.json');
 let fences = JSON.parse(fs.readFileSync(fencePath)); // sits in memory
 let fenceHash = uuid.v4(); // changes each time 'fences' is modified
-
 
 
 /**
@@ -179,6 +179,32 @@ endpoints.get('/questions/:id/children', (req, res)=> {
  * | |__| \__ \  __/ |  \__ \
  *  \____/|___/\___|_|  |___/
  */
+
+/**
+ * verify tokens
+ * This gets user info
+ * by giving id_token and access_token from
+ * googleUser.getAuthResponse()
+ *
+ * Note that this limits handling data in the
+ * backend and will not return user data
+ * to the client.
+ * (wasn't sure it was the right thing to do)
+ */
+
+//FIXME: should be using POST??
+endpoints.get('/users/verify', (req, res)=> {
+    let access_token = req.query.atok;
+
+    // we need another request to the server using the access_token
+    // FIXME: again, should be a using POST??
+    axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + access_token)
+        .then((response)=> {
+            // I think the 'sub' field is the 'unique id' that doesn't expire...
+            console.log(response.data)
+
+        });
+});
 
 /**
  * add Users

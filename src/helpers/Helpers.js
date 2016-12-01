@@ -104,6 +104,13 @@ class Helpers {
         },'');
 
     }
+
+
+    static getUserInfo(token_id,access_token){
+
+    }
+
+
 }
 
 module.exports = Helpers;
