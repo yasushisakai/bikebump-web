@@ -20,12 +20,31 @@ export default class RingDetectionContainer extends Component {
 
         let audioContext = new window.AudioContext()
 
+
+        // the thing to see the frequencies
         this.analyzer = audioContext.createAnalyser();
         this.analyzer.minDecibels = -90;
         this.analyzer.maxDecibels = -10;
         this.analyzer.smoothingTimeConstant = 0.85;
         this.analyzer.fftSize = 2048;
         //this.analyzer.getByteFrequencyData.bind(this);
+
+        this.highpassFilter = audioContext.createBiquadFilter();
+        this.highpassFilter.type = 'highpass';
+        this.highpassFilter.frequency.value = 1000;
+        this.highpassFilter.Q.value = 15;
+
+        this.peakingFilter = audioContext.createBiquadFilter();
+        this.peakingFilter.type = 'peaking';
+        this.peakingFilter.frequency.value = 3000;
+        this.peakingFilter.gain.value = 5; //dB
+        this.peakingFilter.Q.value = 15;
+
+
+        this.bandpassFilter = audioContext.createBiquadFilter();
+        this.bandpassFilter.type = 'bandpass';
+        this.bandpassFilter.frequency.value = 3000;
+        this.bandpassFilter.Q.value = 15; // which is the right value?
 
         // holds the actual frequency data
         this.dataArray = new Uint8Array(this.analyzer.frequencyBinCount); // half of fftSize
@@ -42,7 +61,10 @@ export default class RingDetectionContainer extends Component {
                 {audio: true},
                 stream=> {
                     let source = audioContext.createMediaStreamSource(stream);
-                    source.connect(this.analyzer);
+                    source.connect(this.peakingFilter);
+                    this.highpassFilter.connect(this.highpassFilter);
+                    this.peakingFilter.connect(this.bandpassFilter);
+                    this.bandpassFilter.connect(this.analyzer);
                 },
                 error=> {
                     console.error(error);
