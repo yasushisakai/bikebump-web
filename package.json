@@ -7,7 +7,7 @@
     "webpack": "webpack --watch",
     "start": "node ./src/server/start.js",
     "production": "webpack -p",
-    "startdev" : "webpack && npm start"
+    "startdev": "webpack && npm start"
   },
   "author": "Yasushi Sakai",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "favicon": "0.0.2",
     "leaflet": "^0.7.7",
     "node-uuid": "^1.4.7",
+    "p5": "^0.5.4",
     "react": "^15.3.2",
     "react-auth": "^1.0.0",
     "react-dom": "^15.3.2",
