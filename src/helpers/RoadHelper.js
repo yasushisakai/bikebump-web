@@ -4,6 +4,9 @@ let fs =require('fs');
 let path =require('path');
 let Point =require('../geometry/Point');
 let Line =require('../geometry/Line');
+let mongoose = require('mongoose');
+let database = 'mongodb://localhost/test';
+mongoose.connect(database);
 
 /**
  * RoadHelper class
@@ -12,14 +15,13 @@ class RoadHelper {
 
     constructor() {
 
-        this.jsonPath = path.resolve(__dirname, '../../', 'data');
-
         // this sits in memory
-        this.roads = JSON.parse(fs.readFileSync(path.resolve(this.jsonPath, 'roads.json')));
+    db.roads.find({}).lean().exec(function (err, allRoads) {});
+    this.roads = JSON.parse(allRoads);
 
-        this.distanceThreshold = 30; // used to chip off unrelavent reports
+    this.distanceThreshold = 30; // used to chip off unrelavent reports
 
-    }
+
 
     /**
      * findClosest

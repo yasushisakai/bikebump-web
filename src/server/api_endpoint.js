@@ -203,7 +203,7 @@ endpoints.get('/questions/:id/children', (req, res)=> {
  */
 
 //FIXME: should be using POST??
-endpoints.get('/users/verify', (req, res)=> {
+endpoints.post('/users/verify', (req, res)=> {
     let access_token = req.query.atok;
 
     // we need another request to the server using the access_token
@@ -233,7 +233,7 @@ endpoints.get('/users/verify', (req, res)=> {
             });
         });
 
-})
+});
 
 
 /**
