@@ -5,9 +5,19 @@ const uuid = require('node-uuid');
 const axios = require('axios');
 const Point = require('../geometry/Point');
 const RoadHelper = require('../helpers/RoadHelper');
+const session = require('express-session');
 
 const dataPath = path.resolve(__dirname, '../../', 'data');
 const roadHelper = new RoadHelper();
+
+const mongoose = require('mongoose'),
+    User = require('./Schema/user'),
+    Fence = require('./Schema/fence'),
+    Road = require('./Schema/road'),
+    Question = require('.question');
+
+const database = 'mongodb://localhost/test'
+mongoose.connect(database);
 
 let endpoints = express.Router();
 
@@ -197,14 +207,34 @@ endpoints.get('/users/verify', (req, res)=> {
     let access_token = req.query.atok;
 
     // we need another request to the server using the access_token
-    // FIXME: again, should be a using POST??
+    // FIXME: again, should be a using POST?? Yes We Should.
     axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + access_token)
         .then((response)=> {
             // I think the 'sub' field is the 'unique id' that doesn't expire...
-            console.log(response.data)
+            let profile = response.getBasicProfile();
+            db.collection.findOne({id: profile.getId()}, function (error, user) {
+                if (!user) {
+                    var newUser = new User({
+                        username: profile.getGivenName(),
+                        id: profile.getId(),
+                        fences: [],
+                    });
 
+                    newUser.save(function (err) {
+                        if (err) throw err;
+                    });
+
+                    req.session.user = newUser;
+                }
+
+                else {
+                    req.session.user = user;
+                }
+            });
         });
-});
+
+})
+
 
 /**
  * add Users
