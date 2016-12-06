@@ -7,7 +7,7 @@ class Config {
     constructor(window) {
         let location = window.location;
 
-        this.isRemote = location.protocol == 'https';
+        this.isRemote = location.protocol == 'https:';
         this.url_root = location.protocol + '//' + location.hostname;
 
         if(!this.isRemote) this.url_root += ':8080';
@@ -15,7 +15,6 @@ class Config {
         this.img_root = this.url_root + '/static/img/';
         this.api_root = this.url_root + '/api/';
 
-        console.log(this.api_root);
 
     }
 }
