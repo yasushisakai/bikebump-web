@@ -15,6 +15,8 @@ class Config {
         this.img_root = this.url_root + '/static/img/';
         this.api_root = this.url_root + '/api/';
 
+        console.log(this.api_root);
+
     }
 }
 

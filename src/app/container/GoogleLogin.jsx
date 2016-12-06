@@ -26,7 +26,7 @@ class Login extends Component {
 
         // server handles
         /**
-         * samele url
+         * sample url
          * ../api/users/verify?atok=ya29.CjCnA7yRa2ge1JynEFU5f0TyummShXoObOiiYmaoZudH1QTcBnAhrOsC0L892GWySZY
          */
         axios.get(config.api_root+'users/verify?atok='+access_token);
@@ -35,6 +35,7 @@ class Login extends Component {
     }
 
 
+    // FIXME: should we hide the clientID? socialID?
     render() {
         return (
             <div>
