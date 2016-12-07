@@ -26,7 +26,7 @@ export default class RingDetectionContainer extends Component {
         this.analyzer.minDecibels = -90;
         this.analyzer.maxDecibels = -10;
         this.analyzer.smoothingTimeConstant = 0.85;
-        this.analyzer.fftSize = 2048;
+        this.analyzer.fftSize = 512;
         //this.analyzer.getByteFrequencyData.bind(this);
 
         this.highpassFilter = audioContext.createBiquadFilter();
