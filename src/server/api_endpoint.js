@@ -14,10 +14,7 @@ const mongoose = require('mongoose'),
     User = require('./Schema/user'),
     Fence = require('./Schema/fence'),
     Road = require('./Schema/road'),
-    Question = require('.question');
-
-const database = 'mongodb://localhost/test'
-mongoose.connect(database);
+    Question = require('./Schema/question');
 
 let endpoints = express.Router();
 
@@ -35,8 +32,10 @@ endpoints.get('/', (req, res)=> {
  * | | |  __/ | | | (_|  __/
  * |_|  \___|_| |_|\___\___|
  */
-const fencePath = path.resolve(dataPath, 'fences.json');
-let fences = JSON.parse(fs.readFileSync(fencePath)); // sits in memory
+let fences = null;
+Fence.find({}).lean().exec(function (err, array){
+    fences = array; // sits in memory
+});
 let fenceHash = uuid.v4(); // changes each time 'fences' is modified
 
 
@@ -100,14 +99,9 @@ endpoints.get('/fences/add', (req, res)=> {
 
     fenceHash = uuid.v4(); // update hash
 
-    res.json({hash: fenceHash, newFence: newFence});
+    Fence.create(newFence);
 
-    fs.writeFile(fencePath, JSON.stringify(fences, null, 4), (err)=> {
-        if (err) {
-            console.log(err);
-            process.exit(1);
-        }
-    })
+    res.json({hash: fenceHash, newFence: newFence});
 
 });
 
@@ -210,13 +204,12 @@ endpoints.post('/users/verify', (req, res)=> {
     // FIXME: again, should be a using POST?? Yes We Should.
     axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + access_token)
         .then((response)=> {
-            // I think the 'sub' field is the 'unique id' that doesn't expire...
-            let profile = response.getBasicProfile();
-            db.collection.findOne({id: profile.getId()}, function (error, user) {
+            // I think the 'sub' field is the 'unique id' that doesn't expire..
+            db.collection.findOne({id: response.sub}, function (error, user) {
                 if (!user) {
                     var newUser = new User({
-                        username: profile.getGivenName(),
-                        id: profile.getId(),
+                        username: response.given_name,
+                        id: response.sub,
                         fences: [],
                     });
 

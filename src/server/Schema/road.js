@@ -11,4 +11,4 @@ const roadSchema = new Schema({
     }
 }, {collection: 'roads'});
 
-module.exports = mongoose.models('road', roadSchema);
+module.exports = mongoose.model('road', roadSchema);
