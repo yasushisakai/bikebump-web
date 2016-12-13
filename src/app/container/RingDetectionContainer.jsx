@@ -31,7 +31,7 @@ export default class RingDetectionContainer extends Component {
 
         this.highpassFilter = audioContext.createBiquadFilter();
         this.highpassFilter.type = 'highpass';
-        this.highpassFilter.frequency.value = 1000;
+        this.highpassFilter.frequency.value = 2000;
         this.highpassFilter.Q.value = 15;
 
         this.peakingFilter = audioContext.createBiquadFilter();
