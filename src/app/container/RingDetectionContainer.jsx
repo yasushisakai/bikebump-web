@@ -62,9 +62,9 @@ export default class RingDetectionContainer extends Component {
                 stream=> {
                     let source = audioContext.createMediaStreamSource(stream);
                     source.connect(this.peakingFilter);
-                    this.highpassFilter.connect(this.highpassFilter);
                     this.peakingFilter.connect(this.bandpassFilter);
-                    this.bandpassFilter.connect(this.analyzer);
+                    this.bandpassFilter.connect(this.highpassFilter);
+                    this.highpassFilter.connect(this.analyzer);
                 },
                 error=> {
                     console.error(error);
