@@ -126,6 +126,11 @@ export default class RingDetectionContainer extends Component {
 
             /**
              * threshold
+             * 
+             * 1. get the most highest bin
+             * 2. see if that's in a close enough range to the frequency we want (3K?)
+             * 3. get the slope of adjacent readings and have make a threshold out of that
+             * 
              */
             let averageRangeRadius = 30;
             let average = this.dataArray
