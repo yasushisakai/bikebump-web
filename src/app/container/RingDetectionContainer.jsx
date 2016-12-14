@@ -26,12 +26,12 @@ export default class RingDetectionContainer extends Component {
         this.analyzer.minDecibels = -90;
         this.analyzer.maxDecibels = -10;
         this.analyzer.smoothingTimeConstant = 0.85;
-        this.analyzer.fftSize = 512;
+        this.analyzer.fftSize = 1024;
         //this.analyzer.getByteFrequencyData.bind(this);
 
         this.highpassFilter = audioContext.createBiquadFilter();
         this.highpassFilter.type = 'highpass';
-        this.highpassFilter.frequency.value = 2000;
+        this.highpassFilter.frequency.value = 2600;
         this.highpassFilter.Q.value = 15;
 
         this.peakingFilter = audioContext.createBiquadFilter();
@@ -61,8 +61,8 @@ export default class RingDetectionContainer extends Component {
                 {audio: true},
                 stream=> {
                     let source = audioContext.createMediaStreamSource(stream);
-                    source.connect(this.peakingFilter);
-                    this.peakingFilter.connect(this.bandpassFilter);
+                    source.connect(this.bandpassFilter);
+                    // this.peakingFilter.connect(this.bandpassFilter);
                     this.bandpassFilter.connect(this.highpassFilter);
                     this.highpassFilter.connect(this.analyzer);
                 },
@@ -129,7 +129,7 @@ export default class RingDetectionContainer extends Component {
              */
             let averageRangeRadius = 30;
             let average = this.dataArray
-                    //.slice(this.targetIndex - averageRangeRadius, this.targetIndex + averageRangeRadius + 1)
+                    .slice(this.targetIndex - averageRangeRadius, this.targetIndex + averageRangeRadius + 1)
                     .reduce((a, c)=> {
                         return a + c;
                     }) / (this.dataArray.length);
