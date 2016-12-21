@@ -70,10 +70,10 @@ export default class QuestionContainer extends Component {
         if (this.fences != null) {
             this.fences.map((fence)=> {
 
+                if(fence.coordinates == 'undefined') return;
+
                 let center = new Point(fence.coordinates.lat, fence.coordinates.lng);
-
                 let distance = here.distanceToInMeters(center);
-
                 if (distance < parseFloat(fence.radius)) {
                     if (distance < minDistance) {
                         minDistance = distance;
@@ -115,12 +115,13 @@ export default class QuestionContainer extends Component {
 
                 let result = response.data;
 
-                if (result) {
+                if (result.doesFenceHashMatch) {
                     return Promise.resolve(null);
                 } else {
+                    // fence has been updated get new fence data
                     return axios.get(config.api_root+'fences')
-                        .then((response)=>{
-                            return Promise.resolve(response.data);
+                        .then((newFences)=>{
+                            return Promise.resolve(newFences.data);
                         })
                 }
             })
@@ -253,12 +254,6 @@ export default class QuestionContainer extends Component {
             //fences/:id/append?u=userid&q=0&a=2
             //
 
-            let new_fence_url = config.api_root + 'fences/' +
-                this.includingFence.id + '/append?' +
-                'u=' + this.userId +
-                '&q=' + this.state.questionId +
-                '&a=' + index;
-
             for (let i = 0, l = this.fences.length; i < l; ++i) {
 
                 if (this.fences[i].id == this.includingFence.id) {
@@ -274,10 +269,13 @@ export default class QuestionContainer extends Component {
                 }
             }
 
+            let new_fence_url = config.api_root + 'fences/' +
+                this.includingFence.id + '/append?' +
+                'u=' + this.userId +
+                '&q=' + this.state.questionId +
+                '&a=' + index;
+
             axios.get(new_fence_url).then((response)=> {
-
-                console.log(new_fence_url);
-
 
                 this.setState({
                     fenceHash: response.data.hash

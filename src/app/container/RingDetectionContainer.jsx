@@ -18,7 +18,7 @@ export default class RingDetectionContainer extends Component {
         this.state = {};
 
 
-        let audioContext = new window.AudioContext()
+        let audioContext = new window.AudioContext();
 
 
         // the thing to see the frequencies
@@ -34,11 +34,7 @@ export default class RingDetectionContainer extends Component {
         this.highpassFilter.frequency.value = 2600;
         this.highpassFilter.Q.value = 15;
 
-        this.peakingFilter = audioContext.createBiquadFilter();
-        this.peakingFilter.type = 'peaking';
-        this.peakingFilter.frequency.value = 3000;
-        this.peakingFilter.gain.value = 5; //dB
-        this.peakingFilter.Q.value = 15;
+        // removed peaking filter
 
 
         this.bandpassFilter = audioContext.createBiquadFilter();

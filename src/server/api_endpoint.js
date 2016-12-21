@@ -35,7 +35,7 @@ let fenceHash = uuid.v4(); // changes each time 'fences' is modified
  * ..api/fence/check?hash=109156be-c4fb-41ea-b1b4-efe1671c5836
  */
 endpoints.get('/fences/check/', (req, res)=> {
-    res.json({result: req.query.hash == fenceHash});
+    res.json({doesFenceHashMatch: req.query.hash == fenceHash});
 });
 
 
@@ -107,16 +107,19 @@ endpoints.get('/fences/add', (req, res)=> {
  * api/fences/:id/append?u=userid&q=10&a=2
  */
 endpoints.get('/fences/:id/append', (req, res)=> {
-    let fenceIndex = fences.findIndex((fence)=> {
+    const fenceIndex = fences.findIndex((fence)=> {
         return fence.id === req.params.id;
     });
 
-    let newFence = fences[fenceIndex].answers.push({
+    let newFence = fences[fenceIndex];
+
+    newFence.answers.push({
         userid: req.query.u,
         question: req.query.q,
         value: parseInt(req.query.a),
         timestamp: Date.now()
     });
+
 
     fences.splice(fenceIndex, 1, newFence);
 
