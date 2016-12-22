@@ -1,8 +1,12 @@
 let express =require('express');
+let bodyParser = require('body-parser');
 let path =require('path');
 let api_endpoints =require('./api_endpoint');
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+
 const isRemote = process.env.REMOTE;
 const portNum = 8080;
 

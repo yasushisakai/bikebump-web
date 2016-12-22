@@ -9,6 +9,7 @@ import HeatMapContainer from './container/HeatMapContainer'
 import MapContainer from './container/MapContainer'
 import MapAllRoadContainer from './container/MapAllRoadContainer'
 import RingDetectionContainer from './container/RingDetectionContainer';
+import BreadCrumbContainer from './container/BreadcrumbContainer';
 
 import Login from './container/GoogleLogin'
 import NotFound from './components/NotFound'
@@ -30,6 +31,7 @@ const routes = (
             <Route path="detect_rings" component={RingDetectionContainer} />
             <Route path="map" component={MapContainer} onEnter={requireAuth}/>
             <Route path="map_all" component={MapAllRoadContainer} onEnter={requireAuth}/>
+            <Route path="breadcrumb" component={BreadCrumbContainer}/>
             <Route path="users/:user" component={HeatMapContainer} onEnter={requireAuth}/>
         </Route>
         <Route path="*" component={NotFound}/>
