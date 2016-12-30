@@ -23,16 +23,20 @@ class Login extends Component {
         let config = new Config(window);
 
         var access_token = googleUser.getAuthResponse().access_token;
-        localStorage.token = access_token;
 
         // server handles
         /**
          * samele url
          * ../api/users/verify?atok=ya29.CjCnA7yRa2ge1JynEFU5f0TyummShXoObOiiYmaoZudH1QTcBnAhrOsC0L892GWySZY
          */
-        axios.get(config.api_root+'users/verify?atok='+access_token);
+        var promises = [];
 
-        window.location="app";
+        promises.push(axios.get(config.api_root+'users/verify?atok='+access_token).then((response) => {localStorage.user = response;}));
+
+        console.log(localStorage.user);
+
+        Promise.all(promises.then(window.location="app"));
+
     }
 
 

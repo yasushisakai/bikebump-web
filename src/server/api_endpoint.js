@@ -13,7 +13,6 @@ const roadHelper = new RoadHelper();
 const mongoose = require('mongoose'),
     User = require('./Schema/user'),
     Fence = require('./Schema/fence'),
-    Road = require('./Schema/road'),
     Question = require('./Schema/question');
 
 let endpoints = express.Router();
@@ -72,7 +71,7 @@ endpoints.get('/fences/add', (req, res)=> {
     let latitude = parseFloat(req.query.lat);
     let longitude = parseFloat(req.query.lng);
 
-    let newFence = {
+    let newFence = new Fence({
         id: uuid.v4(),
         userid: req.query.u,
         coordinates: {lat: latitude, lng: longitude},
@@ -86,7 +85,7 @@ endpoints.get('/fences/add', (req, res)=> {
             },
         ],
         timestamp: Date.now()
-    };
+    });
 
 
     // get the closest road, add it to the object if close enough
@@ -95,13 +94,11 @@ endpoints.get('/fences/add', (req, res)=> {
         newFence.closestRoad = closestRoad;
     }
 
-    fences.push(newFence);
-
     fenceHash = uuid.v4(); // update hash
 
-    Fence.create(newFence);
-
+    newFence.save();
     res.json({hash: fenceHash, newFence: newFence});
+    console.log("added");
 
 });
 
@@ -111,31 +108,27 @@ endpoints.get('/fences/add', (req, res)=> {
  * api/fences/:id/append?u=userid&q=10&a=2
  */
 endpoints.get('/fences/:id/append', (req, res)=> {
-    let fenceIndex = fences.findIndex((fence)=> {
-        return fence.id === req.params.id;
-    });
+    Fence.findById({id: req.params.id}, function(err, fence){
+        if (err) return handleError(err);
 
-    let newFence = fences[fenceIndex].answers.push({
-        userid: req.query.u,
-        question: req.query.q,
-        value: parseInt(req.query.a),
-        timestamp: Date.now()
-    });
+        fence.answers.push({
+            userid: req.query.u,
+            question: req.query.q,
+            value: parseInt(req.query.a),
+            timestamp: Date.now()
+        });
 
-    fences.splice(fenceIndex, 1, newFence);
+        fenceHash = uuid.v4();
 
-    fenceHash = uuid.v4();
+        res.json({hash: fenceHash});
 
-    res.json({hash: fenceHash});
+        fence.save(function (err, updatedFence) {
+            if (err) return handleError(err);
+            res.send(updatedFence);
+        });
+    })
 
-    fs.writeFile(fencePath, JSON.stringify(fences, null, 4), (err)=> {
-        if (err) {
-            console.error(err);
-            process.exit(1);
-        }
-
-    });
-
+    console.log("updated");
 });
 
 
@@ -146,8 +139,11 @@ endpoints.get('/fences/:id/append', (req, res)=> {
  * | |__| | |_| |  __/\__ \ |_| | (_) | | | \__ \
  *  \___\_\\__,_|\___||___/\__|_|\___/|_| |_|___/
  */
-let questionsPath = path.resolve(dataPath, 'questions.json');
-let questions = JSON.parse(fs.readFileSync(questionsPath));
+
+let questions = null;
+Question.find({}).lean().exec(function (err, array){
+    questions = array; // sits in memory
+});
 
 /**
  * get all questions
@@ -197,7 +193,7 @@ endpoints.get('/questions/:id/children', (req, res)=> {
  */
 
 //FIXME: should be using POST??
-endpoints.post('/users/verify', (req, res)=> {
+endpoints.get('/users/verify', (req, res)=> {
     let access_token = req.query.atok;
 
     // we need another request to the server using the access_token
@@ -205,22 +201,22 @@ endpoints.post('/users/verify', (req, res)=> {
     axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + access_token)
         .then((response)=> {
             // I think the 'sub' field is the 'unique id' that doesn't expire..
-            db.collection.findOne({id: response.sub}, function (error, user) {
+            User.findOne({id: response.data.sub}, function (error, user) {
                 if (!user) {
                     var newUser = new User({
-                        username: response.given_name,
-                        id: response.sub,
-                        fences: [],
+                        username: response.data.given_name,
+                        id: response.data.sub,
+                        fences: []
                     });
 
-                    newUser.save(function (err) {
-                        if (err) throw err;
-                    });
+                    newUser.save();
 
                     req.session.user = newUser;
+                    res.send(newUser);
                 }
 
                 else {
+                    res.send(user);
                     req.session.user = user;
                 }
             });
@@ -229,12 +225,7 @@ endpoints.post('/users/verify', (req, res)=> {
 });
 
 
-/**
- * add Users
- * ..api/users/add?username=
- */
 
-// TODO: Issue #20
 
 /** _____                 _
  * |  __ \               | |

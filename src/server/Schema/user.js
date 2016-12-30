@@ -2,13 +2,13 @@
  * Created by collinfijalkovich on 11/20/16.
  */
 
-const mongoose = require('mongoose'),
+mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     username: String,
-    identifier: {type: String, required: true},
+    id: String,
     fences: []
-}, {collection: 'users'})
+}, {collection: 'users'});
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('User', userSchema);

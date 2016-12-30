@@ -1,11 +1,24 @@
 let express =require('express');
 let path =require('path');
 let api_endpoints =require('./api_endpoint');
+var bodyParser = require('body-parser');
 
 const app = express();
 const isRemote = process.env.REMOTE;
 const portNum = 8080;
 
+const session = require('express-session');
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+
+app.use(session({
+    secret: 'whataretheoddsofthat',
+    cookie: { maxAge: 60 * 60 * 1000 },
+    saveUninitialized: false,
+    resave: false
+}));
 
 let distRoot = path.resolve(__dirname,'../../dist');
 

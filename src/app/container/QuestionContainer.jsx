@@ -215,7 +215,7 @@ export default class QuestionContainer extends Component {
             this.currentStatus = '';
         }
     }
-
+    //Look Here
     handleButtonClick(index) {
 
         //
@@ -236,6 +236,7 @@ export default class QuestionContainer extends Component {
             axios.get(new_fence_url).then((response)=> {
 
                 this.fences.push(response.fence);
+                console.log("should set");
                 this.includingFence = response.fence;
 
                 this.setState({

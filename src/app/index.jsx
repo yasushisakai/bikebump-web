@@ -16,7 +16,7 @@ import NotFound from './components/NotFound'
 const root = document.getElementById('root');
 
 function requireAuth() {
-    if (!localStorage.token) {
+    if (!localStorage.user) {
         window.location="/";
     }
 }
