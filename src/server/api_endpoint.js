@@ -42,7 +42,7 @@ let fenceHash = uuid.v4(); // changes each time 'fences' is modified
  * check fence hash
  * ..api/fence/check?hash=109156be-c4fb-41ea-b1b4-efe1671c5836
  */
-endpoints.get('/fences/check/', (req, res)=> {
+endpoints.get('/fences/check', (req, res)=> {
     res.json({doesFenceHashMatch: req.query.hash == fenceHash});
 });
 
@@ -97,8 +97,6 @@ endpoints.get('/fences/add', (req, res)=> {
 
     res.json({hash: fenceHash, fence: newFence.toJSON()});
 
-    console.log("added");
-
 });
 
 
@@ -107,10 +105,10 @@ endpoints.get('/fences/add', (req, res)=> {
  * api/fences/:id/append?u=userid&q=10&a=2
  */
 endpoints.get('/fences/:id/append', (req, res)=> {
-    Fence.findById({id: req.params.id}, function(err, fence){
-        if (err) return handleError(err);
+    Fence.find({id: req.params.id}, function(err, fence){
+        if (err) console.log(err);
 
-        fence.answers.push({
+        fence[0].answers.push({
             userid: req.query.u,
             question: req.query.q,
             value: parseInt(req.query.a),
@@ -121,13 +119,9 @@ endpoints.get('/fences/:id/append', (req, res)=> {
 
         res.json({hash: fenceHash});
 
-        fence.save(function (err, updatedFence) {
-            if (err) return handleError(err);
-            res.send(updatedFence);
-        });
-    })
+        fence[0].save();
+    });
 
-    console.log("updated");
 });
 
 

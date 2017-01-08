@@ -226,7 +226,6 @@ export default class QuestionContainer extends Component {
                 '&a=' + index;
 
             axios.get(new_fence_url).then((response)=> {
-                console.log(response.data.fence);
                 this.fences.push(response.data.fence);
                 this.includingFence = response.data.fence;
 
