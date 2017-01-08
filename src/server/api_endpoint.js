@@ -58,6 +58,37 @@ endpoints.get('/fences', (req, res)=> {
 
 });
 
+// trips
+const tripPath = path.resolve(dataPath, 'trips.json');
+
+endpoints.post('/trips/upload/',(req,res)=>{
+
+    let newTrip = {};
+    newTrip.id = uuid.v4();
+
+    const breadcrumbs = req.body.breadcrumbs;
+    // check
+    if(breadcrumbs.length < 2){
+        res.json({result:'error',message:'trip must include at least 2 bread crumbs'});
+        return null;
+    }
+
+    // open trip.json
+    fs.readFile(tripPath,(err,data)=>{
+
+        newTrip.breadcrumbs = breadcrumbs;
+
+        let json_data = JSON.parse(data);
+        json_data.push(newTrip);
+
+        fs.writeFile(tripPath,JSON.stringify(json_data,null,4),err=>{
+            if(err){
+                console.log(err);
+            }
+
+            res.json({result:'success',tripId:newTrip.id});
+        });
+    });
 
 /**
  * add a fence

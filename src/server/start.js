@@ -2,7 +2,7 @@ let express =require('express');
 let bodyParser = require('body-parser');
 let path =require('path');
 let api_endpoints =require('./api_endpoint');
-var bodyParser = require('body-parser');
+
 
 const app = express();
 app.use(bodyParser.json());

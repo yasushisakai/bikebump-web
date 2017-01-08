@@ -94,11 +94,13 @@ export default class QuestionContainer extends Component {
 
         if (this.includingFence == null) return -1;
 
-        this.includingFence.answers.map((answer)=> {
-            if (answer.question == questionId) {9
-                indexCount[answer.value]++;
-            }
-        });
+        if (this.includingFence.answers) {
+            this.includingFence.answers.map((answer)=> {
+                if (answer.question == questionId) {
+                    indexCount[answer.value]++;
+                }
+            });
+        };
 
         let dominant = indexCount.indexOf(Math.max(...indexCount));
 
@@ -245,7 +247,7 @@ export default class QuestionContainer extends Component {
             //fences/:id/append?u=userid&q=0&a=2
             //
 
-            for (let i = 0, l = this.fences.length; i < l; ++i) {
+            for (let i = 0, l = this.fences.length; i < l; i++) {
 
                 if (this.fences[i].id == this.includingFence.id) {
                     let newAnswer = {
@@ -254,7 +256,14 @@ export default class QuestionContainer extends Component {
                         value: index,
                         timestamp: Date.now()
                     };
-                    this.fences[i].answers.push(newAnswer);
+
+                    if (this.fences[i].answers) {
+                        this.fences[i].answers.push(newAnswer);
+                    }
+
+                    else {
+                        this.fences[i].answers = [newAnswer];
+                    }
 
                     break;
                 }
