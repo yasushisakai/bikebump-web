@@ -5,9 +5,6 @@ const uuid = require('node-uuid');
 const axios = require('axios');
 const Point = require('../geometry/Point');
 const RoadHelper = require('../helpers/RoadHelper');
-const session = require('express-session');
-
-const dataPath = path.resolve(__dirname, '../../', 'data');
 const roadHelper = new RoadHelper();
 
 const mongoose = require('mongoose'),
@@ -185,13 +182,11 @@ endpoints.get('/questions/:id/children', (req, res)=> {
  * (wasn't sure it was the right thing to do)
  */
 
-//FIXME: should be using POST??
+
 endpoints.get('/users/verify', (req, res)=> {
     let access_token = req.query.atok;
 
-    // we need another request to the server using the access_token
-    // FIXME: again, should be a using POST?? Yes We Should.
-    axios.get('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + access_token)
+    axios.post('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + access_token)
         .then((response)=> {
             // I think the 'sub' field is the 'unique id' that doesn't expire..
             User.findOne({id: response.data.sub}, function (error, user) {
@@ -203,14 +198,11 @@ endpoints.get('/users/verify', (req, res)=> {
                     });
 
                     newUser.save();
-
-                    req.session.user = newUser;
                     res.send(newUser.toJSON());
                 }
 
                 else {
                     res.send(user.toJSON());
-                    req.session.user = user;
                 }
             });
         });

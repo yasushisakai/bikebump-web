@@ -7,7 +7,6 @@
 
 import React, { Component } from 'react';
 import { GoogleLogin } from 'react-google-login-component';
-import { Router, Link , browserHistory} from 'react-router';
 import Config from '../settings/config';
 import axios from 'axios';
 
@@ -32,8 +31,10 @@ class Login extends Component {
         let promises = [];
 
         axios.get(config.api_root+'users/verify?atok='+access_token).then((response) => {
-            promises.push(localStorage.user = response);
-            promises.push(console.log(localStorage.user));
+            console.log(response);
+            promises.push(localStorage.username = response.data.username);
+            promises.push(localStorage.id = response.data.id);
+            promises.push(localStorage.fences = JSON.stringify(response.data.fences));
             Promise.all(promises).then(window.location="app")});
     }
 

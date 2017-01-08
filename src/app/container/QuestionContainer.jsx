@@ -29,7 +29,7 @@ export default class QuestionContainer extends Component {
 
         this.interval;
 
-        this.userId = '0';
+        this.userId = localStorage.id;
 
         this.question = {};
         this.question.text = '';
