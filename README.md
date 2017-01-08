@@ -15,6 +15,14 @@ bike bump uses node.js react and express
 1. goto localhost:8080 and confirm its running
 
 ## for team members
+## how to run with mongo
+0. Use brew install mongodb.
+1. Take the JSON files for roads, fences, and questions.
+2. Move to the directory containing those JSON files.
+3. For each JSON file, run mongoimport --db "db name" --collection "collection name" --type json --file "file name" --jsonArray. 
+3a. For collection names, use roads, fences, and questions.
+4.  Before running npm run startdev, open a different terminal window and run mongod.
+
 
 ### how to update
 
