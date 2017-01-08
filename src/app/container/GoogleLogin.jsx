@@ -29,14 +29,12 @@ class Login extends Component {
          * samele url
          * ../api/users/verify?atok=ya29.CjCnA7yRa2ge1JynEFU5f0TyummShXoObOiiYmaoZudH1QTcBnAhrOsC0L892GWySZY
          */
-        var promises = [];
+        let promises = [];
 
-        promises.push(axios.get(config.api_root+'users/verify?atok='+access_token).then((response) => {localStorage.user = response;}));
-
-        console.log(localStorage.user);
-
-        Promise.all(promises.then(window.location="app"));
-
+        axios.get(config.api_root+'users/verify?atok='+access_token).then((response) => {
+            promises.push(localStorage.user = response);
+            promises.push(console.log(localStorage.user));
+            Promise.all(promises).then(window.location="app")});
     }
 
 

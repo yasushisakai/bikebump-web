@@ -43,7 +43,7 @@ let fenceHash = uuid.v4(); // changes each time 'fences' is modified
  * ..api/fence/check?hash=109156be-c4fb-41ea-b1b4-efe1671c5836
  */
 endpoints.get('/fences/check/', (req, res)=> {
-    res.json({result: req.query.hash == fenceHash});
+    res.json({doesFenceHashMatch: req.query.hash == fenceHash});
 });
 
 
@@ -76,14 +76,12 @@ endpoints.get('/fences/add', (req, res)=> {
         userid: req.query.u,
         coordinates: {lat: latitude, lng: longitude},
         radius: req.query.r,
-        answers: [
-            {
-                userid: req.query.id,
-                question: '0',
-                value: parseInt(req.query.a),
-                timestamp: Date.now()
-            },
-        ],
+        answers: [{
+            userid: req.query.id,
+            question: '0',
+            value: parseInt(req.query.a),
+            timestamp: Date.now()
+        }],
         timestamp: Date.now()
     });
 
@@ -95,9 +93,10 @@ endpoints.get('/fences/add', (req, res)=> {
     }
 
     fenceHash = uuid.v4(); // update hash
-
     newFence.save();
-    res.json({hash: fenceHash, newFence: newFence});
+
+    res.json({hash: fenceHash, fence: newFence.toJSON()});
+
     console.log("added");
 
 });
@@ -212,11 +211,11 @@ endpoints.get('/users/verify', (req, res)=> {
                     newUser.save();
 
                     req.session.user = newUser;
-                    res.send(newUser);
+                    res.send(newUser.toJSON());
                 }
 
                 else {
-                    res.send(user);
+                    res.send(user.toJSON());
                     req.session.user = user;
                 }
             });

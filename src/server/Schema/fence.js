@@ -10,12 +10,7 @@ const fenceSchema = new Schema({
         lng: Number
     },
     radius: String,
-    answer: [{
-        userid: String,
-        question: String,
-        answer: Number,
-        timestamp: Number
-    }],
+    answers: Array,
     timestamp: Number,
     closestRoad: {
         road: {
