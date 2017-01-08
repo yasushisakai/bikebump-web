@@ -70,7 +70,6 @@ export default class MapContainer extends Component {
 
         Promise.all(promises)
             .then((obj)=> {
-
                 let location = [obj[1].latitude, obj[1].longitude];
 
 
@@ -114,45 +113,47 @@ export default class MapContainer extends Component {
 
     drawFence(fence) {
 
-        let tags = []; // this will contain the react tags
+        if (fence.answers) {
+            let tags = []; // this will contain the react tags
 
-        let center = Point.fromLatLngObj(fence.coordinates);
-        let values = fence.answers.map((answer)=> {
-            return answer.value;
-        });
-        let valueAverage = values.reduce((prev, curr)=> {
-                return prev + (curr / 3.0)
-            }, 0) / values.length;
+            let center = Point.fromLatLngObj(fence.coordinates);
+            let values = fence.answers.map((answer)=> {
+                return answer.value;
+            });
+            let valueAverage = values.reduce((prev, curr)=> {
+                    return prev + (curr / 3.0)
+                }, 0) / values.length;
 
-        //
-        // closest road indicator (if it has one)
-        //
-        if (fence.hasOwnProperty('closestRoad')) {
-            tags.push(...this.drawClosestRoad(fence, valueAverage));
+            //
+            // closest road indicator (if it has one)
+            //
+            if (fence.hasOwnProperty('closestRoad')) {
+                tags.push(...this.drawClosestRoad(fence, valueAverage));
+            }
+
+            //
+            // circles
+            //
+            values.map((obj, index)=> {
+
+                tags.push(<Circle
+                    key={fence.id + '-a_' + index}
+                    center={center.toArray()}
+                    radius={parseInt(fence.radius) + index * this.circleOffset}
+                    color={Helpers.getColor(obj * 0.33333)}
+                    weight={2}
+                    opacity={0.3}
+                    fill={false}
+                />)
+            });
+
+            //
+            // marker (x)
+            //
+            tags.push(<Marker key={fence.id + '-m'} position={center.toArray()} icon={this.markerIcon}/>);
+
+            return tags;
         }
-
-        //
-        // circles
-        //
-        values.map((obj, index)=> {
-
-            tags.push(<Circle
-                key={fence.id+'-a_'+index}
-                center={center.toArray()}
-                radius={parseInt(fence.radius)+index*this.circleOffset}
-                color={Helpers.getColor(obj*0.33333)}
-                weight={2}
-                opacity={0.3}
-                fill={false}
-            />)
-        });
-
-        //
-        // marker (x)
-        //
-        tags.push(<Marker key={fence.id+'-m'} position={center.toArray()} icon={this.markerIcon}/>);
-
-        return tags;
     }
 
     drawFences() {

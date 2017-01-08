@@ -29,7 +29,7 @@ export default class QuestionContainer extends Component {
 
         this.interval;
 
-        this.userId = '0';
+        this.userId = localStorage.id;
 
         this.question = {};
         this.question.text = '';
@@ -61,7 +61,6 @@ export default class QuestionContainer extends Component {
     // receives a object that has lat, lng properties
     // returns null if there is not including fence
     updateIncludingFence(state) {
-
         let here = new Point(state.lat, state.lng);
         let minDistance = 100000000000;
 
@@ -86,7 +85,6 @@ export default class QuestionContainer extends Component {
 
     // gets the most frequent answer value
     dominantAnswer(questionId) {
-
         if (typeof questionId == 'undefined') {
             questionId = this.state.questionId
         }
@@ -97,7 +95,7 @@ export default class QuestionContainer extends Component {
         if (this.includingFence == null) return -1;
 
         this.includingFence.answers.map((answer)=> {
-            if (answer.question == questionId) {
+            if (answer.question == questionId) {9
                 indexCount[answer.value]++;
             }
         });
@@ -109,7 +107,6 @@ export default class QuestionContainer extends Component {
     }
 
     updateFences() {
-
         return axios.get(config.api_root+'fences/check?' + this.state.fenceHash)
             .then(response=> {
 
@@ -129,7 +126,6 @@ export default class QuestionContainer extends Component {
     }
 
     updateQuestion(_id) {
-
         let id = typeof _id == 'undefined' ? '0' : _id;
 
         if (id != this.state.questionId) {
@@ -151,7 +147,6 @@ export default class QuestionContainer extends Component {
     }
 
     update() {
-
         let promises = [];
         promises.push(this.updateFences());
         promises.push(GeoLocationHelper.getGeoLocation());
@@ -198,7 +193,6 @@ export default class QuestionContainer extends Component {
 
 
     changeBackgroundColor(dominantAnswer) {
-
         let newColor = dominantAnswer == -1 ? '#FFFFFF' : this.question.options[dominantAnswer][1];
         let root = document.getElementById('root');
         root.style.backgroundColor = newColor;
@@ -206,7 +200,6 @@ export default class QuestionContainer extends Component {
     }
 
     setStatus(dominantAnswer) {
-
         if (!(this.includingFence == null || dominantAnswer == -1)) {
 
             this.currentStatus =
@@ -216,9 +209,8 @@ export default class QuestionContainer extends Component {
             this.currentStatus = '';
         }
     }
-
+    //Look Here
     handleButtonClick(index) {
-
         //
         // creating a new fence
         //
@@ -235,9 +227,8 @@ export default class QuestionContainer extends Component {
                 '&a=' + index;
 
             axios.get(new_fence_url).then((response)=> {
-
-                this.fences.push(response.fence);
-                this.includingFence = response.fence;
+                this.fences.push(response.data.fence);
+                this.includingFence = response.data.fence;
 
                 this.setState({
                     fenceHash: response.data.hash

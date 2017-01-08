@@ -7,9 +7,9 @@
 
 import React, { Component } from 'react';
 import { GoogleLogin } from 'react-google-login-component';
-import { Router, Link , browserHistory} from 'react-router';
 import Config from '../settings/config';
 import axios from 'axios';
+
 
 
 /**
@@ -22,16 +22,20 @@ class Login extends Component {
         let config = new Config(window);
 
         var access_token = googleUser.getAuthResponse().access_token;
-        localStorage.token = access_token;
 
         // server handles
         /**
          * sample url
          * ../api/users/verify?atok=ya29.CjCnA7yRa2ge1JynEFU5f0TyummShXoObOiiYmaoZudH1QTcBnAhrOsC0L892GWySZY
          */
-        axios.get(config.api_root+'users/verify?atok='+access_token);
+        let promises = [];
 
-        window.location="app";
+        axios.get(config.api_root+'users/verify?atok='+access_token).then((response) => {
+            console.log(response);
+            promises.push(localStorage.username = response.data.username);
+            promises.push(localStorage.id = response.data.id);
+            promises.push(localStorage.fences = JSON.stringify(response.data.fences));
+            Promise.all(promises).then(window.location="app")});
     }
 
 
