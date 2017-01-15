@@ -1,1 +1,1 @@
-export example from './example_reducer.js'
+export example from './example.js'
