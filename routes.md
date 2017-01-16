@@ -8,6 +8,9 @@
 ### login/signup
 * handles authentification of user
 
+### logout
+* boring logout
+
 ### record
 * main view for retriving data
 * detects and records sound
@@ -23,7 +26,7 @@
 * list of roads that contains fences
 * to specify the target
 
-### users
+### user
 * keeps of the record of commutes, fences
 * enable to change configuration
 * asks follow up questions about specific
