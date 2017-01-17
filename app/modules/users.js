@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable'
 import { formatUser } from 'helpers/utils'
-import { saveUserDB, auth } from 'helpers/auth'
+import { saveUserDB, auth, setAccessToken, checkAccessToken } from 'helpers/auth'
 // users 
 
 const FETCHING_USER = 'FETCHING_USER'
@@ -25,7 +25,7 @@ function fetchingUserError(error){
   }
 }
 
-function fetchingUserSuccess(uid,user,timestamp){
+export function fetchingUserSuccess(uid,user,timestamp){
   return {
     type:FETCHING_USER_SUCCESS,
     uid,
@@ -34,14 +34,14 @@ function fetchingUserSuccess(uid,user,timestamp){
   }
 }
 
-function authUser(uid){
+export function authUser(uid){
   return{
     type:AUTH_USER,
     uid,
   }
 }
 
-function unauthUser(){
+export function unauthUser(){
   return{
     type:UNAUTH_USER,
   }
@@ -51,7 +51,10 @@ export function handleFetchAuthUser (service) {
   return function (dispatch) {
     dispatch(fetchingUser)
     return auth(service).then(({user,credential})=>{
-      // TODO: skip auth using access tokens if there is one
+      //console.log(credential.accessToken)
+      setAccessToken(service,credential.accessToken)
+      checkAccessToken(service,credential.accessToken)
+        .then((email)=>{console.log(email)})
       const userData = user.providerData[0]
       const userInfo = formatUser(userData)
       return saveUserDB(userInfo)

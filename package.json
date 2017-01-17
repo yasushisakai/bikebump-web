@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/yasushisakai/bikebump#readme",
   "dependencies": {
+    "axios": "^0.15.3",
     "firebase": "^3.6.5",
     "immutable": "^3.8.1",
     "react": "^15.4.2",

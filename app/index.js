@@ -8,7 +8,7 @@ import * as reducerModules from 'modules'
 import { hashHistory } from 'react-router'
 
 import getRoutes from 'config/routes'
-import {  getCurrentUser } from 'helpers/auth'
+import { checkIfAuthed } from 'helpers/auth'
 
 const store = createStore(combineReducers(
   {...reducerModules, routing: routerReducer}),
@@ -20,16 +20,28 @@ const store = createStore(combineReducers(
 
 const history = syncHistoryWithStore(hashHistory,store)
 
-function checkAuth () {
-  // checks if...
+function checkAuth (nextState, replace) {
+  if(store.getState().users.get('isFetching') === true){
+    return
+  }
 
-  // 1. if firebase.auth().currentUser is not null
-  //    if true check if the state knows that
+  const isAuthed = checkIfAuthed(store)
+  const nextPath = nextState.location.pathname
 
-  // 2. if there
-  const currentUser = getCurrentUser()
-  console.log(currentUser)
+  if(nextPath==='/map'){
+    return
+  }else if (nextPath === '/' || nextPath == '/signin') {
+    if(isAuthed === true) {
+      replace('/record')
+    } 
+  } else {
+    if(isAuthed !== true){
+      replace('/signin')
+    }
+  }  
 }
+
+
 
 
 ReactDOM.render(
