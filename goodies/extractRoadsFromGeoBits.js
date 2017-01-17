@@ -1,12 +1,12 @@
 var fs = require('fs')
 
-const filename = 'map(42.417, -71.202)_(42.319, -70.967).json'
+// const filename = 'map(42.417, -71.202)_(42.319, -70.967).json'
+const filename = process.argv[2]
 let roads={};
 
 //
 // This file extracts road data from nina's geobits
 //
-
 
 function  formatRoad({properties,geometry}){
   return {
@@ -32,5 +32,5 @@ fs.readFile('./data/'+filename,(error,data)=>{
     })
   })
 
-  fs.writeFile('./data/exported_roads.json',JSON.stringify(roads, null, 4))
+  fs.writeFile(`./data/${filename}_exported_roads.json`,JSON.stringify(roads, null, 4))
 })
