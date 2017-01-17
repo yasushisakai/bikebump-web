@@ -17,3 +17,5 @@ firebase.initializeApp(firebaseConfig);
 
 export const ref = firebase.database().ref()
 export const firebaseAuth = firebase.auth
+export const isProduction = process.env.NODE_ENV == 'production'
+

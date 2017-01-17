@@ -4,7 +4,7 @@
   "description": "bikebump web platform",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "concurrently --kill-others \"webpack-dev-server\" \"node server/index.js dev \"",
     "production": "webpack -p",
     "lint": "eslint app/.; exit 0",
     "fix": "eslint --fix app/.; exit 0"
@@ -43,6 +43,7 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-0": "^6.16.0",
+    "concurrently": "^3.1.0",
     "css-loader": "^0.26.1",
     "eslint": "^3.13.1",
     "eslint-config-standard": "^6.2.1",

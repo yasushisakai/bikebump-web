@@ -5,8 +5,8 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import { routerReducer, syncHistoryWithStore } from 'react-router-redux'
 import * as reducerModules from 'modules'
-import { hashHistory } from 'react-router'
-
+import { hashHistory, browserHistory } from 'react-router'
+import { isProduction } from 'config/constants'
 import getRoutes from 'config/routes'
 import { checkIfAuthed } from 'helpers/auth'
 
@@ -17,8 +17,8 @@ const store = createStore(combineReducers(
     window.devToolsExtension ? window.devToolsExtension() : (f)=>f 
   )
 )
-
-const history = syncHistoryWithStore(hashHistory,store)
+const witchHistory = isProduction ? browserHistory : hashHistory
+const history = syncHistoryWithStore(witchHistory,store)
 
 function checkAuth (nextState, replace) {
   if(store.getState().users.get('isFetching') === true){
@@ -41,7 +41,8 @@ function checkAuth (nextState, replace) {
   }  
 }
 
-
+const mode = isProduction === true ? 'production': 'development' 
+console.log(`bikebump running (${mode})`)
 
 
 ReactDOM.render(
