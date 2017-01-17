@@ -68,7 +68,6 @@ export function saveUserDB (user) {
   // check if email is unique
   return fetchUIdfromEmail(user.email)
     .then((uid)=>{
-      console.log(uid)
       return uid === '' ? saveUser(user) : {...user,uid}
     })
 }

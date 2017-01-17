@@ -54,7 +54,6 @@ export function handleFetchAuthUser (service) {
       //console.log(credential.accessToken)
       setAccessToken(service,credential.accessToken)
       checkAccessToken(service,credential.accessToken)
-        .then((email)=>{console.log(email)})
       const userData = user.providerData[0]
       const userInfo = formatUser(userData)
       return saveUserDB(userInfo)

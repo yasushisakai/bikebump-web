@@ -12,7 +12,7 @@ function NavLinks ({isAuthed}) {
     <Link to='/map'>{'Map'}</Link>
   </div>
   : <div>
-    <Link to='/home'>{'Home'}</Link>
+    <Link to='/'>{'Home'}</Link>
     <Link to='/map'>{'Map'}</Link>
   </div>
 }
@@ -27,9 +27,6 @@ function ActionLinks ({isAuthed}) {
     <Link to='/signin'>{'log in/sign in'}</Link>
   </div>
 }
-
-
-
 
 export default function Navigation ({isAuthed}) {
   return (
