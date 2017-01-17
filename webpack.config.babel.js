@@ -50,6 +50,12 @@ const developmentConfig = {
     hot: true,
     inline: true,
     progress: true,
+    port:8081,
+    proxy:{
+      '/api/*':{
+        target:"http://localhost:8080"
+      }
+    }
   },
   plugins: [HTMLWebpackPluginConfig, new webpack.HotModuleReplacementPlugin()]
 }

@@ -5,15 +5,13 @@ const RoadHelper = require('./helpers/RoadHelper')
 
 const roadHelper = new RoadHelper()
 
-const isDevelopment = process.argv[2] === 'dev'
-
-const portNum = isDevelopment === true ? 8081 : 8080
+const portNum = 8080
 
 const distRoot = path.resolve(__dirname,'../','dist')
 
 app.use(express.static(distRoot))
 
-app.get('/find',(req,res)=>{
+app.get('/api/find',(req,res)=>{
   const coordinates = {
     lat:parseFloat(req.query.lat),
     lng:parseFloat(req.query.lng)}
