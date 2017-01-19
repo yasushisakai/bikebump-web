@@ -1,5 +1,9 @@
 import firebase from 'firebase'
 
+
+
+export const minimalLatLngRefresh = 8000 // ms
+
 //
 // firebase
 //

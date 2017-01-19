@@ -13,3 +13,14 @@ export function findClosestRoad({lat,lng}){
       return response.data
     })
 }
+
+export function addDing(ding){
+  const dingId = ref.child(`dings`).push().key
+  const dingPromise = ref.child(`dings/${dingId}`).set({...ding,dingId})
+
+  return {dingId, dingPromise}
+}
+
+export function appendDing(dingId,{timestamp,uid,value}){
+  ref.child(`dings/${dingId}/timestamps`)
+}
