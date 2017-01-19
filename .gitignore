@@ -2,3 +2,5 @@ node_modules/
 goodies/data/
 dist/
 .DS_Store
+
+server/config/
