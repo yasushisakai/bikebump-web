@@ -3,16 +3,30 @@
 the previous web app is living in the ```fall-semester``` branch.
 we will be migrating the code make it to compatible using redux
 
+since the server was detached from this repo, we now need to
+have to run that separately.
 
-- install node & npm
-- ```npm install```
-- ```npm run start```
+0. request yasushi for the firebase credential files and exported_roads.json files
+
+1. do ```git clone https://github.com/yasushisakai/bikebump-server.git server``` 
+*the directory should be in the same level*
+- put the directories/files from Yasushi inside ```server``` folder
+  the structure should be like this
+  ```
+  /bikebump
+    /server
+      /lib
+      /data // from Yasushi
+      /config //from Yasushi
+      /src
+    /web // this repo
+      ...etc
+  ```
+- ```cd server```
+- ```npm install``` & ```npm run production```
+- cd back to this repo
+- ```npm install``` & ```npm run start```
+- check ```localhost:8081/```
 
 ---
-## memo manually add packages
-```
-npm install --save firebase immutable react react-{dom,icons,modal,redux,router,router-redux} redux redux-thunk
-```
-```
-npm install --save-dev babel-{core,eslint,loader,preset-es2015,preset-react,preset-react-hmre,preset-stage-0} css-loader eslint eslint-{config-standard,plugin-promise,plugin-react,plugin-standard} html-webpack-plugin style-loader webpack webpack-dev-server
-```
+
