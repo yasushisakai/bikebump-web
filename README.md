@@ -12,6 +12,7 @@ have to run that separately.
 *the directory should be in the same level*
 - put the directories/files from Yasushi inside ```server``` folder
   the structure should be like this
+  
   ```
   /bikebump
     /server
@@ -22,7 +23,8 @@ have to run that separately.
     /web // this repo
       ...etc
   ```
-- ```cd server```
+  
+3. ```cd server```
 - ```npm install``` & ```npm run production```
 - cd back to this repo
 - ```npm install``` & ```npm run start```
