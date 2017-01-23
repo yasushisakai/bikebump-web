@@ -25,14 +25,23 @@ function AuthButton(props){
 const AuthContainer = React.createClass({
   propTypes:{
     isFetching: PropTypes.bool.isRequired,
+    isAuthed:PropTypes.bool.isRequired,
     error: PropTypes.string.isRequired,
     handleUserAuthRedirect : PropTypes.func.isRequired,
     handleUserAuthReturn: PropTypes.func.isRequired,
+  },
+  contextTypes:{
+    router: PropTypes.object.isRequired,
   },
   componentDidMount (){
     if(sessionStorage.getItem('redirectAuth') === 'true'){
       this.props.handleUserAuthReturn()
     }
+  },
+  componentDidUpdate (){
+    this.props.isAuthed === true 
+    ? this.context.router.push('record')
+    : null
   },
   signInButtons () {
     if(localStorage.getItem('provider') === null){
@@ -61,6 +70,7 @@ const AuthContainer = React.createClass({
 function mapStateToProps({users}){
   return{
     isFetching : users.get('isFetching'),
+    isAuthed: users.get('isAuthed'),
     error : users.get('error'),
   }
 }

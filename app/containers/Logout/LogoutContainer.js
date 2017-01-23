@@ -14,7 +14,6 @@ const LogoutContainer = React.createClass({
   },
   componentDidMount () {
     this.props.handleUserLogout()
-    setTimeout(()=>{this.context.router.push('/')}, 5000)
   },
   render () {
     return (

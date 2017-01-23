@@ -23,7 +23,7 @@ export default function getRoutes(checkAuth, history){
         <Route path='roads/:' component={RoadsContainer} onEnter={checkAuth} />
         <Route path='user/:uid' component={UserContainer} onEnter={checkAuth} />
         <Route path='pick' component={PickContainer} onEnter={checkAuth} />
-        <Route path='signin' component={AuthContainer}/>
+        <Route path='signin' component={AuthContainer} onEnter={checkAuth}/>
         <Route path='logout' component={LogoutContainer} />
         <Route path='clear' component={ClearContainer} />
         <IndexRoute component={HomeContainer} onEnter={checkAuth}/>
