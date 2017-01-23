@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable'
-import { formatUser } from 'helpers/utils'
-import { saveUserDB, auth, setAccessToken, checkAccessToken } from 'helpers/auth'
+import { formatUser, clearStorage } from 'helpers/utils'
+import { auth, redirectAuth, getCurrentUser, logout } from 'helpers/auth'
 // users 
 
 const FETCHING_USER = 'FETCHING_USER'
@@ -9,7 +9,6 @@ const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
 
 const AUTH_USER = 'AUTH_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
-
 
 function fetchingUser(){
   return {
@@ -41,26 +40,51 @@ export function authUser(uid){
   }
 }
 
-export function unauthUser(){
+function unauthUser(){
   return{
     type:UNAUTH_USER,
   }
 }
 
-export function handleFetchAuthUser (service) {
+// this is triggered by a mouse click
+export function handleUserAuthRedirect (service) {
   return function (dispatch) {
     dispatch(fetchingUser)
-    return auth(service).then(({user,credential})=>{
-      //console.log(credential.accessToken)
-      setAccessToken(service,credential.accessToken)
-      checkAccessToken(service,credential.accessToken)
-      const userData = user.providerData[0]
-      const userInfo = formatUser(userData)
-      return saveUserDB(userInfo)
-    })
+    return auth(service)
+  }
+} 
+
+// this is triggered only when it is redirected from handleUserRedirect
+export function handleUserAuthReturn (service) {
+  return function (dispatch) {
+    dispatch(fetchingUser)
+    return redirectAuth(service)
       .then((user)=>dispatch(fetchingUserSuccess(user.uid,user,Date.now())))
       .then((user)=>dispatch(authUser(user.uid)))
       .catch((error)=>dispatch(fetchingUserError(error)))
+  }
+}
+
+export function handleUserLogout (){
+  return function (dispatch) {
+    logout()
+      .then(()=>dispatch(unauthUser()))
+  }
+} 
+
+export function handleClearUser (){
+  return function (dispatch) {
+    getCurrentUser()
+      .then((user)=>{
+        if(user){
+          clearStorage()
+          return user.delete()
+        }else{
+          return null
+        }
+      })
+      .then(()=>{dispatch(unauthUser())})
+      .catch((error)=>dispatch(fetchingUserError(error))) 
   }
 }
 

@@ -11,6 +11,7 @@ import {
   PickContainer,
   AuthContainer,
   LogoutContainer,
+  ClearContainer,
 } from 'containers'
 
 export default function getRoutes(checkAuth, history){
@@ -24,6 +25,7 @@ export default function getRoutes(checkAuth, history){
         <Route path='pick' component={PickContainer} onEnter={checkAuth} />
         <Route path='signin' component={AuthContainer}/>
         <Route path='logout' component={LogoutContainer} />
+        <Route path='clear' component={ClearContainer} />
         <IndexRoute component={HomeContainer} onEnter={checkAuth}/>
       </Route>
     </Router>

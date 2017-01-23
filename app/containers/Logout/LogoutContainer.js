@@ -1,22 +1,37 @@
-import React, {PropTypes} from 'react'
+import React, { PropTypes } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { logout } from 'helpers/auth'
-import { unauthUser } from 'modules/users'
-
 import { Logout } from 'components'
+import * as userActionCreators from 'modules/users'
+
 const LogoutContainer = React.createClass({
   propTypes:{
-    dispatch : PropTypes.func.isRequired,
+    isAuthed:PropTypes.bool.isRequired,
+    handleUserLogout:PropTypes.func.isRequired,
   },
-  componentDidMount(){
-    logout()
-    this.props.dispatch(unauthUser())
+  contextTypes:{
+    router: PropTypes.object.isRequired,
+  },
+  componentDidMount () {
+    this.props.handleUserLogout()
+    setTimeout(()=>{this.context.router.push('/')}, 5000)
   },
   render () {
     return (
-      <Logout />
+      <Logout isAuthed={this.props.isAuthed} />
     )
   },
 })
 
-export default connect()(LogoutContainer)
+function mapStateToProps (state) {
+  return {
+    isAuthed:state.users.get('isAuthed'),
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return bindActionCreators(userActionCreators,dispatch)
+}
+
+export default connect(mapStateToProps, 
+mapDispatchToProps)(LogoutContainer)

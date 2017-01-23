@@ -21,12 +21,12 @@ export function formatGeoLocation(coords){
   } 
 }
 
-export function formatUser(userData) {
+export function formatUser(name,email,avatar,uid) {
   return {
-    name: userData.displayName,
-    email: userData.email,
-    avatar: userData.photoURL,
-    uid: userData.uid,
+    name,
+    email,
+    avatar,
+    uid,
   }
 }
 
@@ -43,4 +43,9 @@ export function insertCSSLink(url) {
   link.href = url
 
   head.appendChild(link)
+}
+
+export function clearStorage () {
+  localStorage.clear()
+  sessionStorage.clear()
 }

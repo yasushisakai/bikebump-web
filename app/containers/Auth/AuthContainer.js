@@ -22,23 +22,32 @@ function AuthButton(props){
     )
 }
 
-
 const AuthContainer = React.createClass({
   propTypes:{
     isFetching: PropTypes.bool.isRequired,
     error: PropTypes.string.isRequired,
-    handleFetchAuthUser: PropTypes.func.isRequired,
+    handleUserAuthRedirect : PropTypes.func.isRequired,
+    handleUserAuthReturn: PropTypes.func.isRequired,
   },
-  handleClick () {
-    this.props.handleFetchAuthUser('google')
+  componentDidMount (){
+    if(sessionStorage.getItem('redirectAuth') === 'true'){
+      this.props.handleUserAuthReturn()
+    }
   },
   signInButtons () {
-    return Object.values(services).map((service)=>{
+    if(localStorage.getItem('provider') === null){
+      return Object.values(services).map((service)=>{
+        return <AuthButton 
+          onClick={this.props.handleUserAuthRedirect}
+          service={service}
+          key={service} />
+      })
+    }else{
       return <AuthButton 
-        onClick={this.props.handleFetchAuthUser}
-        service={service}
-        key={service} />
-    })
+        onClick={this.props.handleUserAuthRedirect}
+        service={localStorage.getItem('provider')}
+        />
+    }
   },
   render () {
     return (

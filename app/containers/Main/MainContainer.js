@@ -20,16 +20,16 @@ const MainContainer = React.createClass({
     authUser : PropTypes.func.isRequired,
   },
   componentDidMount () {
-    // check if we are authed using access_tokens ?
     firebaseAuth().onAuthStateChanged((user)=>{
       if(user){
-        let userInfo = formatUser(user.providerData[0])
-        fetchUIdfromEmail(userInfo.email)
-          .then((uid)=>{
-            userInfo.uid = uid
-            this.props.fetchingUserSuccess(uid,userInfo,Date.now())
-            this.props.authUser(uid)
-          })
+        const userInfo = formatUser(
+          user.displayName,
+          user.email,
+          user.photoURL,
+          user.uid
+          )
+        this.props.fetchingUserSuccess(user.uid,userInfo,Date.now())
+        this.props.authUser(user.uid)
       }
     })
   },
