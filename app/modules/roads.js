@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable'
+import { fetchRoad, fetchRoads } from 'helpers/api'
 const FETCHING_ROAD = 'FETCHING_ROAD'
 const FETCHING_ROAD_ERROR = 'FETCHING_ROAD_ERROR'
 const FETCHING_ROAD_SUCCESS = 'FETCHING_ROAD_SUCCESS'
@@ -14,17 +15,30 @@ function fetchingRoad () {
   }
 }
 
-function fetchingRoadError () {
+function fetchingRoadError (error) {
+  console.warn(error)
   return {
-    type:FETCHING_ROAD_ERROR
+    type:FETCHING_ROAD_ERROR,
+    error : 'error fetching road'
   }
 }
 
-function fetchingRoadSuccess () {
+// lets get the roads once
+function fetchingRoadSuccess (roads) {
   return {
-    type:FETCHING_ROAD_SUCCESS
+    type:FETCHING_ROAD_SUCCESS,
+    roads
   }
 }
+
+export function handleRoadsFetch () {
+  return function(dispatch){
+    fetchRoads()
+      .then((roads)=>dispatch(fetchingRoadSuccess(roads)))
+      .catch((error)=>dispatch(fetchingRoadError(error)))
+  }
+}
+
 
 export default function roads (state=initialState,action){
   switch (action.type) {
@@ -35,10 +49,11 @@ export default function roads (state=initialState,action){
         isFetching:false,
         error:action.error,
       })
-    case FETCHING_ROAD_ERROR:
-      return state
     case FETCHING_ROAD_SUCCESS:
-      return state
+      return state.merge(action.roads).merge({
+        isFetching:false,
+        error:''
+      })
     default:
       return state
   }

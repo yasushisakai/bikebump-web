@@ -38,3 +38,8 @@ export function fetchRoad (roadId) {
   return ref.child(`roads/${roadId}`).once('value')
     .then((snapshot)=>snapshot.val())
 }
+
+export function fetchRoads () {
+  return ref.child(`roads`).once('value')
+    .then((snapshot)=>snapshot.val())
+}

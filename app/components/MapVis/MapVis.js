@@ -8,6 +8,7 @@ MapVis.propTypes={
 }
 
 export default function MapVis (props) {
+  console.log('MapVis Compoment Render!!')
   // we need to put a special css file in order to render correctly
   insertCSSLink('https://unpkg.com/leaflet@1.0.2/dist/leaflet.css')
   
