@@ -1,4 +1,4 @@
-import {ref,isRemote} from 'config/constants'
+import {ref,isProduction} from 'config/constants'
 import axios from 'axios'
 
 export function fetchUser(uid){
@@ -7,7 +7,7 @@ export function fetchUser(uid){
 }
 
 export function findClosestRoad({lat,lng}){
-  const serverURL = isRemote === true ?'https://bikebump.media.mit.edu/':'http://localhost:8081/'
+  const serverURL = isProduction === true ?'https://bikebump.media.mit.edu/':'http://localhost:8081/'
   return axios.get(`${serverURL}api/road/closest?lat=${lat}&lng=${lng}`,{header:{}})
     .then((response)=>{
       return response.data
