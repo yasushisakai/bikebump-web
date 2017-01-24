@@ -4,14 +4,13 @@ import { Map } from 'immutable'
 
 Record.propTypes={
   isRecording : PropTypes.bool.isRequired,
+  isFetchingLatLng : PropTypes.bool.isRequired,
   onRecordButtonClick: PropTypes.func.isRequired,
+  onReportButtonClick: PropTypes.func.isRequired,
   location : PropTypes.instanceOf(Map)
 }
 
-let renderTimes = 0
-
 export default function Record (props) {
-  renderTimes ++
   return (
    <div>
     <div className={button} onClick={props.onRecordButtonClick}>
@@ -20,15 +19,14 @@ export default function Record (props) {
         :'start recording'
       }
     </div>
-    {props.isRecording === true
+    {props.isRecording === true && props.isFetchingLatLng === false
     ? (<div>
-      <div className={button} onClick={()=>{console.log('good')}}>{'good'}</div>
-      <div className={button} onClick={()=>{console.log('bad')}}>{'bad'}</div>
+      <div className={button} onClick={props.onReportButtonClick}>{'good'}</div>
+      <div className={button} onClick={props.onReportButtonClick}>{'bad'}</div>
       </div>
       )
     : null
     }
-    {`Record render Times: ${renderTimes}`}
     <div>
       {`location: lat=${props.location.get('lat')}, lat=${props.location.get('lng')}`}
     </div>

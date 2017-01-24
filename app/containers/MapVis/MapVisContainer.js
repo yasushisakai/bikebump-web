@@ -1,25 +1,38 @@
-import React from 'react'
+import React, {PropTypes} from 'react'
 import { MapVis } from 'components'
+import { bindActionCreators } from 'redux'
 import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
+
+import * as dingFeedActionCreators from 'modules/dingFeed'
 import { findClosestRoad } from 'helpers/api'
 
+
 const MapVisContainer = React.createClass({
+  propTypes:{
+    isFetching:PropTypes.bool.isRequired,
+    handleSetDingListener:PropTypes.func.isRequired,
+  },
   componentDidMount () {
-    const coordinates = {lng:42.360152, lat:-71.0871862}
-    console.log(
-      `media lab is at: lat=${coordinates.lat} lng=${coordinates.lng}`
-      )
-    findClosestRoad(coordinates)
-      .then((road)=>{
-        console.log(road)
-      })
+    // add dings and dingFeed to the state
+    this.props.handleSetDingListener() 
   },
   render () {
     return (
-      <MapVis/>
+      <MapVis isFetching={this.props.isFetching}/>
       )
   },
 })
 
 
-export default MapVisContainer
+function mapStateToProps({dings, dingFeed}){
+  return {
+    isFetching:dings.get('isFetching') || dingFeed.get('isFetching'),
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators(dingFeedActionCreators,dispatch)
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(MapVisContainer)

@@ -15,6 +15,7 @@ const initialState = fromJS({
     lat: 0,
     lng: 0,
   },
+  latestFetchAttempt:0,
   latestFetch:0,
   error:'',
 })
@@ -86,6 +87,7 @@ export default function record(state=initialState,action){
     case FETCHING_LATLNG:
       return state.merge({
         isFetchingLatLng:true,
+        latestFetchAttempt:Date.now(),
       })
     case FETCHING_LATLNG_ERROR:
       return state.merge({

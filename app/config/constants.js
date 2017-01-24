@@ -2,7 +2,7 @@ import firebase from 'firebase'
 
 
 
-export const minimalLatLngRefresh = 8000 // ms
+export const minimalLatLngRefresh = 5000 // ms
 
 //
 // firebase

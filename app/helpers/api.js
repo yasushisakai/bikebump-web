@@ -24,3 +24,12 @@ export function addDing(ding){
 export function appendDing(dingId,{timestamp,uid,value}){
   ref.child(`dings/${dingId}/timestamps`)
 }
+
+export function listenToDings( callback, errorCallback){
+  ref.child(`dings/`).on('value',
+    (snapshot)=>{
+      const dings = snapshot.val() || {}
+      callback(dings)
+    },
+    errorCallback)
+}

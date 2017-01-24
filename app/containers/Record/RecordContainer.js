@@ -2,11 +2,12 @@ import React, {PropTypes} from 'react'
 import { Record } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {refreshLatLng} from 'helpers/utils'
+import { refreshLatLng } from 'helpers/utils'
 
 import {Map} from 'immutable'
 import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
+import * as dingFeedActionCreators from 'modules/dingFeed'
 
 const RecordContainer = React.createClass({
   propTypes:{
@@ -15,15 +16,23 @@ const RecordContainer = React.createClass({
     isFetchingLatLng:PropTypes.bool.isRequired,
     latestLocation: PropTypes.instanceOf(Map).isRequired,
     latestFetch : PropTypes.number.isRequired,
+    latestFetchAttempt : PropTypes.number.isRequired,
     location: PropTypes.instanceOf(Map).isRequired,
     handleFetchLatLng: PropTypes.func.isRequired,
     toggleRecording: PropTypes.func.isRequired, 
     handleCreateDing : PropTypes.func.isRequired,
+    handleSetDingListener : PropTypes.func.isRequired,
+    handleComplieDing : PropTypes.func.isRequired,
   },
+
   componentDidMount () {
-    this.renderTime = 0
-    this.props.handleFetchLatLng()
+
+    // listen to dings if not already
+    this.props.handleSetDingListener()
+
     this.interval = null
+
+    this.props.handleFetchLatLng()
 
     let testDing = {
       radius : 10,
@@ -44,9 +53,10 @@ const RecordContainer = React.createClass({
     }
 
 
-    this.props.handleCreateDing(testDing)
+    //this.props.handleCreateDing(testDing)
 
   },
+
   shouldComponentUpdate (nextProps, nextState) {
     if(this.props.isFetchingLatLng !== nextProps.isFetchingLatLng){
       if(nextProps.isFetchingLatLng===false) return true
@@ -54,31 +64,47 @@ const RecordContainer = React.createClass({
     }
     return true
   },
-  updateLatLng () {
 
+  updateLatLng () {
     if(this.props.isRecording === false && this.interval !== null) {
       window.clearInterval(this.interval)
       this.interval = null
     }
 
-    if(refreshLatLng(this.props.latestFetch) === true && this.props.isFetchingLatLng === false){
+    if(refreshLatLng(this.props.latestFetchAttempt) === true && this.props.isFetchingLatLng === false){
       this.props.handleFetchLatLng()
     }
 
   },
+
+  handleReport () {
+    // add a ding
+
+    this.props.handleComplieDing(
+      this.props.uid,
+      this.props.latestLocation.toJS(),
+      this.props.latestFetch,
+      10,
+      0
+      )
+
+  },
+
   componentDidUpdate () {
     if(this.props.isRecording === true && this.interval===null){
+      this.updateLatLng()
       this.interval = window.setInterval(this.updateLatLng, 10000)
     }
   },
+
   componentWillUnmount () {
     window.clearInterval(this.interval)
     this.interval = null
   },
+
   render () {
     return (<div>
-      <Record isRecording={this.props.isRecording} onRecordButtonClick={this.props.toggleRecording} location={this.props.location}/>
-      <div>{`RecordContainer:${this.renderTime}`}</div>
+      <Record isRecording={this.props.isRecording} isFetchingLatLng={this.props.isFetchingLatLng} onRecordButtonClick={this.props.toggleRecording} onReportButtonClick={this.handleReport} location={this.props.location}/>
       </div>
     )
   },
@@ -91,12 +117,13 @@ function mapState({record,users}){
   isFetchingLatLng : record.get('isFetchingLatLng'),
   latestLocation: record.get('latestLocation'),
   latestFetch : record.get('latestFetch'),
+  latestFetchAttempt : record.get('latestFetchAttempt'),
   location : record.get('latestLocation')
   }
 }
 
 function mapDispatch(dispatch){
-  return bindActionCreators({...recordActionCreators,...dingsActionCreators},dispatch)
+  return bindActionCreators({...recordActionCreators,...dingsActionCreators, ...dingFeedActionCreators},dispatch)
 }
 
 
