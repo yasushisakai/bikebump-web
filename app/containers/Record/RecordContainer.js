@@ -77,15 +77,14 @@ const RecordContainer = React.createClass({
 
   },
 
-  handleReport () {
+  handleReport (value) {
     // add a ding
-
-    this.props.handleComplieDing(
+    return this.props.handleComplieDing(
       this.props.uid,
       this.props.latestLocation.toJS(),
       this.props.latestFetch,
       10,
-      0
+      value
       )
 
   },

@@ -1,4 +1,6 @@
-import {minimalLatLngRefresh } from 'config/constants'
+import {
+  minimalLatLngRefresh
+} from 'config/constants'
 
 export function fetchGeoLocation() {
   return new Promise(function(resolve, reject) {
@@ -14,14 +16,14 @@ export function fetchGeoLocation() {
   })
 }
 
-export function formatGeoLocation(coords){
+export function formatGeoLocation(coords) {
   return {
-    lat:coords.latitude,
-    lng:coords.longitude,
-  } 
+    lat: coords.latitude,
+    lng: coords.longitude,
+  }
 }
 
-export function formatUser(name,email,avatar,uid) {
+export function formatUser(name, email, avatar, uid) {
   return {
     name,
     email,
@@ -30,8 +32,35 @@ export function formatUser(name,email,avatar,uid) {
   }
 }
 
-export function refreshLatLng(timestamp){
-  return Date.now() - timestamp >= minimalLatLngRefresh 
+/**
+ * distFromLatLng
+ * calculates the distance between two latlng values in Meters
+ * ref:
+ * http://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
+ *
+ * @param lat1
+ * @param lng1
+ * @param lat2
+ * @param lng2
+ * @returns {number} : distance in METERS
+ */
+export function distFromLatLng(start, end) {
+
+  const R = 6378.137 * 1000; // Radius of the earth in m
+  const dLat = (end.lat - start.lat) * (Math.PI / 180.0);
+  const dLon = (end.lng - start.lng) * (Math.PI / 180.0);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(start.lat * (Math.PI / 180.0)) * Math.cos(end.lat * (Math.PI / 180.0)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c; // Distance in meters
+
+  return d;
+}
+
+export function refreshLatLng(timestamp) {
+  return Date.now() - timestamp >= minimalLatLngRefresh
 }
 
 export function insertCSSLink(url) {
@@ -45,7 +74,7 @@ export function insertCSSLink(url) {
   head.appendChild(link)
 }
 
-export function clearStorage () {
+export function clearStorage() {
   localStorage.clear()
   sessionStorage.clear()
 }

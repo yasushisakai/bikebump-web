@@ -21,8 +21,8 @@ export function addDing(ding){
   return {dingId, dingPromise}
 }
 
-export function appendDing(dingId,{timestamp,uid,value}){
-  ref.child(`dings/${dingId}/timestamps`)
+export function appendTimestampToDing(dingId,{timestamp,uid,value}){
+  return ref.child(`dings/${dingId}/timestamps/${timestamp}`).set({timestamp,uid,value})
 }
 
 export function listenToDings( callback, errorCallback){
@@ -32,4 +32,9 @@ export function listenToDings( callback, errorCallback){
       callback(dings)
     },
     errorCallback)
+}
+
+export function fetchRoad (roadId) {
+  return ref.child(`roads/${roadId}`).once('value')
+    .then((snapshot)=>snapshot.val())
 }

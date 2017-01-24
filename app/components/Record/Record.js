@@ -11,6 +11,15 @@ Record.propTypes={
 }
 
 export default function Record (props) {
+
+  function onReportGood () {
+    props.onReportButtonClick(0)
+  }
+
+  function onReportBad () {
+    props.onReportButtonClick(1)
+  }
+
   return (
    <div>
     <div className={button} onClick={props.onRecordButtonClick}>
@@ -21,8 +30,8 @@ export default function Record (props) {
     </div>
     {props.isRecording === true && props.isFetchingLatLng === false
     ? (<div>
-      <div className={button} onClick={props.onReportButtonClick}>{'good'}</div>
-      <div className={button} onClick={props.onReportButtonClick}>{'bad'}</div>
+      <div className={button} onClick={onReportGood}>{'good'}</div>
+      <div className={button} onClick={onReportBad}>{'bad'}</div>
       </div>
       )
     : null

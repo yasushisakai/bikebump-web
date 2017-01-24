@@ -1,6 +1,7 @@
-import { fromJS, toJS } from 'immutable'
-import { addDing, listenToDings, findClosestRoad } from 'helpers/api'
+import { fromJS, toJS, Map } from 'immutable'
+import { addDing, appendTimestampToDing, listenToDings, findClosestRoad } from 'helpers/api'
 import { addListener } from 'modules/listeners'
+import {distFromLatLng} from 'helpers/utils'
 
 const FETCHING_DING = 'FETCHING_DING'
 const FETCHING_DING_ERROR = 'FETCHING_DING_ERROR'
@@ -68,34 +69,58 @@ export function handleCreateDing(ding){
 }
 
 export function handleComplieDing(uid,coordinates,timestamp,radius,value){
-  return function(dispatch){
+  return function(dispatch,getState){
 
-    let ding = {
-      coordinates:coordinates,
-      radius,
-      timestamps:{}
-    }
-
-    ding.timestamps[timestamp] = {
+    // create the timestamp first
+    const timestampData = {
       uid,
       value,
       timestamp
     }
 
+    // get all dings check the distance
+    let minimalDistance = 100 //meters
+    let closestDingId = ''
+    const dingIds = getState().dingFeed.get('dingIds')
+    dingIds.map((dingId)=>{
+      const ding = getState().dings.get(dingId)
+      const start = ding.get('coordinates').toJS()
+      const end = coordinates
+      const distance = distFromLatLng(start,end)
+      if (minimalDistance > distance && distance < ding.get('radius')) {
+        minimalDistance = distance
+        closestDingId = dingId
+      }
+    })
+
+    if(minimalDistance < 10) {
+      appendTimestampToDing(closestDingId,timestampData)
+        .then(()=>dispatch(appendDing(closestDingId,timestampData)))
+    } else {
+      // create new one
+      let newDing = {
+        coordinates,
+        radius,
+        timestamps:{
+          [timestamp]:timestampData
+        }
+      }
     findClosestRoad(coordinates)
       .then((closestRoad)=>{
         const roadId = closestRoad.roadId
-        ding = {...ding,roadId}
-        return ding
+        newDing = {...newDing,roadId}
+        return newDing
       })
-      .then((ding)=>addDing(ding))
+      .then((newDing)=>addDing(newDing))
       .then((result)=>{
-        ding = {...ding,dingId:result.dingId}
+        newDing = {...newDing,dingId:result.dingId}
         return result.dingPromise
       })
-      .then(()=>dispatch(createDing(ding)))
+      .then(()=>dispatch(createDing(newDing)))
+    }
   }
 }
+
 
 const initialState = fromJS({
   lastUpdated : 0,
@@ -124,7 +149,10 @@ export default function dings(state=initialState, action) {
         [action.ding.dingId]:action.ding
       })
     case APPEND_DING:
-      return state
+      return state.setIn(
+        [action.dingId,'timestamps',action.timestamp],
+        Map({uid:action.uid,timestamp:action.timestamp,value:action.value})
+        )
     case ADD_MULTIPLE_DINGS:
       return state.merge(action.dings)
     default:

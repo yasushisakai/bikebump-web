@@ -30,7 +30,6 @@ function settingDingListenerSuccess (dingIds) {
 
 export function handleSetDingListener () {
   return function (dispatch,getState) {
-    console.log(getState().listeners.get('dings'))
 
     if(getState().listeners.get('dings')===true){
       return
