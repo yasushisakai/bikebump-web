@@ -32,3 +32,7 @@ have to run that separately.
 
 ---
 
+### node and npm versions
+some version may not work, these are tested enviroments
+mac(development), npm v3.10.3, node v6.3.0,
+ubuntu(production), npm v3.10.9, node v7.2.0 
