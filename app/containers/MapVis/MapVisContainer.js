@@ -39,12 +39,12 @@ const MapVisContainer = React.createClass({
     const currentDingsLength = this.props.dings.length
 
     if(
-      nextRoadsLength === currentRoadsLength ||
+      nextRoadsLength === currentRoadsLength &&
       nextDingsLength === currentDingsLength
       ) { return false}
 
     if(
-      currentRoadsLength === 0 ||
+      currentRoadsLength === 0 &&
       currentDingsLength === 0
       ) {
       return false
