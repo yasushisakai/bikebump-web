@@ -1,26 +1,19 @@
-import {fromJS} from 'immutable'
+import {fromJS, toJS} from 'immutable'
 import {fetchGeoLocation} from 'helpers/utils'
+import {saveCommute} from 'helpers/api'
+import { addCommute } from 'modules/commutes'
 
 const STOP_RECORDING = 'STOP_RECORDING'
 const START_RECORDING = 'START_RECORDING'
+const ADD_BREADCRUMB = 'ADD_BREADCRUMB'
 
 const FETCHING_LATLNG = 'FETCHING_LATLNG'
 const FETCHING_LATLNG_ERROR = 'FETCHING_LATLNG_ERROR'
 const FETCHING_LATLNG_SUCCESS = 'FETCHING_LATLNG_SUCCESS'
 
-const initialState = fromJS({
-  isFetchingLatLng:false,
-  isRecording:false,
-  latestLocation:{
-    lat: 0,
-    lng: 0,
-  },
-  latestFetchAttempt:0,
-  latestFetch:0,
-  error:'',
-})
 
-function stopRecording () {
+
+export function stopRecording () {
   return {
     type:STOP_RECORDING,
   }
@@ -34,9 +27,20 @@ function startRecording () {
 
 export function toggleRecording () {
   return function(dispatch,getState){
-    getState().record.get('isRecording') === true
-    ? dispatch(stopRecording())
-    : dispatch(startRecording())
+    if(getState().record.get('isRecording')===true){
+      const uid = getState().users.get('authedId')
+      const breadcrumbs = getState().record.get('breadcrumbs').toJS()
+      if(Object.keys(breadcrumbs).length >= 1)
+      {
+        saveCommute(uid,breadcrumbs)
+          .then((commute)=>dispatch(addCommute(commute)))
+      }else{
+        console.log('commute unable to save, no breadcrumbs!')
+              }
+      dispatch(stopRecording())
+    }else{
+      dispatch(startRecording())
+    }
   }
 }
 
@@ -64,7 +68,6 @@ function fetchingLatLngSuccess (location,timestamp=Date.now()) {
 
 export function handleFetchLatLng () {
   return function(dispatch,getState) {
-
     dispatch(fetchingLatLng())
     return fetchGeoLocation()
       .then((coordinates)=>{
@@ -73,6 +76,19 @@ export function handleFetchLatLng () {
       .catch((error)=>dispatch(fetchingLatLngError(error)))
   }
 }
+
+const initialState = fromJS({
+  isFetchingLatLng:false,
+  isRecording:false,
+  latestLocation:{
+    lat: 0,
+    lng: 0,
+  },
+  latestFetchAttempt:0,
+  latestFetch:0,
+  error:'',
+  breadcrumbs : {}
+})
 
 export default function record(state=initialState,action){
   switch (action.type) {
@@ -83,6 +99,7 @@ export default function record(state=initialState,action){
     case START_RECORDING:
       return state.merge({
         isRecording:true,
+        breadcrumbs:{}, //initiation
       })
     case FETCHING_LATLNG:
       return state.merge({
@@ -99,7 +116,13 @@ export default function record(state=initialState,action){
         isFetchingLatLng:false,
         latestFetch:action.timestamp,
         latestLocation:action.location,
-      })
+      }).setIn(
+        ['breadcrumbs',action.timestamp],
+          {
+            timestamp:action.timestamp,
+            coordinate:action.location,
+          }
+        )
     default:
       return state
   }

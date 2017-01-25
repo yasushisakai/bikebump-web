@@ -6,12 +6,13 @@ import {distFromLatLng} from 'helpers/utils'
 const FETCHING_DING = 'FETCHING_DING'
 const FETCHING_DING_ERROR = 'FETCHING_DING_ERROR'
 const FETCHING_DING_SUCCESS = 'FETCHING_DING_SUCCESS'
+const REMOVE_FETCHING = 'REMOVE_FETCHING'
 const CREATE_DING = 'CREATE_DING'
 const APPEND_DING = 'APPEND_DING'
 const ADD_MULTIPLE_DINGS = 'ADD_MULTIPLE_DINGS'
 
 
-function fetchingDing(){
+export function fetchingDing(){
   return {
     type:FETCHING_DING,
   }
@@ -29,6 +30,12 @@ function fetchingDingSuccess(ding){
   return {
     type:FETCHING_DING_SUCCESS,
     ding
+  }
+}
+
+export function removeFetching(){
+  return {
+    type:REMOVE_FETCHING,
   }
 }
 
@@ -124,7 +131,7 @@ export function handleComplieDing(uid,coordinates,timestamp,radius,value){
 
 const initialState = fromJS({
   lastUpdated : 0,
-  isFetching : false,
+  isFetching : true,
   error : '',
 })
 
@@ -144,6 +151,8 @@ export default function dings(state=initialState, action) {
         isFetching:false,
         [action.ding.dingId]:action.ding
       })
+    case REMOVE_FETCHING:
+      return state.set('isFetching',false)
     case CREATE_DING:
       return state.merge({
         [action.ding.dingId]:action.ding

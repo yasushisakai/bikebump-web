@@ -7,8 +7,9 @@ import { toJS, Map } from 'immutable'
 
 import * as dingFeedActionCreators from 'modules/dingFeed'
 import * as roadActionCreators from 'modules/roads'
+import * as commuteActionCreators from 'modules/commutes'
 import { findClosestRoad } from 'helpers/api'
-
+import { updateTimeConstrain } from 'helpers/utils'
 
 const MapVisContainer = React.createClass({
   propTypes:{
@@ -17,22 +18,42 @@ const MapVisContainer = React.createClass({
     dings: PropTypes.array.isRequired,
     roads: PropTypes.array.isRequired,
     handleRoadsFetch: PropTypes.func.isRequired, 
+    handleFetchCommutes: PropTypes.func.isRequired, 
   },
   componentDidMount () {
     // add dings and dingFeed to the state
+    // put a timer so we don't request data all
     this.props.handleSetDingListener() 
     this.props.handleRoadsFetch()
+    this.props.handleFetchCommutes()
+    this.previousUpdate = Date.now()
   },
   shouldComponentUpdate(nextProps) {
     // this is where you define when to trigger 'render' function
     // we can validate or compare nextProps and this.props
 
+    const nextRoadsLength = nextProps.roads.length
+    const currentRoadsLength = this.props.roads.length
+
+    const nextDingsLength = nextProps.dings.length
+    const currentDingsLength = this.props.dings.length
+
     if(
-      nextProps.roads.length === this.props.roads.length &&
-      nextProps.dings.length === this.props.dings.length
+      nextRoadsLength === currentRoadsLength ||
+      nextDingsLength === currentDingsLength
       ) { return false}
 
-    if(nextProps.roads.length === 0 || nextProps.dings.length === 0) {
+    if(
+      currentRoadsLength === 0 ||
+      currentDingsLength === 0
+      ) {
+      return false
+    }
+
+    if(
+      nextRoadsLength === 0 &&
+      nextDingsLength === 0
+      ) {
       return false
     }
 
@@ -68,7 +89,7 @@ function mapStateToProps({dings, dingFeed,roads}){
 }
 
 function mapDispatchToProps(dispatch){
-  return bindActionCreators({...dingFeedActionCreators,...roadActionCreators},dispatch)
+  return bindActionCreators({...dingFeedActionCreators,...roadActionCreators,...commuteActionCreators},dispatch)
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(MapVisContainer)

@@ -3,8 +3,8 @@ import { Record } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { refreshLatLng } from 'helpers/utils'
-
-import {Map} from 'immutable'
+import { Map } from 'immutable'
+import { updateCycleDuration } from 'config/constants'
 import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
@@ -65,6 +65,9 @@ const RecordContainer = React.createClass({
     return true
   },
 
+  componentWillUnmount (){
+    this.props.dispatch(this.props.stopRecording())  
+  },
   updateLatLng () {
     if(this.props.isRecording === false && this.interval !== null) {
       window.clearInterval(this.interval)
@@ -92,7 +95,7 @@ const RecordContainer = React.createClass({
   componentDidUpdate () {
     if(this.props.isRecording === true && this.interval===null){
       this.updateLatLng()
-      this.interval = window.setInterval(this.updateLatLng, 10000)
+      this.interval = window.setInterval(this.updateLatLng, updateCycleDuration)
     }
   },
 

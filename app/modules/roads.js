@@ -5,7 +5,7 @@ const FETCHING_ROAD_ERROR = 'FETCHING_ROAD_ERROR'
 const FETCHING_ROAD_SUCCESS = 'FETCHING_ROAD_SUCCESS'
 
 const initialState = fromJS({
-  isFetching:false,
+  isFetching:true,
   error:''
 })
 
@@ -33,6 +33,7 @@ function fetchingRoadSuccess (roads) {
 
 export function handleRoadsFetch () {
   return function(dispatch){
+    dispatch(fetchingRoad())
     fetchRoads()
       .then((roads)=>dispatch(fetchingRoadSuccess(roads)))
       .catch((error)=>dispatch(fetchingRoadError(error)))

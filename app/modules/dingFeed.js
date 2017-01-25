@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable' 
 import { listenToDings } from 'helpers/api'
 import { addListener } from 'modules/listeners'
-import { addMultipleDings } from 'modules/dings'
+import { addMultipleDings, removeFetching } from 'modules/dings'
 
 const SETTING_DING_LISTENER = 'SETTING_DING_LISTENER'
 const SETTING_DING_LISTENER_ERROR = 'SETTING_DING_LISTENER_ERROR'
@@ -39,6 +39,7 @@ export function handleSetDingListener () {
     listenToDings((dings)=>{
       dispatch(addMultipleDings(dings))
       dispatch(settingDingListenerSuccess(Object.keys(dings)))
+      dispatch(removeFetching())
     },(error)=>dispatch(settingDingListenerError(error)))
   }
 }

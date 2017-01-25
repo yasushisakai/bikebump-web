@@ -1,5 +1,6 @@
 import {
-  minimalLatLngRefresh
+  minimalLatLngRefresh,
+  renderTimeConstrain,
 } from 'config/constants'
 
 export function fetchGeoLocation() {
@@ -30,6 +31,11 @@ export function formatUser(name, email, avatar, uid) {
     avatar,
     uid,
   }
+}
+
+
+export function updateTimeConstrain (timestamp) {
+  return Date.now() - timestamp > renderTimeConstrain 
 }
 
 /**

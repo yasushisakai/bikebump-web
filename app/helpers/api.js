@@ -36,10 +36,22 @@ export function listenToDings( callback, errorCallback){
 
 export function fetchRoad (roadId) {
   return ref.child(`roads/${roadId}`).once('value')
-    .then((snapshot)=>snapshot.val())
+    .then((snapshot)=>(snapshot.val()||{}))
 }
 
 export function fetchRoads () {
   return ref.child(`roads`).once('value')
-    .then((snapshot)=>snapshot.val())
+    .then((snapshot)=>(snapshot.val()||{}))
+}
+
+export function fetchCommutes () {
+  return ref.child('commutes').once('value')
+    .then((snapshot)=>(snapshot.val()||{}))
+}
+
+export function saveCommute (uid,breadcrumbs) {
+  const commuteId = ref.child('commutes').push().key
+  const commute = {...breadcrumbs,commuteId,uid}
+  return ref.child(`commutes/${commuteId}`).set(commute)
+    .then(()=>commute)
 }

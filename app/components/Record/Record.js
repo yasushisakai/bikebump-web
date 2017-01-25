@@ -37,7 +37,11 @@ export default function Record (props) {
     : null
     }
     <div>
-      {`location: lat=${props.location.get('lat')}, lat=${props.location.get('lng')}`}
+      {
+      props.isRecording === true && props.isFetchingLatLng === false
+        ?(`location: lat=${props.location.get('lat')}, lat=${props.location.get('lng')}`)
+        :null
+      }
     </div>
    </div>
   )
