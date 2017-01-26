@@ -38,38 +38,23 @@ const MapVisContainer = React.createClass({
     const nextDingsLength = nextProps.dings.length
     const currentDingsLength = this.props.dings.length
 
-    if(
-      nextRoadsLength === currentRoadsLength &&
-      nextDingsLength === currentDingsLength
-      ) { return false}
-
-    if(
-      currentRoadsLength === 0 &&
-      currentDingsLength === 0
-      ) {
-      return false
-    }
-
-    if(
-      nextRoadsLength === 0 &&
-      nextDingsLength === 0
-      ) {
-      return false
-    }
-
     // default should be true
       return true
   },
   render () {
+    //console.log(this.props.handleFetchCommutes())
     console.log('MapVis Contaier render!!')
-    console.log(this.props.roads)
+    // console.log(this.props.roads)
     return this.props.isFetching === true
     ? null 
-    : <MapVis isFetching={this.props.isFetching}/>
+    : <MapVis isFetching={this.props.isFetching}
+        dings={this.props.dings}
+        commutes={this.props.commutes} />
   },
 })
 
-function mapStateToProps({dings, dingFeed,roads}){
+
+function mapStateToProps({dings, dingFeed, roads, commutes}){
   // everything from the state is a immutable object
   // this is an array
   const justDings = dingFeed.get('dingIds').toJS().map((dingId)=>{
@@ -79,12 +64,18 @@ function mapStateToProps({dings, dingFeed,roads}){
   const justRoads = roads.toList().filter((road,index)=>{
     return road instanceof Map
   }).toJS()
+
+  var justCommutes = commutes.toList().filter((commute,index)=>{
+    return commute instanceof Map
+  }).toJS()
+
   return {
     isFetching:dings.get('isFetching') ||
     dingFeed.get('isFetching') ||
     roads.get('isFetching'),
     dings:justDings,
     roads:justRoads,
+    commutes:justCommutes,
   }
 }
 
