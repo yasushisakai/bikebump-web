@@ -28,7 +28,7 @@ function checkAuth (nextState, replace) {
   const isAuthed = checkIfAuthed(store)
   const nextPath = nextState.location.pathname
 
-  if(nextPath==='/map'){
+  if(nextPath==='/map' || nextPath==='/admin'){
     return
   }else if (nextPath === '/' || nextPath == '/signin') {
     if(isAuthed === true) {

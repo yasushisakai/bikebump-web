@@ -65,6 +65,37 @@ export function distFromLatLng(start, end) {
   return d;
 }
 
+export function getTotalLength(geometry){
+  if(geometry.type==='LineString'){
+    return geometry.coordinates.reduce((length,coordinate,index,coordinates)=>{
+      if(index === 0 ) return 0
+      else{
+        const previousCoordinate = {lat:coordinates[index-1][1],lng:coordinates[index-1][0]}
+        const currentCoordinate = {lat:coordinate[1],lng:coordinate[0]}
+        return length + distFromLatLng(previousCoordinate,currentCoordinate)
+      }
+    },0)
+  }else if(geometry.type ==="MultiLineString"){
+    return geometry.coordinates.reduce((length,lineString)=>{
+      const lineStringLength = lineString.reduce((partialLength,coordinate,index,coordinates)=>{
+        if(index === 0 ) return 0
+        else{
+          const previousCoordinate = {lat:coordinates[index-1][1],lng:coordinates[index-1][0]}
+          const currentCoordinate = {lat:coordinate[1],lng:coordinate[0]}
+
+          return partialLength + distFromLatLng(previousCoordinate,currentCoordinate)
+        }
+      },0)
+      return length+lineStringLength 
+    },0)
+  }
+}
+
+export function getDomainLength(geometry,{start,end}){
+  const totalLength = getTotalLength(geometry)
+  return totalLength * Math.abs(end-start)
+}
+
 export function refreshLatLng(timestamp) {
   return Date.now() - timestamp >= minimalLatLngRefresh
 }

@@ -9,7 +9,7 @@ import * as dingFeedActionCreators from 'modules/dingFeed'
 import * as roadActionCreators from 'modules/roads'
 import * as commuteActionCreators from 'modules/commutes'
 import { findClosestRoad } from 'helpers/api'
-import { updateTimeConstrain } from 'helpers/utils'
+import { updateTimeConstrain, getDomainLength, getTotalLength } from 'helpers/utils'
 
 const MapVisContainer = React.createClass({
   propTypes:{
@@ -61,6 +61,7 @@ const MapVisContainer = React.createClass({
       return true
   },
   render () {
+    console.log(getDomainLength(this.props.roads[1].geometry,{start:0.0,end:1.0}))
     console.log('MapVis Contaier render!!')
     console.log(this.props.roads)
     return this.props.isFetching === true
@@ -72,6 +73,7 @@ const MapVisContainer = React.createClass({
 function mapStateToProps({dings, dingFeed,roads}){
   // everything from the state is a immutable object
   // this is an array
+
   const justDings = dingFeed.get('dingIds').toJS().map((dingId)=>{
     return dings.get(dingId).toJS()
   })
