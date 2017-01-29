@@ -14,11 +14,13 @@ Record.propTypes={
 
 export default function Record (props) {
 
-  function onReportGood () {
+  function onReportGood (event) {
+    event.preventDefault()
     props.onReportButtonClick(0)
   }
 
   function onReportBad () {
+    event.preventDefault()
     props.onReportButtonClick(1)
   }
 

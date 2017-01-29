@@ -11,6 +11,7 @@ const FETCHING_LATLNG = 'FETCHING_LATLNG'
 const FETCHING_LATLNG_ERROR = 'FETCHING_LATLNG_ERROR'
 const FETCHING_LATLNG_SUCCESS = 'FETCHING_LATLNG_SUCCESS'
 
+const LOCATION_CHANGE = '@@router/LOCATION_CHANGE'
 
 
 export function stopRecording () {
@@ -66,6 +67,18 @@ function fetchingLatLngSuccess (location,timestamp=Date.now()) {
   }
 }
 
+function locationChange () {
+  return {
+    type:LOCATION_CHANGE,
+  }
+}
+
+export function handleLocationChange () {
+  return function (dispatch) {
+    dispatch(locationChange)
+  }
+}
+
 export function handleFetchLatLng () {
   return function(dispatch,getState) {
     dispatch(fetchingLatLng())
@@ -110,6 +123,11 @@ export default function record(state=initialState,action){
       return state.merge({
         isFetchingLatLng:false,
         error:action.error,
+      })
+    case LOCATION_CHANGE:
+      console.log('location change')
+      return state.merge({
+        isRecording:false,
       })
     case FETCHING_LATLNG_SUCCESS:
       return state.merge({

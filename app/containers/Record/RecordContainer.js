@@ -52,7 +52,7 @@ const RecordContainer = React.createClass({
       value:0,
     }
 
-
+    console.log('componentDidMount')
     //this.props.handleCreateDing(testDing)
 
   },
@@ -100,6 +100,10 @@ const RecordContainer = React.createClass({
   },
 
   componentWillUnmount () {
+    console.log('hello')
+    if(this.props.isRecording === true) {
+      this.props.toggleRecording()
+    }
     window.clearInterval(this.interval)
     this.interval = null
   },
