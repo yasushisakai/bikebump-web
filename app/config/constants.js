@@ -2,6 +2,7 @@ import firebase from 'firebase'
 import { Map } from 'immutable' 
 
 export const minimalLatLngRefresh = 5000 // ms
+export const maxCommuteLife = 20000 // ms 
 export const updateCycleDuration = 7000 //ms
 export const renderTimeConstrain = 10000 //ms
 

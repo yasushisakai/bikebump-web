@@ -56,6 +56,18 @@ export function saveCommute (uid,breadcrumbs) {
     .then(()=>commute)
 }
 
+export function createCommute (uid) {
+  // initiates a commute
+  const commuteId = ref.child('commutes').push().key
+  return ref.child(`commutes/${commuteId}`).set({uid})
+    .then(()=>commuteId)
+}
+
+export function appendBreadcrumb (commuteId,coordinate,timestamp=Date.now()) {
+  ref.child(`commutes/${commuteId}/${timestamp}`).set(coordinate)
+    .then(()=>(null))
+}
+
 export function fetchPatterns() {
   return ref.child(`patterns/`).once('value')
     .then((snapshot)=>snapshot.val())

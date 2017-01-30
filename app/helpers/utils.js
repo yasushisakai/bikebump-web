@@ -1,6 +1,7 @@
 import {
   minimalLatLngRefresh,
   renderTimeConstrain,
+  maxCommuteLife, 
 } from 'config/constants'
 
 export function fetchGeoLocation() {
@@ -98,6 +99,10 @@ export function getDomainLength(geometry,{start,end}){
 
 export function refreshLatLng(timestamp) {
   return Date.now() - timestamp >= minimalLatLngRefresh
+}
+
+export function refreshCommute(timestamp) {
+  return Date.now() - timestamp >= maxCommuteLife 
 }
 
 export function insertCSSLink(url) {

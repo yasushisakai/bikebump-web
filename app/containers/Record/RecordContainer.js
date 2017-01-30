@@ -32,8 +32,6 @@ const RecordContainer = React.createClass({
 
     this.interval = null
 
-    this.props.handleFetchLatLng()
-
     let testDing = {
       radius : 10,
       roadId : 92038402,
@@ -64,10 +62,6 @@ const RecordContainer = React.createClass({
     }
     return true
   },
-
-  componentWillUnmount (){
-    this.props.dispatch(this.props.stopRecording())  
-  },
   updateLatLng () {
     if(this.props.isRecording === false && this.interval !== null) {
       window.clearInterval(this.interval)
@@ -93,14 +87,18 @@ const RecordContainer = React.createClass({
   },
 
   componentDidUpdate () {
-    if(this.props.isRecording === true && this.interval===null){
+    if(this.props.isRecording === false && this.interval !== null){
+      window.clearInterval(this.interval)
+      this.interval = null
+    }
+
+    if(this.props.isRecording === true && this.interval === null){
       this.updateLatLng()
       this.interval = window.setInterval(this.updateLatLng, updateCycleDuration)
     }
   },
-
   componentWillUnmount () {
-    console.log('hello')
+    // todo move this to main?
     if(this.props.isRecording === true) {
       this.props.toggleRecording()
     }

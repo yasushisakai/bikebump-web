@@ -16,6 +16,7 @@ const MainContainer = React.createClass({
     isFetching: PropTypes.bool.isRequired,
     error : PropTypes.string.isRequired,
     isAuthed: PropTypes.bool.isRequired,
+    isRecording: PropTypes.bool.isRequired,
     fetchingUserSuccess: PropTypes.func.isRequired,
     authUser : PropTypes.func.isRequired,
   },
@@ -32,6 +33,14 @@ const MainContainer = React.createClass({
         this.props.authUser(user.uid)
       }
     })
+
+    // check if isRecording
+    // if yes
+      // and if interval is null
+        // check commuteId && lastAttempt
+          // setinterval(update)
+        // initiate commute
+      // keep one
   },
   render () {
     return this.props.isFetching === true
@@ -43,11 +52,12 @@ const MainContainer = React.createClass({
   },
 })
 
-function mapStateToProps (state) {
+function mapStateToProps ({users,record}) {
   return {
-  isFetching : state.users.get('isFetching'),
-  error: state.users.get('error'),
-  isAuthed : state.users.get('isAuthed'),
+  isFetching : users.get('isFetching'),
+  error: users.get('error'),
+  isAuthed : users.get('isAuthed'),
+  isRecording : record.get('isRecording'),
   }
 }
 
