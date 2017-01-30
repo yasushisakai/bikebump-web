@@ -1,3 +1,4 @@
+console.clear()
 import React, {PropTypes} from 'react'
 import { Record } from 'components'
 import { connect } from 'react-redux'
@@ -8,6 +9,45 @@ import { updateCycleDuration } from 'config/constants'
 import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
+import mojs from 'mo-js'
+
+
+const Circle = React.createClass({
+  propTypes:{
+    isRecording:PropTypes.bool.isRequired,
+    //parent: PropTypes.object.isRequired,
+  },
+  componentDidMount(){
+    console.log(this.root)
+    this.circle = new mojs.Shape({
+      shape:'circle',
+      scale:{0.9:1.0},
+      top:'50%',
+      radius: 100,
+      fill:'white',
+      isShowStart:true,
+      //parent:props.parent,
+
+      duration : 1000,
+      delay: 1000,
+      easing: 'cubic.out',
+      repeat:999,
+    })
+
+    console.log(this.circle)
+
+    this.circle.play()
+  },
+  onClick(){
+    console.log('pressed')
+    this.circle.tune({
+      fill: 'red',
+    }).replay()
+  },
+  render(){
+    return <div onClick={this.onClick} id={'test_circle'}></div>
+  }
+})
 
 const RecordContainer = React.createClass({
   propTypes:{
@@ -45,6 +85,11 @@ const RecordContainer = React.createClass({
       }
 
       const timestamp = Date.now()
+
+      this.circleContainer = document.createElement('div')
+      const app = document.getElementById('app')
+      app.appendChild(circleContainer)
+
 
     testDing.timestamps[timestamp]={     
       timestamp:timestamp,
@@ -111,6 +156,7 @@ const RecordContainer = React.createClass({
   render () {
     return (<div>
       <Record isRecording={this.props.isRecording} isFetchingLatLng={this.props.isFetchingLatLng} onRecordButtonClick={this.props.toggleRecording} onReportButtonClick={this.handleReport} location={this.props.location}/>
+      <Circle isRecording={this.props.isRecording} parent={this.circleContainer}/>
       </div>
     )
   },
