@@ -20,6 +20,7 @@ export default function Record (props) {
     props.onReportButtonClick(1)
   }
 
+
   return (
    <div>
     <div className={button} onClick={props.onRecordButtonClick}>
