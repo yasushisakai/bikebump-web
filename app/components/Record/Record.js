@@ -24,17 +24,6 @@ export default function Record (props) {
     props.onReportButtonClick(1)
   }
 
-  const buttonStyle = {
-    backgroundColor : props.isRecording ? '#ff0000' : '#444444'
-  }
-
-  function buttonColor(color,float) {
-    return {
-      backgroundColor: color,
-      float : float,
-    }
-  }
-
   return (
    <div className={recordContainer}>
     <div className={mainButton} style={buttonStyle} onClick={props.onRecordButtonClick}>

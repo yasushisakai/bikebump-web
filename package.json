@@ -24,6 +24,7 @@
     "firebase": "^3.6.5",
     "immutable": "^3.8.1",
     "inline-worker": "^1.1.0",
+    "p5": "^0.5",
     "leaflet": "^1.0.2",
     "mojs": "^0.2.0",
     "nosleep": "BHSPitMonkey/NoSleep.js",
