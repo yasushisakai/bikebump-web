@@ -103,9 +103,9 @@ export default function proposals (state=initialState, action){
     case ADD_PROPOSAL:
       return state.setIn([action.proposal.roadId,action.proposal.proposalId],action.proposal)
     case ADD_VOTE:
-      return state.setIn([`${action.roadId}`,action.proposalId,action.uid],true)
+      return state.setIn([`${action.roadId}`,action.proposalId,'votes',action.uid],true)
     case REMOVE_VOTE:
-      return state.deleteIn([`${action.roadId}`,action.proposalId,action.uid])
+      return state.deleteIn([`${action.roadId}`,action.proposalId,'votes',action.uid])
     default:
       return state
       break;

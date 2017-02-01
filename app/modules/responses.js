@@ -42,7 +42,7 @@ export function handleFetchingResponses(){
 function addResponse (response) {
   return{
     type:ADD_RESPONSE,
-    response
+    response,
   }
 }
 
@@ -81,8 +81,7 @@ export default function responses (state=initialState, action){
       return state.merge({
         isFetching:false,
         error:'',
-        [action.response.responseId]:action.response
-      })
+      }).setIn([action.response.dingId,action.response.questionId,action.response.responseId],action.response)
     default:
       return state
   }

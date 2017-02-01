@@ -6,7 +6,8 @@ import * as patternsActionCreators from 'modules/patterns'
 import * as proposalsActionCreators from 'modules/proposals'
 import * as questionsActionCreators from 'modules/questions'
 import * as responsesActionCreators from 'modules/responses'
-import * as userStatsActionCreatros from 'modules/userStats'
+import * as userVotesActionCreators from 'modules/userVotes'
+import * as roadsActionCreators from 'modules/roads'
 
 const TestContainer = React.createClass({
   propTypes :{
@@ -14,14 +15,14 @@ const TestContainer = React.createClass({
     isFetching : PropTypes.bool.isRequired,
     handleFetchPatterns: PropTypes.func.isRequired,
     handleFetchingProposals: PropTypes.func.isRequired,
-    handleFetchingQuestions:  PropTypes.func.isRequired,
+    handleFetchingQuestions: PropTypes.func.isRequired,
     handleFetchingResponses: PropTypes.func.isRequired,
     handleAddProposal : PropTypes.func.isRequired,
     handleAddQuestion : PropTypes.func.isRequired,
     handleAddResponse: PropTypes.func.isRequired,
-    handleAddVote: PropTypes.func.isRequired,
-    handleRemoveVote: PropTypes.func.isRequired,
-    handleFetchingUserStats : PropTypes.func.isRequired,
+    handleVote: PropTypes.func.isRequired,
+    handleFetchingUserVotes : PropTypes.func.isRequired,
+    handleRoadsFetch: PropTypes.func.isRequired,
   },
   contextTypes:{
     router : PropTypes.object.isRequired,
@@ -33,7 +34,8 @@ const TestContainer = React.createClass({
     this.props.handleFetchingProposals()
     this.props.handleFetchingQuestions()
     this.props.handleFetchingResponses()
-    this.props.handleFetchingUserStats()
+    this.props.handleFetchingUserVotes()
+    this.props.handleRoadsFetch()
 
     const proposal = {
       patternId:"-KbMbV6KN6h0C3QDyoyI",
@@ -50,17 +52,19 @@ const TestContainer = React.createClass({
     }
 
     const response = {
+      uid: this.context.router.params.uid,
       questionId: '-KbQI8K7Upvsg7f4TD8x',
       dingId : '-KbMikLDixaHNHc1-qf-',
       value: 0
     }
+
+    //this.props.handleAddResponse(response)
   },
   handleClick () {
     const uid = this.props.uid
     const roadId = 8813981
-    const proposalId = '-KbRQ2NIpXecf10Bj7Zz'
-    this.props.handleAddVote(uid,roadId,proposalId)
-    this.props.handleRemoveVote(uid,roadId,proposalId)
+    const proposalId = '-Kbkut-h4eXH852rheVp'
+    this.props.handleVote(uid,roadId,proposalId)
   },
   render () {
     return this.props.isFetching === true
@@ -89,7 +93,8 @@ function mapDispatchToProps (dispatch) {
       ...proposalsActionCreators,
       ...questionsActionCreators,
       ...responsesActionCreators,
-      ...userStatsActionCreatros,
+      ...userVotesActionCreators,
+      ...roadsActionCreators,
     },dispatch)
 }
 

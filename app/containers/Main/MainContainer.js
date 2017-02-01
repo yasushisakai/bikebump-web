@@ -46,7 +46,7 @@ const MainContainer = React.createClass({
     return this.props.isFetching === true
     ? null
     :<div className={container}>
-        <Navigation isAuthed={this.props.isAuthed}/>
+        <Navigation isAuthed={this.props.isAuthed} isRecording={this.props.isRecording}/>
         {this.props.children}
       </div>
   },

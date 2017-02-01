@@ -124,23 +124,35 @@ export function fetchAll (branchName) {
     .then((snapshot)=>snapshot.val())
 }
 
-export function fetchUserStats (uid) {
-  return ref.child(`userStats/${uid}`).once('value')
+export function fetchUserVotes (uid) {
+  return ref.child(`userVotes/${uid}`).once('value')
     .then((snapshot)=>(snapshot.val()||{}))
 }
 
-export function saveVote(uid,roadId,proposalId) {
+export function saveVote(uid,roadId,proposalId,newCredit) {
+  console.log('save vote',newCredit)
   const promises = [
     ref.child(`proposals/${roadId}/${proposalId}/votes/${uid}`).set(true),
-    ref.child(`userStats/${uid}/${roadId}/${proposalId}`).set(true)
+    ref.child(`userVotes/${uid}/${roadId}`).set(proposalId),
+    ref.child(`userVotes/${uid}/credits`).set(newCredit)
   ]
   return Promise.all(promises)
 }
 
-export function deleteVote(uid,roadId,proposalId) {
+export function overwriteVote(uid,roadId,prevProposalId,newProposalId,newCredit) {
+  const promises = [
+    ref.child(`proposals/${roadId}/${prevProposalId}/votes/${uid}`).set(null),
+    ref.child(`proposals/${roadId}/${newProposalId}/votes/${uid}`).set(true),
+    ref.child(`userVotes/${uid}/${roadId}`).set(newProposalId),
+    ref.child(`userVotes/${uid}/credits`).set(newCredit)
+  ]
+}
+
+export function deleteVote(uid,roadId,proposalId,newCredit) {
   const promises = [
     ref.child(`proposals/${roadId}/${proposalId}/votes/${uid}`).set(null),
-    ref.child(`userStats/${uid}/${roadId}/${proposalId}`).set(null)
+    ref.child(`userVotes/${uid}/${roadId}`).set(null),
+    ref.child(`userVotes/${uid}/credits`).set(newCredit)
   ]
   return Promise.all(promises)
 }

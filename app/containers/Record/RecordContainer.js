@@ -49,10 +49,6 @@ const RecordContainer = React.createClass({
       uid:this.props.uid,
       value:0,
     }
-
-    console.log('componentDidMount')
-    //this.props.handleCreateDing(testDing)
-
   },
 
   shouldComponentUpdate (nextProps, nextState) {
