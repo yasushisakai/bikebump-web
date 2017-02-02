@@ -34,6 +34,26 @@ export function formatUser(name, email, avatar, uid) {
   }
 }
 
+export function formatWavFileName(now,location){
+
+  const day = zeroAdd(now.getDate())
+  const month = zeroAdd(now.getMonth()+1)
+  const year = zeroAdd(now.getFullYear())
+  const hour = zeroAdd(now.getHours())
+  const minute = zeroAdd(now.getMinutes())
+  const seconds = zeroAdd(now.getSeconds())
+
+  const lat = location.lat
+  const lng = location.lng
+
+  return `soundClipsWeb/Audio_Sample_${day}-${month}-${year}-${hour}-${minute}-${seconds}_lat=${lat}_long=${lng}.wav`
+
+}
+
+function zeroAdd (num){
+  if(num < 10) return `0${num}`
+  else return `${num}`
+}
 
 export function updateTimeConstrain (timestamp) {
   return Date.now() - timestamp > renderTimeConstrain 

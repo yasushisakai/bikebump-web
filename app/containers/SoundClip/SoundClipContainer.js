@@ -4,42 +4,43 @@ import { connect } from 'react-redux'
 import { storeBlob } from 'helpers/storage'
 
 import { SoundClip } from 'components'
+import Recorder from 'helpers/Recorder'
+import { fetchGeoLocation, formatWavFileName } from 'helpers/utils'
+
 
 const SoundClipContainer = React.createClass({
   handleClick (){
     console.log('click')
   },
   handleStart (){
-    this.chunks = []
-    this.mediaRecorder.start()
-    console.log(this.mediaRecorder.state)
+    this.recorder.record()
+    console.log('recording...')
   },
   handleStop (){
-      this.mediaRecorder.stop()
-      console.log(this.mediaRecorder.state)
+    this.recorder.stop()
+    console.log('stopped')
+    this.recorder.exportWAV((blob)=>{
+
+      fetchGeoLocation()
+        .then((coordinate)=>{
+          console.log('got latlng')
+          const now = new Date()
+          return formatWavFileName(now,coordinate)
+        })
+        .then((filename)=>storeBlob(filename,blob))
+        .then(console.log('uploaded'))
+    })
   },
   componentDidMount () {
+
+    const audio_context = new AudioContext();
+
     if(navigator.getUserMedia) {
       navigator.getUserMedia(
           { audio:true },
           (stream) =>{
-            // success callback
-            const options = {mimeType:'audio/wav'}
-            this.mediaRecorder = new MediaRecorder(stream,options)
-
-            this.mediaRecorder.onstop = (e)=>{
-              console.log('onstop')
-              const blob = new Blob(this.chunks,{'type':'audio/wav'})
-              storeBlob('test.wav',blob)
-              console.log(window.URL.createObjectURL(blob))
-              this.chunks = []
-              console.log('stopped')
-            }
-
-            this.mediaRecorder.ondataavailable = (e) =>{
-              this.chunks.push(e.data)
-            }
-
+            const input = audio_context.createMediaStreamSource(stream)
+            this.recorder = new Recorder(input)
           },
           (error)=>{
             // error callback
