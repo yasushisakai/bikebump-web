@@ -40,9 +40,6 @@ const RecordContainer = React.createClass({
     this.interval = null
     this.props.handleFetchLatLng()
 
-    const root = document.getElementById('root');
-    new P5(this.sketch, root);
-
     let testDing = {
       radius : 10,
       roadId : 92038402,
