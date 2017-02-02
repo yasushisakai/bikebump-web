@@ -1,8 +1,17 @@
 import React, { PropTypes, Component } from 'react'
-import {button} from './styles.css'
+import { mainButton, smallButton,  detailText } from './styles.css'
 import { Map } from 'immutable'
 import P5 from 'p5'
 
+import { recordContainer } from './styles.css'
+
+Record.propTypes={
+  isRecording : PropTypes.bool.isRequired,
+  isFetchingLatLng : PropTypes.bool.isRequired,
+  onRecordButtonClick: PropTypes.func.isRequired,
+  onReportButtonClick: PropTypes.func.isRequired,
+  location : PropTypes.instanceOf(Map)
+}
 
 export default class Record extends Component {
     constructor(props) {
@@ -184,11 +193,13 @@ export default class Record extends Component {
     }
 
     //single ding
-     onReportGood = ()=> {
+     onReportGood = (event)=> {
+      event.preventDefault()
       this.props.onReportButtonClick()
     }
       //double ding
-      onReportBad = ()=> {
+      onReportBad = (event)=> {
+      event.preventDefault()
       this.props.onReportButtonClick()
       this.props.onReportButtonClick();
     }
@@ -205,31 +216,40 @@ export default class Record extends Component {
       }
     }
 
-    render() {
-    return (
-     <div>
-      <div className={button} onClick={this.onRecordButtonClick}>
-        {this.props.isRecording === true
-          ?'stop recording'
-          :'start recording'
-        }
-      </div>
-      {this.props.isRecording === true && this.props.isFetchingLatLng === false
-      ? (<div>
-        <div className={button} onClick={this.onReportGood}>{'good'}</div>
-        <div className={button} onClick={this.onReportBad}>{'bad'}</div>
-        </div>
-        )
-      : null
+    const buttonStyle = {
+      backgroundColor : props.isRecording ? '#ff0000' : '#444444'
+    }
+
+    function buttonColor(color,float) {
+      return {
+        backgroundColor: color,
+        float : float,
       }
-      <div>
-        {
-        this.props.isRecording === true && this.props.isFetchingLatLng === false
-          ?(`location: lat=${this.props.location.get('lat')}, lat=${this.props.location.get('lng')}`)
-          :null
-        }
-      </div>
-     </div>
+    }
+
+    render() {
+    //FIX ME
+    //Change class name to Record
+    return (
+      <div className={recordContainer}>
+       <div className={mainButton} style={buttonStyle} onClick={this.props.onRecordButtonClick}>
+       </div>
+       {this.props.isRecording === true && this.props.isFetchingLatLng === false
+       ? (<div>
+         <div className={smallButton} style={buttonColor('#0055ff','right')}onClick={onReportGood}></div>
+         <div className={smallButton} style={buttonColor('#ff5500','left')}onClick={onReportBad}></div>
+         </div>
+         )
+       : null
+       }
+       <div className={detailText}>
+         {
+         this.props.isRecording === true && this.props.isFetchingLatLng === false
+           ?(`location: lat=${this.props.location.get('lat')}, lat=${this.props.location.get('lng')}`)
+           :null
+         }
+       </div>
+       </div>
    );
   }
 }

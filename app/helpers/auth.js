@@ -41,6 +41,7 @@ export function redirectAuth () {
   return firebaseAuth().getRedirectResult()
     .then(({credential,user})=>{
       sessionStorage.removeItem('redirectAuth')
+      
       return user
     })
     .catch((error)=>{

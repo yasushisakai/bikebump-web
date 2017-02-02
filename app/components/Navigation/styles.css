@@ -1,0 +1,38 @@
+.navigation {
+  padding-top:20px;
+  width:100%;
+  height:80px;
+}
+
+.navLink {
+  padding:10px;
+  width: 45%;
+  float : left;
+}
+
+.actionLink {
+  padding:10px;
+  text-align: right;
+  width:45%;
+  float:left;
+}
+
+.link {
+  padding:0 8px;
+  letter-spacing: 2px;
+}
+
+.center {
+  margin: auto;
+}
+
+.icon {
+  font-size: 50px;
+  padding-right: 10px;
+}
+
+.iconRecording {
+  color: #ff0000;
+  font-size: 50px;
+  padding-right: 10px;
+}

@@ -1,45 +1,94 @@
-import {fromJS, toJS} from 'immutable'
-import {fetchGeoLocation} from 'helpers/utils'
-import {saveCommute} from 'helpers/api'
+import { fromJS, toJS } from 'immutable'
+import { fetchGeoLocation, refreshCommute } from 'helpers/utils'
+import { createCommute, appendBreadcrumb } from 'helpers/api'
 import { addCommute } from 'modules/commutes'
 
 const STOP_RECORDING = 'STOP_RECORDING'
 const START_RECORDING = 'START_RECORDING'
-const ADD_BREADCRUMB = 'ADD_BREADCRUMB'
+const UPDATE_BREADCRUMB = 'UPDATE_BREADCRUMB'
+const RECORD_ERROR = 'RECORD_ERROR'
+
+const START_CAPTURE = 'START_CAPTURE'
+const STOP_CAPTURE = 'STOP_CAPTURE'
+const UPLOADING_CLIP = 'UPLOADING_CLIP'
+const UPLOADING_CLIP_ERROR = 'UPLOADING_CLIP_ERROR'
+const UPLOADING_CLIP_SUCCESS = 'UPLOADING_CLIP_SUCCESS'
 
 const FETCHING_LATLNG = 'FETCHING_LATLNG'
 const FETCHING_LATLNG_ERROR = 'FETCHING_LATLNG_ERROR'
 const FETCHING_LATLNG_SUCCESS = 'FETCHING_LATLNG_SUCCESS'
 
-
-
-export function stopRecording () {
+function stopRecording () {
   return {
     type:STOP_RECORDING,
   }
 }
 
-function startRecording () {
+function startRecording (commuteId) {
   return {
     type:START_RECORDING,
+    commuteId,
+  }
+}
+
+function recordError (error) {
+  console.warn(error)
+  return {
+    type:RECORD_ERROR,
+    error : 'error recording'
+  }
+}
+
+export function startCapture (){
+  return {
+    type:START_CAPTURE,
+  }
+}
+
+export function stopCapture () {
+  return {
+    type: STOP_CAPTURE,
+  }
+}
+
+export function uploadingClip () {
+  return {
+    type: UPLOADING_CLIP,
+  }
+}
+
+export function uploadingClipError (error) {
+  console.warn(error)
+  return {
+    error: 'error uploading clip',
+    type: UPLOADING_CLIP_ERROR,
+  }
+}
+
+export function uploadingClipSuccess () {
+  return {
+    type: UPLOADING_CLIP_SUCCESS,
+  }
+}
+
+export function handleRecordInitiation () {
+  return function (dispatch,getState) {
+    const uid = getState().users.get('authedId')
+    
+    if(uid === '') {
+      dispatch(recordError('uid is empty'))
+    }
+    createCommute(uid)
+      .then((commuteId)=>dispatch(startRecording(commuteId)))
   }
 }
 
 export function toggleRecording () {
   return function(dispatch,getState){
     if(getState().record.get('isRecording')===true){
-      const uid = getState().users.get('authedId')
-      const breadcrumbs = getState().record.get('breadcrumbs').toJS()
-      if(Object.keys(breadcrumbs).length >= 1)
-      {
-        saveCommute(uid,breadcrumbs)
-          .then((commute)=>dispatch(addCommute(commute)))
-      }else{
-        console.log('commute unable to save, no breadcrumbs!')
-              }
       dispatch(stopRecording())
     }else{
-      dispatch(startRecording())
+      dispatch(handleRecordInitiation())
     }
   }
 }
@@ -66,12 +115,27 @@ function fetchingLatLngSuccess (location,timestamp=Date.now()) {
   }
 }
 
+function locationChange () {
+  return {
+    type:LOCATION_CHANGE,
+  }
+}
+
 export function handleFetchLatLng () {
   return function(dispatch,getState) {
+    const commuteId = getState().record.get('currentCommuteId')
     dispatch(fetchingLatLng())
     return fetchGeoLocation()
-      .then((coordinates)=>{
-        dispatch(fetchingLatLngSuccess(coordinates))
+      .then((coordinates)=>dispatch(fetchingLatLngSuccess(coordinates)))
+      .then(({location,timestamp})=>{
+        if(refreshCommute(timestamp)){
+          // if the commutee is too old reinitiate it
+          dispatch(stopRecording())
+          handleRecordInitiation()
+        }else{
+          // else, the commute is still alive append
+          appendBreadcrumb(commuteId,location,timestamp)
+        }
       })
       .catch((error)=>dispatch(fetchingLatLngError(error)))
   }
@@ -79,7 +143,10 @@ export function handleFetchLatLng () {
 
 const initialState = fromJS({
   isFetchingLatLng:false,
-  isRecording:false,
+  isRecording: false,
+  isCapturing: false,
+  isUploading: false,
+  currentCommuteId:'',
   latestLocation:{
     lat: 0,
     lng: 0,
@@ -87,7 +154,6 @@ const initialState = fromJS({
   latestFetchAttempt:0,
   latestFetch:0,
   error:'',
-  breadcrumbs : {}
 })
 
 export default function record(state=initialState,action){
@@ -95,19 +161,31 @@ export default function record(state=initialState,action){
     case STOP_RECORDING:
       return state.merge({
         isRecording:false,
+        currentCommuteId: '',
       })
     case START_RECORDING:
       return state.merge({
         isRecording:true,
-        breadcrumbs:{}, //initiation
+        currentCommuteId: action.commuteId,
       })
+    case START_CAPTURE:
+      return state.set('isCapturing',true)
+    case STOP_CAPTURE:
+      return state.set('isCapturing',false)
+    case UPLOADING_CLIP:
+      return state.set('isUploading',true)
+    case UPLOADING_CLIP_SUCCESS:
+      return state.set('isUploading',false)
     case FETCHING_LATLNG:
       return state.merge({
         isFetchingLatLng:true,
         latestFetchAttempt:Date.now(),
       })
+    case UPLOADING_CLIP_ERROR:
+    case RECORD_ERROR:
     case FETCHING_LATLNG_ERROR:
       return state.merge({
+        isRecording:false,
         isFetchingLatLng:false,
         error:action.error,
       })
@@ -116,13 +194,7 @@ export default function record(state=initialState,action){
         isFetchingLatLng:false,
         latestFetch:action.timestamp,
         latestLocation:action.location,
-      }).setIn(
-        ['breadcrumbs',action.timestamp],
-          {
-            timestamp:action.timestamp,
-            coordinate:action.location,
-          }
-        )
+      })
     default:
       return state
   }

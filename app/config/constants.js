@@ -1,8 +1,17 @@
 import firebase from 'firebase'
+import { Map } from 'immutable' 
 
 export const minimalLatLngRefresh = 5000 // ms
+export const maxCommuteLife = 20000 // ms 
 export const updateCycleDuration = 7000 //ms
 export const renderTimeConstrain = 10000 //ms
+export const recordDuration = 5000 //ms
+
+export const initialState = new Map({
+  isFetching: true,
+  error: '',
+})
+
 
 //
 // firebase
@@ -21,5 +30,6 @@ firebase.initializeApp(firebaseConfig);
 
 export const ref = firebase.database().ref()
 export const firebaseAuth = firebase.auth
+export const firebaseStorage = firebase.storage().ref()
 export const isProduction = process.env.NODE_ENV == 'production'
 export const isRemote = false

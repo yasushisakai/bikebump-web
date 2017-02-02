@@ -1,34 +1,46 @@
 ## bikebump-web
----
 the previous web app is living in the ```fall-semester``` branch.
-we will be migrating the code make it to compatible using redux
 
-since the server was detached from this repo, we now need to
-have to run that separately.
+## How to run
 
-0. request yasushi for the firebase credential files and exported_roads.json files
+0. request Yasushi for firebase credentials
+1. clone the parent repository
 
-1. do ```git clone https://github.com/yasushisakai/bikebump-server.git server``` 
-*the directory should be in the same level*
-- put the directories/files from Yasushi inside ```server``` folder
-  the structure should be like this
-  
+  ``` 
+  git clone https://github.com/yasushisakai/bikebump.git
   ```
-  /bikebump
-    /server
-      /lib
-      /data // from Yasushi
-      /config //from Yasushi
-      /src
-    /web // this repo
-      ...etc
-  ```
+2. init and update web and server 
   
-3. ```cd server```
-- ```npm install``` & ```npm run production```
-- cd back to this repo
-- ```npm install``` & ```npm run start```
-- check ```localhost:8081/```
+  ``` 
+  cd bikebump
+  git submodule update --init web server 
+  ```
+3. checkout master for both web and server
+
+    ```
+    cd web/ s
+    git checkout master
+    cd ../server/
+    git checkout master
+    ```
+4. put the credential file (from step.1) inside server/config/
+5. install & build the server
+
+  ```
+  (cd to/server/directory )
+  npm install
+  npm run build
+  ``` 
+6. install & run web
+
+  ```
+  (cd to/web/directory)
+  npm install
+  npm run start
+  ```
+7. check
+
+  check ```localhost:8081/```
 
 ---
 

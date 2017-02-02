@@ -8,6 +8,7 @@ import { updateCycleDuration } from 'config/constants'
 import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
+import NoSleep from 'nosleep'
 
 const RecordContainer = React.createClass({
   propTypes:{
@@ -30,6 +31,11 @@ const RecordContainer = React.createClass({
     this.DOUBLECLICK = 500;
     this.GOOD = 0;
     this.BAD = 1;
+
+    console.clear()
+
+    const noSleep = new NoSleep()
+    noSleep.enable()
 
     // listen to dings if not already
     this.props.handleSetDingListener()
@@ -58,10 +64,6 @@ const RecordContainer = React.createClass({
       uid:this.props.uid,
       value:0,
     }
-
-
-    //this.props.handleCreateDing(testDing)
-
   },
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -75,6 +77,7 @@ const RecordContainer = React.createClass({
   componentWillUnmount (){
     this.props.dispatch(this.props.stopRecording())
   },
+
   updateLatLng () {
     if(this.props.isRecording === false && this.interval !== null) {
       window.clearInterval(this.interval)
@@ -125,13 +128,22 @@ const RecordContainer = React.createClass({
   },
 
   componentDidUpdate () {
-    if(this.props.isRecording === true && this.interval===null){
+    if(this.props.isRecording === false && this.interval !== null){
+      window.clearInterval(this.interval)
+      this.interval = null
+    }
+
+    if(this.props.isRecording === true && this.interval === null){
       this.updateLatLng()
       this.interval = window.setInterval(this.updateLatLng, updateCycleDuration)
     }
   },
-
   componentWillUnmount () {
+    noSleep.disable()
+    // todo move this to main?
+    if(this.props.isRecording === true) {
+      this.props.toggleRecording()
+    }
     window.clearInterval(this.interval)
     this.interval = null
   },

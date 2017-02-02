@@ -7,8 +7,8 @@ const FETCHING_DING = 'FETCHING_DING'
 const FETCHING_DING_ERROR = 'FETCHING_DING_ERROR'
 const FETCHING_DING_SUCCESS = 'FETCHING_DING_SUCCESS'
 const REMOVE_FETCHING = 'REMOVE_FETCHING'
-const CREATE_DING = 'CREATE_DING'
-const APPEND_DING = 'APPEND_DING'
+export const CREATE_DING = 'CREATE_DING'
+export const APPEND_DING = 'APPEND_DING'
 const ADD_MULTIPLE_DINGS = 'ADD_MULTIPLE_DINGS'
 
 
@@ -42,7 +42,7 @@ export function removeFetching(){
 function createDing(ding){
   return {
     type:CREATE_DING,
-    ding
+    ding,
   }
 }
 
