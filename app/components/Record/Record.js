@@ -5,20 +5,18 @@ import P5 from 'p5'
 
 import { recordContainer } from './styles.css'
 
-Record.propTypes={
-  isRecording : PropTypes.bool.isRequired,
-  isFetchingLatLng : PropTypes.bool.isRequired,
-  onRecordButtonClick: PropTypes.func.isRequired,
-  onReportButtonClick: PropTypes.func.isRequired,
-  location : PropTypes.instanceOf(Map)
-}
-
 export default class Record extends Component {
     constructor(props) {
       super(props);
+      this.onReportGood = onReportGood.bind(this);
+      this.onReportBad = onReportBad.bind(this);
     }
 
     componentDidMount() {
+      this.buttonStyle = {
+        backgroundColor : this.props.isRecording ? '#ff0000' : '#444444'
+      }
+
       this.audioContext = new AudioContext();
 
       //the thing to see the frequencies
@@ -192,17 +190,7 @@ export default class Record extends Component {
 
     }
 
-    //single ding
-     onReportGood = (event)=> {
-      event.preventDefault()
-      this.props.onReportButtonClick()
-    }
-      //double ding
-      onReportBad = (event)=> {
-      event.preventDefault()
-      this.props.onReportButtonClick()
-      this.props.onReportButtonClick();
-    }
+
 
     onRecordButtonClick = ()=> {
       this.props.onRecordButtonClick();
@@ -216,28 +204,25 @@ export default class Record extends Component {
       }
     }
 
-    const buttonStyle = {
-      backgroundColor : props.isRecording ? '#ff0000' : '#444444'
-    }
-
-    function buttonColor(color,float) {
+    buttonColor(color,float) {
       return {
         backgroundColor: color,
         float : float,
       }
     }
 
+
     render() {
     //FIX ME
     //Change class name to Record
     return (
       <div className={recordContainer}>
-       <div className={mainButton} style={buttonStyle} onClick={this.props.onRecordButtonClick}>
+       <div className={mainButton} style={this.buttonStyle} onClick={this.onRecordButtonClick}>
        </div>
        {this.props.isRecording === true && this.props.isFetchingLatLng === false
        ? (<div>
-         <div className={smallButton} style={buttonColor('#0055ff','right')}onClick={onReportGood}></div>
-         <div className={smallButton} style={buttonColor('#ff5500','left')}onClick={onReportBad}></div>
+         <div className={smallButton} style={this.buttonColor('#0055ff','right')}onClick={(e) => this.onReportGood(e)}></div>
+         <div className={smallButton} style={this.buttonColor('#ff5500','left')}onClick={(e) => this.onReportBad(e)}></div>
          </div>
          )
        : null
@@ -261,3 +246,18 @@ Record.proptypes = {
     onReportButtonClick: PropTypes.func.isRequired,
     location : PropTypes.instanceOf(Map)
   };
+
+  //single ding
+   function onReportGood(e) {
+    //console.log(e);
+    //e.preventDefault()
+    this.props.onReportButtonClick()
+  }
+    //double ding
+    function onReportBad(e) {
+    //console.log(event);
+
+    //e.preventDefault()
+    this.props.onReportButtonClick()
+    this.props.onReportButtonClick();
+  }

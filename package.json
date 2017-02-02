@@ -23,11 +23,8 @@
     "axios": "^0.15.3",
     "firebase": "^3.6.5",
     "immutable": "^3.8.1",
-<<<<<<< HEAD
     "p5": "^0.5",
-=======
     "inline-worker": "^1.1.0",
->>>>>>> master
     "leaflet": "^1.0.2",
     "mojs": "^0.2.0",
     "nosleep": "BHSPitMonkey/NoSleep.js",
