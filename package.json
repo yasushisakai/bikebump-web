@@ -26,6 +26,7 @@
     "inline-worker": "^1.1.0",
     "leaflet": "^1.0.2",
     "mojs": "^0.2.0",
+    "nosleep": "BHSPitMonkey/NoSleep.js",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-icons": "^2.2.3",

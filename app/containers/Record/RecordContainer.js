@@ -9,6 +9,8 @@ import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
 
+import NoSleep from 'nosleep'
+
 const RecordContainer = React.createClass({
   propTypes:{
     uid:PropTypes.string.isRequired,
@@ -26,6 +28,11 @@ const RecordContainer = React.createClass({
   },
 
   componentDidMount () {
+
+    console.clear()
+
+    const noSleep = new NoSleep()
+    noSleep.enable()
 
     // listen to dings if not already
     this.props.handleSetDingListener()
@@ -94,6 +101,7 @@ const RecordContainer = React.createClass({
     }
   },
   componentWillUnmount () {
+    noSleep.disable()
     // todo move this to main?
     if(this.props.isRecording === true) {
       this.props.toggleRecording()
