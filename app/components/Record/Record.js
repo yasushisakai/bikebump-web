@@ -4,20 +4,18 @@ import { Map } from 'immutable'
 import P5 from 'p5'
 
 
-Record.propTypes={
-  isRecording : PropTypes.bool.isRequired,
-  isFetchingLatLng : PropTypes.bool.isRequired,
-  onRecordButtonClick: PropTypes.func.isRequired,
-  onReportButtonClick: PropTypes.func.isRequired,
-  location : PropTypes.instanceOf(Map)
-}
-
 export default class Record extends Component {
     constructor(props) {
       super(props);
+      this.onReportGood = onReportGood.bind(this);
+      this.onReportBad = onReportBad.bind(this);
     }
 
     componentDidMount() {
+      this.buttonStyle = {
+        backgroundColor : this.props.isRecording ? '#ff0000' : '#444444'
+      }
+
       this.audioContext = new AudioContext();
 
       //the thing to see the frequencies
@@ -190,17 +188,6 @@ export default class Record extends Component {
         };
 
     }
-
-    //single ding
-     onReportGood = ()=> {
-      this.props.onReportButtonClick()
-    }
-      //double ding
-      onReportBad = ()=> {
-      this.props.onReportButtonClick()
-      this.props.onReportButtonClick();
-    }
-
     onRecordButtonClick = ()=> {
       this.props.onRecordButtonClick();
       if(!this.props.isRecording) {
@@ -212,32 +199,33 @@ export default class Record extends Component {
         element.parentNode.removeChild(element);
       }
     }
-
+    buttonColor(color,float) {
+      return {
+        backgroundColor: color,
+        float : float,
+      }
+    }
     render() {
     return (
-     <div>
-      <div className={button} onClick={this.onRecordButtonClick}>
-        {this.props.isRecording === true
-          ?'stop recording'
-          :'start recording'
-        }
-      </div>
-      {this.props.isRecording === true && this.props.isFetchingLatLng === false
-      ? (<div>
-        <div className={button} onClick={this.onReportGood}>{'good'}</div>
-        <div className={button} onClick={this.onReportBad}>{'bad'}</div>
-        </div>
-        )
-      : null
-      }
-      <div>
-        {
-        this.props.isRecording === true && this.props.isFetchingLatLng === false
-          ?(`location: lat=${this.props.location.get('lat')}, lat=${this.props.location.get('lng')}`)
-          :null
-        }
-      </div>
-     </div>
+      <div className={recordContainer}>
+       <div className={mainButton} style={this.buttonStyle} onClick={this.onRecordButtonClick}>
+       </div>
+       {this.props.isRecording === true && this.props.isFetchingLatLng === false
+       ? (<div>
+         <div className={smallButton} style={this.buttonColor('#0055ff','right')}onClick={(e) => this.onReportGood(e)}></div>
+         <div className={smallButton} style={this.buttonColor('#ff5500','left')}onClick={(e) => this.onReportBad(e)}></div>
+         </div>
+         )
+       : null
+       }
+       <div className={detailText}>
+         {
+         this.props.isRecording === true && this.props.isFetchingLatLng === false
+           ?(`location: lat=${this.props.location.get('lat')}, lat=${this.props.location.get('lng')}`)
+           :null
+         }
+       </div>
+       </div>
    );
   }
 }
@@ -249,3 +237,18 @@ Record.proptypes = {
     onReportButtonClick: PropTypes.func.isRequired,
     location : PropTypes.instanceOf(Map)
   };
+
+  //single ding
+   function onReportGood(e) {
+    //console.log(e);
+    //e.preventDefault()
+    this.props.onReportButtonClick()
+  }
+    //double ding
+    function onReportBad(e) {
+    //console.log(event);
+
+    //e.preventDefault()
+    this.props.onReportButtonClick()
+    this.props.onReportButtonClick();
+  }

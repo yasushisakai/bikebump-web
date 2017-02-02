@@ -42,13 +42,7 @@ const RecordContainer = React.createClass({
     this.props.handleSetDingListener()
 
     this.interval = null
-<<<<<<< ae852e9875a8bf415ee6a8ec11b2f516753274d0
-=======
-
     this.latestDing = null
-
-
->>>>>>> Two Ding Functionality
     this.props.handleFetchLatLng()
 
     let testDing = {
