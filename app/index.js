@@ -28,17 +28,17 @@ function checkAuth (nextState, replace) {
   const isAuthed = checkIfAuthed(store)
   const nextPath = nextState.location.pathname
 
+
+
   if(isProduction===true){
-    if(nextPath==='/map' || nextPath==='/admin'){
+    if(nextPath==='/map' || nextPath === '/admin'){
       return
     }else if (nextPath === '/' || nextPath == '/signin') {
       if(isAuthed === true) {
         replace('/record')
+      }else{
+        replace('signin')
       } 
-    } else {
-      if(isAuthed !== true){
-        replace('/signin')
-      }
     }
   }
 }
