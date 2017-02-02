@@ -23,12 +23,10 @@ const SoundClipContainer = React.createClass({
 
       fetchGeoLocation()
         .then((coordinate)=>{
-          console.log('got latlng')
           const now = new Date()
           return formatWavFileName(now,coordinate)
         })
         .then((filename)=>storeBlob(filename,blob))
-        .then(console.log('uploaded'))
     })
   },
   componentDidMount () {
