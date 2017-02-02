@@ -1,39 +1,51 @@
 import React, { PropTypes } from 'react'
-import { bindActionCreators } from 'redux'
+// import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { storeBlob } from 'helpers/storage'
+import { recordDuration } from 'config/constants'
 
 import { SoundClip } from 'components'
 import Recorder from 'helpers/Recorder'
 import { fetchGeoLocation, formatWavFileName } from 'helpers/utils'
+import {startCapture, stopCapture, uploadingClip, uploadingClipSuccess} from 'modules/record'
 
 
 const SoundClipContainer = React.createClass({
-  handleClick (){
-    console.log('click')
+  propTypes:{
+    //dispatch:PropTypes.func.isRequired,
+    isCapturing:PropTypes.bool.isRequired,
+    isUploading:PropTypes.bool.isRequired,
   },
-  handleStart (e){
-    e.preventDefault()
-    this.recorder.record()
-    console.log('recording...')
+  handleClick (e){
+    if(this.props.isCapturing !== true){
+      this.recorder.record()
+      console.log('recording...')
+      this.props.dispatch(startCapture())
+      setTimeout(this.stopAndUpload,recordDuration) // close it
+      e.preventDefault() 
+    }
   },
-  handleStop (e){
-    e.preventDefault()
+  stopAndUpload () {
+    console.log('stopAndUpload')
     this.recorder.stop()
-    console.log('stopped')
+    this.props.dispatch(stopCapture())
     this.recorder.exportWAV((blob)=>{
-
+      this.isCapturing = false
       fetchGeoLocation()
         .then((coordinate)=>{
           const now = new Date()
           return formatWavFileName(now,coordinate)
         })
-        .then((filename)=>storeBlob(filename,blob))
+        .then((filename)=>{
+          this.props.dispatch(uploadingClip())
+          storeBlob(filename,blob)})
+        .then(()=>this.props.dispatch(uploadingClipSuccess()))
     })
+
   },
   componentDidMount () {
-
-    const audio_context = new AudioContext();
+    this.isCapturing = false
+    const audio_context = new AudioContext()
 
     if(navigator.getUserMedia) {
       navigator.getUserMedia(
@@ -52,21 +64,21 @@ const SoundClipContainer = React.createClass({
   },
   render () {
     return (
-      <SoundClip onClickStart={this.handleStart} onClickStop={this.handleStop}/>
+      <SoundClip onClick={this.handleClick} isCapturing={this.props.isCapturing}/>
     )
   },
 })
 
-// function mapStateToProps (state) {
-//   return {
-
-//   }
-// }
+function mapStateToProps (state) {
+  return {
+    isCapturing:state.record.get('isCapturing'),
+    isUploading:state.record.get('isUploading'),
+  }
+}
 
 // function mapDispatchToProps (dispatch) {
 //   return bindActionCreators(,dispatch)
 // }
 
-// export default connect(mapStateToProps, 
-// mapDispatchToProps)(SoundClipContainer)
-export default SoundClipContainer
+ export default connect(mapStateToProps)(SoundClipContainer)
+//export default SoundClipContainer

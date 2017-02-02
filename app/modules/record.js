@@ -8,6 +8,12 @@ const START_RECORDING = 'START_RECORDING'
 const UPDATE_BREADCRUMB = 'UPDATE_BREADCRUMB'
 const RECORD_ERROR = 'RECORD_ERROR'
 
+const START_CAPTURE = 'START_CAPTURE'
+const STOP_CAPTURE = 'STOP_CAPTURE'
+const UPLOADING_CLIP = 'UPLOADING_CLIP'
+const UPLOADING_CLIP_ERROR = 'UPLOADING_CLIP_ERROR'
+const UPLOADING_CLIP_SUCCESS = 'UPLOADING_CLIP_SUCCESS'
+
 const FETCHING_LATLNG = 'FETCHING_LATLNG'
 const FETCHING_LATLNG_ERROR = 'FETCHING_LATLNG_ERROR'
 const FETCHING_LATLNG_SUCCESS = 'FETCHING_LATLNG_SUCCESS'
@@ -30,6 +36,38 @@ function recordError (error) {
   return {
     type:RECORD_ERROR,
     error : 'error recording'
+  }
+}
+
+export function startCapture (){
+  return {
+    type:START_CAPTURE,
+  }
+}
+
+export function stopCapture () {
+  return {
+    type: STOP_CAPTURE,
+  }
+}
+
+export function uploadingClip () {
+  return {
+    type: UPLOADING_CLIP,
+  }
+}
+
+export function uploadingClipError (error) {
+  console.warn(error)
+  return {
+    error: 'error uploading clip',
+    type: UPLOADING_CLIP_ERROR,
+  }
+}
+
+export function uploadingClipSuccess () {
+  return {
+    type: UPLOADING_CLIP_SUCCESS,
   }
 }
 
@@ -105,7 +143,9 @@ export function handleFetchLatLng () {
 
 const initialState = fromJS({
   isFetchingLatLng:false,
-  isRecording:false,
+  isRecording: false,
+  isCapturing: false,
+  isUploading: false,
   currentCommuteId:'',
   latestLocation:{
     lat: 0,
@@ -128,11 +168,20 @@ export default function record(state=initialState,action){
         isRecording:true,
         currentCommuteId: action.commuteId,
       })
+    case START_CAPTURE:
+      return state.set('isCapturing',true)
+    case STOP_CAPTURE:
+      return state.set('isCapturing',false)
+    case UPLOADING_CLIP:
+      return state.set('isUploading',true)
+    case UPLOADING_CLIP_SUCCESS:
+      return state.set('isUploading',false)
     case FETCHING_LATLNG:
       return state.merge({
         isFetchingLatLng:true,
         latestFetchAttempt:Date.now(),
       })
+    case UPLOADING_CLIP_ERROR:
     case RECORD_ERROR:
     case FETCHING_LATLNG_ERROR:
       return state.merge({
