@@ -12,11 +12,13 @@ const SoundClipContainer = React.createClass({
   handleClick (){
     console.log('click')
   },
-  handleStart (){
+  handleStart (e){
+    e.preventDefault()
     this.recorder.record()
     console.log('recording...')
   },
-  handleStop (){
+  handleStop (e){
+    e.preventDefault()
     this.recorder.stop()
     console.log('stopped')
     this.recorder.exportWAV((blob)=>{
