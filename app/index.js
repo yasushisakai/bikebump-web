@@ -21,6 +21,7 @@ const witchHistory = isProduction ? browserHistory : hashHistory
 const history = syncHistoryWithStore(witchHistory,store)
 
 function checkAuth (nextState, replace) {
+  console.log(nextState)
   if(store.getState().users.get('isFetching') === true){
     return
   }
@@ -28,7 +29,8 @@ function checkAuth (nextState, replace) {
   const isAuthed = checkIfAuthed(store)
   const nextPath = nextState.location.pathname
 
-  if(nextPath==='/map'){
+  // change to if(nextPath==='/map2') once you figure out where to add map2?
+  if(nextPath==='/map' || nextPath==='/map2'){
     return
   }else if (nextPath === '/' || nextPath == '/signin') {
     if(isAuthed === true) {

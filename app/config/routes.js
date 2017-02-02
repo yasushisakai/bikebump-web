@@ -6,6 +6,7 @@ import {
   HomeContainer,
   RecordContainer,
   MapVisContainer,
+  MapVis2Container,
   RoadsContainer,
   UserContainer,
   PickContainer,
@@ -20,6 +21,7 @@ export default function getRoutes(checkAuth, history){
       <Route path='/' component={MainContainer}>
         <Route path='record' component={RecordContainer} onEnter={checkAuth} />
         <Route path='map' component={MapVisContainer} onEnter={checkAuth} />
+        <Route path='map2' component={MapVis2Container} onEnter={checkAuth} />
         <Route path='roads/:' component={RoadsContainer} onEnter={checkAuth} />
         <Route path='user/:uid' component={UserContainer} onEnter={checkAuth} />
         <Route path='pick' component={PickContainer} onEnter={checkAuth} />

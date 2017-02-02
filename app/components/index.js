@@ -1,6 +1,7 @@
 export Home from './Home/Home'
 export Record from './Record/Record'
 export MapVis from './MapVis/MapVis'
+export MapVis2 from './MapVis2/MapVis2'
 export Roads from './Roads/Roads'
 export User from './User/User'
 export Pick from './Pick/Pick'

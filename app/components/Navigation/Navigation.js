@@ -10,10 +10,12 @@ function NavLinks ({isAuthed}) {
   ? <div>
     <Link to='/record'>{'Record'}</Link>
     <Link to='/map'>{'Map'}</Link>
+    <Link to='/map2'>{'Map2'}</Link>
   </div>
   : <div>
     <Link to='/'>{'Home'}</Link>
     <Link to='/map'>{'Map'}</Link>
+    <Link to='/map2'>{'Map2'}</Link>
   </div>
 }
 
