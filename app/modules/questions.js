@@ -1,5 +1,5 @@
 import { initialState } from 'config/constants'
-import { fetchAll, save } from 'helpers/api'
+import { fetchAll, saveQuestion } from 'helpers/api'
 
 const FETCHING_QUESTIONS = 'FETCHING_QUESTIONS'
 const FETCHING_QUESTIONS_ERROR = 'FETCHING_QUESTIONS_ERROR'
@@ -56,8 +56,8 @@ function addQuestionError (error) {
 
 export function handleAddQuestion (question) {
   return function(dispatch) {
-    save('questions',question)
-      .then((questionWithId)=>dispatch(addQuestion(question)))
+    saveQuestion(question)
+      .then((questionWithId)=>dispatch(addQuestion(questionWithId)))
       .catch((error)=>dispatch(addQuestionError(error)))
   }
 }

@@ -152,37 +152,6 @@ export function handleVote(uid,roadId,proposalId){
   }
 }
 
-// export function handleAddVote(uid,roadId,proposalId){
-//   return function (dispatch,getState) {
-//     dispatch(fetchingUserVotes())
-//     const credit = getCredit(getState,roadId,proposalId)
-//     const newCredit = getState().UserVotes.getIn([uid,'credits']) + credit 
-//     console.log('add',newCredit)
-//     dispatch(setUserCredits(uid,newCredit))
-//     dispatch(addVote(uid,roadId,proposalId)) // adds to the proposals
-//     dispatch(addUserVote(uid,roadId,proposalId))
-//     saveVote(uid,roadId,proposalId,newCredit)
-//       .then(()=>dispatch(removeFetchingUserVotes()))
-//       .catch((error)=>dispatch(fetchingUserVotesError(error)))
-//   }
-// }
-
-// export function handleRemoveVote(uid,roadId,proposalId){
-//   return function (dispatch,getState) {
-//     dispatch(fetchingUserVotes)
-//     const credit = getCredit(getState,roadId,proposalId)
-//     console.log('state before remove',getState().UserVotes.getIn([uid,'credits']),credit)
-//     const newCredit = getState().UserVotes.getIn([uid,'credits']) - credit
-//     console.log('remove',newCredit)
-//     dispatch(removeVote(uid,roadId,proposalId))
-//     dispatch(setUserCredits(uid,newCredit))
-//     dispatch(removeUserVote(uid,roadId,proposalId))
-//     deleteVote(uid,roadId,proposalId,newCredit)
-//       .then(()=>dispatch(removeFetchingUserVotes()))
-//       .catch((error)=>dispatch(fetchingUserVotesError(error)))
-//   }
-// }
-
 function removeUserVote (uid,roadId,proposalId) {
   return {
     type:REMOVE_USER_VOTE,

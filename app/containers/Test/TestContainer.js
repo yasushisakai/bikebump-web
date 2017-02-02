@@ -7,6 +7,7 @@ import * as proposalsActionCreators from 'modules/proposals'
 import * as questionsActionCreators from 'modules/questions'
 import * as responsesActionCreators from 'modules/responses'
 import * as userVotesActionCreators from 'modules/userVotes'
+import * as userResponsesActionCreators from 'modules/userResponses'
 import * as roadsActionCreators from 'modules/roads'
 
 const TestContainer = React.createClass({
@@ -17,6 +18,7 @@ const TestContainer = React.createClass({
     handleFetchingProposals: PropTypes.func.isRequired,
     handleFetchingQuestions: PropTypes.func.isRequired,
     handleFetchingResponses: PropTypes.func.isRequired,
+    handleFetchingUserResponses: PropTypes.func.isRequired,
     handleAddProposal : PropTypes.func.isRequired,
     handleAddQuestion : PropTypes.func.isRequired,
     handleAddResponse: PropTypes.func.isRequired,
@@ -35,6 +37,7 @@ const TestContainer = React.createClass({
     this.props.handleFetchingQuestions()
     this.props.handleFetchingResponses()
     this.props.handleFetchingUserVotes()
+    this.props.handleFetchingUserResponses()
     this.props.handleRoadsFetch()
 
     const proposal = {
@@ -58,13 +61,10 @@ const TestContainer = React.createClass({
       value: 0
     }
 
-    //this.props.handleAddResponse(response)
+    // this.props.handleAddResponse(response)
   },
   handleClick () {
-    const uid = this.props.uid
-    const roadId = 8813981
-    const proposalId = '-Kbkut-h4eXH852rheVp'
-    this.props.handleVote(uid,roadId,proposalId)
+    this.props.handleAddQuestion({questionText:'',values:['option']})
   },
   render () {
     return this.props.isFetching === true
@@ -94,6 +94,7 @@ function mapDispatchToProps (dispatch) {
       ...questionsActionCreators,
       ...responsesActionCreators,
       ...userVotesActionCreators,
+      ...userResponsesActionCreators,
       ...roadsActionCreators,
     },dispatch)
 }

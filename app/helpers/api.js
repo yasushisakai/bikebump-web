@@ -17,12 +17,15 @@ export function findClosestRoad({lat,lng}){
 export function addDing(ding){
   const dingId = ref.child(`dings`).push().key
   const dingPromise = ref.child(`dings/${dingId}`).set({...ding,dingId})
-
-  return {dingId, dingPromise}
+  const userDingPromise = ref.child(`userDings/${ding.uid}/${dingId}`).set(true)
+  const promises = [dingPromise,userDingPromise]
+  return {dingId, dingPromise:Promise.all(promises)}
 }
 
 export function appendTimestampToDing(dingId,{timestamp,uid,value}){
-  return ref.child(`dings/${dingId}/timestamps/${timestamp}`).set({timestamp,uid,value})
+  const p1 = ref.child(`dings/${dingId}/timestamps/${timestamp}`).set({timestamp,uid,value})
+  const p2 = ref.child(`userDings/${uid}/${dingId}`).set(true)
+  return Promise.all([p1,p2])
 }
 
 export function listenToDings( callback, errorCallback){
@@ -107,8 +110,11 @@ export function saveProposal(proposal){
 export function saveResponse(response){
   const responseId = ref.child(`responses/${response.dingId}/${response.questionId}`).push().key
   const responseWithId = {...response,responseId}
-  return ref.child(`responses/${response.dingId}/${response.questionId}/${responseId}`).set(responseWithId)
-    .then(()=>responseWithId)
+  const promises = [
+    ref.child(`responses/${response.dingId}/${response.questionId}/${responseId}`).set(responseWithId),
+    ref.child(`userResponses/${response.uid}/${response.dingId}/${response.questionId}/${responseId}`).set(response.value)
+  ]
+  return Promise.all(promises).then(()=>responseWithId)
 }
 
 // TODO: we are reapeating this tooooooo much!!
@@ -117,6 +123,13 @@ export function save (branchName,object) {
   const objectWithId = {...object,objectId}
   return ref.child(`${branchName}/${objectId}`).set(objectWithId)
     .then(()=>objectWithId)
+}
+
+export function saveQuestion (question) {
+  const questionId = ref.child(`questions`).push().key
+  const questionWithId = {...question, questionId}
+  return ref.child(`questions/${questionId}`).set(questionWithId)
+    .then(()=>questionWithId)
 }
 
 export function fetchAll (branchName) {
@@ -158,6 +171,14 @@ export function deleteVote(uid,roadId,proposalId,newCredit) {
 }
 
 
+export function fetchUserResponses (uid) {
+  return ref.child(`userResponses/${uid}`).once('value')
+    .then((snapshot)=>(snapshot.val()||{}))
+}
 
+export function fetchUserDings (uid) {
+  return ref.child(`userDings/${uid}`).once('value')
+    .then((snapshot)=>(snapshot.val()||{}))
+}
 
 

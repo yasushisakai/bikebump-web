@@ -28,17 +28,19 @@ function checkAuth (nextState, replace) {
   const isAuthed = checkIfAuthed(store)
   const nextPath = nextState.location.pathname
 
-  if(nextPath==='/map' || nextPath==='/admin'){
-    return
-  }else if (nextPath === '/' || nextPath == '/signin') {
-    if(isAuthed === true) {
-      replace('/record')
-    } 
-  } else {
-    if(isAuthed !== true){
-      replace('/signin')
+  if(isProduction===true){
+    if(nextPath==='/map' || nextPath==='/admin'){
+      return
+    }else if (nextPath === '/' || nextPath == '/signin') {
+      if(isAuthed === true) {
+        replace('/record')
+      } 
+    } else {
+      if(isAuthed !== true){
+        replace('/signin')
+      }
     }
-  }  
+  }
 }
 
 const mode = isProduction === true ? 'production': 'development' 
