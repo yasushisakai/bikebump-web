@@ -29,5 +29,6 @@ firebase.initializeApp(firebaseConfig);
 
 export const ref = firebase.database().ref()
 export const firebaseAuth = firebase.auth
+export const firebaseStorage = firebase.storage().ref()
 export const isProduction = process.env.NODE_ENV == 'production'
 export const isRemote = false
