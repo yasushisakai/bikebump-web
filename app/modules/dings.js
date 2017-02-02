@@ -159,7 +159,7 @@ export default function dings(state=initialState, action) {
       })
     case APPEND_DING:
       return state.setIn(
-        [action.dingId,'timestamps',action.timestamp],
+        ['dings', action.dingId,'timestamps',action.timestamp],
         Map({uid:action.uid,timestamp:action.timestamp,value:action.value})
         )
     case ADD_MULTIPLE_DINGS:

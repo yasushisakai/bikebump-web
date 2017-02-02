@@ -26,11 +26,18 @@ const RecordContainer = React.createClass({
   },
 
   componentDidMount () {
+    //Constants
+    this.DOUBLECLICK = 500;
+    this.GOOD = 0;
+    this.BAD = 1;
 
     // listen to dings if not already
     this.props.handleSetDingListener()
 
     this.interval = null
+
+    this.latestDing = null
+
 
     this.props.handleFetchLatLng()
 
@@ -80,16 +87,41 @@ const RecordContainer = React.createClass({
 
   },
 
-  handleReport (value) {
-    // add a ding
-    return this.props.handleComplieDing(
-      this.props.uid,
-      this.props.latestLocation.toJS(),
-      this.props.latestFetch,
-      10,
-      value
-      )
+  handleReport () {
 
+    // add a ding
+    //save latest ding
+
+    this.duplicateLatestDing = this.latestDing
+    this.latestDing = {
+          location:this.props.latestLocation.toJS(),
+          timeStamp:this.props.latestFetch
+      }
+
+    if(this.duplicateLatestDing) {
+      let value = 0;
+      if(this.props.latestFetch- this.duplicateLatestDing.timeStamp <=this.DOUBLECLICK) {
+        value = 0;
+        this.latestDing = null;
+        console.log(this.props.latestFetch, this.duplicateLatestDing.timeStamp);
+      }
+      else{
+        value = 1;
+      }
+      return this.props.handleComplieDing(
+        this.props.uid,
+        this.props.latestLocation.toJS(),
+        this.props.latestFetch,
+        10,
+        value
+      )
+   }
+
+   //save latest ding
+   this.latestDing = {
+         location:this.props.latestLocation.toJS(),
+         timeStamp:this.props.latestFetch
+     }
   },
 
   componentDidUpdate () {

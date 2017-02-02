@@ -141,6 +141,7 @@ export default class Record extends Component {
           * Detecthing the "ding"
           */
           if (highSlope > this.threshold && lowSlope > this.threshold) {
+            this.onReportGood();
             console.log(lowSlope,highSlope);
             p.background(255, 0, 0);
           }
@@ -182,12 +183,14 @@ export default class Record extends Component {
 
     }
 
+    //single ding
      onReportGood = ()=> {
-      this.props.onReportButtonClick(0)
+      this.props.onReportButtonClick()
     }
-
+      //double ding
       onReportBad = ()=> {
-      this.props.onReportButtonClick(1)
+      this.props.onReportButtonClick()
+      this.props.onReportButtonClick();
     }
 
     onRecordButtonClick = ()=> {
@@ -197,7 +200,7 @@ export default class Record extends Component {
         new P5(this.sketch, root);
       }
       else {
-        let element = document.getElementById("defaultCanvas1");
+        let element = document.getElementById("defaultCanvas0");
         element.parentNode.removeChild(element);
       }
     }
