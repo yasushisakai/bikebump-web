@@ -1,7 +1,7 @@
 
 
 // https://github.com/mattdiamond
-// 
+//
 
 // Copyright © 2013 Matt Diamond
 
@@ -103,11 +103,21 @@ export default class Recorder {
                 if(pivot > 59) {
                     pivot = 0
                 }
+<<<<<<< 5123c74855109eff20632a8960210ad1362c1504
             }
 
             function develop(pivot){
                 const beginning = recBuffers.splice(pivot)
                 recBuffers = beginning.concat(recBuffers)
+=======
+                if (recBuffers[channel].length >= bigNumber) {
+                    recBuffers.splice(0,recBuffers[channel].length-bigNumber)
+                    recLength = bigAssNumber
+                }
+                else{
+                  recLength += inputBuffer[0].length;
+                }
+>>>>>>> Blob code done; need to debug
             }
 
             function exportWAV(type) {
