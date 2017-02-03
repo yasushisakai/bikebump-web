@@ -131,7 +131,7 @@ export function handleFetchLatLng () {
         if(refreshCommute(timestamp)){
           // if the commutee is too old reinitiate it
           dispatch(stopRecording())
-          handleRecordInitiation()
+          // handleRecordInitiation()
         }else{
           // else, the commute is still alive append
           appendBreadcrumb(commuteId,location,timestamp)

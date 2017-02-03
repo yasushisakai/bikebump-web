@@ -31,8 +31,8 @@ const RecordContainer = React.createClass({
 
     console.clear()
 
-    const noSleep = new NoSleep()
-    noSleep.enable()
+    this.noSleep = new NoSleep()
+    this.noSleep.enable()
 
     // listen to dings if not already
     this.props.handleSetDingListener()
@@ -101,7 +101,7 @@ const RecordContainer = React.createClass({
     }
   },
   componentWillUnmount () {
-    noSleep.disable()
+    this.noSleep.disable()
     // todo move this to main?
     if(this.props.isRecording === true) {
       this.props.toggleRecording()
