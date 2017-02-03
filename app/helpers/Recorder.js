@@ -1,7 +1,7 @@
 
 
 // https://github.com/mattdiamond
-// 
+//
 
 // Copyright © 2013 Matt Diamond
 
@@ -88,7 +88,13 @@ export default class Recorder {
                 for (var channel = 0; channel < numChannels; channel++) {
                     recBuffers[channel].push(inputBuffer[channel]);
                 }
-                recLength += inputBuffer[0].length;
+                if (recBuffers[channel].length >= bigNumber) {
+                    recBuffers.splice(0,recBuffers[channel].length-bigNumber)
+                    recLength = bigAssNumber
+                }
+                else{
+                  recLength += inputBuffer[0].length;
+                }
             }
 
             function exportWAV(type) {

@@ -9,6 +9,7 @@ import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
 import NoSleep from 'nosleep'
+import SoundClip from 'containers/SoundClip'
 
 const RecordContainer = React.createClass({
   propTypes:{
@@ -24,6 +25,10 @@ const RecordContainer = React.createClass({
     handleCreateDing : PropTypes.func.isRequired,
     handleSetDingListener : PropTypes.func.isRequired,
     handleComplieDing : PropTypes.func.isRequired,
+    //dispatch:PropTypes.func.isRequired,
+    isCapturing:PropTypes.bool.isRequired,
+    isUploading:PropTypes.bool.isRequired,
+    },
   },
 
   componentDidMount () {
@@ -31,7 +36,7 @@ const RecordContainer = React.createClass({
     this.DOUBLECLICK = 500;
     this.GOOD = 0;
     this.BAD = 1;
-
+    this.SoundClip = new SoundClip();
     console.clear()
 
     const noSleep = new NoSleep()
@@ -94,6 +99,11 @@ const RecordContainer = React.createClass({
 
     // add a ding
     //save latest ding
+    console.log("stopAndUpload");
+    this.props.dispatch(stopCapture())
+    this.SoundClip.stopAndUpload();
+    this.SoundClip.record();
+    this.props.dispatch(startCapture());
 
     this.duplicateLatestDing = this.latestDing
     this.latestDing = {
@@ -150,7 +160,7 @@ const RecordContainer = React.createClass({
 
   render () {
       return (<div>
-      <Record isRecording={this.props.isRecording} isFetchingLatLng={this.props.isFetchingLatLng} onRecordButtonClick={this.props.toggleRecording} onReportButtonClick={this.handleReport} location={this.props.location}/>
+      <Record dataArray ={this.SoundClip.getDataArray()} analyzer ={this.SoundClip.getAnalyzer()} isRecording={this.props.isRecording} isFetchingLatLng={this.props.isFetchingLatLng} onRecordButtonClick={this.props.toggleRecording} onReportButtonClick={this.handleReport} location={this.props.location}/>
       </div>
     )
   },
@@ -164,7 +174,9 @@ function mapState({record,users}){
   latestLocation: record.get('latestLocation'),
   latestFetch : record.get('latestFetch'),
   latestFetchAttempt : record.get('latestFetchAttempt'),
-  location : record.get('latestLocation')
+  location : record.get('latestLocation'),
+  isCapturing:state.record.get('isCapturing'),
+  isUploading:state.record.get('isUploading'),
   }
 }
 

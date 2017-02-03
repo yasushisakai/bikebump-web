@@ -9,81 +9,14 @@ import { recordContainer } from './styles.css'
 
 
 export default class Record extends Component {
+
     constructor(props) {
       super(props);
-      this.onReportGood = this.onReportGood.bind(this);
-      this.onReportBad = this.onReportBad.bind(this);
     }
 
     componentDidMount() {
-      this.buttonStyle = {
-        backgroundColor : this.props.isRecording ? '#ff0000' : '#444444'
-      }
 
-      this.audioContext = new AudioContext();
-
-      //the thing to see the frequencies
-      this.analyzer = this.audioContext.createAnalyser();
-      this.analyzer.minDecibels = -90;
-      this.analyzer.maxDecibels = -10;
-      this.analyzer.smoothingTimeConstant = 0.85;
-      this.analyzer.fftSize = 1024;
-      //this.analyzer.getByteFrequencyData.bind(this)l
-
-      this.highpassFilter = this.audioContext.createBiquadFilter();
-      this.highpassFilter.type = 'highpass';
-      this.highpassFilter.frequency.value = 2600;
-      this.highpassFilter.Q.value = 15;
-
-      //removed peaking fetchingLatLngError
-
-      //holds the actual frequency data
-      this.dataArray = new Uint8Array(this.analyzer.frequencyBinCount); //half of fft size
-      this.sketch = this.sketch.bind(this);
-
-      //mic test
-      navigator.getUserMedia = (navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia ||
-      navigator.msGetUserMedia);
-
-      if (navigator.getUserMedia) {
-
-          navigator.getUserMedia(
-            {audio: true},
-            stream=> {
-                let source = this.audioContext.createMediaStreamSource(stream);
-                source.connect(this.highpassFilter);
-                //this.peakingFilter.connect(this.bandpassFilter)
-                //this.bandpassFilter.connect(this.highpassFilter);
-                this.highpassFilter.connect(this.analyzer);
-            },
-            error=> {
-                console.error(error);
-            }
-        )
-      } else {
-          console.error('getUserMedia inaccessible');
-      }
-      //octave frequencies
-      this.a_indexies = [27.5, 55, 110, 220, 440, 880, 1760, 3520, 7040, 14080].map(v=> {
-          return this.getIndexFromFrequency(v);
-      });
-
-      //Constants
-      this.targetIndex = this.getIndexFromFrequency(3050);
-      this.lowIndex = this.getIndexFromFrequency(1000);
-      this.highIndex = this.getIndexFromFrequency(5000);
-      this.frequencyDiff = 2000;
-      this.threshold= 100;
     }
-
-    getIndexFromFrequency(frequency) {
-      let nyquist = 44100 / 2.0;
-      let index = Math.round(frequency / nyquist * this.analyzer.frequencyBinCount);
-      return index;
-    }
-
      //single ding
     onReportGood() {
     //console.log(e);
@@ -97,11 +30,9 @@ export default class Record extends Component {
     //e.preventDefault()
       this.props.onReportButtonClick()
       this.props.onReportButtonClick();
-    } 
-
-    getFrequencyFromIndex(index) {
-      return (index * (44100 / 2.0)) / this.analyzer.frequencyBinCount;
     }
+
+
 
   /**
   *sketch
@@ -118,7 +49,10 @@ export default class Record extends Component {
         this.unitHeight = p.windowHeight / 256;
       };
 
-      p.draw = ()=> {
+      p.draw = (this.props.analyzer, this.props.dataArray)=>
+         this.analyzer = this.props.analyzer;
+         this.dataArray = this.props.dataArray;
+         
          p.background(250);
 
          this.analyzer.getByteFrequencyData(this.dataArray); //the meat
@@ -264,6 +198,3 @@ Record.propTypes = {
     onReportButtonClick: PropTypes.func.isRequired,
     location : PropTypes.instanceOf(Map)
 };
-
-
-
