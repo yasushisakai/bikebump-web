@@ -4,11 +4,14 @@ import { Map } from 'immutable'
 import P5 from 'p5'
 
 
+
+
+
 export default class Record extends Component {
     constructor(props) {
       super(props);
-      this.onReportGood = onReportGood.bind(this);
-      this.onReportBad = onReportBad.bind(this);
+      this.onReportGood = this.onReportGood.bind(this);
+      this.onReportBad = this.onReportBad.bind(this);
     }
 
     componentDidMount() {
@@ -79,6 +82,21 @@ export default class Record extends Component {
       let index = Math.round(frequency / nyquist * this.analyzer.frequencyBinCount);
       return index;
     }
+
+     //single ding
+    onReportGood() {
+    //console.log(e);
+    //e.preventDefault()
+      this.props.onReportButtonClick()
+    }
+    //double ding
+    onReportBad() {
+    //console.log(event);
+
+    //e.preventDefault()
+      this.props.onReportButtonClick()
+      this.props.onReportButtonClick();
+    } 
 
     getFrequencyFromIndex(index) {
       return (index * (44100 / 2.0)) / this.analyzer.frequencyBinCount;
@@ -212,8 +230,8 @@ export default class Record extends Component {
        </div>
        {this.props.isRecording === true && this.props.isFetchingLatLng === false
        ? (<div>
-         <div className={smallButton} style={this.buttonColor('#0055ff','right')}onClick={(e) => this.onReportGood(e)}></div>
-         <div className={smallButton} style={this.buttonColor('#ff5500','left')}onClick={(e) => this.onReportBad(e)}></div>
+         <div className={smallButton} style={this.buttonColor('#0055ff','right')} onClick={this.onReportGood}></div>
+         <div className={smallButton} style={this.buttonColor('#ff5500','left')} onClick={this.onReportBad}></div>
          </div>
          )
        : null
@@ -230,25 +248,13 @@ export default class Record extends Component {
   }
 }
 
-Record.proptypes = {
+Record.propTypes = {
     isRecording : PropTypes.bool.isRequired,
     isFetchingLatLng : PropTypes.bool.isRequired,
     onRecordButtonClick: PropTypes.func.isRequired,
     onReportButtonClick: PropTypes.func.isRequired,
     location : PropTypes.instanceOf(Map)
-  };
+};
 
-  //single ding
-   function onReportGood(e) {
-    //console.log(e);
-    //e.preventDefault()
-    this.props.onReportButtonClick()
-  }
-    //double ding
-    function onReportBad(e) {
-    //console.log(event);
 
-    //e.preventDefault()
-    this.props.onReportButtonClick()
-    this.props.onReportButtonClick();
-  }
+
