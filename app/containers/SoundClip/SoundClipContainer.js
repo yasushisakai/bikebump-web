@@ -18,6 +18,7 @@ const SoundClipContainer = React.createClass({
   },
   handleClick (e){
     if(this.props.isCapturing !== true){
+      this.recorder.clear()
       this.recorder.record()
       console.log('recording...')
       this.props.dispatch(startCapture())
@@ -40,7 +41,6 @@ const SoundClipContainer = React.createClass({
           this.props.dispatch(uploadingClip())
           storeBlob(filename,blob)})
         .then(()=>{
-          this.recorder.clear() // need to clear
           return this.props.dispatch(uploadingClipSuccess())
         })
     })
