@@ -41,8 +41,8 @@ const SoundClipContainer = React.createClass({
           storeBlob(filename,blob)})
         .then(()=>{
           this.recorder.clear() // need to clear
-          return this.props.dispatch(uploadingClipSuccess()
-        }))
+          return this.props.dispatch(uploadingClipSuccess())
+        })
     })
 
   },
