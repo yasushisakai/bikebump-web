@@ -50,7 +50,6 @@ export function handleFetchingUserVotes () {
     dispatch(fetchingUserVotes())
     fetchUserVotes(uid)
       .then((votes)=>{
-        console.log(votes)
         let newVote;
         if(votes.credits === undefined){
           newVote = {...votes,credits:100}

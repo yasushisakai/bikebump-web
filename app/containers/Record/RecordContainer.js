@@ -29,7 +29,7 @@ const RecordContainer = React.createClass({
 
   componentDidMount () {
 
-    console.clear()
+    //console.clear()
 
     this.noSleep = new NoSleep()
     this.noSleep.enable()

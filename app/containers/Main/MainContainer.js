@@ -16,6 +16,7 @@ const MainContainer = React.createClass({
     isFetching: PropTypes.bool.isRequired,
     error : PropTypes.string.isRequired,
     isAuthed: PropTypes.bool.isRequired,
+    authedId: PropTypes.string.isRequired,
     isRecording: PropTypes.bool.isRequired,
     fetchingUserSuccess: PropTypes.func.isRequired,
     authUser : PropTypes.func.isRequired,
@@ -46,7 +47,7 @@ const MainContainer = React.createClass({
     return this.props.isFetching === true
     ? null
     :<div className={container}>
-        <Navigation isAuthed={this.props.isAuthed} isRecording={this.props.isRecording}/>
+        <Navigation isAuthed={this.props.isAuthed} isRecording={this.props.isRecording} authedId={this.props.authedId}/>
         {this.props.children}
       </div>
   },
@@ -57,6 +58,7 @@ function mapStateToProps ({users,record}) {
   isFetching : users.get('isFetching'),
   error: users.get('error'),
   isAuthed : users.get('isAuthed'),
+  authedId: users.get('authedId'),
   isRecording : record.get('isRecording'),
   }
 }

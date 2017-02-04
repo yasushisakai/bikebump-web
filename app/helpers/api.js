@@ -178,7 +178,7 @@ export function fetchUserResponses (uid) {
 
 export function fetchUserDings (uid) {
   return ref.child(`userDings/${uid}`).once('value')
-    .then((snapshot)=>(snapshot.val()||{}))
+    .then((snapshot)=>(Object.keys(snapshot.val())||[]))
 }
 
 

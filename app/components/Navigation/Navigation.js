@@ -11,10 +11,11 @@ import Bullseye from 'react-icons/lib/fa/bullseye'
 
 Navigation.propTypes=NavLinks.propTypes=ActionLinks.propTypes={
   isAuthed : PropTypes.bool.isRequired,
+  authedId : PropTypes.string.isRequired,
   isRecording : PropTypes.bool.isRequired,
 }
 
-function NavLinks ({isAuthed, isRecording}) {
+function NavLinks ({isAuthed, isRecording,authedId}) {
   return isAuthed===true
   ? <div className={navLink}>
     <Link className={link} to='/record'><Record className={isRecording===true? iconRecording :icon}/></Link>
@@ -27,10 +28,10 @@ function NavLinks ({isAuthed, isRecording}) {
   </div>
 }
 
-function ActionLinks ({isAuthed}) {
+function ActionLinks ({isAuthed,authedId}) {
   return isAuthed === true
   ? <div className={actionLink}>
-    <Link className={link} to='/user/testuserId'> <Account className={icon}/></Link>
+    <Link className={link} to={`/user/${authedId}`}> <Account className={icon}/></Link>
     <Link className={link} to='/logout'><SignOut className={icon}/></Link>
   </div>
   : <div className={actionLink}>
@@ -38,11 +39,11 @@ function ActionLinks ({isAuthed}) {
   </div>
 }
 
-export default function Navigation ({isAuthed, isRecording}) {
+export default function Navigation ({isAuthed, isRecording,authedId}) {
   return (
     <div className={navigation}>
-    <NavLinks isAuthed={isAuthed} isRecording={isRecording}/>
-    <ActionLinks isAuthed={isAuthed} isRecording={isRecording}/>
+    <NavLinks isAuthed={isAuthed} isRecording={isRecording} authedId={authedId}/>
+    <ActionLinks isAuthed={isAuthed} isRecording={isRecording} authedId={authedId}/>
     </div>
   )
 }
