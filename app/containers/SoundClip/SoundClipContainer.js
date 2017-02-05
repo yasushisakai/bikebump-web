@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 // import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { storeBlob } from 'helpers/storage'
-import { recordDuration } from 'config/constants'
+import { recordDuration, waitDuration } from 'config/constants'
 
 import { SoundClip } from 'components'
 import Recorder from 'helpers/Recorder'
@@ -18,13 +18,16 @@ const SoundClipContainer = React.createClass({
   },
   handleClick (e){
     if(this.props.isCapturing !== true){
-      this.recorder.clear()
-      this.recorder.record()
-      console.log('recording...')
-      this.props.dispatch(startCapture())
-      setTimeout(this.stopAndUpload,recordDuration) // close it
+      setTimeout(this.startRecord,waitDuration)
       e.preventDefault() 
     }
+  },
+  startRecord () {
+    this.recorder.clear()
+    this.recorder.record()
+    console.log('recording...')
+    this.props.dispatch(startCapture())
+    setTimeout(this.stopAndUpload,recordDuration)
   },
   stopAndUpload () {
     console.log('stopAndUpload')

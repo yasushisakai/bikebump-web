@@ -65,6 +65,7 @@ const RecordContainer = React.createClass({
     }
     return true
   },
+  
   updateLatLng () {
     if(this.props.isRecording === false && this.interval !== null) {
       window.clearInterval(this.interval)
