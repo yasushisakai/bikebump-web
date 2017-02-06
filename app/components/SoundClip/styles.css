@@ -8,3 +8,14 @@
   background-color: #FF0000;
   font-size:2em;
 }
+
+
+.bigButtonDisabled {
+  margin:15px;
+  padding:20px;
+  margin-top:25%;
+  text-align: center;
+  width:auto;
+  background-color: #333333;
+  font-size:2em;
+}

@@ -12,24 +12,18 @@ import {startCapture, stopCapture, uploadingClip, uploadingClipSuccess} from 'mo
 
 const SoundClipContainer = React.createClass({
   propTypes:{
-    //dispatch:PropTypes.func.isRequired,
-    isCapturing:PropTypes.bool.isRequired,
     isUploading:PropTypes.bool.isRequired,
   },
-  handleClick (e){
+  handleClick (){
     if(this.props.isCapturing !== true){
       setTimeout(this.startRecord,waitDuration)
-      e.preventDefault() 
     }
   },
   startRecord () {
-    console.log('recording...')
-    this.props.dispatch(startCapture())
     setTimeout(this.upload,recordDuration)
   },
   upload () {
-    console.log('stopAndUpload')
-    this.props.dispatch(stopCapture())
+    this.props.dispatch(uploadingClip())
     this.recorder.exportWAV((blob)=>{
       this.isCapturing = false
       fetchGeoLocation()
@@ -38,7 +32,6 @@ const SoundClipContainer = React.createClass({
           return formatWavFileName(now,coordinate)
         })
         .then((filename)=>{
-          this.props.dispatch(uploadingClip())
           storeBlob(filename,blob)
         })
         .then(()=>{
@@ -49,7 +42,6 @@ const SoundClipContainer = React.createClass({
   componentDidMount () {
     this.isCapturing = false
     const audio_context = new AudioContext()
-    this.bufferSize = 0
     if(navigator.getUserMedia) {
       navigator.getUserMedia(
           { audio:true },
@@ -72,14 +64,13 @@ const SoundClipContainer = React.createClass({
   },
   render () {
     return (
-      <SoundClip onClick={this.handleClick} isCapturing={this.props.isCapturing} bufferSize={this.bufferSize}/>
+      <SoundClip onClick={this.handleClick} isUploading={this.props.isUploading}/>
     )
   },
 })
 
 function mapStateToProps (state) {
   return {
-    isCapturing:state.record.get('isCapturing'),
     isUploading:state.record.get('isUploading'),
   }
 }

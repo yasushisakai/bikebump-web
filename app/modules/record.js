@@ -8,8 +8,6 @@ const START_RECORDING = 'START_RECORDING'
 const UPDATE_BREADCRUMB = 'UPDATE_BREADCRUMB'
 const RECORD_ERROR = 'RECORD_ERROR'
 
-const START_CAPTURE = 'START_CAPTURE'
-const STOP_CAPTURE = 'STOP_CAPTURE'
 const UPLOADING_CLIP = 'UPLOADING_CLIP'
 const UPLOADING_CLIP_ERROR = 'UPLOADING_CLIP_ERROR'
 const UPLOADING_CLIP_SUCCESS = 'UPLOADING_CLIP_SUCCESS'
@@ -39,17 +37,6 @@ function recordError (error) {
   }
 }
 
-export function startCapture (){
-  return {
-    type:START_CAPTURE,
-  }
-}
-
-export function stopCapture () {
-  return {
-    type: STOP_CAPTURE,
-  }
-}
 
 export function uploadingClip () {
   return {
@@ -168,10 +155,6 @@ export default function record(state=initialState,action){
         isRecording:true,
         currentCommuteId: action.commuteId,
       })
-    case START_CAPTURE:
-      return state.set('isCapturing',true)
-    case STOP_CAPTURE:
-      return state.set('isCapturing',false)
     case UPLOADING_CLIP:
       return state.set('isUploading',true)
     case UPLOADING_CLIP_SUCCESS:

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { bigButton } from './styles.css'
+import { bigButton, bigButtonDisabled } from './styles.css'
 
 SoundClip.PropTypes={
   onClick:PropTypes.func.isRequired,
@@ -7,10 +7,15 @@ SoundClip.PropTypes={
 }
 
 export default function SoundClip (props) {
+
+  function onClick (e) {
+    e.preventDefault()
+    return props.isUploading === true ? null : props.onClick()
+  }
   return (
     <div>
       {'SoundClip'}
-      <div className={bigButton} onClick={props.onClick}> {props.isCapturing === true ? 'caputuring...' : 'start recording'} </div>
+      <div className={props.isUploading === true ? bigButtonDisabled : bigButton} onClick={onClick}> {props.isUploading === true ? 'uploading...' : 'start recording'} </div>
       {props.bufferSize}
     </div>
 
