@@ -41,18 +41,21 @@ const SoundClipContainer = React.createClass({
           return formatWavFileName(now,coordinate)
         })
         .then((filename)=>{
-          this.props.dispatch(uploadingClip())
-          storeBlob(filename,blob)})
+          //storeBlob(filename,blob)})
+          this.recorder.getBuffer((buf)=>{
+            this.bufferSize = buf[0].length
+            this.props.dispatch(uploadingClip())
+          })
+        })
         .then(()=>{
           return this.props.dispatch(uploadingClipSuccess())
         })
     })
-
   },
   componentDidMount () {
     this.isCapturing = false
     const audio_context = new AudioContext()
-
+    this.bufferSize = 0
     if(navigator.getUserMedia) {
       navigator.getUserMedia(
           { audio:true },
@@ -70,7 +73,7 @@ const SoundClipContainer = React.createClass({
   },
   render () {
     return (
-      <SoundClip onClick={this.handleClick} isCapturing={this.props.isCapturing}/>
+      <SoundClip onClick={this.handleClick} isCapturing={this.props.isCapturing} bufferSize={this.bufferSize}/>
     )
   },
 })
