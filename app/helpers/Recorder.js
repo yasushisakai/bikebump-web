@@ -12,12 +12,17 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // change log
+// records the last totalLength*bufferLen data
+// develops the recBuffer
+
+
 import InlineWorker from 'inline-worker'
 
 export default class Recorder {
     config = {
         bufferLen: 4096,
         numChannels: 2,
+        totalLength: 60,
         mimeType: 'audio/wav'
     };
 
@@ -55,7 +60,9 @@ export default class Recorder {
         this.worker = new InlineWorker(function () {
             let recLength = 0,
                 recBuffers = [],
+                pivot = 0,
                 sampleRate,
+                totalLength,
                 numChannels;
 
             this.onmessage = function (e) {
@@ -81,18 +88,31 @@ export default class Recorder {
             function init(config) {
                 sampleRate = config.sampleRate;
                 numChannels = config.numChannels;
+                totalLength = config.totalLength;
+                bufferLen = config.bufferLen;
+                recLength = bufferLen*totalLength;
                 initBuffers();
             }
 
             function record(inputBuffer) {
                 for (var channel = 0; channel < numChannels; channel++) {
-                    recBuffers[channel].push(inputBuffer[channel]);
+                    recBuffers[channel][pivot]=inputBuffer[channel];
                 }
-                recLength += inputBuffer[0].length;
+                pivot ++
+                //recLength += inputBuffer[0].length;
+                if(pivot > 59) {
+                    pivot = 0
+                }
+            }
+
+            function develop(pivot){
+                const beginning = recBuffers.splice(pivot)
+                recBuffers = beginning.concat(recBuffers)
             }
 
             function exportWAV(type) {
                 let buffers = [];
+                develop(pivot)
                 for (let channel = 0; channel < numChannels; channel++) {
                     buffers.push(mergeBuffers(recBuffers[channel], recLength));
                 }
@@ -117,14 +137,15 @@ export default class Recorder {
             }
 
             function clear() {
-                recLength = 0;
-                recBuffers = [];
                 initBuffers();
             }
 
             function initBuffers() {
                 for (let channel = 0; channel < numChannels; channel++) {
                     recBuffers[channel] = [];
+                    for(let bin = 0; bin < totalLength; bin++){
+                        recBuffers[channel][bin] = [];
+                    }
                 }
             }
 
@@ -207,7 +228,9 @@ export default class Recorder {
             command: 'init',
             config: {
                 sampleRate: this.context.sampleRate,
-                numChannels: this.config.numChannels
+                numChannels: this.config.numChannels,
+                bufferLen: this.config.bufferLen,
+                totalLength: this.config.totalLength,
             }
         });
 
@@ -242,16 +265,18 @@ export default class Recorder {
     }
 
     exportWAV(cb, mimeType) {
+        this.recording = false
         mimeType = mimeType || this.config.mimeType;
         cb = cb || this.config.callback;
         if (!cb) throw new Error('Callback not set');
 
         this.callbacks.exportWAV.push(cb);
-
+        
         this.worker.postMessage({
             command: 'exportWAV',
             type: mimeType
         });
+        this.recording = true
     }
 
     static

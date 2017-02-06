@@ -23,15 +23,12 @@ const SoundClipContainer = React.createClass({
     }
   },
   startRecord () {
-    this.recorder.clear()
-    this.recorder.record()
     console.log('recording...')
     this.props.dispatch(startCapture())
-    setTimeout(this.stopAndUpload,recordDuration)
+    setTimeout(this.upload,recordDuration)
   },
-  stopAndUpload () {
+  upload () {
     console.log('stopAndUpload')
-    this.recorder.stop()
     this.props.dispatch(stopCapture())
     this.recorder.exportWAV((blob)=>{
       this.isCapturing = false
@@ -41,11 +38,8 @@ const SoundClipContainer = React.createClass({
           return formatWavFileName(now,coordinate)
         })
         .then((filename)=>{
-          //storeBlob(filename,blob)})
-          this.recorder.getBuffer((buf)=>{
-            this.bufferSize = buf[0].length
-            this.props.dispatch(uploadingClip())
-          })
+          this.props.dispatch(uploadingClip())
+          storeBlob(filename,blob)
         })
         .then(()=>{
           return this.props.dispatch(uploadingClipSuccess())
@@ -62,6 +56,8 @@ const SoundClipContainer = React.createClass({
           (stream) =>{
             const input = audio_context.createMediaStreamSource(stream)
             this.recorder = new Recorder(input)
+            // this.recorder.init()
+            this.recorder.record() // starts the bin filling
           },
           (error)=>{
             // error callback
@@ -70,6 +66,9 @@ const SoundClipContainer = React.createClass({
     }else{
       console.log('getUserMedia not supported on your browser!')
     }
+  },
+  componentWillUnmount () {
+    this.recorder.stop()
   },
   render () {
     return (
