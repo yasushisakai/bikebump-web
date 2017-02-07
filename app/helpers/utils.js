@@ -22,6 +22,66 @@ export function flipCoordinate(coordinate){
   return coordinate.reverse()
 }
 
+export function getCenter(coordinates){
+ return coordinates.reduce((prev,current)=>{
+    return [prev[0]+current[0],prev[1]+current[1]]
+  },[0,0]).map((element)=>{return element/coordinates.length})
+}
+
+export function pointFromParameter(start,end,parameter){
+  const delta = [end[0]-start[0],end[1]-start[1]]
+  return [
+  start[0]+delta[0]*parameter,
+  start[1]+delta[1]*parameter
+  ]
+}
+
+
+export function spliceRoad(geometry, {index=0, start, end}){
+  const totalLength = getSingleLineStringLength(geometry,index)
+  let pivot = 0
+  let pivotLength = 0
+  let isInside = false
+
+  let lineStringCoordinates;
+
+  if(geometry.type === 'LineString'){
+    lineStringCoordinates = geometry.coordinates
+  }else if(geometry.type === 'MultiLineString'){
+    lineStringCoordinates = geometry.coordinates[index]
+  }
+
+  let points=[]
+  let prevCoordinate = lineStringCoordinates[0]
+  for(let i=1;i<lineStringCoordinates.length;i++){
+    
+    const partialDistance = distFromLatLngArray(prevCoordinate,lineStringCoordinates[i])
+    pivotLength += partialDistance
+    const nextPivot = pivotLength/totalLength
+
+    if(!isInside && nextPivot > start){
+      const startPoint = pointFromParameter(prevCoordinate,lineStringCoordinates[i],(start-pivot)/(nextPivot-pivot))
+      points.push(startPoint)
+      // points.push(lineStringCoordinates[i])
+      isInside = true
+    }
+
+    if(isInside && nextPivot > end){
+      const lastPoint = pointFromParameter(prevCoordinate,lineStringCoordinates[i],(end-pivot)/(nextPivot-pivot))
+      points.push(lastPoint)
+      break; 
+    }
+
+    if(isInside){
+      points.push(lineStringCoordinates[i])
+    }
+
+    prevCoordinate = lineStringCoordinates[i]
+    pivot = nextPivot
+  }
+  return points
+}
+
 export function formatGeoLocation(coords) {
   return {
     lat: coords.latitude,
@@ -90,23 +150,33 @@ export function distFromLatLng(start, end) {
   return d;
 }
 
+function distFromLatLngArray(start,end){
+  return distFromLatLng({
+    lat:start[0],
+    lng:start[1],
+  },{
+    lat:end[0],
+    lng:end[1],
+  })
+}
+
 export function getTotalLength(geometry){
-  if(geometry.type==='LineString'){
+  if(geometry.type === 'LineString'){
     return geometry.coordinates.reduce((length,coordinate,index,coordinates)=>{
       if(index === 0 ) return 0
       else{
-        const previousCoordinate = {lat:coordinates[index-1][1],lng:coordinates[index-1][0]}
-        const currentCoordinate = {lat:coordinate[1],lng:coordinate[0]}
+        const previousCoordinate = {lat:coordinates[index-1][0],lng:coordinates[index-1][1]}
+        const currentCoordinate = {lat:coordinate[0],lng:coordinate[1]}
         return length + distFromLatLng(previousCoordinate,currentCoordinate)
       }
     },0)
-  }else if(geometry.type ==="MultiLineString"){
+  }else if(geometry.type === "MultiLineString"){
     return geometry.coordinates.reduce((length,lineString)=>{
       const lineStringLength = lineString.reduce((partialLength,coordinate,index,coordinates)=>{
         if(index === 0 ) return 0
         else{
-          const previousCoordinate = {lat:coordinates[index-1][1],lng:coordinates[index-1][0]}
-          const currentCoordinate = {lat:coordinate[1],lng:coordinate[0]}
+          const previousCoordinate = {lat:coordinates[index-1][0],lng:coordinates[index-1][1]}
+          const currentCoordinate = {lat:coordinate[0],lng:coordinate[1]}
 
           return partialLength + distFromLatLng(previousCoordinate,currentCoordinate)
         }
@@ -116,8 +186,17 @@ export function getTotalLength(geometry){
   }
 }
 
-export function getDomainLength(geometry,{start,end}){
-  const totalLength = getTotalLength(geometry)
+export function getSingleLineStringLength(geometry,index=0){
+  if(geometry.type === 'LineString'){
+    return getTotalLength(geometry)
+  }else if(geometry.type === 'MultiLineString'){
+    const newGeom = {type:'LineString',coordinates:geometry.coordinates[index]}
+    return getTotalLength(newGeom)
+  }
+}
+
+export function getDomainLength(geometry,{index=0,start,end}){
+  const totalLength = getSingleLineStringLength(geometry,index)
   return totalLength * Math.abs(end-start)
 }
 
