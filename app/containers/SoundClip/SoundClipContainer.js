@@ -5,7 +5,7 @@ import { storeBlob } from 'helpers/storage'
 import { recordDuration, waitDuration } from 'config/constants'
 
 import { SoundClip } from 'components'
-import Recorder from 'helpers/Recorder'
+import Recorder from 'helpers/Sound/Recorder'
 import { fetchGeoLocation, formatWavFileName } from 'helpers/utils'
 import {startCapture, stopCapture, uploadingClip, uploadingClipSuccess} from 'modules/record'
 

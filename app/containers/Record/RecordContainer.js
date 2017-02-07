@@ -56,6 +56,15 @@ const RecordContainer = React.createClass({
       uid:this.props.uid,
       value:0,
     }
+
+    //audio Context
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    const analyzer = audioContext.creatAnalyzer()
+
+    const source = audioContext.createMediaStreamSource(stream);
+    source.connect(analyzer)
+    analyzer.connect()
+
   },
 
   shouldComponentUpdate (nextProps, nextState) {
