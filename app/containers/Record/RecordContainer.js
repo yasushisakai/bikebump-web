@@ -10,7 +10,7 @@ import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
 
 import NoSleep from 'nosleep'
-import SoundClip from 'containers/SoundClip'
+import SoundClip from 'helpers/SoundClip'
 
 const RecordContainer = React.createClass({
   propTypes:{
@@ -29,7 +29,6 @@ const RecordContainer = React.createClass({
     //dispatch:PropTypes.func.isRequired,
     isCapturing:PropTypes.bool.isRequired,
     isUploading:PropTypes.bool.isRequired,
-    },
   },
 
   componentDidMount () {
@@ -37,7 +36,9 @@ const RecordContainer = React.createClass({
     this.DOUBLECLICK = 500;
     this.GOOD = 0;
     this.BAD = 1;
-    this.SoundClip = new SoundClip();
+    this.soundClip = new SoundClip();
+    this.dataArray = this.soundClip.getDataArray();
+    this.analyzer = this.soundClip.getAnalyzer();
     console.clear()
 
     this.noSleep = new NoSleep()
@@ -93,12 +94,11 @@ const RecordContainer = React.createClass({
 
   handleReport () {
 
-    // add a ding
-    //save latest ding
+    // send blob
     console.log("stopAndUpload");
     this.props.dispatch(stopCapture())
-    this.SoundClip.stopAndUpload();
-    this.SoundClip.record();
+    this.soundClip.stopAndUpload();
+    this.soundClip.record();
     this.props.dispatch(startCapture());
 
     this.duplicateLatestDing = this.latestDing
@@ -107,6 +107,7 @@ const RecordContainer = React.createClass({
           timeStamp:this.props.latestFetch
       }
 
+    //ding logic
     if(this.duplicateLatestDing) {
       let value = 0;
       if(this.props.latestFetch- this.duplicateLatestDing.timeStamp <=this.DOUBLECLICK) {
@@ -144,6 +145,7 @@ const RecordContainer = React.createClass({
       this.interval = window.setInterval(this.updateLatLng, updateCycleDuration)
     }
   },
+
   componentWillUnmount () {
     this.noSleep.disable()
     // todo move this to main?
@@ -156,10 +158,10 @@ const RecordContainer = React.createClass({
 
   render () {
       return (<div>
-      <Record dataArray ={this.SoundClip.getDataArray()} analyzer ={this.SoundClip.getAnalyzer()} isRecording={this.props.isRecording} isFetchingLatLng={this.props.isFetchingLatLng} onRecordButtonClick={this.props.toggleRecording} onReportButtonClick={this.handleReport} location={this.props.location}/>
+      <Record dataArray ={this.dataArray} analyzer ={this.analyzer} isRecording={this.props.isRecording} isFetchingLatLng={this.props.isFetchingLatLng} onRecordButtonClick={this.props.toggleRecording} onReportButtonClick={this.handleReport} location={this.props.location}/>
       </div>
     )
-  },
+  }
 })
 
 function mapState({record,users}){
@@ -171,8 +173,8 @@ function mapState({record,users}){
   latestFetch : record.get('latestFetch'),
   latestFetchAttempt : record.get('latestFetchAttempt'),
   location : record.get('latestLocation'),
-  isCapturing:state.record.get('isCapturing'),
-  isUploading:state.record.get('isUploading'),
+  isCapturing:record.get('isCapturing'),
+  isUploading:record.get('isUploading'),
   }
 }
 

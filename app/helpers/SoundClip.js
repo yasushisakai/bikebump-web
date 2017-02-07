@@ -4,12 +4,11 @@ import { connect } from 'react-redux'
 import { storeBlob } from 'helpers/storage'
 import { recordDuration, waitDuration } from 'config/constants'
 
-import { SoundClip } from 'components'
 import Recorder from 'helpers/Recorder'
 import { fetchGeoLocation, formatWavFileName } from 'helpers/utils'
 import {startCapture, stopCapture, uploadingClip, uploadingClipSuccess} from 'modules/record'
 
-class SoundClip {
+export default class SoundClip {
 
 <<<<<<< 5123c74855109eff20632a8960210ad1362c1504
 const SoundClipContainer = React.createClass({
@@ -50,14 +49,14 @@ const SoundClipContainer = React.createClass({
     const audio_context = new AudioContext()
 
     //the thing to see the frequencies
-    this.analyzer = this.audioContext.createAnalyser();
+    this.analyzer = audio_context.createAnalyser();
     this.analyzer.minDecibels = -90;
     this.analyzer.maxDecibels = -10;
     this.analyzer.smoothingTimeConstant = 0.85;
     this.analyzer.fftSize = 1024;
     //this.analyzer.getByteFrequencyData.bind(this)l
 
-    this.highpassFilter = this.audioContext.createBiquadFilter();
+    this.highpassFilter = audio_context.createBiquadFilter();
     this.highpassFilter.type = 'highpass';
     this.highpassFilter.frequency.value = 2600;
     this.highpassFilter.Q.value = 15;
@@ -66,7 +65,6 @@ const SoundClipContainer = React.createClass({
 
     //holds the actual frequency data
     this.dataArray = new Uint8Array(this.analyzer.frequencyBinCount); //half of fft size
-    this.sketch = this.sketch.bind(this);
 
     //mic test
     navigator.getUserMedia = (navigator.getUserMedia ||
@@ -89,11 +87,11 @@ const SoundClipContainer = React.createClass({
             //Recorder
             const input = audio_context.createMediaStreamSource(stream);
             this.recorder = new Recorder(input);
-            console.log('recording...')
-            record();
+            this.record();
+            console.log('recording...');
 
             //Ding Detection
-            this.source = this.audioContext.createMediaStreamSource(stream);
+            this.source = audio_context.createMediaStreamSource(stream);
             this.source.connect(this.highpassFilter);
             this.highpassFilter.connect(this.analyzer);
 
@@ -135,7 +133,7 @@ function mapStateToProps (state) {
     const FREQUENCY_DIFF = 2000;
     const THRESHOLD = 100;
   }
-  
+
   getAnalyzer() {
     return this.analyzer;
   }
@@ -174,7 +172,7 @@ function mapStateToProps (state) {
           storeBlob(filename,blob)})
         .then(()=>this.props.dispatch(uploadingClipSuccess()))
     })
-    record();
+    this.record();
   }
 
 }
