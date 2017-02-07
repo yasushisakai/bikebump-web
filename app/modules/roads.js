@@ -34,7 +34,7 @@ function fetchingRoadSuccess (roads) {
 export function handleRoadsFetch () {
   return function(dispatch){
     dispatch(fetchingRoad())
-    fetchRoads()
+    return fetchRoads()
       .then((roads)=>dispatch(fetchingRoadSuccess(roads)))
       .catch((error)=>dispatch(fetchingRoadError(error)))
   }

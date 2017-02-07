@@ -18,6 +18,10 @@ export function fetchGeoLocation() {
   })
 }
 
+export function flipCoordinate(coordinate){
+  return coordinate.reverse()
+}
+
 export function formatGeoLocation(coords) {
   return {
     lat: coords.latitude,
