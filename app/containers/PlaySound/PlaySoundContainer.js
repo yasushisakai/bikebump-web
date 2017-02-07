@@ -3,47 +3,25 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { PlaySound } from 'components'
 
+import  TonePlayer from 'helpers/Sound/Synth'
+
 const PlaySoundContainer = React.createClass({
   playSound () {
     console.log('play sound')
   },
   componentDidMount () {
 
-    this.isPlaying = false
-    
-    // VCO
-    const audio_context = new AudioContext()
-    this.vco = audio_context.createOscillator()
-    this.vco.type = this.vco.SINE
-    this.vco.frequency.value = 440
-    this.vco.start(0)
-
-    // VCA
-    this.vca = audio_context.createGain()
-    this.vca.gain.value = 0
-
-    // connection
-    this.vco.connect(this.vca)
-    this.vca.connect(audio_context.destination);
-    
-    this.isPlaying = false
+    const audioContext = new AudioContext()
+    this.tonePlayer = new TonePlayer(audioContext)
 
   },
   togglePlay () {
-
-    console.log(this.isPlaying)
-
-    if(this.isPlaying){
-      this.vca.gain.value = 0
-      this.isPlaying = false
-    }else{
-      this.vca.gain.value = 1
-      this.isPlaying = true
-    }
+    this.tonePlayer.play(440)
+    // setTimeout(this.tonePlayer.play(880),2000)
   },
   render () {
     return (
-  <PlaySound onClickPlaySound={this.togglePlay.bind(this)}/>
+  <PlaySound onClickPlaySound={this.togglePlay}/>
     )
   },
 })

@@ -1,4 +1,6 @@
 
+// you can't use setTimeOut because its a different thread
+// TODO: scheduling sound >>> https://www.html5rocks.com/en/tutorials/audio/scheduling/
 
 export class VCO {
   constructor (audioContext,frequency=440) {
@@ -6,6 +8,11 @@ export class VCO {
     this.oscillator = this.context.createOscillator()
     this.oscillator.type = this.oscillator.SAWTOOTH
     this.setFrequency(frequency)
+    this.oscillator.start(0)
+
+    this.input = this.oscillator
+    this.output = this.oscillator
+
   }
 
   setFrequency (frequency) {
@@ -16,7 +23,7 @@ export class VCO {
     if(node.hasOwnProperty('input')){
       this.output.connect(node.input)
     }else{
-      this.outline.connect(node)
+      this.output.connect(node)
     }
   }
 
@@ -36,7 +43,7 @@ export class VCA {
     if(node.hasOwnProperty('input')){
       this.output.connect(node.input)
     }else{
-      this.outline.connect(node)
+      this.output.connect(node)
     }
   }
 
@@ -58,16 +65,25 @@ export class EnvelopeGenerator {
     this.param.linearRampToValueAtTime(0,now+this.attackTime+this.releaseTime)
   }
 
+  connect (param) {
+    this.param = param
+  }
 }
 
-export default play(audioContext,frequency=440){
+export default class TonePlayer {
 
-  const vca = new VCA(audioContext)
-  const vco = new VCO(audioContext,frequency)
-  const env = new EnvelopeGenerator(audioContext)
+    constructor(audioContext){
+      this.vca = new VCA(audioContext)
+      this.vco = new VCO(audioContext,440)
+      this.env = new EnvelopeGenerator(audioContext)
+  
+      this.vco.connect(this.vca)
+      this.env.connect(this.vca.amplitude)
+      this.vca.connect(audioContext.destination)
+    }
 
-  vco.connect(vca)
-  env.connect(vca.amplitude)
-  vca.connect(audioContext.destination)
-
+    play(frequency){
+      this.vco.setFrequency(frequency)
+      this.env.trigger()
+    }
 }
