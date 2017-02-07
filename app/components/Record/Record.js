@@ -5,18 +5,12 @@ import P5 from 'p5'
 
 import { recordContainer } from './styles.css'
 
-
-
-
 export default class Record extends Component {
 
     constructor(props) {
       super(props);
     }
 
-    componentDidMount() {
-
-    }
      //single ding
     onReportGood() {
     //console.log(e);
@@ -31,8 +25,6 @@ export default class Record extends Component {
       this.props.onReportButtonClick()
       this.props.onReportButtonClick();
     }
-
-
 
   /**
   *sketch
@@ -49,10 +41,10 @@ export default class Record extends Component {
         this.unitHeight = p.windowHeight / 256;
       };
 
-      p.draw = (this.props.analyzer, this.props.dataArray)=>
+      p.draw= ()=> {
          this.analyzer = this.props.analyzer;
          this.dataArray = this.props.dataArray;
-         
+
          p.background(250);
 
          this.analyzer.getByteFrequencyData(this.dataArray); //the meat

@@ -88,8 +88,9 @@ export default class Recorder {
                 for (var channel = 0; channel < numChannels; channel++) {
                     recBuffers[channel].push(inputBuffer[channel]);
                 }
-                if (recBuffers[channel].length >= bigNumber) {
-                    recBuffers.splice(0,recBuffers[channel].length-bigNumber)
+                if (recBuffers[0].length >= bigNumber) {
+                    recBuffers[0].splice(0,recBuffers[0].length-bigNumber)
+                    recBuffers[1].splice(0, recBuffers[0].length-bigNumber)
                     recLength = bigAssNumber
                 }
                 else{
