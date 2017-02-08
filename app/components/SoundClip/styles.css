@@ -1,12 +1,6 @@
 
 .bigButton {
-  margin:15px;
-  padding:20px;
-  margin-top:25%;
-  text-align: center;
-  width:auto;
-  background-color: #FF0000;
-  font-size:2em;
+  composes: largeButton from 'styles/styles.css';
 }
 
 

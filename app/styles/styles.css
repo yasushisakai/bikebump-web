@@ -2,14 +2,29 @@ body{
   margin:0;
   padding:0;
   font-family: sans-serif;
-  font-size: 28px;
+  font-size: 24px;
   background-color: #111111;
   color : #ffffff;
   height:100%;
 }
 
+#app {
+  text-align: center;
+}
+
 .button {
   cursor:pointer;
+}
+
+.largeButton {
+  margin:50px;
+  padding:15px;
+  margin-top:15%;
+  text-align: center;
+  width:auto;
+  background-color: #FF0000;
+  font-size:1.5em;
+  border-radius:20px;
 }
 
 a {

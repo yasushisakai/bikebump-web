@@ -18,6 +18,7 @@ import {
   SoundClipContainer,
   PlaySoundContainer,
   RoadVisContainer,
+  CalibrateContainer,
 } from 'containers'
 
 export default function getRoutes(checkAuth, history){
@@ -27,7 +28,10 @@ export default function getRoutes(checkAuth, history){
         <Route path='record' component={RecordContainer} onEnter={checkAuth} />
         <Route path='map' component={MapVisContainer} onEnter={checkAuth} />
         <Route path='roads/:roadId' component={RoadsContainer} onEnter={checkAuth} />
-        <Route path='user/:uid' component={UserContainer} onEnter={checkAuth} />
+        <Route path='user/:uid' onEnter={checkAuth} >
+          <Route path='calibrate' component={CalibrateContainer} onEnter={checkAuth} />
+          <IndexRoute component={UserContainer} onEnter={checkAuth} />
+        </Route>
         <Route path='pick' component={PickContainer} onEnter={checkAuth} />
         <Route path='signin' component={AuthContainer} onEnter={checkAuth}/>
         <Route path='logout' component={LogoutContainer} />

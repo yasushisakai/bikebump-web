@@ -33,7 +33,7 @@ function checkAuth (nextState, replace) {
   if(isProduction===true){
     if(nextPath==='/map' || nextPath === '/admin'){
       return
-    }else if (nextPath === '/' || nextPath == '/signin') {
+    }else if (nextPath === '/' || nextPath == '/signin' ) {
       if(isAuthed === true) {
         replace('/record')
       }else{
