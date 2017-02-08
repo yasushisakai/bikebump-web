@@ -26,19 +26,21 @@ const RecordContainer = React.createClass({
     handleCreateDing : PropTypes.func.isRequired,
     handleSetDingListener : PropTypes.func.isRequired,
     handleComplieDing : PropTypes.func.isRequired,
-    //dispatch:PropTypes.func.isRequired,
+    dispatch:PropTypes.func.isRequired,
     isCapturing:PropTypes.bool.isRequired,
     isUploading:PropTypes.bool.isRequired,
   },
 
   componentDidMount () {
     //Constants
-    this.DOUBLECLICK = 500;
-    this.GOOD = 0;
-    this.BAD = 1;
-    this.soundClip = new SoundClip();
-    this.dataArray = this.soundClip.getDataArray();
-    this.analyzer = this.soundClip.getAnalyzer();
+    //this.DOUBLECLICK = 500;
+    //this.GOOD = 0;
+    //this.BAD = 1;
+
+    this.SoundClip = new SoundClip();
+    this.dataArray = this.SoundClip.getDataArray();
+    this.analyzer = this.SoundClip.getAnalyzer();
+
     console.clear()
 
     this.noSleep = new NoSleep()
@@ -96,12 +98,20 @@ const RecordContainer = React.createClass({
 
     // send blob
     console.log("stopAndUpload");
-    this.props.dispatch(stopCapture())
-    this.soundClip.stopAndUpload();
-    this.soundClip.record();
-    this.props.dispatch(startCapture());
+    //this.props.dispatch(this.props.stopCapture())
+    this.SoundClip.stopAndUpload();
+    this.SoundClip.record();
+    //this.props.dispatch(this.props.startCapture());
 
-    this.duplicateLatestDing = this.latestDing
+    return this.props.handleComplieDing(
+        this.props.uid,
+        this.props.latestLocation.toJS(),
+        this.props.latestFetch,
+        10,
+        0
+    );
+
+    /*this.duplicateLatestDing = this.latestDing
     this.latestDing = {
           location:this.props.latestLocation.toJS(),
           timeStamp:this.props.latestFetch
@@ -132,6 +142,7 @@ const RecordContainer = React.createClass({
          location:this.props.latestLocation.toJS(),
          timeStamp:this.props.latestFetch
      }
+     */
   },
 
   componentDidUpdate () {

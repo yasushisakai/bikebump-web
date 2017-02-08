@@ -10,40 +10,6 @@ import {startCapture, stopCapture, uploadingClip, uploadingClipSuccess} from 'mo
 
 export default class SoundClip {
 
-<<<<<<< 5123c74855109eff20632a8960210ad1362c1504
-const SoundClipContainer = React.createClass({
-  propTypes:{
-    isUploading:PropTypes.bool.isRequired,
-  },
-  handleClick (){
-    if(this.props.isCapturing !== true){
-      setTimeout(this.startRecord,waitDuration)
-    }
-  },
-  startRecord () {
-    setTimeout(this.upload,recordDuration)
-  },
-  upload () {
-    this.props.dispatch(uploadingClip())
-    this.recorder.exportWAV((blob)=>{
-      this.isCapturing = false
-      fetchGeoLocation()
-        .then((coordinate)=>{
-          const now = new Date()
-          return formatWavFileName(now,coordinate)
-        })
-        .then((filename)=>{
-          storeBlob(filename,blob)
-        })
-        .then(()=>{
-          return this.props.dispatch(uploadingClipSuccess())
-        })
-    })
-  },
-  componentDidMount () {
-    this.isCapturing = false
-    const audio_context = new AudioContext()
-=======
   constructor() {
     this.isCapturing = false
     const audio_context = new AudioContext()
@@ -61,6 +27,11 @@ const SoundClipContainer = React.createClass({
     this.highpassFilter.frequency.value = 2600;
     this.highpassFilter.Q.value = 15;
 
+    this.bandpassFilter = audio_context.createBiquadFilter();
+    this.bandpassFilter.type = 'bandpass';
+    this.bandpassFilter.frequency.value = 3000;
+    this.bandpassFilter.Q.value = 15;
+
     //removed peaking fetchingLatLngError
 
     //holds the actual frequency data
@@ -73,17 +44,10 @@ const SoundClipContainer = React.createClass({
     navigator.msGetUserMedia);
 
 
->>>>>>> Blob code done; need to debug
     if(navigator.getUserMedia) {
       navigator.getUserMedia(
           { audio:true },
           (stream) =>{
-<<<<<<< 5123c74855109eff20632a8960210ad1362c1504
-            const input = audio_context.createMediaStreamSource(stream)
-            this.recorder = new Recorder(input)
-            // this.recorder.init()
-            this.recorder.record() // starts the bin filling
-=======
             //Recorder
             const input = audio_context.createMediaStreamSource(stream);
             this.recorder = new Recorder(input);
@@ -92,10 +56,9 @@ const SoundClipContainer = React.createClass({
 
             //Ding Detection
             this.source = audio_context.createMediaStreamSource(stream);
-            this.source.connect(this.highpassFilter);
+            this.source.connect(this.bandpassFilter);
+            this.bandpassFilter.connect(this.highpassFilter);
             this.highpassFilter.connect(this.analyzer);
-
->>>>>>> Blob code done; need to debug
           },
           (error)=>{
             // error callback
@@ -106,32 +69,11 @@ const SoundClipContainer = React.createClass({
       else{
       console.log('getUserMedia not supported on your browser!')
     }
-<<<<<<< 5123c74855109eff20632a8960210ad1362c1504
-  },
-  componentWillUnmount () {
-    this.recorder.stop()
-  },
-  render () {
-    return (
-      <SoundClip onClick={this.handleClick} isUploading={this.props.isUploading}/>
-    )
-  },
-})
-
-function mapStateToProps (state) {
-  return {
-    isUploading:state.record.get('isUploading'),
-=======
     this.a_indexies = [27.5, 55, 110, 220, 440, 880, 1760, 3520, 7040, 14080].map(v=> {
         return this.getIndexFromFrequency(v);
     })
 
-    //Constants
-    const TARGET_INDEX = this.getIndexFromFrequency(3050);
-    const LOW_INDEX = this.getIndexFromFrequency(1000);
-    const HIGH_INDEX = this.getIndexFromFrequency(5000);
-    const FREQUENCY_DIFF = 2000;
-    const THRESHOLD = 100;
+
   }
 
   getAnalyzer() {
@@ -140,7 +82,6 @@ function mapStateToProps (state) {
 
   getDataArray() {
     return this.dataArray;
->>>>>>> Blob code done; need to debug
   }
 
   getIndexFromFrequency(frequency) {
@@ -168,9 +109,9 @@ function mapStateToProps (state) {
           return formatWavFileName(now,coordinate)
         })
         .then((filename)=>{
-          this.props.dispatch(uploadingClip())
+          //this.props.dispatch(uploadingClip())
           storeBlob(filename,blob)})
-        .then(()=>this.props.dispatch(uploadingClipSuccess()))
+        //.then(()=>//this.props.dispatch(uploadingClipSuccess()))
     })
     this.record();
   }

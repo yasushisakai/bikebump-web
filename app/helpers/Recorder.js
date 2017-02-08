@@ -19,6 +19,8 @@
 import InlineWorker from 'inline-worker'
 
 export default class Recorder {
+
+
     config = {
         bufferLen: 4096,
         numChannels: 2,
@@ -58,6 +60,9 @@ export default class Recorder {
 
         let self = {};
         this.worker = new InlineWorker(function () {
+          this.TIME_LENGTH = 5;
+          this.SAMPLING_RATE = 44100;
+          this.BIN_SIZE = this.SAMPLING_RATE * this.TIME_LENGTH;
             let recLength = 0,
                 recBuffers = [],
                 pivot = 0,
@@ -98,14 +103,10 @@ export default class Recorder {
                 for (var channel = 0; channel < numChannels; channel++) {
                     recBuffers[channel][pivot]=inputBuffer[channel];
                 }
-                pivot ++
-                //recLength += inputBuffer[0].length;
-                if(pivot > 59) {
-                    pivot = 0
-                }
-                if (recBuffers[channel].length >= bigNumber) {
-                    recBuffers.splice(0,recBuffers[channel].length-bigNumber)
-                                   recLength = bigAssNumber
+                if (recBuffers[0].length >= this.BIN_SIZE ) {
+                    recBuffers[0].splice(0,recBuffers[0].length-this.BIN_SIZE);
+                    recBuffers[1].splice(0, recBuffers[0].length-this.BIN_SIZE);
+                    recLength = this.BIN_SIZE;
                 }
                 else{
                   recLength += inputBuffer[0].length;
