@@ -44,9 +44,8 @@ function fetchingUserVotesSuccess (uid,votes) {
   }
 }
 
-export function handleFetchingUserVotes () {
+export function handleFetchingUserVotes (uid) {
   return function (dispatch,getState) {
-    const uid = getState().users.get('authedId')
     dispatch(fetchingUserVotes())
     fetchUserVotes(uid)
       .then((votes)=>{

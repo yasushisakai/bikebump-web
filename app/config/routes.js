@@ -12,6 +12,7 @@ import {
   AuthContainer,
   LogoutContainer,
   ClearContainer,
+  AddResponseVotesContainer,
   AdminContainer,
   TestContainer,
   RespondContainer,
@@ -32,6 +33,7 @@ export default function getRoutes(checkAuth, history){
         <Route path='signin' component={AuthContainer} onEnter={checkAuth}/>
         <Route path='logout' component={LogoutContainer} />
         <Route path='clear' component={ClearContainer} />
+        <Route path='testAdd/:uid' component={AddResponseVotesContainer} />
         <Route path='respond' component={RespondContainer} onEnter={checkAuth}/>
         <Route path='soundclip' component={SoundClipContainer} onEnter={checkAuth}/>
         <Route path='playSound' component={PlaySoundContainer} onEnter={checkAuth}/>

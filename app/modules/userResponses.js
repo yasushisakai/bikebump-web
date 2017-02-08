@@ -33,9 +33,9 @@ function fetchingUserResponsesSuccess (uid,responses) {
   }
 }
 
-export function handleFetchingUserResponses (){
+export function handleFetchingUserResponses (uid){
   return function(dispatch,getState){
-    const uid = getState().users.get('authedId')
+    // const uid = getState().users.get('authedId')
     dispatch(fetchingUserResponses())
       fetchUserResponses(uid)
         .then((response)=>{
