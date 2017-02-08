@@ -89,6 +89,13 @@ export function formatGeoLocation(coords) {
   }
 }
 
+export function getSlopes (dataArray, target, range=2) {
+  const targetValue = dataArray[target]
+  let result = [dataArray[target-range],dataArray[target+range]]
+  return result.map((value)=>(targetValue-value)/range)
+}
+
+
 export function formatUser(name, email, avatar, uid) {
   return {
     name,
