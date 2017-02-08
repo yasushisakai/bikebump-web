@@ -182,3 +182,11 @@ export function fetchUserDings (uid) {
 }
 
 
+export function fetchUserSettings (uid) {
+  return ref.child(`userSettings/${uid}`).once('value')
+    .then((snapshot)=>snapshot.val()||{})
+}
+
+export function updateUserSettings (uid, variable, value) {
+  return ref.child(`userSettings/${uid}/${variable}`).set(value)
+}

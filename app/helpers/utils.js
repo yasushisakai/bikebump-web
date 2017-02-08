@@ -22,6 +22,14 @@ export function flipCoordinate(coordinate){
   return coordinate.reverse()
 }
 
+export function indexToFrequency(index,analyser) {
+  return index*analyser.binUnit
+}
+
+export function frequencyToIndex(frequency,analyser) {
+  return Math.round(frequency/analyser.binUnit)
+}
+
 export function getCenter(coordinates){
  return coordinates.reduce((prev,current)=>{
     return [prev[0]+current[0],prev[1]+current[1]]

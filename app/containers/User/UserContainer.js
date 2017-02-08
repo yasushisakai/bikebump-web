@@ -36,7 +36,7 @@ const UserContainer = React.createClass({
   render () {
     return this.props.isFetching === true
     ? null
-    :( <User dingIds={this.props.dingIds}/> )
+    :( <User uid={this.props.authedId} dingIds={this.props.dingIds}/> )
   },
 })
 
