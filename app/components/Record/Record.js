@@ -33,17 +33,36 @@ export default class Record extends Component {
   */
 
     sketch = (p)=> {
+
       p.setup= ()=> {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.textAlign(p.CENTER);
         p.textSize(9);
-        this.unitWidth = p.windowWidth / this.dataArray.length;
+        this.unitWidth = p.windowWidth / this.props.dataArray.length;
         this.unitHeight = p.windowHeight / 256;
       };
 
       p.draw= ()=> {
          this.analyzer = this.props.analyzer;
          this.dataArray = this.props.dataArray;
+         this.getIndexFromFrequency = function (frequency) {
+           let nyquist = 44100 / 2.0;
+           let index = Math.round(frequency / nyquist * this.analyzer.frequencyBinCount);
+           return index;
+         };
+         this.getFrequencyFromIndex = function(index) { return (index * (44100 / 2.0)) / this.analyzer.frequencyBinCount;};
+
+         //octave frequencies
+         this.a_indexies = [27.5, 55, 110, 220, 440, 880, 1760, 3520, 7040, 14080].map(v=> {
+            return this.getIndexFromFrequency(v)
+        });
+
+         //Constants
+         const TARGET_INDEX = this.getIndexFromFrequency(3050);
+         const LOW_INDEX = this.getIndexFromFrequency(1000);
+         const HIGH_INDEX = this.getIndexFromFrequency(5000);
+         const FREQUENCY_DIFF = 2000;
+         const THRESHOLD = 100;
 
          p.background(250);
 
@@ -57,8 +76,8 @@ export default class Record extends Component {
          *3. Compare each slope to a threshold
          */
 
-         let lowSlope = this.dataArray[this.targetIndex] - this.dataArray[this.lowIndex]/(this.frequencyDiff)
-         let highSlope = this.dataArray[this.targetIndex] - this.dataArray[this.highIndex]/(this.frequencyDiff)
+         let lowSlope = this.dataArray[TARGET_INDEX] - this.dataArray[LOW_INDEX]/(FREQUENCY_DIFF)
+         let highSlope = this.dataArray[TARGET_INDEX] - this.dataArray[HIGH_INDEX]/(FREQUENCY_DIFF)
 
          /**
          * average threshold
@@ -71,13 +90,13 @@ export default class Record extends Component {
 
          let averageRangeRadius = 30;
          let average = this.dataArray
-                .slice(this.targetIndex - averageRangeRadius, this.targetIndex + averageRangeRadius + 1)
+                .slice(TARGET_INDEX - averageRangeRadius, TARGET_INDEX + averageRangeRadius + 1)
                 .reduce((a, c)=> {
                   return a + c;
                 }) / (this.dataArray.length)
 
           let targetRange = 3;
-          let targetValue = this.dataArray.slice(this.targetIndex-targetRange,this.targetIndex+targetRange+1).reduce((a,c)=>{return a+c})/(3*2+1)
+          let targetValue = this.dataArray.slice(TARGET_INDEX-targetRange,TARGET_INDEX+targetRange+1).reduce((a,c)=>{return a+c})/(3*2+1)
 
           //console.log(targetValue);
 
@@ -91,30 +110,38 @@ export default class Record extends Component {
           /**
           * Detecthing the "ding"
           */
-          if (highSlope > this.threshold && lowSlope > this.threshold) {
+          if (highSlope > THRESHOLD && lowSlope > THRESHOLD) {
             this.onReportGood();
             console.log(lowSlope,highSlope);
             p.background(255, 0, 0);
           }
-
           p.fill(0);
           p.noStroke();
-          this.dataArray.map((v,index) => {
-                 if (index % 50 == 0)
-                    p.text(this.getFrequencyFromIndex(index).toFixed(2), index * this.unitWidth, p.windowHeight - 50);
+          this.dataArray.map((v, index)=> {
+                  if (index % 50 == 0)
+                      p.text(this.getFrequencyFromIndex(index).toFixed(2), index * this.unitWidth, p.windowHeight - 50);
               }
           );
+
+          p.noFill();
+          p.stroke(255, 0, 0);
+          this.a_indexies.map(v=> {
+              p.line(this.unitWidth * v, 0, this.unitWidth * v, p.windowHeight);
+          });
 
           p.stroke(0, 0, 255);
           p.line(this.unitWidth * this.targetIndex, 0, this.unitWidth * this.targetIndex, p.windowHeight);
 
-          //draw the frequencies
+
+
+          // draw the frequencies
           p.stroke(20);
           p.beginShape();
-          this.dataArray.map((v,index)=> {
-            p.vertex(index * this.unitWidth, p.windowHeight - this.unitHeight * v);
+          this.dataArray.map((v, index)=> {
+              p.vertex(index * this.unitWidth, p.windowHeight - this.unitHeight * v);
           });
           p.endShape();
+
 
         };
 

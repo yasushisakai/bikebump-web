@@ -27,6 +27,11 @@ export default class SoundClip {
     this.highpassFilter.frequency.value = 2600;
     this.highpassFilter.Q.value = 15;
 
+    this.bandpassFilter = audio_context.createBiquadFilter();
+    this.bandpassFilter.type = 'bandpass';
+    this.bandpassFilter.frequency.value = 3000;
+    this.bandpassFilter.Q.value = 15;
+
     //removed peaking fetchingLatLngError
 
     //holds the actual frequency data
@@ -51,9 +56,9 @@ export default class SoundClip {
 
             //Ding Detection
             this.source = audio_context.createMediaStreamSource(stream);
-            this.source.connect(this.highpassFilter);
+            this.source.connect(this.bandpassFilter);
+            this.bandpassFilter.connect(this.highpassFilter);
             this.highpassFilter.connect(this.analyzer);
-
           },
           (error)=>{
             // error callback
@@ -68,12 +73,7 @@ export default class SoundClip {
         return this.getIndexFromFrequency(v);
     })
 
-    //Constants
-    const TARGET_INDEX = this.getIndexFromFrequency(3050);
-    const LOW_INDEX = this.getIndexFromFrequency(1000);
-    const HIGH_INDEX = this.getIndexFromFrequency(5000);
-    const FREQUENCY_DIFF = 2000;
-    const THRESHOLD = 100;
+
   }
 
   getAnalyzer() {
@@ -109,9 +109,9 @@ export default class SoundClip {
           return formatWavFileName(now,coordinate)
         })
         .then((filename)=>{
-          this.props.dispatch(uploadingClip())
+          //this.props.dispatch(uploadingClip())
           storeBlob(filename,blob)})
-        .then(()=>this.props.dispatch(uploadingClipSuccess()))
+        //.then(()=>//this.props.dispatch(uploadingClipSuccess()))
     })
     this.record();
   }
