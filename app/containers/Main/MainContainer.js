@@ -22,6 +22,7 @@ const MainContainer = React.createClass({
     authUser : PropTypes.func.isRequired,
   },
   componentDidMount () {
+    this.props.fetchingUser()
     firebaseAuth().onAuthStateChanged((user)=>{
       if(user){
         const userInfo = formatUser(

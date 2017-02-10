@@ -7,7 +7,6 @@ import SignIn from 'react-icons/lib/fa/sign-in'
 import MapIcon from 'react-icons/lib/fa/map-o'
 import Record from 'react-icons/lib/md/radio-button-checked'
 import Home from 'react-icons/lib/md/home'
-import Bullseye from 'react-icons/lib/fa/bullseye'
 
 Navigation.propTypes=NavLinks.propTypes=ActionLinks.propTypes={
   isAuthed : PropTypes.bool.isRequired,
@@ -19,7 +18,6 @@ function NavLinks ({isAuthed, isRecording,authedId}) {
   return isAuthed===true
   ? <div className={navLink}>
     <Link className={link} to='/record'><Record className={isRecording===true? iconRecording :icon}/></Link>
-    <Link className={link} to='/soundclip'><Bullseye className={icon} /></Link>
     <Link className={link} to='/map'><MapIcon className={icon}/></Link>
   </div>
   : <div className={navLink}>

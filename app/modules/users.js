@@ -10,7 +10,7 @@ const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
 const AUTH_USER = 'AUTH_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
 
-function fetchingUser(){
+export function fetchingUser(){
   return {
     type:FETCHING_USER,
   }

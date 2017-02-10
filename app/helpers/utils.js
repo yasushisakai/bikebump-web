@@ -2,6 +2,7 @@ import {
   minimalLatLngRefresh,
   renderTimeConstrain,
   maxCommuteLife, 
+  dingDetectionGap,
 } from 'config/constants'
 
 export function fetchGeoLocation() {
@@ -104,26 +105,6 @@ export function getSlopes (dataArray, target, range=2) {
 }
 
 
-export function drawPolyline (context,points) {
-  context.beginPath()
-  points.map((point,index)=>{
-
-    if(index === 0) {
-      context.moveTo(point[0],point[1])
-    }else{
-      context.lineTo(point[0],point[1])
-    }
-
-  })
-  context.stroke()
-}
-
-export function drawVerticalAxis (context,x,height) {
-  context.beginPath()
-  context.moveTo(x,0)
-  context.lineTo(x,height)
-  context.stroke()
-}
 
 export function formatUser(name, email, avatar, uid) {
   return {
@@ -262,4 +243,8 @@ export function clearStorage() {
 
 export function insertAfter(newNode,refNode){
   refNode.parentNode.insertBefore(newNode,refNode.nextSibling)
+}
+
+export function detectionGap(timestamp){
+  return Date.now() - timestamp > dingDetectionGap
 }

@@ -2,12 +2,18 @@ import React, {PropTypes} from 'react'
 import { Record } from 'components'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { refreshLatLng, getSlopes } from 'helpers/utils'
+import { refreshLatLng, getSlopes, getMouseCoordinates, detectionGap, formatWavFileName } from 'helpers/utils'
 import { Map } from 'immutable'
 import { updateCycleDuration } from 'config/constants'
 import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
+import * as userSettingsActionCreators from 'modules/userSettings'
+import Pen from 'helpers/Pen'
+import { Analyser, Recorder } from 'helpers/Sound'
+import { firebaseAuth} from 'config/constants'
+import { getCurrentUser } from 'helpers/auth'
+import { storeBlob } from 'helpers/storage'
 
 import NoSleep from 'nosleep'
 
@@ -25,46 +31,69 @@ const RecordContainer = React.createClass({
     handleCreateDing : PropTypes.func.isRequired,
     handleSetDingListener : PropTypes.func.isRequired,
     handleComplieDing : PropTypes.func.isRequired,
+    handleFetchingUserSettings : PropTypes.func.isRequired,
+    uploadingClip : PropTypes.func.isRequired,
+    uploadingClipSuccess : PropTypes.func.isRequired, 
   },
 
   componentDidMount () {
-    console.clear()
+    // console.clear()
+
+    if(this.props.uid === '' && this.props.settings == new Map()){
+      getCurrentUser().then(user=>{
+        // console.log(user)
+        this.props.handleFetchingUserSettings(user.uid)
+          .then(action=>{
+            this.targetFrequency = action.settings.targetFrequency
+          })
+      })
+    }
+
+    this.contents = document.getElementById('contents')
+    this.canvas = document.createElement('canvas')
+    this.contents.appendChild(this.canvas)
+
+    this.canvas.style.width = '100%'
+    this.canvas.style.flex='1 0'
+    this.canvas.width =  contents.offsetWidth
+    this.canvas.height = contents.offsetHeight 
 
     this.noSleep = new NoSleep()
     this.noSleep.enable()
 
-    // listen to dings if not already
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    this.analyser = new Analyser(this.audioContext)
+    this.analyser.setIsInFocus(true)
+
+    const dataArray = this.analyser.updateDataArray()
+    this.binWidth = this.canvas.width / dataArray.length
+
+    // listen to server dings if not already
     this.props.handleSetDingListener()
     this.interval = null
 
     this.slopes = [0,0]
-    this.flag1 = false
+    this.flag = false
+    this.secondFlag = false
+    this.isDing = false
     this.previousSpike = Date.now()
 
-    //audio Context
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
-    this.analyser = audioContext.createAnalyser()
-    this.analyser.fftsize = 2048
-    console.log(audioContext.sampleRate/this.analyser.fftsize)
-
-    this.highpassFilter = audioContext.createBiquadFilter();
-    this.highpassFilter.type = 'highpass';
-    this.highpassFilter.frequency.value = 2600;
-    this.highpassFilter.Q.value = 10;
-
-    this.analyser.minDecibels = -80;
-    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount)
-    this.analyser.getByteFrequencyData(this.dataArray)
+    
 
     if(navigator.getUserMedia){
       navigator.getUserMedia(
         {audio:true},
         (stream) => {
-          let source = audioContext.createMediaStreamSource(stream)
-          // apply filters here
-          source.connect(this.highpassFilter)
-          this.highpassFilter.connect(this.analyser)
 
+                    // const dataArray = this.analyser.updateDataArray()
+
+          let source = this.audioContext.createMediaStreamSource(stream)
+          // apply filters here
+          source.connect(this.analyser.input)
+          this.analyser.connect()
+
+          this.recorder = new Recorder(source)
+          this.recorder.record()
         },
         (error) => {
             console.error(error)
@@ -74,123 +103,138 @@ const RecordContainer = React.createClass({
       console.error('cannot access to microphone')
     }
 
-    // canvas for visualization
-    const app = document.getElementById('app')
-    // const canvasContainer = document.createElement('div')
-    // canvasContainer.id = 'canvasContainer'
-    this.canvas = document.createElement('canvas')
-    app.appendChild(this.canvas)
-    this.canvas.style.width='100%'
-    this.canvas.width = this.canvas.offsetWidth
-    this.canvas.id = 'freqVis'
 
-    canvas.width = app.offsetWidth
-    canvas.style.marginLeft = 'auto'
-    canvas.style.marginRight = 'auto'
-    app.appendChild(canvas)
-    this.canvasContext = canvas.getContext('2d')
+  },
+  componentWillUpdate () { // this is like 'setup' in p5
+
+    // canvas for visualization
+
+    // contents.appendChild(this.canvas)
+
+    this.canvas.style.width = '100%'
+    // this.canvas.style.height = '100%'
+    // this.canvas.style.flex='1 0'
+    this.canvas.width =  contents.offsetWidth
+    this.canvas.height = contents.offsetHeight
+
+    this.canvas.style.display = 'flex'
+
+    this.circleRadius = this.canvas.width/3 
+
+    this.canvas.onclick = this.mousePressed
+    this.canvas.addEventListener('mousemove',this.mouseMoved)
+
+
+
+    this.pen = new Pen(this.canvas)
+    this.canvasContext = this.canvas.getContext('2d')
+
+    this.draw()
 
   },
   draw () {
-    window.requestAnimationFrame(this.draw)
+      this.animation = window.requestAnimationFrame(this.draw)
+      this.canvasContext.clearRect(0,0,this.canvas.width,this.canvas.height)
 
-    const width = this.canvasContext.canvas.clientWidth
-    const height = this.canvasContext.canvas.clientHeight
+      if(!this.analyser) return
 
-    this.canvasContext.clearRect(0,0,width,height)
+    // draw a circle 
+    if(!this.props.isRecording){
+      this.pen.noFill()
+        this.pen.stroke('#ffffff')
+    }else{
+      this.pen.noStroke()
+      if(this.isDing){
+        this.pen.fill('red')
+      }else{
+        this.pen.fill('orange')
+      }
+    }
+    this.pen.drawCircle(
+    this.canvas.width/2.0,
+    this.canvas.height/2.0,
+    this.circleRadius)
 
-    function getIndexFromFreq (frequency,analyser) {
-      // 23 comes from sampleRate/fftsize
-      return Math.round(frequency/(23.4375))
+    // update dataArray
+    if(this.props.isRecording){
+      const dataArray = this.analyser.updateDataArray()
+
+      // draw polyline
+      this.pen.stroke('white')
+      this.canvasContext.beginPath()
+      dataArray.map((bin,index)=>{
+        const x = index * this.binWidth
+        const y = (this.canvas.height)*(1-bin/256)
+        this.canvasContext.lineTo(x,y)
+      })
+      this.canvasContext.stroke()
+    }
+   
+    // draw current frequency setting
+    const currentFreqIndex = this.analyser.frequencyToIndex(this.targetFrequency)
+    // this.pen.stroke('red')
+    // this.pen.drawVerticalAxis(currentFreqIndex*this.binWidth,this.canvas.height)
+
+    // this.pen.fill('white')
+    // this.pen.noStroke()
+    // this.pen.text(
+    //   this.targetFrequency,
+    //   currentFreqIndex*this.binWidth,
+    //   this.canvas.height*0.5
+    //   )
+
+    const freqSlope = this.analyser.getSlopes(currentFreqIndex)
+
+    if(detectionGap(this.previousSpike)){
+      this.isDing = false
+      // console.log(freqSlope)
     }
 
-    function getFreqFromIndex (index,analyser) {
-      return index*23.4375 
-    }
-
-    this.analyser.getByteFrequencyData(this.dataArray)
-    
-    const minRange = getIndexFromFreq(2000)
-    const maxRange = getIndexFromFreq(4000)
-    const newDataArray = this.dataArray.slice(minRange,maxRange)
-
-
-    const binWidth = width / newDataArray.length
-    this.canvasContext.strokeStyle = 'white'
-    this.canvasContext.lineWidth = 1.0
-
-    this.canvasContext.beginPath()
-    for(let i=0; i<newDataArray.length ;i++){
-      // console.log(this.dataArray)
-      const x = binWidth * i + binWidth/2.0
-      const y = height - (newDataArray[i]/256)*height
-      this.canvasContext.lineTo(x,y)
-    }
-
-    this.canvasContext.stroke()
-
-    const peakIndex = newDataArray.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)
-
-    this.canvasContext.strokeStyle = 'red'
-    this.canvasContext.beginPath()
-    this.canvasContext.moveTo(peakIndex*binWidth+binWidth*0.5,0)
-    this.canvasContext.lineTo(peakIndex*binWidth+binWidth*0.5,height)
-
-    this.canvasContext.stroke()
-
-    this.canvasContext.strokeStyle = 'blue'
-    this.canvasContext.beginPath()
-    this.canvasContext.moveTo((peakIndex-2)*binWidth+binWidth*0.5,0)
-    this.canvasContext.lineTo((peakIndex-2)*binWidth+binWidth*0.5,height)
-    this.canvasContext.stroke()
-
-    this.canvasContext.beginPath()
-    this.canvasContext.moveTo((peakIndex+2)*binWidth+binWidth*0.5,0)
-    this.canvasContext.lineTo((peakIndex+2)*binWidth+binWidth*0.5,height)
-
-    this.canvasContext.stroke()
-
-    this.canvasContext.fillStyle = 'white'
-    this.canvasContext.textAlign = 'center'
-    this.canvasContext.textBaseline = 'bottom'
-    this.canvasContext.font='12px sans-serif'
-    this.canvasContext.fillText(getFreqFromIndex(peakIndex+minRange),peakIndex*binWidth+binWidth*0.5,height*0.1)
-
-
-    //console.log(getSlopes(newDataArray,peakIndex))
-    this.slopes = getSlopes(newDataArray,peakIndex)
-    // if(slopes[0] > this.slopes[0]){
-    //   this.slopes[0] = slopes[0]
-    //   console.log(this.slopes)
-    // }
-
-    // if(slopes[1] > this.slopes[1]){
-    //   this.slopes[1] = slopes[1]
-    //   console.log(this.slopes)
-    // }
-
-    // detection
-    if (this.slopeTest(Date.now()+'#01') && !this.flag1 && (Date.now()-this.previousSpike)> 300){
-      console.log('#01',getFreqFromIndex(peakIndex+minRange),this.slopes)
-      this.flag1 = true
-      this.recentSlopeIndex = peakIndex
+    if((freqSlope[0]>10 || freqSlope[1]>10) && !this.flag && detectionGap(this.previousSpike)) {
+      console.log('1',freqSlope)
+      this.flag = true
       this.previousSpike = Date.now()
     }
 
-    if(this.flag1 === true && (Date.now() - this.previousSpike) > 200) {
-        const sameIndexSlope = getSlopes(newDataArray,this.recentSlopeIndex)
-        console.log('#02',getFreqFromIndex(this.recentSlopeIndex+minRange),sameIndexSlope)
-        this.flag1 = false
-        this.previousSpike = Date.now()
-    }
+    if(this.flag && detectionGap(this.previousSpike) && !this.secondFlag){
+      console.log('2',freqSlope)
+      if (freqSlope[0]>10 || freqSlope[1]>10) this.secondFlag = true
+      else{this.flag = false}
+      this.previousSpike = Date.now()
+    } 
+
+    if(this.secondFlag && detectionGap(this.previousSpike)){
+     console.log('3',freqSlope)
+      this.flag = false
+      this.secondFlag = false
+      if(freqSlope[0]>5 && freqSlope[1]>5){
+        if(this.props.isRecording){
+          this.handleReport(0) 
+          this.upload()
+        }
+        console.log('ding')
+        this.isDing = true
+      }
+      this.previousSpike = Date.now()
+    } 
 
   },
-  slopeTest(id=0){
-    const result = this.slopes[0] > 25 && this.slopes[1] > 25
-    // if(result) console.log(id,this.slopes)
-    return result
+  mousePressed(event){
+    const distanceFromCenter = this.pen.distance(
+      this.pen.mouseX,
+      this.pen.mouseY,
+      this.canvas.width/2.0,
+      this.canvas.height/2.0
+      )
+    if(distanceFromCenter<this.circleRadius){
+      this.props.toggleRecording()
+    }
+  },
+  mouseMoved(event){
+    this.pen.updateMouse(event)
   },
   shouldComponentUpdate (nextProps, nextState) {
+
     if(this.props.isFetchingLatLng !== nextProps.isFetchingLatLng){
       if(nextProps.isFetchingLatLng===false) return true
       else return false
@@ -209,7 +253,6 @@ const RecordContainer = React.createClass({
     }
 
   },
-
   handleReport (value) {
     // add a ding
     return this.props.handleComplieDing(
@@ -221,7 +264,20 @@ const RecordContainer = React.createClass({
       )
 
   },
+  upload () {
+    if(this.props.isUploading) return
 
+    this.props.uploadingClip()
+    this.recorder.exportWAV((blob)=>{
+      const now = new Date(this.props.latestFetchAttempt)
+      const coordinate = this.props.latestLocation.toJS()
+      const filename = formatWavFileName(now,coordinate)
+      console.log(filename)
+      storeBlob(filename,blob)
+        .then(()=>this.props.uploadingClipSuccess())
+    })
+    
+  },
   componentDidUpdate () {
     if(this.props.isRecording === false && this.interval !== null){
       window.clearInterval(this.interval)
@@ -241,33 +297,40 @@ const RecordContainer = React.createClass({
     }
     window.clearInterval(this.interval)
     this.interval = null
+    // this.recorder.stop()
 
-    // remove the freqVis canvas
-    const app = document.getElementById('app')
-    app.removeChild(document.getElementById('freqVis'))
+    this.contents.removeChild(this.canvas)
+    if (this.audioContext) this.audioContext.close()
 
   },
 
   render () {
-    if(this.canvasContext) this.draw()
-    return <div></div>
+    return null
   },
 })
 
-function mapState({record,users}){
+function mapState({record,users,userSettings}){
+  const uid = users.get('authedId')
   return {
-  uid:users.get('authedId'),
+  uid,
   isRecording : record.get('isRecording'),
   isFetchingLatLng : record.get('isFetchingLatLng'),
   latestLocation: record.get('latestLocation'),
   latestFetch : record.get('latestFetch'),
   latestFetchAttempt : record.get('latestFetchAttempt'),
-  location : record.get('latestLocation')
+  location : record.get('latestLocation'),
+  settings : userSettings.get(uid) || new Map(), 
+  isUploading : record.get('isUploading'),
   }
 }
 
 function mapDispatch(dispatch){
-  return bindActionCreators({...recordActionCreators,...dingsActionCreators, ...dingFeedActionCreators},dispatch)
+  return bindActionCreators({
+    ...recordActionCreators,
+    ...dingsActionCreators, 
+    ...dingFeedActionCreators,
+    ...userSettingsActionCreators
+  },dispatch)
 }
 
 
