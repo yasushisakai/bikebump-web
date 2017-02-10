@@ -3,8 +3,9 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Calibrate } from 'components'
 import { toJS, Map } from 'immutable'
-import { getSlopes ,frequencyToIndex, indexToFrequency } from 'helpers/utils'
+import { getSlopes ,frequencyToIndex, indexToFrequency, insertAfter, drawPolyline, drawVerticalAxis } from 'helpers/utils'
 import * as userSettingsActionCreators from 'modules/userSettings'
+import { Analyser } from 'helpers/Sound'
 
 const CalibrateContainer = React.createClass({
   propTypes:{
@@ -21,29 +22,23 @@ const CalibrateContainer = React.createClass({
       this.props.handleFetchingUserSettings(this.props.uid)
     }
 
-    this.slopes = [0,0]
+    this.maxSlopes = [0,0]
 
     const audioContext = new AudioContext()
+    this.analyser = new Analyser(audioContext)
 
-    this.analyser = audioContext.createAnalyser()
-    this.analyser.fftsize = 2048
-    this.analyser.minDecibels = -80
-    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount)
-    this.analyser.getByteFrequencyData(this.dataArray)
-    this.analyser.binUnit = audioContext.sampleRate/this.analyser.fftsize
-
-    const highpass = audioContext.createBiquadFilter()
-    highpass.type = 'highpass'
-    highpass.frequency.value = 2600
-    highpass.Q.value = 10
+    this.analyser.setIsInFocus(true) 
+    // this sets will splice the raw data 
+    // into a specific range to 2k - 4k
+    const dataArray = this.analyser.updateDataArray()
 
     if(navigator.getUserMedia){
       navigator.getUserMedia(
         {audio:true},
         (stream)=>{
           let source = audioContext.createMediaStreamSource(stream)
-          source.connect(highpass)
-          highpass.connect(this.analyser)
+          source.connect(this.analyser.input)
+          this.analyser.connect()
         },
         (error)=>{
           console.error(error)
@@ -53,22 +48,25 @@ const CalibrateContainer = React.createClass({
         console.error('user get media error')
       }
 
-      const app = document.getElementById('app')
+      const contents = document.getElementById('contents')
       this.canvas = document.createElement('canvas')
-      app.appendChild(this.canvas)
-
+      // contents.appendChild(this.canvas)
+      contents.insertBefore(this.canvas, contents.firstChild)
+      this.canvas.style.flex='1 0'
       this.canvas.style.width = '100%'
       this.canvas.width=this.canvas.offsetWidth
-      this.canvasContext = this.canvas.getContext('2d')
+      this.binWidth = this.canvas.width / dataArray.length
 
-      this.minRange = frequencyToIndex(2000,this.analyser)
-      this.maxRange = frequencyToIndex(4000,this.analyser)
-      this.binWidth = this.canvas.width / (this.maxRange-this.minRange)
+      this.canvasContext = this.canvas.getContext('2d')
+      this.canvasContext.lineWidth = 1.5
+
+      this.canvasContext.textAlign = 'center'
+      this.canvasContext.textBaseline = 'bottom'
+      this.canvasContext.font='12px sans-serif'
 
   },
   toggleCalibration () {
     this.props.toggleCalibration()
-    console.log(this.props.isCalibrating)
     if(!this.props.isCalibrating){
       this.slopes = [0,0] // reset slopes
     }else{
@@ -80,57 +78,45 @@ const CalibrateContainer = React.createClass({
   },
   draw(){
     this.animation = window.requestAnimationFrame(this.draw)
-    
-    this.analyser.getByteFrequencyData(this.dataArray)
-    const focusedDataArray = this.dataArray.slice(this.minRange,this.maxRange)
     this.canvasContext.clearRect(0,0,this.canvas.width,this.canvas.height)
-    this.canvasContext.lineWidth = 1.5
 
+    // update dataArray
+    const dataArray = this.analyser.updateDataArray()
 
-    // draw current
-    const currentFreqIndex = frequencyToIndex(this.targetFrequency,this.analyser)-this.minRange
-    this.canvasContext.strokeStyle='red'
-    this.canvasContext.beginPath()
-    this.canvasContext.moveTo(currentFreqIndex*this.binWidth,0)
-    this.canvasContext.lineTo(currentFreqIndex*this.binWidth,this.canvas.height)
-    this.canvasContext.stroke()
-
-    // show freqvalue
-    this.canvasContext.fillStyle = 'white'
-    this.canvasContext.textAlign = 'center'
-    this.canvasContext.textBaseline = 'bottom'
-    this.canvasContext.font='12px sans-serif'
-    this.canvasContext.fillText(this.targetFrequency,currentFreqIndex*this.binWidth,this.canvas.height*0.5)
-
-
-    // draw max
-    const maxIndex = focusedDataArray.reduce(
-      (iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0
-    )
-    this.canvasContext.strokeStyle='blue'
-    this.canvasContext.beginPath()
-    this.canvasContext.moveTo(maxIndex*this.binWidth,0)
-    this.canvasContext.lineTo(maxIndex*this.binWidth,this.canvas.height)
-    this.canvasContext.stroke()
-
-    if(this.props.isCalibrating){
-    const tempSlope = getSlopes(focusedDataArray,maxIndex,4)
-      if(tempSlope[0] > this.slopes[0] && tempSlope[1] > this.slopes[1]){
-        this.slopes = tempSlope
-        console.log(this.slopes)
-        this.targetFrequency = indexToFrequency(maxIndex+this.minRange,this.analyser)
-        console.log(this.targetFrequency)
-      }
-    }
-
+    // draw polyline
     this.canvasContext.strokeStyle='white'
     this.canvasContext.beginPath()
-    focusedDataArray.map((value,index)=>{
-      const x = this.binWidth*index
-      const y = this.canvas.height * (1-(value/256))
+    dataArray.map((bin,index)=>{
+      const x = index * this.binWidth
+      const y = (this.canvas.height)*(1-bin/256)
       this.canvasContext.lineTo(x,y)
     })
     this.canvasContext.stroke()
+   
+    // draw peak
+    if(this.props.isCalibrating){
+      const peakIndex = this.analyser.getPeakIndex()
+      this.canvasContext.strokeStyle='yellow'
+      drawVerticalAxis(this.canvasContext, peakIndex*this.binWidth, this.canvas.height)
+
+      const tempSlope = this.analyser.getSlopes(peakIndex)
+      if(tempSlope[0] > this.maxSlopes[0] && tempSlope[1] > this.maxSlopes[1]){
+        this.maxSlopes = tempSlope
+        this.targetFrequency = this.analyser.indexToFrequency(peakIndex)
+      }
+    }
+
+    // draw current frequency setting
+    const currentFreqIndex = this.analyser.frequencyToIndex(this.targetFrequency)
+    this.canvasContext.strokeStyle='red'
+    drawVerticalAxis(this.canvasContext,currentFreqIndex*this.binWidth,this.canvas.height)
+
+    this.canvasContext.fillStyle = 'white'
+    this.canvasContext.fillText(
+      this.targetFrequency,
+      currentFreqIndex*this.binWidth,
+      this.canvas.height*0.5
+      )
 
   },
   componentWillUnmount () {

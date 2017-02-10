@@ -47,9 +47,12 @@ const mode = isProduction === true ? 'production': 'development'
 console.log(`bikebump running (${mode})`)
 
 
+let app = document.getElementById('app')
+app.style.height = '100%'
+
 ReactDOM.render(
     <Provider store={store}>
       {getRoutes(checkAuth,history)}
     </Provider>,
-    document.getElementById('app')
+    app
   )

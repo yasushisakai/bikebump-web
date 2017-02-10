@@ -1,3 +1,3 @@
 export Recorder from './Recorder'
-export TonePlayer as Synth from './Synth'
-export Analyzer from './Analyzer'
+export TonePlayer from './Synth'
+export Analyser from './Analyser'
