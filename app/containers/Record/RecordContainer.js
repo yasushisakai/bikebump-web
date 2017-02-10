@@ -28,34 +28,14 @@ const RecordContainer = React.createClass({
   },
 
   componentDidMount () {
-
-    //console.clear()
+    console.clear()
 
     this.noSleep = new NoSleep()
     this.noSleep.enable()
 
     // listen to dings if not already
     this.props.handleSetDingListener()
-
     this.interval = null
-
-    let testDing = {
-      radius : 10,
-      roadId : 92038402,
-      coordinates:{
-        lng:-71.087264,
-        lat:42.360357
-      },
-      timestamps:{}
-      }
-
-      const timestamp = Date.now()
-
-    testDing.timestamps[timestamp]={     
-      timestamp:timestamp,
-      uid:this.props.uid,
-      value:0,
-    }
 
     this.slopes = [0,0]
     this.flag1 = false
@@ -98,8 +78,12 @@ const RecordContainer = React.createClass({
     const app = document.getElementById('app')
     // const canvasContainer = document.createElement('div')
     // canvasContainer.id = 'canvasContainer'
-    const canvas = document.createElement('canvas')
-    canvas.id = 'freqVis'
+    this.canvas = document.createElement('canvas')
+    app.appendChild(this.canvas)
+    this.canvas.style.width='100%'
+    this.canvas.width = this.canvas.offsetWidth
+    this.canvas.id = 'freqVis'
+
     canvas.width = app.offsetWidth
     canvas.style.marginLeft = 'auto'
     canvas.style.marginRight = 'auto'
@@ -266,11 +250,7 @@ const RecordContainer = React.createClass({
 
   render () {
     if(this.canvasContext) this.draw()
-
-    return (<div>
-      <Record isRecording={this.props.isRecording} isFetchingLatLng={this.props.isFetchingLatLng} onRecordButtonClick={this.props.toggleRecording} onReportButtonClick={this.handleReport} location={this.props.location}/>
-      </div>
-    )
+    return <div></div>
   },
 })
 

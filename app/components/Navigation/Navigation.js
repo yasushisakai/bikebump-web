@@ -41,7 +41,7 @@ function ActionLinks ({isAuthed,authedId}) {
 
 export default function Navigation ({isAuthed, isRecording,authedId}) {
   return (
-    <div className={navigation}>
+    <div id={'navigation'} className={navigation}>
     <NavLinks isAuthed={isAuthed} isRecording={isRecording} authedId={authedId}/>
     <ActionLinks isAuthed={isAuthed} isRecording={isRecording} authedId={authedId}/>
     </div>

@@ -104,6 +104,27 @@ export function getSlopes (dataArray, target, range=2) {
 }
 
 
+export function drawPolyline (context,points) {
+  context.beginPath()
+  points.map((point,index)=>{
+
+    if(index === 0) {
+      context.moveTo(point[0],point[1])
+    }else{
+      context.lineTo(point[0],point[1])
+    }
+
+  })
+  context.stroke()
+}
+
+export function drawVerticalAxis (context,x,height) {
+  context.beginPath()
+  context.moveTo(x,0)
+  context.lineTo(x,height)
+  context.stroke()
+}
+
 export function formatUser(name, email, avatar, uid) {
   return {
     name,
@@ -237,4 +258,8 @@ export function insertCSSLink(url) {
 export function clearStorage() {
   localStorage.clear()
   sessionStorage.clear()
+}
+
+export function insertAfter(newNode,refNode){
+  refNode.parentNode.insertBefore(newNode,refNode.nextSibling)
 }

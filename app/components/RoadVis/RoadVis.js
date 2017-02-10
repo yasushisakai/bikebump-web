@@ -9,6 +9,7 @@ import { Map, toJS } from 'immutable'
 // http://zevross.com/blog/2014/09/30/use-the-amazing-d3-library-to-animate-a-path-on-a-leaflet-map/
 
 RoadVis.propTypes = {
+  dom:PropTypes.object.isRequired,
   road:PropTypes.instanceOf(Map),
 }
 
@@ -16,12 +17,8 @@ export default function RoadVis (props) {
   console.log('render component')
   insertCSSLink('https://unpkg.com/leaflet@1.0.2/dist/leaflet.css')
 
-  const mapElement = document.createElement('div')
-  mapElement.id = 'map'
-  mapElement.style.width='100%'
-  mapElement.style.height='500px'
-  const app = document.getElementById('app')
-  app.appendChild(mapElement)
+  props.dom.style.width='100%'
+  props.dom.style.height='500px'
 
   const position=[props.latestLocation.get('lat'),props.latestLocation.get('lng')]
   

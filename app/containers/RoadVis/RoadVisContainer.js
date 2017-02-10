@@ -18,12 +18,19 @@ const RoadVisContainer = React.createClass({
   componentDidMount () {
     this.props.handleRoadsFetch()
     this.props.handleFetchLatLng()
-  },
 
+    this.mapElement = document.createElement('div')
+    this.mapElement.id = 'map'
+    document.getElementById('app').appendChild(this.mapElement)
+  },
+  componenetWillUnmount () {
+    document.getElementById('app').appendChild(this.mapElement)
+  },
   render () {
     return this.props.isFetching 
     ? <div>{'isLoading'}</div>
     : (<RoadVis
+        dom = {this.mapElement}
         latestLocation={this.props.latestLocation} 
         isFetching={this.props.isFetching} 
         road={this.props.road} 
