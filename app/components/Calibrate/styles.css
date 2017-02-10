@@ -5,3 +5,7 @@
 .largeButton {
   composes: largeButton from 'styles/styles.css';
 }
+
+.calibrateWrapper {
+  flex:0 1 auto;
+}

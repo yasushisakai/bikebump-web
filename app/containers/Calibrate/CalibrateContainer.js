@@ -3,9 +3,10 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Calibrate } from 'components'
 import { toJS, Map } from 'immutable'
-import { getSlopes ,frequencyToIndex, indexToFrequency, insertAfter, drawPolyline, drawVerticalAxis } from 'helpers/utils'
+import { getSlopes ,frequencyToIndex, indexToFrequency, insertAfter} from 'helpers/utils'
 import * as userSettingsActionCreators from 'modules/userSettings'
 import { Analyser } from 'helpers/Sound'
+import Pen from 'helpers/Pen'
 
 const CalibrateContainer = React.createClass({
   propTypes:{
@@ -24,19 +25,18 @@ const CalibrateContainer = React.createClass({
 
     this.maxSlopes = [0,0]
 
-    const audioContext = new AudioContext()
-    this.analyser = new Analyser(audioContext)
+    this.audioContext = new AudioContext()
+    this.analyser = new Analyser(this.audioContext)
 
     this.analyser.setIsInFocus(true) 
     // this sets will splice the raw data 
     // into a specific range to 2k - 4k
-    const dataArray = this.analyser.updateDataArray()
 
     if(navigator.getUserMedia){
       navigator.getUserMedia(
         {audio:true},
         (stream)=>{
-          let source = audioContext.createMediaStreamSource(stream)
+          let source = this.audioContext.createMediaStreamSource(stream)
           source.connect(this.analyser.input)
           this.analyser.connect()
         },
@@ -48,21 +48,13 @@ const CalibrateContainer = React.createClass({
         console.error('user get media error')
       }
 
-      const contents = document.getElementById('contents')
-      this.canvas = document.createElement('canvas')
-      // contents.appendChild(this.canvas)
-      contents.insertBefore(this.canvas, contents.firstChild)
-      this.canvas.style.flex='1 0'
-      this.canvas.style.width = '100%'
-      this.canvas.width=this.canvas.offsetWidth
-      this.binWidth = this.canvas.width / dataArray.length
 
-      this.canvasContext = this.canvas.getContext('2d')
-      this.canvasContext.lineWidth = 1.5
 
-      this.canvasContext.textAlign = 'center'
-      this.canvasContext.textBaseline = 'bottom'
-      this.canvasContext.font='12px sans-serif'
+    this.contents = document.getElementById('contents')
+    this.canvas = document.createElement('canvas')
+    this.contents.insertBefore(this.canvas,this.contents.firstChild)
+
+    //this.contents.stlye.display='flex'
 
   },
   toggleCalibration () {
@@ -73,8 +65,24 @@ const CalibrateContainer = React.createClass({
       this.props.handleUpdateTargetFrequency(this.props.uid,this.targetFrequency)
     }
   },
-  setup(){
+  componentWillUpdate(){
+
+    const dataArray = this.analyser.updateDataArray()
+    this.binWidth = this.canvas.width / dataArray.length
+
+    this.canvas.style.width = '100%'
+    this.canvas.style.flex='1 0'
+    this.canvas.width =  contents.offsetWidth
+    this.canvas.height = contents.offsetHeight
+
+    this.circleRadius = this.canvas.width/3 
+
+    this.pen = new Pen(this.canvas)
+    this.canvasContext = this.canvas.getContext('2d')
+
     this.targetFrequency = this.props.settings.get('targetFrequency')
+
+    this.draw()
   },
   draw(){
     this.animation = window.requestAnimationFrame(this.draw)
@@ -84,7 +92,7 @@ const CalibrateContainer = React.createClass({
     const dataArray = this.analyser.updateDataArray()
 
     // draw polyline
-    this.canvasContext.strokeStyle='white'
+    this.pen.stroke('white')
     this.canvasContext.beginPath()
     dataArray.map((bin,index)=>{
       const x = index * this.binWidth
@@ -96,8 +104,8 @@ const CalibrateContainer = React.createClass({
     // draw peak
     if(this.props.isCalibrating){
       const peakIndex = this.analyser.getPeakIndex()
-      this.canvasContext.strokeStyle='yellow'
-      drawVerticalAxis(this.canvasContext, peakIndex*this.binWidth, this.canvas.height)
+      this.pen.stroke('yellow')
+      this.pen.drawVerticalAxis(peakIndex*this.binWidth, this.canvas.height)
 
       const tempSlope = this.analyser.getSlopes(peakIndex)
       if(tempSlope[0] > this.maxSlopes[0] && tempSlope[1] > this.maxSlopes[1]){
@@ -108,10 +116,11 @@ const CalibrateContainer = React.createClass({
 
     // draw current frequency setting
     const currentFreqIndex = this.analyser.frequencyToIndex(this.targetFrequency)
-    this.canvasContext.strokeStyle='red'
-    drawVerticalAxis(this.canvasContext,currentFreqIndex*this.binWidth,this.canvas.height)
+    this.pen.stroke('red')
+    this.pen.drawVerticalAxis(currentFreqIndex*this.binWidth,this.canvas.height)
 
-    this.canvasContext.fillStyle = 'white'
+    this.pen.fill('white')
+    this.pen.noStroke()
     this.canvasContext.fillText(
       this.targetFrequency,
       currentFreqIndex*this.binWidth,
@@ -121,13 +130,12 @@ const CalibrateContainer = React.createClass({
   },
   componentWillUnmount () {
     console.log('hello')
-    const app = document.getElementById('app')
     //document.cancelAnimationFrame(this.animation)
-    app.removeChild(this.canvas)
+    this.contents.removeChild(this.canvas)
+    this.audioContext.close()
   },
   render () {
-    this.setup()
-    if(this.analyser) {this.draw()}
+    // if(this.analyser) {this.draw()}
     return this.props.isFetching === true 
     ? null
     : (

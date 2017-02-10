@@ -17,15 +17,16 @@ const MapVisContainer = React.createClass({
     handleSetDingListener:PropTypes.func.isRequired,
     dings: PropTypes.array.isRequired,
     roads: PropTypes.array.isRequired,
+    commutes : PropTypes.object.isRequired,
     handleRoadsFetch: PropTypes.func.isRequired, 
     handleFetchCommutes: PropTypes.func.isRequired, 
   },
   componentDidMount () {
     // add dings and dingFeed to the state
     // put a timer so we don't request data all
-    this.props.handleSetDingListener() 
+    this.props.handleSetDingListener()
     this.props.handleRoadsFetch()
-    this.props.handleFetchCommutes()
+    // this.props.handleFetchCommutes()
     this.previousUpdate = Date.now()
   },
   shouldComponentUpdate(nextProps) {
@@ -61,16 +62,13 @@ const MapVisContainer = React.createClass({
       return true
   },
   render () {
-    console.log(getDomainLength(this.props.roads[1].geometry,{start:0.0,end:1.0}))
-    console.log('MapVis Contaier render!!')
-    console.log(this.props.roads)
     return this.props.isFetching === true
     ? null 
-    : <MapVis isFetching={this.props.isFetching}/>
+    : <MapVis dings={this.props.dings} roads={this.props.roads} isFetching={this.props.isFetching}/>
   },
 })
 
-function mapStateToProps({dings, dingFeed,roads}){
+function mapStateToProps({dings, dingFeed,roads, commutes}){
   // everything from the state is a immutable object
   // this is an array
 
@@ -85,8 +83,9 @@ function mapStateToProps({dings, dingFeed,roads}){
     isFetching:dings.get('isFetching') ||
     dingFeed.get('isFetching') ||
     roads.get('isFetching'),
-    dings:justDings,
-    roads:justRoads,
+    dings : justDings,
+    roads : justRoads,
+    commutes : commutes
   }
 }
 

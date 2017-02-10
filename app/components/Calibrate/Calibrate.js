@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { largeButton } from './styles.css'
+import { largeButton, calibrateWrapper } from './styles.css'
 
 Calibrate.propTypes = {
   isCalibrating: PropTypes.bool.isRequired,

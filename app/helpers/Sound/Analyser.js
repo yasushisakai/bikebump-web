@@ -59,7 +59,7 @@ export default class Analyser {
   getSlopes (target, range=2) {
     const targetValue = this.dataArray[target]
     let result = [
-      this.dataArray[target-range],
+      this.dataArray[target-range-1],
       this.dataArray[target+range]
       ]
     return result.map((value)=>(targetValue-value)/range)
@@ -89,5 +89,6 @@ export default class Analyser {
     }
     return this.dataArray
   }
+
 
 }
