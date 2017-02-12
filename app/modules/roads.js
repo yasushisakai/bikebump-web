@@ -3,9 +3,10 @@ import { fetchRoad, fetchRoads } from 'helpers/api'
 const FETCHING_ROAD = 'FETCHING_ROAD'
 const FETCHING_ROAD_ERROR = 'FETCHING_ROAD_ERROR'
 const FETCHING_ROAD_SUCCESS = 'FETCHING_ROAD_SUCCESS'
+const FETCH_SINGLE_ROAD = 'FETCH_SINGLE_ROAD'
 
 const initialState = fromJS({
-  isFetching:true,
+  isFetching:false,
   error:''
 })
 
@@ -23,6 +24,23 @@ function fetchingRoadError (error) {
   }
 }
 
+function fetchSingleRoad(roadId,road){
+  return {
+    type:FETCH_SINGLE_ROAD,
+    roadId,
+    road
+  }
+}
+
+export function handleFetchSingleRoad(roadId){
+  return function (dispatch){
+    dispatch(fetchingRoad())
+    fetchRoad(roadId)
+      .then(road => dispatch(fetchSingleRoad(roadId,road)))
+
+  }
+}
+
 // lets get the roads once
 function fetchingRoadSuccess (roads) {
   return {
@@ -30,9 +48,13 @@ function fetchingRoadSuccess (roads) {
     roads
   }
 }
+// fetch road
 
-export function handleRoadsFetch () {
-  return function(dispatch){
+export function handleFetchingRoads () {
+  return function(dispatch,getState){
+    
+    if(getState().roads.get('isFetching')) return
+
     dispatch(fetchingRoad())
     return fetchRoads()
       .then((roads)=>dispatch(fetchingRoadSuccess(roads)))
@@ -55,6 +77,8 @@ export default function roads (state=initialState,action){
         isFetching:false,
         error:''
       })
+    case FETCH_SINGLE_ROAD:
+    return state.set('isFetching',false).set(action.roadId,action.road)
     default:
       return state
   }
