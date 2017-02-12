@@ -12,19 +12,17 @@ const RoadVisContainer = React.createClass({
     roads: PropTypes.object,
     latestLocation: PropTypes.object.isRequired,
     road:PropTypes.instanceOf(Map),
-    handleRoadsFetch:PropTypes.func.isRequired,
+    handleFetchingRoads:PropTypes.func.isRequired,
     handleFetchLatLng:PropTypes.func.isRequired,
+    handleFetchSingleRoad: PropTypes.func.isRequired,
   },
   componentDidMount () {
-    this.props.handleRoadsFetch()
+    this.props.handleFetchingRoads()
     this.props.handleFetchLatLng()
 
-    this.mapElement = document.createElement('div')
-    this.mapElement.id = 'map'
-    document.getElementById('app').appendChild(this.mapElement)
   },
   componenetWillUnmount () {
-    document.getElementById('app').appendChild(this.mapElement)
+    document.getElementById('app').removeChild(this.mapElement)
   },
   render () {
     return this.props.isFetching 
@@ -40,6 +38,8 @@ const RoadVisContainer = React.createClass({
 
 function mapStateToProps (state) {
   const road = state.roads.get(`${24054355}`) || new Map()
+
+  console.log(road)
   return {
     isFetching:state.roads.get('isFetching') || state.record.get('isFetchingLatLng'),
     roads:state.roads,

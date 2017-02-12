@@ -28,8 +28,13 @@ function fetchingCommutesSuccess (commutes) {
   }
 }
 
-export function handleFetchCommutes () {
-  return function (dispatch) {
+export function handleFetchingCommutes () {
+  return function (dispatch,getState) {
+
+    if(getState().commutes.get('isFetching')){
+      return 
+    }
+
     dispatch(fetchingCommutes())
     fetchCommutes()
       .then((commutes)=>dispatch(fetchingCommutesSuccess(commutes)))
@@ -62,7 +67,7 @@ export function handleAddCommute (commute) {
 }
 
 const initalState = fromJS({
-  isFetching:true,
+  isFetching:false,
   error:'',
 })
 

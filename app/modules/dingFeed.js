@@ -6,6 +6,7 @@ import { addMultipleDings, removeFetching } from 'modules/dings'
 const SETTING_DING_LISTENER = 'SETTING_DING_LISTENER'
 const SETTING_DING_LISTENER_ERROR = 'SETTING_DING_LISTENER_ERROR'
 const SETTING_DING_LISTENER_SUCCESS = 'SETTING_DING_LISTENER_SUCCESS'
+const REMOVE_FEED_FETCHING = 'REMOVE_FEED_FETCHING'
 
 function settingDingListener () {
   return {
@@ -28,24 +29,32 @@ function settingDingListenerSuccess (dingIds) {
   }
 }
 
+function removeFeedFetching (){
+  return {
+    type: REMOVE_FEED_FETCHING,
+  }
+}
+
 export function handleSetDingListener () {
   return function (dispatch,getState) {
 
-    if(getState().listeners.get('dings')===true){
-      return
-    }
     dispatch(settingDingListener())
+
+    if(getState().listeners.get('dings')===true){
+      return Promise.resolve(removeFeedFetching())
+    }
+
     dispatch(addListener('dings'))
-    listenToDings((dings)=>{
-      dispatch(addMultipleDings(dings))
+    return listenToDings((dings)=>{
       dispatch(settingDingListenerSuccess(Object.keys(dings)))
       dispatch(removeFetching())
+      return dispatch(addMultipleDings(dings))
     },(error)=>dispatch(settingDingListenerError(error)))
   }
 }
 
 const initialState=fromJS({
-  isFetching:false,
+  isFetching: true,
   error:'',
   dingIds:[],
 })
@@ -67,6 +76,8 @@ export default function dingFeed(state=initialState,action){
         error:'',
         dingIds : action.dingIds
       })
+    case REMOVE_FEED_FETCHING:
+      return state.set('isFetching',false)
     default:
       return state
     }

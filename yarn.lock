@@ -3692,13 +3692,6 @@ react-icons@^2.2.3:
   dependencies:
     react-icon-base "2.0.4"
 
-react-leaflet@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-1.1.0.tgz#0ec55ff030fae8c90e6e00a48163dcbccbadb4d8"
-  dependencies:
-    lodash "^4.0.0"
-    warning "^3.0.0"
-
 react-modal@^1.6.5:
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-1.6.5.tgz#f720d99bd81b1def5c2c32e0ffaa48bdaf484862"
