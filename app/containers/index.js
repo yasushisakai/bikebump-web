@@ -11,10 +11,3 @@ export ClearContainer from './Clear/ClearContainer'
 export AdminContainer from './Admin/AdminContainer'
 export TestContainer from './Test/TestContainer'
 export RespondContainer from './Respond/RespondContainer'
-<<<<<<< e4c03c1f26253ba6433529ef8d4f2ec3ddd8d57d
-export SoundClipContainer from './SoundClip/SoundClipContainer'
-export PlaySoundContainer from './PlaySound/PlaySoundContainer'
-export RoadVisContainer from './RoadVis/RoadVisContainer'
-export AddResponseVotesContainer from './AddResponseVotes/AddResponseVotesContainer'
-=======
->>>>>>> Got soundclip helper working; need to find size of 5 second blob

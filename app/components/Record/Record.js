@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { button, recordContainer } from './styles.css'
+import { mainButton, smallButton,  detailText } from './styles.css'
 import { Map } from 'immutable'
 import P5 from 'p5'
 
@@ -30,7 +30,6 @@ export default class Record extends Component {
   *this is the p5js chunk
   *@param p
   */
-
     sketch = (p)=> {
 
       p.setup= ()=> {
@@ -177,6 +176,8 @@ export default class Record extends Component {
       }
     }
     render() {
+    //FIX ME
+    //Change class name to Record
     return (
       <div className={recordContainer}>
        <div className={mainButton} style={this.buttonStyle} onClick={this.onRecordButtonClick}>

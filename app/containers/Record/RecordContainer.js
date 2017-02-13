@@ -8,7 +8,6 @@ import { updateCycleDuration } from 'config/constants'
 import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
-
 import NoSleep from 'nosleep'
 import SoundClip from 'helpers/SoundClip'
 
@@ -51,6 +50,11 @@ const RecordContainer = React.createClass({
 
     this.interval = null
     this.latestDing = null
+    this.props.handleFetchLatLng()
+
+    this.latestDing = null
+
+
     this.props.handleFetchLatLng()
 
     let testDing = {
