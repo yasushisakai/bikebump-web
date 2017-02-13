@@ -41,7 +41,6 @@ const RecordContainer = React.createClass({
 
   componentDidMount () {
     // console.clear()
-
     if(this.props.uid === '' && this.props.settings == new Map()){
       getCurrentUser().then(user=>{
         // console.log(user)
@@ -67,7 +66,6 @@ const RecordContainer = React.createClass({
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
     this.analyser = new Analyser(this.audioContext)
     this.analyser.setIsInFocus(true)
-
     const dataArray = this.analyser.updateDataArray()
     this.binWidth = this.canvas.width / dataArray.length
 
@@ -87,8 +85,6 @@ const RecordContainer = React.createClass({
     this.secondFlag = false
     this.isDing = false
     this.previousSpike = Date.now()
-
-    
 
     if(navigator.getUserMedia){
       navigator.getUserMedia(
