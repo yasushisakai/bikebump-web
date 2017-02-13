@@ -179,7 +179,7 @@ export default class Record extends Component {
     //FIX ME
     //Change class name to Record
     return (
-      <div className={recordContainer}>
+      <div>
        <div className={mainButton} style={this.buttonStyle} onClick={this.onRecordButtonClick}>
        </div>
        {this.props.isRecording === true && this.props.isFetchingLatLng === false
