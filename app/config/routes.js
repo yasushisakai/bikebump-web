@@ -8,13 +8,9 @@ import {
   MapVisContainer,
   RoadsContainer,
   UserContainer,
-  PickContainer,
   AuthContainer,
   LogoutContainer,
   ClearContainer,
-  AddResponseVotesContainer,
-  AdminContainer,
-  TestContainer,
   RespondContainer,
   SoundClipContainer,
   PlaySoundContainer,
@@ -33,17 +29,12 @@ export default function getRoutes(checkAuth, history){
           <Route path='calibrate' component={CalibrateContainer} onEnter={checkAuth} />
           <IndexRoute component={UserContainer} onEnter={checkAuth} />
         </Route>
-        <Route path='pick' component={PickContainer} onEnter={checkAuth} />
         <Route path='signin' component={AuthContainer} onEnter={checkAuth}/>
         <Route path='logout' component={LogoutContainer} />
         <Route path='clear' component={ClearContainer} />
-        <Route path='testAdd/:uid' component={AddResponseVotesContainer} />
         <Route path='respond' component={RespondContainer} onEnter={checkAuth}/>
-        <Route path='soundclip' component={SoundClipContainer} onEnter={checkAuth}/>
-        <Route path='playSound' component={PlaySoundContainer} onEnter={checkAuth}/>
-        <Route path='roadVis' component={RoadVisContainer} onEnter={checkAuth}/>
-        <Route path='admin' component={AdminContainer} onEnter={checkAuth}>
-          <Route path=':uid/test' component={TestContainer}/>
+        <Route path='tests' onEnter={checkAuth} >
+          <Route path='playSound' component={PlaySoundContainer} onEnter={checkAuth}/>
         </Route>
         <IndexRoute component={HomeContainer} onEnter={checkAuth}/>
       </Route>

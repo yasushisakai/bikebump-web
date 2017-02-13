@@ -31,7 +31,6 @@ const RecordContainer = React.createClass({
     handleCreateDing : PropTypes.func.isRequired,
     handleSetDingListener : PropTypes.func.isRequired,
     handleComplieDing : PropTypes.func.isRequired,
-    dispatch:PropTypes.func.isRequired,
     isCapturing:PropTypes.bool.isRequired,
     isUploading:PropTypes.bool.isRequired,
     handleFetchingUserSettings : PropTypes.func.isRequired,
@@ -355,6 +354,7 @@ function mapState({record,users,userSettings}){
   return {
   uid,
   isRecording : record.get('isRecording'),
+  isCapturing : record.get('isCapturing'),
   isFetchingLatLng : record.get('isFetchingLatLng'),
   latestLocation: record.get('latestLocation'),
   latestFetch : record.get('latestFetch'),
