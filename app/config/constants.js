@@ -35,3 +35,11 @@ export const firebaseAuth = firebase.auth
 export const firebaseStorage = firebase.storage().ref()
 export const isProduction = process.env.NODE_ENV == 'production'
 export const isRemote = false
+
+
+//
+// leaflet
+//
+export const tileURL = 'https://api.mapbox.com/styles/v1/yasushisakai/ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAwNjUzM28weHRuMnJ4a2kifQ.ooHi0pGR-SdDraWzTRCoVA'
+
+export const attribution = '&copy; Mapbox &copy; OpenStreetMap &copy; DigitalGlobe'

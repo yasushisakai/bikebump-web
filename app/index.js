@@ -28,8 +28,6 @@ function checkAuth (nextState, replace) {
   const isAuthed = checkIfAuthed(store)
   const nextPath = nextState.location.pathname
 
-
-
   if(isProduction===true){
     if(nextPath==='/map' || nextPath === '/admin'){
       return
@@ -49,6 +47,8 @@ console.log(`bikebump running (${mode})`)
 
 let app = document.getElementById('app')
 app.style.height = '100%'
+app.style.width = '100%'
+// app.style.display = 'flex'
 
 ReactDOM.render(
     <Provider store={store}>

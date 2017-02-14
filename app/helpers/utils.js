@@ -19,6 +19,15 @@ export function fetchGeoLocation() {
   })
 }
 
+export function fitCanvas(canvas){
+  canvas.style.width = '100%'
+  canvas.style.height = '100%'
+
+  const boundingRect = canvas.getBoundingClientRect()
+  canvas.width = boundingRect.width
+  canvas.height = boundingRect.height
+}
+
 export function flipCoordinate(coordinate){
   return coordinate.reverse()
 }

@@ -5,8 +5,7 @@ import { firebaseAuth } from 'config/constants'
 import { fetchUIdfromEmail } from 'helpers/auth'
 import { formatUser } from 'helpers/utils'
 
-import { body } from 'styles/styles.css' 
-import { container,contents } from './styles.css'
+import { body, container} from 'styles/styles.css' 
 
 import { Navigation } from 'components'
 import * as usersActionCreators from 'modules/users'
@@ -49,9 +48,7 @@ const MainContainer = React.createClass({
     ? null
     :<div className={container}>
         <Navigation isAuthed={this.props.isAuthed} isRecording={this.props.isRecording} authedId={this.props.authedId}/>
-        <div id={'contents'} className={contents}>
           {this.props.children}
-        </div>
       </div>
   },
 })

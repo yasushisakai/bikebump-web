@@ -2,8 +2,8 @@
   composes: button from 'styles/styles.css';
 }
 
-.recordContainer {
-  margin:auto;
+.recordContents {
+  composes: contents from 'styles/styles.css';
 }
 
 .mainButton {
