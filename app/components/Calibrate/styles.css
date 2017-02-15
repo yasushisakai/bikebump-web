@@ -2,10 +2,11 @@
   cursor : pointer;
 }
 
-.largeButton {
-  composes: largeButton from 'styles/styles.css';
+
+.calibrateContents{
+  composes: contents from 'styles/styles.css';
 }
 
-.calibrateWrapper {
-  flex:0 1 auto;
+.largeButton {
+  composes: largeButton from 'styles/styles.css';
 }

@@ -44,12 +44,11 @@ const MainContainer = React.createClass({
       // keep one
   },
   render () {
-    return this.props.isFetching === true
-    ? null
-    :<div className={container}>
+     return (<div className={container}>
         <Navigation isAuthed={this.props.isAuthed} isRecording={this.props.isRecording} authedId={this.props.authedId}/>
           {this.props.children}
       </div>
+    )
   },
 })
 

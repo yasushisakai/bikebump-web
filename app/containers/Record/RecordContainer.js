@@ -12,8 +12,8 @@ const RecordContainer = React.createClass({
   componentDidMount () {
 
     this.canvas = document.createElement('canvas')
-    this.recordContainer = document.getElementById('record')
-    this.recordContainer.appendChild(this.canvas)
+    this.recordElement = document.getElementById('record')
+    this.recordElement.appendChild(this.canvas)
     fitCanvas(this.canvas)
 
     this.pen = new Pen(this.canvas)

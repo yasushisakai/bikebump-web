@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react'
-import { largeButton, calibrateWrapper } from './styles.css'
+import { largeButton, callibrateContents } from './styles.css'
 
 Calibrate.propTypes = {
-  isCalibrating: PropTypes.bool.isRequired,
-  toggleCalibration: PropTypes.func.isRequired,
-  targetFrequency : PropTypes.number.isRequired,
+  isFetching : PropTypes.bool.isRequired,
+  // isCalibrating: PropTypes.bool.isRequired,
+  // toggleCalibration: PropTypes.func.isRequired,
+  //targetFrequency : PropTypes.number.isRequired,
 }
 
 export default function Calibrate (props) {
@@ -13,7 +14,9 @@ export default function Calibrate (props) {
   }
 
   return (
-    <div id='calibrateWrapper'>
+    props.isFetching 
+    ? <div id='calibrate' className={callibrateContents}> </div> 
+    :(<div id='calibrate' className={callibrateContents}>
     { props.isCalibrating === true 
       ? 'calibrating...'
       : `target bell frequency: ${props.targetFrequency}`
@@ -24,6 +27,6 @@ export default function Calibrate (props) {
           : 'start calibration'
         }
       </div>
-    </div>
+    </div>)
   )
 }

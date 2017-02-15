@@ -1,0 +1,3 @@
+.userContents{
+  composes: contents from 'styles/styles.css';
+}

@@ -1,0 +1,3 @@
+.logoutContents{
+  composes: contents from 'styles/styles.css';
+}

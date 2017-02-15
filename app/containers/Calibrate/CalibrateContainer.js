@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Calibrate } from 'components'
 import { toJS, Map } from 'immutable'
-import { getSlopes ,frequencyToIndex, indexToFrequency, insertAfter} from 'helpers/utils'
+import { getSlopes ,frequencyToIndex, indexToFrequency, insertAfter, fitCanvas} from 'helpers/utils'
 import * as userSettingsActionCreators from 'modules/userSettings'
 import { Analyser } from 'helpers/Sound'
 import Pen from 'helpers/Pen'
@@ -19,6 +19,13 @@ const CalibrateContainer = React.createClass({
     toggleCalibration:PropTypes.func.isRequired,
   },
   componentDidMount(){
+    this.calibrateElement = document.getElementById('calibrate')
+    this.canvas = document.createElement('canvas')
+    this.calibrateElement.insertBefore(this.canvas,this.calibrateElement.firstChild)
+    fitCanvas(this.canvas)
+
+    this.pen = new Pen(this.canvas)
+
     if(this.props.noSettings){
       this.props.handleFetchingUserSettings(this.props.uid)
     }
@@ -48,13 +55,8 @@ const CalibrateContainer = React.createClass({
         console.error('user get media error')
       }
 
-
-
-    this.contents = document.getElementById('contents')
-    this.canvas = document.createElement('canvas')
-    this.contents.insertBefore(this.canvas,this.contents.firstChild)
-
-    //this.contents.stlye.display='flex'
+      this.setup()
+      this.draw()
 
   },
   toggleCalibration () {
@@ -67,39 +69,27 @@ const CalibrateContainer = React.createClass({
   },
   componentWillUpdate(){
 
+  },
+  setup(){
     const dataArray = this.analyser.updateDataArray()
     this.binWidth = this.canvas.width / dataArray.length
-
-    this.canvas.style.width = '100%'
-    this.canvas.style.flex='1 0'
-    this.canvas.width =  contents.offsetWidth
-    this.canvas.height = contents.offsetHeight
-
-    this.circleRadius = this.canvas.width/3 
-
-    this.pen = new Pen(this.canvas)
-    this.canvasContext = this.canvas.getContext('2d')
-
-    this.targetFrequency = this.props.settings.get('targetFrequency')
-
-    this.draw()
   },
   draw(){
-    this.animation = window.requestAnimationFrame(this.draw)
-    this.canvasContext.clearRect(0,0,this.canvas.width,this.canvas.height)
+    window.requestAnimationFrame(this.draw)
+    this.pen.clear()
 
     // update dataArray
     const dataArray = this.analyser.updateDataArray()
 
     // draw polyline
     this.pen.stroke('white')
-    this.canvasContext.beginPath()
+    this.pen.ctx.beginPath()
     dataArray.map((bin,index)=>{
       const x = index * this.binWidth
       const y = (this.canvas.height)*(1-bin/256)
-      this.canvasContext.lineTo(x,y)
+      this.pen.ctx.lineTo(x,y)
     })
-    this.canvasContext.stroke()
+    this.pen.ctx.stroke()
    
     // draw peak
     if(this.props.isCalibrating){
@@ -121,25 +111,16 @@ const CalibrateContainer = React.createClass({
 
     this.pen.fill('white')
     this.pen.noStroke()
-    this.canvasContext.fillText(
+    this.pen.ctx.fillText(
       this.targetFrequency,
       currentFreqIndex*this.binWidth,
       this.canvas.height*0.5
       )
-
-  },
-  componentWillUnmount () {
-    console.log('hello')
-    //document.cancelAnimationFrame(this.animation)
-    this.contents.removeChild(this.canvas)
-    this.audioContext.close()
   },
   render () {
-    // if(this.analyser) {this.draw()}
-    return this.props.isFetching === true 
-    ? null
-    : (
-      <Calibrate 
+    return(
+      <Calibrate
+        isFetching={this.props.isFetching} 
         isCalibrating={this.props.isCalibrating}
         toggleCalibration={this.toggleCalibration}
         targetFrequency={this.props.settings.get('targetFrequency')}
