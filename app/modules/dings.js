@@ -1,7 +1,7 @@
 import { fromJS, toJS, Map } from 'immutable'
 import { addDing, appendTimestampToDing, listenToDings, findClosestRoad } from 'helpers/api'
 import { addListener } from 'modules/listeners'
-import {distFromLatLng} from 'helpers/utils'
+import { distFromLatLng } from 'helpers/utils'
 
 const FETCHING_DING = 'FETCHING_DING'
 const FETCHING_DING_ERROR = 'FETCHING_DING_ERROR'

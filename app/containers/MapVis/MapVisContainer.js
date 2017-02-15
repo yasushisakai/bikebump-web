@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as usersActionCreator from 'modules/users'
-import { tileURL, attribution } from 'config/constants'
+import { tileURL, attribution, img_root } from 'config/constants'
 import { MapVis } from 'components'
 import leaflet from 'leaflet'
 

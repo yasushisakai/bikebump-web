@@ -1,6 +1,7 @@
 import { fromJS, toJS } from 'immutable'
-import { fetchGeoLocation, refreshCommute } from 'helpers/utils'
+import { fetchGeoLocation, refreshCommute, formatWavFileName } from 'helpers/utils'
 import { createCommute, appendBreadcrumb } from 'helpers/api'
+import { storeBlob } from 'helpers/storage'
 import { addCommute } from 'modules/commutes'
 
 const STOP_RECORDING = 'STOP_RECORDING'
@@ -58,6 +59,23 @@ export function uploadingClipSuccess () {
   }
 }
 
+export function handleUpload(recorder,location,timestamp){
+  return function(dispatch,getState){
+    
+    if(getState().record.get('isUploading')) return
+
+    dispatch(uploadingClip())
+    recorder.exportWAV((blob)=>{
+      const filename = formatWavFileName(timestamp,location)
+      console.log(filename)
+      storeBlob(filename,blob)
+        .then(()=>uploadingClipSuccess())
+    })
+  }
+}
+
+
+
 export function handleRecordInitiation () {
   return function (dispatch,getState) {
     const uid = getState().users.get('authedId')
@@ -65,7 +83,7 @@ export function handleRecordInitiation () {
     if(uid === '') {
       dispatch(recordError('uid is empty'))
     }
-    createCommute(uid)
+    return createCommute(uid)
       .then((commuteId)=>dispatch(startRecording(commuteId)))
   }
 }
@@ -74,8 +92,10 @@ export function toggleRecording () {
   return function(dispatch,getState){
     if(getState().record.get('isRecording')===true){
       dispatch(stopRecording())
+      return (Promise.resolve(false))
     }else{
       dispatch(handleRecordInitiation())
+      return (Promise.resolve(true))
     }
   }
 }

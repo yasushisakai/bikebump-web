@@ -21,24 +21,22 @@ const witchHistory = isProduction ? browserHistory : hashHistory
 const history = syncHistoryWithStore(witchHistory,store)
 
 function checkAuth (nextState, replace) {
-  if(store.getState().users.get('isFetching') === true){
-    return
-  }
-
+  // if(store.getState().users.get('isFetching') === true){
+  //   return
+  // }
   const isAuthed = checkIfAuthed(store)
   const nextPath = nextState.location.pathname
 
-  if(isProduction===true){
-    if(nextPath==='/map' || nextPath === '/admin'){
-      return
-    }else if (nextPath === '/' || nextPath == '/signin' ) {
-      if(isAuthed === true) {
-        replace('/record')
-      }else{
-        replace('signin')
-      } 
+  if(isAuthed){
+    if(nextPath=='/'){
+      replace('/record')
+    }
+  }else{
+    if(nextPath=='/record'){
+      replace('/signin')
     }
   }
+
 }
 
 const mode = isProduction === true ? 'production': 'development' 

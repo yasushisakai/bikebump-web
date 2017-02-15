@@ -34,7 +34,6 @@ const CalibrateContainer = React.createClass({
 
     this.audioContext = new AudioContext()
     this.analyser = new Analyser(this.audioContext)
-
     this.analyser.setIsInFocus(true) 
     // this sets will splice the raw data 
     // into a specific range to 2k - 4k
@@ -66,9 +65,6 @@ const CalibrateContainer = React.createClass({
     }else{
       this.props.handleUpdateTargetFrequency(this.props.uid,this.targetFrequency)
     }
-  },
-  componentWillUpdate(){
-
   },
   setup(){
     const dataArray = this.analyser.updateDataArray()

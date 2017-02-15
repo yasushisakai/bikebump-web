@@ -16,6 +16,14 @@ export const initialState = new Map({
 
 
 //
+// GENERAL
+//
+
+export const isProduction = process.env.NODE_ENV == 'production'
+export const root_url = isProduction ? 'https://bikebump.media.mit.edu' : 'localhost:8080'
+export const img_root = `${root_url}/static/img/`
+
+//
 // firebase
 //
 
@@ -33,7 +41,6 @@ firebase.initializeApp(firebaseConfig);
 export const ref = firebase.database().ref()
 export const firebaseAuth = firebase.auth
 export const firebaseStorage = firebase.storage().ref()
-export const isProduction = process.env.NODE_ENV == 'production'
 export const isRemote = false
 
 

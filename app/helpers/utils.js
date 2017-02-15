@@ -124,8 +124,8 @@ export function formatUser(name, email, avatar, uid) {
   }
 }
 
-export function formatWavFileName(now,location){
-
+export function formatWavFileName(timestamp,location){
+  const now = new Date(timestamp)
   const day = zeroAdd(now.getDate())
   const month = zeroAdd(now.getMonth()+1)
   const year = zeroAdd(now.getFullYear())

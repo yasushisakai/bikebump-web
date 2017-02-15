@@ -9,6 +9,7 @@ import { body, container} from 'styles/styles.css'
 
 import { Navigation } from 'components'
 import * as usersActionCreators from 'modules/users'
+import * as userSettingsActionCreators from 'modules/userSettings'
 
 const MainContainer = React.createClass({
   propTypes:{
@@ -32,6 +33,7 @@ const MainContainer = React.createClass({
           )
         this.props.fetchingUserSuccess(user.uid,userInfo,Date.now())
         this.props.authUser(user.uid)
+        this.props.handleFetchingUserSettings(user.uid)
       }
     })
 
@@ -44,7 +46,9 @@ const MainContainer = React.createClass({
       // keep one
   },
   render () {
-     return (<div className={container}>
+     return this.props.isFetching
+     ? null
+     :(<div className={container}>
         <Navigation isAuthed={this.props.isAuthed} isRecording={this.props.isRecording} authedId={this.props.authedId}/>
           {this.props.children}
       </div>
@@ -63,7 +67,10 @@ function mapStateToProps ({users,record}) {
 }
 
 function mapDispatchToProps (dispatch) {
-  return bindActionCreators(usersActionCreators, dispatch)
+  return bindActionCreators({
+    ...usersActionCreators,
+    ...userSettingsActionCreators,
+  }, dispatch)
 }
 
 export default connect(

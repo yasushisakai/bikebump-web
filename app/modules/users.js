@@ -113,7 +113,7 @@ function user(state=initialUserState,action){
 const initialState = fromJS({
   isAuthed: false,
   authedId: '',
-  isFetching: false,
+  isFetching: true,
   error: '',
 })
 
