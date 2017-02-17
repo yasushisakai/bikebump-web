@@ -1,11 +1,12 @@
 import { fromJS, toJS, Map } from 'immutable'
-import { addDing, appendTimestampToDing, listenToDings, findClosestRoad } from 'helpers/api'
+import { addDing, appendTimestampToDing, listenToDings, findClosestRoad, fetchDings } from 'helpers/api'
 import { addListener } from 'modules/listeners'
 import { distFromLatLng } from 'helpers/utils'
 
 const FETCHING_DING = 'FETCHING_DING'
 const FETCHING_DING_ERROR = 'FETCHING_DING_ERROR'
 const FETCHING_DING_SUCCESS = 'FETCHING_DING_SUCCESS'
+const FETCHING_DINGS_SUCCESS = 'FETCHING_DINGS_SUCCESS'
 const REMOVE_FETCHING = 'REMOVE_FETCHING'
 export const CREATE_DING = 'CREATE_DING'
 export const APPEND_DING = 'APPEND_DING'
@@ -32,6 +33,26 @@ function fetchingDingSuccess(ding){
     ding
   }
 }
+
+
+function fetchingDingsSuccess(dings){
+  return {
+    type:FETCHING_DINGS_SUCCESS,
+    dings,
+  }
+}
+
+export function handleFetchingDings(){
+  return function (dispatch) {
+
+    dispatch(fetchingDing())
+
+    return fetchDings()
+      .then(dings=>dispatch(fetchingDingsSuccess(dings)))
+      .catch(error=>dispatch(fetchingDingError(error)))
+  }
+}
+
 
 export function removeFetching(){
   return {
@@ -151,6 +172,10 @@ export default function dings(state=initialState, action) {
         isFetching:false,
         [action.ding.dingId]:action.ding
       })
+    case FETCHING_DINGS_SUCCESS:
+      return state.merge({
+        isFetching:false
+      }).merge(action.dings)
     case REMOVE_FETCHING:
       return state.set('isFetching',false)
     case CREATE_DING:

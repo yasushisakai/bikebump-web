@@ -76,13 +76,8 @@ export function handleUpload(recorder,location,timestamp){
 
 
 
-export function handleRecordInitiation () {
+export function handleRecordInitiation (uid) {
   return function (dispatch,getState) {
-    const uid = getState().users.get('authedId')
-    
-    if(uid === '') {
-      dispatch(recordError('uid is empty'))
-    }
     return createCommute(uid)
       .then((commuteId)=>dispatch(startRecording(commuteId)))
   }
@@ -90,12 +85,17 @@ export function handleRecordInitiation () {
 
 export function toggleRecording () {
   return function(dispatch,getState){
-    if(getState().record.get('isRecording')===true){
+
+    if(
+        getState().record.get('isRecording')===true ||
+        getState().users.get('isAuthed')===false
+      ){
       dispatch(stopRecording())
-      return (Promise.resolve(false))
+      return Promise.resolve({isRecording:false})
     }else{
-      dispatch(handleRecordInitiation())
-      return (Promise.resolve(true))
+      const authedId = getState().users.get('authedId')
+      return dispatch(handleRecordInitiation(authedId))
+        .then((action)=>Promise.resolve({isRecording:true,commuteId:action.commuteId}))
     }
   }
 }
@@ -128,9 +128,8 @@ function locationChange () {
   }
 }
 
-export function handleFetchLatLng () {
+export function handleFetchLatLng (commuteId) {
   return function(dispatch,getState) {
-    const commuteId = getState().record.get('currentCommuteId')
     dispatch(fetchingLatLng())
     return fetchGeoLocation()
       .then((coordinates)=>dispatch(fetchingLatLngSuccess(coordinates)))

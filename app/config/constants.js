@@ -7,7 +7,8 @@ export const updateCycleDuration = 7000 //ms
 export const renderTimeConstrain = 10000 //ms
 export const recordDuration = 5000 //ms
 export const waitDuration = 3000 //ms
-export const dingDetectionGap = 120 
+export const dingDetectionGap = 120
+export const updateDuration = 5 * 60 * 1000 // 5min 
 
 export const initialState = new Map({
   isFetching: true,

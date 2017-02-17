@@ -46,10 +46,11 @@ export function handleSetDingListener () {
 
     dispatch(addListener('dings'))
     return listenToDings((dings)=>{
-      dispatch(settingDingListenerSuccess(Object.keys(dings)))
+      dispatch(addMultipleDings(dings))
       dispatch(removeFetching())
-      return dispatch(addMultipleDings(dings))
-    },(error)=>dispatch(settingDingListenerError(error)))
+      dispatch(settingDingListenerSuccess(Object.keys(dings)))
+      },
+      (error)=>dispatch(settingDingListenerError(error)))
   }
 }
 

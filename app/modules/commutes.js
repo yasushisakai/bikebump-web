@@ -34,9 +34,8 @@ export function handleFetchingCommutes () {
     if(getState().commutes.get('isFetching')){
       return 
     }
-
     dispatch(fetchingCommutes())
-    fetchCommutes()
+    return fetchCommutes()
       .then((commutes)=>dispatch(fetchingCommutesSuccess(commutes)))
       .catch((error)=>dispatch(fetchingCommutesError(error)))
   }
@@ -69,6 +68,7 @@ export function handleAddCommute (commute) {
 const initalState = fromJS({
   isFetching:false,
   error:'',
+  lastUpdated:0,
 })
 
 export default function commutes(state=initalState,action){
@@ -87,6 +87,7 @@ export default function commutes(state=initalState,action){
       return state.merge({
         isFetching:false,
         error:'',
+        lastUpdated: Date.now(),
       }).merge(action.commutes)
     case ADD_COMMUTE:
       return state.merge({

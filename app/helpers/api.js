@@ -33,8 +33,14 @@ export function listenToDings( callback, errorCallback){
     (snapshot)=>{
       const dings = snapshot.val() || {}
       callback(dings)
+      return dings
     },
     errorCallback)
+}
+
+export function fetchDings() {
+  return ref.child(`dings/`).once('value')
+    .then(snapshot=>(snapshot.val()||{}))
 }
 
 export function fetchRoad (roadId) {

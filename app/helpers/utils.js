@@ -3,6 +3,7 @@ import {
   renderTimeConstrain,
   maxCommuteLife, 
   dingDetectionGap,
+  updateDuration,
 } from 'config/constants'
 
 export function fetchGeoLocation() {
@@ -17,6 +18,10 @@ export function fetchGeoLocation() {
         enableHighAccuracy: true
       })
   })
+}
+
+export function filterStateVariables(key){
+  return key !== 'isFetching' && key !== 'lastUpdated' && key !== 'error'
 }
 
 export function fitCanvas(canvas){
@@ -147,6 +152,10 @@ function zeroAdd (num){
 
 export function updateTimeConstrain (timestamp) {
   return Date.now() - timestamp > renderTimeConstrain 
+}
+
+export function checkLastUpdate (timestamp) {
+  return Date.now() - timestamp > updateDuration
 }
 
 /**

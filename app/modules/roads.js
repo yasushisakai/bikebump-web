@@ -7,6 +7,7 @@ const FETCH_SINGLE_ROAD = 'FETCH_SINGLE_ROAD'
 
 const initialState = fromJS({
   isFetching:false,
+  lastUpdated:0,
   error:''
 })
 
@@ -52,9 +53,7 @@ function fetchingRoadSuccess (roads) {
 
 export function handleFetchingRoads () {
   return function(dispatch,getState){
-    
     if(getState().roads.get('isFetching')) return
-
     dispatch(fetchingRoad())
     return fetchRoads()
       .then((roads)=>dispatch(fetchingRoadSuccess(roads)))
@@ -75,7 +74,8 @@ export default function roads (state=initialState,action){
     case FETCHING_ROAD_SUCCESS:
       return state.merge(action.roads).merge({
         isFetching:false,
-        error:''
+        error:'',
+        lastUpdated: Date.now(),
       })
     case FETCH_SINGLE_ROAD:
     return state.set('isFetching',false).set(action.roadId,action.road)

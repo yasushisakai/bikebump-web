@@ -194,10 +194,11 @@ const RecordContainer = React.createClass({
 
     if(distanceFromCenter < this.circleRadius){
       this.props.toggleRecording()
-      .then(isRecording=>{
-        if(isRecording){
-          this.props.handleFetchLatLng()
-          this.latLngInterval = window.setInterval(this.props.handleFetchLatLng, updateCycleDuration)
+      .then(response=>{
+        if(response.isRecording){
+          const fetchFunc = this.props.handleFetchLatLng.bind(this,response.commuteId)
+          fetchFunc()
+          this.latLngInterval = window.setInterval(fetchFunc, updateCycleDuration)
         }else{
           if(this.latLngInterval !== null){
             window.clearInterval(this.latLngInterval)
@@ -225,6 +226,7 @@ function mapStateToProps (state) {
     authedId,
     isFetching : state.users.get('isFetching') || state.userSettings.get('isFetching') || state.dingFeed.get('isFetching'),
     isRecording : state.record.get('isRecording'),
+    currentCommuteId: state.record.get('currentCommuteId'),
     isUploading: state.record.get('isUploading'),
     latestLocation : state.record.get('latestLocation').toJS(),
     latestFetch : state.record.get('latestFetch'),
