@@ -33,6 +33,8 @@ const RecordContainer = React.createClass({
   },
   componentDidMount () {
 
+    console.log('mounted')
+
     // setting dom elements
     this.canvas = document.createElement('canvas')
     this.recordElement = document.getElementById('record')
@@ -98,8 +100,9 @@ const RecordContainer = React.createClass({
     this.canvas.addEventListener('mousemove', this.mouseMoved)
   },
   draw (){
-    requestAnimationFrame(this.draw)
+    this.animation = requestAnimationFrame(this.draw)
 
+    console.log(this.props.isFetching)
     if (this.props.isFetching) return 
 
     this.pen.clear()
@@ -211,6 +214,22 @@ const RecordContainer = React.createClass({
   },
   mouseMoved (event){
     this.pen.updateMouse(event)
+  },
+  componentWillUnmount(){
+    console.log('unmounted')
+    
+    window.cancelAnimationFrame(this.animation)
+
+    if(this.latLngInterval !== null) {
+      window.clearInterval(this.latLngInterval)
+      this.latLngInterval = null
+    }
+
+    // stop recording
+    if(this.props.isRecording === true) {
+      this.props.toggleRecording()
+    }
+
   },
   render () {
     return (

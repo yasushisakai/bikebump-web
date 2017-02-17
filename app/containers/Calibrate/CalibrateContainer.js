@@ -71,7 +71,7 @@ const CalibrateContainer = React.createClass({
     this.binWidth = this.canvas.width / dataArray.length
   },
   draw(){
-    window.requestAnimationFrame(this.draw)
+    this.animation = window.requestAnimationFrame(this.draw)
     this.pen.clear()
 
     // update dataArray
@@ -112,6 +112,9 @@ const CalibrateContainer = React.createClass({
       currentFreqIndex*this.binWidth,
       this.canvas.height*0.5
       )
+  },
+  componentWillUnmount(){
+    window.cancelAnimationFrame(this.animation)
   },
   render () {
     return(

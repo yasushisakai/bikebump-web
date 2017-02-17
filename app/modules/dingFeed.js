@@ -41,7 +41,8 @@ export function handleSetDingListener () {
     dispatch(settingDingListener())
 
     if(getState().listeners.get('dings')===true){
-      return Promise.resolve(removeFeedFetching())
+      console.log('ding,true')
+      return Promise.resolve(dispatch(removeFeedFetching()))
     }
 
     dispatch(addListener('dings'))
