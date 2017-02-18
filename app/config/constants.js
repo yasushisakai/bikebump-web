@@ -21,8 +21,9 @@ export const initialState = new Map({
 //
 
 export const isProduction = process.env.NODE_ENV == 'production'
-export const root_url = isProduction ? 'https://bikebump.media.mit.edu' : 'localhost:8080'
-export const img_root = `${root_url}/static/img/`
+export const rootUrl = isProduction ? 'https://bikebump.media.mit.edu' : 'http://localhost:8080'
+export const imgRoot = `${rootUrl}/static/img/`
+export const apiRoot = isProduction ? 'https://bikebump.media.mit.edu/api/' : 'http://localhost:8081/api/'
 
 //
 // firebase

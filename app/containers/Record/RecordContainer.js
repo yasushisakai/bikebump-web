@@ -102,7 +102,6 @@ const RecordContainer = React.createClass({
   draw (){
     this.animation = requestAnimationFrame(this.draw)
 
-    console.log(this.props.isFetching)
     if (this.props.isFetching) return 
 
     this.pen.clear()
@@ -154,6 +153,8 @@ const RecordContainer = React.createClass({
           console.log('ding')
           this.isDing = true
 
+          window.navigator.vibrate(200)
+
           // ding
           this.props.handleComplieDing(
             this.props.authedId,
@@ -186,6 +187,10 @@ const RecordContainer = React.createClass({
     this.pen.drawCircle(this.canvas.width/2,this.canvas.height/2,this.circleRadius)
 
   },
+  updatePosition(commuteId){
+    window.navigator.vibrate(100)
+    this.props.handleFetchLatLng()
+  },
   mousePressed (event){
 
     const distanceFromCenter = this.pen.distance(
@@ -199,7 +204,7 @@ const RecordContainer = React.createClass({
       this.props.toggleRecording()
       .then(response=>{
         if(response.isRecording){
-          const fetchFunc = this.props.handleFetchLatLng.bind(this,response.commuteId)
+          const fetchFunc = this.updatePosition.bind(this,response.commuteId)
           fetchFunc()
           this.latLngInterval = window.setInterval(fetchFunc, updateCycleDuration)
         }else{

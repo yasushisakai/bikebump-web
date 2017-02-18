@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { insertCSSLink, getCenter, spliceRoad } from 'helpers/utils'
-import { plotRoad, plotSpliced } from 'helpers/mapPlot'
+import { plotRoad, plotSpliced } from 'helpers/mapUtils'
 import leaflet from 'leaflet'
 import { Map, toJS } from 'immutable'
 

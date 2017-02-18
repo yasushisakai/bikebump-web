@@ -1,5 +1,6 @@
 import {ref,isProduction} from 'config/constants'
 import axios from 'axios'
+import { apiRoot } from 'config/constants'
 
 export function fetchUser(uid){
   return ref.child(`users/${uid}`).once('value')
@@ -20,6 +21,16 @@ export function addDing(ding){
   const userDingPromise = ref.child(`userDings/${ding.uid}/${dingId}`).set(true)
   const promises = [dingPromise,userDingPromise]
   return {dingId, dingPromise:Promise.all(promises)}
+}
+
+export function createNewDing(lat,lng,uid,timestamp,value){
+  return axios.post(`${apiRoot}dings/add`,{
+    lat,
+    lng,
+    uid,
+    timestamp,
+    value,
+  })
 }
 
 export function appendTimestampToDing(dingId,{timestamp,uid,value}){

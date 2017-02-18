@@ -20,6 +20,7 @@ export function fetchGeoLocation() {
   })
 }
 
+
 export function filterStateVariables(key){
   return key !== 'isFetching' && key !== 'lastUpdated' && key !== 'error'
 }

@@ -1,5 +1,5 @@
 import { fromJS, toJS, Map } from 'immutable'
-import { addDing, appendTimestampToDing, listenToDings, findClosestRoad, fetchDings } from 'helpers/api'
+import { createNewDing, addDing, appendTimestampToDing, listenToDings, findClosestRoad, fetchDings } from 'helpers/api'
 import { addListener } from 'modules/listeners'
 import { distFromLatLng } from 'helpers/utils'
 
@@ -98,54 +98,7 @@ export function handleCreateDing(ding){
 
 export function handleComplieDing(uid,coordinates,timestamp,radius,value){
   return function(dispatch,getState){
-
-    // create the timestamp first
-    const timestampData = {
-      uid,
-      value,
-      timestamp
-    }
-
-    // get all dings check the distance
-    let minimalDistance = 100 //meters
-    let closestDingId = ''
-    const dingIds = getState().dingFeed.get('dingIds')
-    dingIds.map((dingId)=>{
-      const ding = getState().dings.get(dingId)
-      const start = ding.get('coordinates').toJS()
-      const end = coordinates
-      const distance = distFromLatLng(start,end)
-      if (minimalDistance > distance && distance < ding.get('radius')) {
-        minimalDistance = distance
-        closestDingId = dingId
-      }
-    })
-
-    if(minimalDistance < 10) {
-      appendTimestampToDing(closestDingId,timestampData)
-        .then(()=>dispatch(appendDing(closestDingId,timestampData)))
-    } else {
-      // create new one
-      let newDing = {
-        coordinates,
-        radius,
-        timestamps:{
-          [timestamp]:timestampData
-        }
-      }
-    findClosestRoad(coordinates)
-      .then((closestRoad)=>{
-        const roadId = closestRoad.roadId
-        newDing = {...newDing,roadId}
-        return newDing
-      })
-      .then((newDing)=>addDing(newDing))
-      .then((result)=>{
-        newDing = {...newDing,dingId:result.dingId}
-        return result.dingPromise
-      })
-      .then(()=>dispatch(createDing(newDing)))
-    }
+    return createNewDing(coordinates.lat,coordinates.lng,uid,timestamp,value)
   }
 }
 

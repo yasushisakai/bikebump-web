@@ -7,7 +7,7 @@ import { MapVis } from 'components'
 import leaflet from 'leaflet'
 import {Map} from 'immutable'
 import {checkLastUpdate, filterStateVariables } from 'helpers/utils'
-import {plotRoad, plotCommute, plotDing} from 'helpers/mapPlot'
+import {plotRoad, plotCommute, plotDing} from 'helpers/mapUtils'
 
 import * as commuteActionCreators from 'modules/commutes'
 import * as dingFeedActionCreators from 'modules/dingFeed'
@@ -79,6 +79,7 @@ const MapVisContainer = React.createClass({
     //
     if(this.props.listeners.get('dings')===true){
       this.props.dingIds.map(key=>{
+        const ding = this.props.dings.get(key)
         plotDing(this.props.dings.get(key).toJS(),this.map)
       })
     }else{
