@@ -2,7 +2,7 @@ export default class Analyser {
 
   constructor (
       audioContext,
-      fftSize=2048,
+      fftSize=1024,
       minDecibels=-80,
       maxDecibels=-10,
       highpassFrequency=2200,

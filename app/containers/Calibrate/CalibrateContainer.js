@@ -7,14 +7,19 @@ import { getSlopes ,frequencyToIndex, indexToFrequency, insertAfter, fitCanvas} 
 import * as userSettingsActionCreators from 'modules/userSettings'
 import { Analyser } from 'helpers/Sound'
 import Pen from 'helpers/Pen'
+import {updateUserSettings} from 'helpers/api'
 
 const CalibrateContainer = React.createClass({
   propTypes:{
     uid: PropTypes.string.isRequired,
     isFetching: PropTypes.bool.isRequired,
     isCalibrating:PropTypes.bool.isRequired,
+    // isRingBellEnabled : PropTypes.bool.isRequired,
     noSettings:PropTypes.bool.isRequired,
     settings:PropTypes.object.isRequired,
+
+    enableRingBellMode:PropTypes.func.isRequired,
+    disableRingBellMode:PropTypes.func.isRequired,
     handleFetchingUserSettings:PropTypes.func.isRequired,
     toggleCalibration:PropTypes.func.isRequired,
   },
@@ -65,6 +70,15 @@ const CalibrateContainer = React.createClass({
     }else{
       this.props.handleUpdateTargetFrequency(this.props.uid,this.targetFrequency)
     }
+  },
+  toggleRingBell (value){
+    if(value){
+      this.props.disableRingBellMode(this.props.uid)
+    }else{
+      this.props.enableRingBellMode(this.props.uid)
+    }
+
+    updateUserSettings(this.props.uid,'useRingBell',!value)
   },
   setup(){
     const dataArray = this.analyser.updateDataArray()
@@ -123,6 +137,8 @@ const CalibrateContainer = React.createClass({
         isCalibrating={this.props.isCalibrating}
         toggleCalibration={this.toggleCalibration}
         targetFrequency={this.props.settings.get('targetFrequency')}
+        isRingBellEnabled={this.props.settings.get('useRingBells')}
+        toggleRingBell={this.toggleRingBell}
       />
     )
   },
@@ -133,6 +149,7 @@ function mapStateToProps (state,props) {
   return {
     uid,
     isCalibrating : state.userSettings.get('isCalibrating'),
+    // isRingBellEnabled : state.userSettings.getIn([uid,'useRingBells']),
     isFetching : state.users.get('isFetching') || state.userSettings.get('isFetching') || !state.users.get('isAuthed'),
     noSettings : !state.userSettings.get(uid),
     settings: state.userSettings.get(uid) || new Map()

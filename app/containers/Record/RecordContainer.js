@@ -72,6 +72,7 @@ const RecordContainer = React.createClass({
       )
     }else{
       console.error('user get media error')
+      // switch to button mode
     }
 
     // library that prevents the phone to goto sleep mode
@@ -153,7 +154,7 @@ const RecordContainer = React.createClass({
           console.log('ding')
           this.isDing = true
 
-          window.navigator.vibrate(200)
+          window.navigator.vibrate(100)
 
           // ding
           this.props.handleComplieDing(
@@ -188,7 +189,7 @@ const RecordContainer = React.createClass({
 
   },
   updatePosition(commuteId){
-    window.navigator.vibrate(100)
+    // window.navigator.vibrate(100)
     this.props.handleFetchLatLng()
   },
   mousePressed (event){

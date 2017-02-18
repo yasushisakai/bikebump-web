@@ -6,6 +6,8 @@ const FETCHING_USER_SETTINGS = 'FETCHING_USER_SETTINGS'
 const FETCHING_USER_SETTINGS_ERROR = 'FETCHING_USER_SETTINGS_ERROR'
 const FETCHING_USER_SETTINGS_SUCCESS = 'FETCHING_USER_SETTINGS_SUCCESS'
 const UPDATE_USER_TARGET_FREQUENCY = 'UPDATE_USER_TARGET_FREQUENCY'
+const DISABLE_RING_BELL_MODE = 'DISABLE_RING_BELL_MODE'
+const ENABLE_RING_BELL_MODE = 'ENABLE_RING_BELL_MODE'
 const TOGGLE_CALIBRATION = 'TOGGLE_CALIBRATION'
 
 function fetchingUserSettings () {
@@ -35,6 +37,20 @@ function updateUserTargetFrequency (uid,frequency){
     type:UPDATE_USER_TARGET_FREQUENCY,
     uid,
     frequency,
+  }
+}
+
+export function disableRingBellMode(uid){
+  return {
+    type:DISABLE_RING_BELL_MODE,
+    uid,
+  }
+}
+
+export function enableRingBellMode(uid){
+  return {
+      type:ENABLE_RING_BELL_MODE,
+      uid,
   }
 }
 
@@ -73,6 +89,10 @@ function settings (state = initialSettingState, action) {
       return state.merge(action.settings)
     case UPDATE_USER_TARGET_FREQUENCY:
       return state.set('targetFrequency',action.frequency)
+    case DISABLE_RING_BELL_MODE:
+      return state.set('useRingBells',false)
+    case ENABLE_RING_BELL_MODE:
+      return state.set('useRingBells',true)
     default:
       return state
   }
@@ -97,6 +117,8 @@ export default function userSettings (state = initialState, action) {
         [action.uid]:settings(state.get(action.uid),action)
       })
     case UPDATE_USER_TARGET_FREQUENCY:
+    case DISABLE_RING_BELL_MODE:
+    case ENABLE_RING_BELL_MODE:
       return state.set(action.uid,settings(state.get(action.uid),action))
     case TOGGLE_CALIBRATION:
       return state.merge({

@@ -5,6 +5,7 @@ import Account from 'react-icons/lib/md/account-circle'
 import SignOut from 'react-icons/lib/fa/sign-out'
 import SignIn from 'react-icons/lib/fa/sign-in'
 import MapIcon from 'react-icons/lib/fa/map-o'
+import Paw from 'react-icons/lib/fa/paw'
 import Record from 'react-icons/lib/md/radio-button-checked'
 import Home from 'react-icons/lib/md/home'
 
@@ -19,6 +20,7 @@ function NavLinks ({isAuthed, isRecording,authedId}) {
   ? <div className={navLink}>
     <Link className={link} to='/record'><Record className={isRecording===true? iconRecording :icon}/></Link>
     <Link className={link} to='/map'><MapIcon className={icon}/></Link>
+    <Link className={link} to='/survey'><Paw className={icon}/></Link>
   </div>
   : <div className={navLink}>
     <Link className={link} to='/'><Home className={icon}/></Link>

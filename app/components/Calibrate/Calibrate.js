@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { largeButton, callibrateContents } from './styles.css'
+// import ToggleButton from 'react-toggle-button'
 
 Calibrate.propTypes = {
   isFetching : PropTypes.bool.isRequired,
