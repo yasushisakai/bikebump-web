@@ -25,7 +25,6 @@ const QuestionPanelContainer = React.createClass({
     })
   },
   render () {
-    console.log(this.props.nextResponsePair[1],this.props.questionId)
     return  this.props.question === undefined || this.props.questionId === undefined
     ? null
     :(

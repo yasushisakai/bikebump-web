@@ -28,6 +28,9 @@ const MapVisContainer = React.createClass({
     handleSetDingListener : PropTypes.func.isRequired,
     handleFetchingDings : PropTypes.func.isRequired,
   },
+  contextTypes:{
+    router:PropTypes.object.isRequired,
+  },
   componentDidMount(){
     
     // fetch stuff
@@ -42,13 +45,15 @@ const MapVisContainer = React.createClass({
       this.props.handleFetchingRoads()
         .then((result)=>{
           Object.keys(result.roads)
-            .map(key=>{plotRoad(result.roads[key],this.map,(roadId)=>{console.log(roadId)})})
+            .map(key=>{
+              plotRoad(result.roads[key],this.map,{},this.handleClickRoad)
+            })
         }) 
     }else{
       this.props.roads.keySeq().toArray()
       .filter(key=>filterStateVariables(key))
       .map((key)=>{
-         plotRoad(this.props.roads.get(key).toJS(),this.map,(roadId)=>{console.log(roadId)})
+         plotRoad(this.props.roads.get(key).toJS(),this.map,{},this.handleClickRoad)
       })
     }
 
@@ -91,8 +96,16 @@ const MapVisContainer = React.createClass({
             })
         })
     }
-
-
+  },
+  handleClickRoad(roadId){
+    //console.log(roadId)
+    this.context.router.push(`/roads/${roadId}`)
+  },
+  handleClickDing(dingId){
+    console.log(dingId)
+  },
+  componentWillUnmount(){
+    // this.map.remove()
   },
   render () {
     return (

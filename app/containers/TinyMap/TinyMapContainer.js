@@ -51,6 +51,9 @@ const TinyMapContainer = React.createClass({
       // this.map.zoomIn(14,{animate:true,duration:5})
     }
   },
+  componentWillUnmount(){
+    // this.map.remove()
+  },
   render () {
     return (
       <div id='tinyMap' className={contents}></div>

@@ -36,9 +36,9 @@ function fetchSingleRoad(roadId,road){
 export function handleFetchSingleRoad(roadId){
   return function (dispatch){
     dispatch(fetchingRoad())
-    fetchRoad(roadId)
+    return fetchRoad(roadId)
       .then(road => dispatch(fetchSingleRoad(roadId,road)))
-
+      .catch(error => dispatch(fetchingRoadError(error)))
   }
 }
 
@@ -78,7 +78,10 @@ export default function roads (state=initialState,action){
         lastUpdated: Date.now(),
       })
     case FETCH_SINGLE_ROAD:
-    return state.set('isFetching',false).set(action.roadId,action.road)
+    return state.merge({
+      isFetching:false,
+      [action.roadId]:action.road,
+    })
     default:
       return state
   }

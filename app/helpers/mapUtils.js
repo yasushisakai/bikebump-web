@@ -1,5 +1,5 @@
 import leaflet from 'leaflet'
-import { toJS } from 'immutable'
+import { Map } from 'immutable'
 import { imgRoot } from 'config/constants'
 
 export const defaultStyle={
@@ -22,6 +22,23 @@ function latLngToPoint(coordinate){
   return leaflet.point(coordinate.lat,coordinate.lng)
 }
 
+
+export function roadLineStringToLatLngBound(road,){
+  let latLngs=[];
+  if(road.geometry.type==='LineString'){
+    latLngs = road.geometry.coordinates 
+  }else{
+   road.geometry.coordinates.map((lineString)=>{
+      lineString.map(coordinate=>{
+        latLngs.push(coordinate)
+      })
+    })
+  }
+
+  return leaflet.latLngBounds(latLngs)
+}
+
+
 function pointToLatLng(point){
   return leaflet.latLng(point.x,point.y)
 }
@@ -40,6 +57,7 @@ export function getClosestPoint(coordinate,road){
         const p1 = latLngToPoint(road.geometry.coordinates[index-1])
         const p2 = latLngToPoint(coord)
 
+        //FIXME: this leaflet function is cheesy
         const tempDist = leaflet.LineUtil.pointToSegmentDistance(basePoint,p1,p2)
         if(tempDist < closestDistance){
           closestDistance = tempDist
@@ -73,19 +91,13 @@ export function getClosestPoint(coordinate,road){
 // PLOT functions
 //
 
-export function plotRoad(road,_map,customStyle,callback=()=>{}) {
+export function plotRoad(road,_map,customStyle,callback) {
 
   const style = {...defaultStyle, opacity:0.4, weight:20 ,...customStyle}
 
   if(road.geometry.type === 'LineString'){
-    const coordinates = road.geometry.coordinates.map((coordinate)=>{
-      return coordinate.reverse()
-    })
-    const path = leaflet.polyline(coordinates,style)
-    path.addEventListener('click', ()=>{
-      callback(road.roadId)
-      console.log(road.roadId)
-    })
+    const path = leaflet.polyline(road.geometry.coordinates,style)
+    path.addEventListener('click', ()=>callback(road.properties.id))
     path.addTo(_map)
   }else{ // multilineString
     road.geometry.coordinates.map((coordinates)=>{
@@ -93,11 +105,7 @@ export function plotRoad(road,_map,customStyle,callback=()=>{}) {
         return coordinate.reverse()
       })
       const path = leaflet.polyline(coordinates,style)
-        path.addEventListener('click', ()=>{
-          callback(road.roadId)
-          console.log(road.roadId)
-        }
-        )
+        path.addEventListener('click', ()=>callback(road.properties.id))
         path.addTo(_map)
     })
 
