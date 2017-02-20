@@ -2,7 +2,7 @@ import leaflet from 'leaflet'
 import { toJS } from 'immutable'
 import { imgRoot } from 'config/constants'
 
-const defaultStyle={
+export const defaultStyle={
   lineCap:'butt',
   color:'#fff',
   opacity:1,
@@ -10,7 +10,7 @@ const defaultStyle={
   fill:false,
 }
 
-const icon = leaflet.icon({
+export const icon = leaflet.icon({
   iconUrl: `${imgRoot}cross.png`,
   iconSize : [5,5],
   iconAnchor : [3,3],
@@ -140,7 +140,6 @@ export function plotCommute(commute,map,customStyle={}){
 export function plotDing(ding,map,customStyle={}){
   const coords = ding.coordinates
   const style = {...defaultStyle,...customStyle} 
-  console.log(ding)
   // marker
   leaflet.marker(coords,{icon}).addTo(map)
   // circle

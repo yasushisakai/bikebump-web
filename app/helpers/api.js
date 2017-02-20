@@ -1,29 +1,15 @@
 import {ref,isProduction} from 'config/constants'
 import axios from 'axios'
 import { apiRoot } from 'config/constants'
+import { userDingStatus } from 'modules/userDings'
 
 export function fetchUser(uid){
   return ref.child(`users/${uid}`).once('value')
     .then((snapshot)=>snapshot.val())
 }
 
-export function findClosestRoad({lat,lng}){
-  const serverURL = isProduction === true ?'https://bikebump.media.mit.edu/':'http://localhost:8081/'
-  return axios.get(`${serverURL}api/road/closest?lat=${lat}&lng=${lng}`,{header:{}})
-    .then((response)=>{
-      return response.data
-    })
-}
 
-export function addDing(ding){
-  const dingId = ref.child(`dings`).push().key
-  const dingPromise = ref.child(`dings/${dingId}`).set({...ding,dingId})
-  const userDingPromise = ref.child(`userDings/${ding.uid}/${dingId}`).set(true)
-  const promises = [dingPromise,userDingPromise]
-  return {dingId, dingPromise:Promise.all(promises)}
-}
-
-export function createNewDing(lat,lng,uid,timestamp,value){
+export function createDing(lat,lng,uid,timestamp,value){
   return axios.post(`${apiRoot}dings/add`,{
     lat,
     lng,
@@ -31,13 +17,19 @@ export function createNewDing(lat,lng,uid,timestamp,value){
     timestamp,
     value,
   })
+    .then(result=>result.data)
 }
 
-export function appendTimestampToDing(dingId,{timestamp,uid,value}){
-  const p1 = ref.child(`dings/${dingId}/timestamps/${timestamp}`).set({timestamp,uid,value})
-  const p2 = ref.child(`userDings/${uid}/${dingId}`).set(true)
-  return Promise.all([p1,p2])
+export function createUserDing(uid,dingId,status=userDingStatus.DINGED){
+  return ref.child(`userDings/${uid}/${dingId}`).set(status)
+    .then(()=>({uid,dingId,status}))
 }
+
+export function fetchUserDings (uid) {
+  return ref.child(`userDings/${uid}`).once('value')
+    .then((snapshot)=>(snapshot.val() || {}))
+}
+
 
 export function listenToDings( callback, errorCallback){
   ref.child(`dings/`).on('value',
@@ -53,6 +45,14 @@ export function fetchDings() {
   return ref.child(`dings/`).once('value')
     .then(snapshot=>(snapshot.val()||{}))
 }
+
+
+export function fetchDing(dingId) {
+  console.log(dingId)
+  return ref.child(`dings/${dingId}`).once('value')
+    .then(snapshot=>(snapshot.val()||{}))
+}
+
 
 export function fetchRoad (roadId) {
   return ref.child(`roads/${roadId}`).once('value')
@@ -191,11 +191,6 @@ export function deleteVote(uid,roadId,proposalId,newCredit) {
 export function fetchUserResponses (uid) {
   return ref.child(`userResponses/${uid}`).once('value')
     .then((snapshot)=>(snapshot.val()||{}))
-}
-
-export function fetchUserDings (uid) {
-  return ref.child(`userDings/${uid}`).once('value')
-    .then((snapshot)=>(Object.keys(snapshot.val())||[]))
 }
 
 

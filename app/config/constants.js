@@ -1,18 +1,18 @@
 import firebase from 'firebase'
 import { Map } from 'immutable' 
 
-export const minimalLatLngRefresh = 5000 // ms
 export const maxCommuteLife = 20000 // ms 
-export const updateCycleDuration = 7000 //ms
+export const updateCycleDuration = 5000 //ms
 export const renderTimeConstrain = 10000 //ms
 export const recordDuration = 5000 //ms
 export const waitDuration = 3000 //ms
 export const dingDetectionGap = 120
-export const updateDuration = 5 * 60 * 1000 // 5min 
+export const updateDuration = 1 * 60 * 1000 // 1min 
 
 export const initialState = new Map({
   isFetching: true,
   error: '',
+  lastUpdated: 0,
 })
 
 

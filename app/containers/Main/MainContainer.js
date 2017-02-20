@@ -10,6 +10,8 @@ import { body, container} from 'styles/styles.css'
 import { Navigation } from 'components'
 import * as usersActionCreators from 'modules/users'
 import * as userSettingsActionCreators from 'modules/userSettings'
+import * as userDingsActionCreators from 'modules/userDings'
+import * as userResponsesActionCreators from 'modules/userResponses'
 
 const MainContainer = React.createClass({
   propTypes:{
@@ -18,8 +20,12 @@ const MainContainer = React.createClass({
     isAuthed: PropTypes.bool.isRequired,
     authedId: PropTypes.string.isRequired,
     isRecording: PropTypes.bool.isRequired,
+
     fetchingUserSuccess: PropTypes.func.isRequired,
     authUser : PropTypes.func.isRequired,
+    handleFetchingUserSettings: PropTypes.func.isRequired,
+    handleFetchingUserDings: PropTypes.func.isRequired,
+    handleFetchingUserResponses: PropTypes.func.isRequired,
   },
   componentDidMount () {
     this.props.fetchingUser()
@@ -34,6 +40,8 @@ const MainContainer = React.createClass({
         this.props.fetchingUserSuccess(user.uid,userInfo,Date.now())
         this.props.authUser(user.uid)
         this.props.handleFetchingUserSettings(user.uid)
+        this.props.handleFetchingUserDings(user.uid)
+        this.props.handleFetchingUserResponses(user.uid)
       }
     })
 
@@ -70,6 +78,8 @@ function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     ...usersActionCreators,
     ...userSettingsActionCreators,
+    ...userDingsActionCreators,
+    ...userResponsesActionCreators,
   }, dispatch)
 }
 

@@ -1,11 +1,20 @@
 import { initialState} from 'config/constants' 
-import { CREATE_DING, APPEND_DING} from 'modules/dings'
 import { List } from 'immutable'
 import { fetchUserDings } from 'helpers/api'
+import { checkLastUpdate } from 'helpers/utils'
 
 const FETCHING_USER_DINGS = 'FETCHING_USER_DINGS'
 const FETCHING_USER_DINGS_ERROR = 'FETCHING_USER_DINGS_ERROR'
 const FETCHING_USER_DINGS_SUCCESS = 'FETCHING_USER_DINGS_SUCCESS'
+
+//
+// status
+//
+export const userDingStatus = {
+  DINGED : 'DINGED',
+  PASSEDBY : 'PASSEDBY',
+  VIRTUAL : 'VIRTUAL',
+}
 
 const ADD_USER_DING='ADD_USER_DING'
 
@@ -23,19 +32,21 @@ function fetchingUserDingsError (error) {
   }
 }
 
-function fetchingUserDingsSuccess (uid,dingIds) {
+function fetchingUserDingsSuccess (uid,dingIdsAndStatus) {
   return {
     type: FETCHING_USER_DINGS_SUCCESS, 
     uid,
-    dingIds,
+    dingIdsAndStatus,
   }
 }
 
-export function handleFetchingUserDings () {
+export function handleFetchingUserDings (uid) {
   return function(dispatch,getState){
-    const uid = getState().users.get('authedId')
+    if(!checkLastUpdate(getState().userDings.get('lastUpdated'))){
+      return Promise.resolve(getState().userDings.get('uid'))
+    }
     dispatch(fetchingUserDings())
-    fetchUserDings(uid)
+    return fetchUserDings(uid)
       .then((dings)=>{
         return dings
       })
@@ -44,26 +55,14 @@ export function handleFetchingUserDings () {
   }
 }
 
-function addUserDing (uid,ding) {
+export function addUserDing (uid,dingId,status) {
   return {
     type: ADD_USER_DING,
     uid,
-    ding
+    dingId,
+    status,
   }
 }
-
-
-
-function singleDings(state=new List(),action){
-  switch (action.type) {
-    case CREATE_DING:
-    case APPEND_DING:
-      return state.push(action.dingId)
-    default:
-     return state
-  }
-}
-
 
 
 export default function userDings (state=initialState,action) {
@@ -76,16 +75,13 @@ export default function userDings (state=initialState,action) {
         error:action.error,
       })
     case FETCHING_USER_DINGS_SUCCESS:
+
       return state.merge({
         isFetching:false,
-        [action.uid]:action.dingIds
+        [action.uid]:action.dingIdsAndStatus
       })
-    case APPEND_DING:
-      return state.set(action.uid,singleDings(state.get(action.uid),action))
-    case CREATE_DING:
-      action.dingId = action.ding.dingId
-      setl
-      return state.set(action.ding.uid,singleDings(state.get(action.ding.uid),action))
+    case ADD_USER_DING:
+      return state.setIn([action.uid,action.dingId],action.status)
     default:
       return state
   }

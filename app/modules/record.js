@@ -1,13 +1,17 @@
 import { fromJS, toJS } from 'immutable'
-import { fetchGeoLocation, refreshCommute, formatWavFileName } from 'helpers/utils'
-import { createCommute, appendBreadcrumb } from 'helpers/api'
+import { fetchGeoLocation, refreshCommute, formatWavFileName, distFromLatLng } from 'helpers/utils'
+import { createCommute, appendBreadcrumb, createUserDing } from 'helpers/api'
 import { storeBlob } from 'helpers/storage'
 import { addCommute } from 'modules/commutes'
+import { addUserDing, userDingStatus } from 'modules/userDings'
 
 const STOP_RECORDING = 'STOP_RECORDING'
 const START_RECORDING = 'START_RECORDING'
 const UPDATE_BREADCRUMB = 'UPDATE_BREADCRUMB'
 const RECORD_ERROR = 'RECORD_ERROR'
+
+const INSIDE_DING = 'INSIDE_DING'
+const OUTSIDE_DING = 'OUTSIDE_DING'
 
 const UPLOADING_CLIP = 'UPLOADING_CLIP'
 const UPLOADING_CLIP_ERROR = 'UPLOADING_CLIP_ERROR'
@@ -128,11 +132,51 @@ function locationChange () {
   }
 }
 
+function insideDing(dingId) {
+  return {
+    type:INSIDE_DING,
+    dingId
+  }
+}
+
+function outsideDing(){
+  return {
+    type: OUTSIDE_DING,
+  }
+}
+
 export function handleFetchLatLng (commuteId) {
   return function(dispatch,getState) {
     dispatch(fetchingLatLng())
     return fetchGeoLocation()
       .then((coordinates)=>dispatch(fetchingLatLngSuccess(coordinates)))
+      .then(({location,timestamp})=>{
+        let isInside = false
+        let whichDing = ''
+        getState().dingFeed.get('dingIds').toJS().map(dingId=>{
+          const ding = getState().dings.get(dingId)
+          const distance = distFromLatLng(ding.get('coordinates').toJS(),location)
+          if(distance < ding.get('radius')) {
+            // append as passed by to userDings (+server)
+            isInside = true
+            whichDing = dingId
+            const uid = getState().users.get('authedId')
+            const currentStats = getState().userDings.getIn([uid,dingId])
+            if(currentStats !== userDingStatus.DINGED && currentStats !== userDingStatus.PASSEDBY){
+              createUserDing(uid,dingId,userDingStatus.PASSEDBY)
+                .then(dispatch(addUserDing(uid,dingId,userDingStatus.PASSEDBY)))
+            }
+          }
+        })
+
+        if(isInside){
+          if(!getState().record.get('isInside') || getState().record.get('whichDing') !== whichDing )dispatch(insideDing(whichDing))
+        }else{
+          if(getState().record.get('isInside')) dispatch(outsideDing())
+        }
+
+        return {location,timestamp}
+      })
       .then(({location,timestamp})=>{
         if(refreshCommute(timestamp)){
           // if the commutee is too old reinitiate it
@@ -152,6 +196,8 @@ const initialState = fromJS({
   isRecording: false,
   isCapturing: false,
   isUploading: false,
+  isInside :false,
+  whichDing:'',
   currentCommuteId:'',
   latestLocation:{
     lat: 0,
@@ -183,6 +229,10 @@ export default function record(state=initialState,action){
         isFetchingLatLng:true,
         latestFetchAttempt:Date.now(),
       })
+    case INSIDE_DING:
+      return state.set('isInside',true).set('whichDing',action.dingId)
+    case OUTSIDE_DING:
+      return state.set('isInside',false).set('whichDing','')
     case UPLOADING_CLIP_ERROR:
     case RECORD_ERROR:
     case FETCHING_LATLNG_ERROR:

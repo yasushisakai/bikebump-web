@@ -20,6 +20,9 @@ export function fetchGeoLocation() {
   })
 }
 
+export function formatGoogleStreetViewURL(coordinate,heading=0){
+  return `https://maps.googleapis.com/maps/api/streetview?size=240x320&location=${coordinate.lat},${coordinate.lng}&heading=${heading}`
+}
 
 export function filterStateVariables(key){
   return key !== 'isFetching' && key !== 'lastUpdated' && key !== 'error'
@@ -79,6 +82,7 @@ export function spliceRoad(geometry, {index=0, start, end}){
   let prevCoordinate = lineStringCoordinates[0]
   for(let i=1;i<lineStringCoordinates.length;i++){
     
+    // check if im doing it right
     const partialDistance = distFromLatLngArray(prevCoordinate,lineStringCoordinates[i])
     pivotLength += partialDistance
     const nextPivot = pivotLength/totalLength
@@ -155,8 +159,8 @@ export function updateTimeConstrain (timestamp) {
   return Date.now() - timestamp > renderTimeConstrain 
 }
 
-export function checkLastUpdate (timestamp) {
-  return Date.now() - timestamp > updateDuration
+export function checkLastUpdate (timestamp,scale=1) {
+  return Date.now() - timestamp > (updateDuration*scale)
 }
 
 /**

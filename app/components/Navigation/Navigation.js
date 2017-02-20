@@ -20,7 +20,7 @@ function NavLinks ({isAuthed, isRecording,authedId}) {
   ? <div className={navLink}>
     <Link className={link} to='/record'><Record className={isRecording===true? iconRecording :icon}/></Link>
     <Link className={link} to='/map'><MapIcon className={icon}/></Link>
-    <Link className={link} to='/survey'><Paw className={icon}/></Link>
+    <Link className={link} to={`/user/${authedId}/respond`}><Paw className={icon}/></Link>
   </div>
   : <div className={navLink}>
     <Link className={link} to='/'><Home className={icon}/></Link>

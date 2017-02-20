@@ -2102,6 +2102,10 @@ follow-redirects@1.0.0:
   dependencies:
     debug "^2.2.0"
 
+font-awesome@^4.5.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
+
 for-in@^0.1.5:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-0.1.6.tgz#c9f96e89bfad18a545af5ec3ed352a1d9e5b4dc8"
@@ -2822,6 +2826,25 @@ lazy-cache@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
 
+leaflet-geocoder-mapzen@1.7.1, leaflet-geocoder-mapzen@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/leaflet-geocoder-mapzen/-/leaflet-geocoder-mapzen-1.7.1.tgz#83224becbb9d66df54d30c80a159105e59085365"
+
+leaflet.locatecontrol@0.52.0:
+  version "0.52.0"
+  resolved "https://registry.yarnpkg.com/leaflet.locatecontrol/-/leaflet.locatecontrol-0.52.0.tgz#d77d3fb4369dbc4e41b744dfbbb220306a23d021"
+  dependencies:
+    font-awesome "^4.5.0"
+    leaflet "^0.7.7"
+
+leaflet@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.0.2.tgz#fa4fbcb7844944fc2bfb0bcf9ca0dea13463ca21"
+
+leaflet@^0.7.7:
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-0.7.7.tgz#1e352ba54e63d076451fa363c900890cb2cf75ee"
+
 leaflet@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.0.3.tgz#1f401b98b45c8192134c6c8d69686253805007c8"
@@ -2891,6 +2914,21 @@ lower-case@^1.1.1:
 macaddress@^0.2.8:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/macaddress/-/macaddress-0.2.8.tgz#5904dc537c39ec6dbefeae902327135fa8511f12"
+
+"mapzen-scarab@git+https://github.com/mapzen/scarab.git":
+  version "1.0.0"
+  resolved "git+https://github.com/mapzen/scarab.git#519a86526af18d63eda734057e252b126246a836"
+  dependencies:
+    leaflet-geocoder-mapzen "1.7.1"
+    leaflet.locatecontrol "0.52.0"
+
+mapzen.js@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/mapzen.js/-/mapzen.js-0.6.3.tgz#fea83069cd7c875c406993b9ec202d1898c0c0a6"
+  dependencies:
+    leaflet "1.0.2"
+    leaflet-geocoder-mapzen "^1.7.1"
+    mapzen-scarab "git+https://github.com/mapzen/scarab.git"
 
 math-expression-evaluator@^1.2.14:
   version "1.2.16"

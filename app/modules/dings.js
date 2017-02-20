@@ -1,39 +1,30 @@
 import { fromJS, toJS, Map } from 'immutable'
-import { createNewDing, addDing, appendTimestampToDing, listenToDings, findClosestRoad, fetchDings } from 'helpers/api'
-import { addListener } from 'modules/listeners'
+import { createDing, fetchDings, fetchDing, createUserDing } from 'helpers/api'
+import { addUserDing } from 'modules/userDings' 
 import { distFromLatLng } from 'helpers/utils'
+import { addDingId } from 'modules/dingFeed'
 
-const FETCHING_DING = 'FETCHING_DING'
-const FETCHING_DING_ERROR = 'FETCHING_DING_ERROR'
-const FETCHING_DING_SUCCESS = 'FETCHING_DING_SUCCESS'
+const FETCHING_DINGS = 'FETCHING_DINGS'
+const FETCHING_DINGS_ERROR = 'FETCHING_DINGS_ERROR'
+export const FETCHING_DING_SUCCESS = 'FETCHING_DING_SUCCESS'
 const FETCHING_DINGS_SUCCESS = 'FETCHING_DINGS_SUCCESS'
 const REMOVE_FETCHING = 'REMOVE_FETCHING'
-export const CREATE_DING = 'CREATE_DING'
-export const APPEND_DING = 'APPEND_DING'
 const ADD_MULTIPLE_DINGS = 'ADD_MULTIPLE_DINGS'
 
 
-export function fetchingDing(){
+function fetchingDings(){
   return {
-    type:FETCHING_DING,
+    type:FETCHING_DINGS,
   }
 }
 
-function fetchingDingError(error){
+function fetchingDingsError(error){
   console.warn(error)
   return {
-    type:FETCHING_DING_ERROR,
-    error: 'error fetching ding'
+    type:FETCHING_DINGS_ERROR,
+    error: 'error fetching dings'
   }
 }
-
-function fetchingDingSuccess(ding){
-  return {
-    type:FETCHING_DING_SUCCESS,
-    ding
-  }
-}
-
 
 function fetchingDingsSuccess(dings){
   return {
@@ -42,41 +33,43 @@ function fetchingDingsSuccess(dings){
   }
 }
 
-export function handleFetchingDings(){
-  return function (dispatch) {
-
-    dispatch(fetchingDing())
-
-    return fetchDings()
-      .then(dings=>dispatch(fetchingDingsSuccess(dings)))
-      .catch(error=>dispatch(fetchingDingError(error)))
+function fetchingDingSuccess(dingId,ding){
+  console.log(dingId,ding)
+  return {
+    type:FETCHING_DING_SUCCESS,
+    dingId,
+    ding,
   }
 }
 
+export function handleFetchingDings(){
+  return function (dispatch) {
+    dispatch(fetchingDings())
+    return fetchDings()
+      .then(dings=>dispatch(fetchingDingsSuccess(dings)))
+      .catch(error=>dispatch(fetchingDingsError(error)))
+  }
+}
+
+export function handleFetchingDing(dingId){
+  return function(dispatch,getState){
+    dispatch(fetchingDings())
+    return fetchDing(dingId)
+      .then(ding=>dispatch(fetchingDingSuccess(dingId,ding)))
+      .then(()=>{
+        if(!getState().dingFeed.get('dingIds').has(dingId)){
+          dispatch(addDingId(dingId))
+        }
+      })
+      .catch(error=>dispatch(fetchingDingsError(error)))
+  }
+}
 
 export function removeFetching(){
   return {
     type:REMOVE_FETCHING,
   }
 }
-
-function createDing(ding){
-  return {
-    type:CREATE_DING,
-    ding,
-  }
-}
-
-function appendDing(dingId,{timestamp,uid,value}){
-  return {
-    type:APPEND_DING,
-    dingId,
-    timestamp,
-    uid,
-    value,
-  }
-}
-
 
 
 export function addMultipleDings(dings){
@@ -86,19 +79,19 @@ export function addMultipleDings(dings){
   }
 }
 
-export function handleCreateDing(ding){
-  return function(dispatch) {
-  const {dingId, dingPromise} = addDing(ding)
-  dingPromise
-    .then(()=>{
-      dispatch(createDing({...ding,dingId}))
-    })
-  }
-}
-
+//
+// this creates or append (a timestamp to an existing ding)
+// ding, updates the server, the state will be notified by the listener(dingFeed)
+// + it adds (to both FB and state) and userDing with the status of 'DINGED'
+// 
 export function handleComplieDing(uid,coordinates,timestamp,radius,value){
   return function(dispatch,getState){
-    return createNewDing(coordinates.lat,coordinates.lng,uid,timestamp,value)
+    return createDing(coordinates.lat,coordinates.lng,uid,timestamp,value)
+      .then(dingId=>createUserDing(uid,dingId))
+      .then(response=>{
+        const {uid,dingId,status} = response
+        return dispatch(addUserDing(uid,dingId,status))
+      })
   }
 }
 
@@ -111,11 +104,11 @@ const initialState = fromJS({
 
 export default function dings(state=initialState, action) {
   switch (action.type) {
-    case FETCHING_DING:
+    case FETCHING_DINGS:
       return state.merge({
         isFetching:true
       })
-    case FETCHING_DING_ERROR:
+    case FETCHING_DINGS_ERROR:
       return state.merge({
         isFetching:false,
         error : action.error
@@ -123,7 +116,7 @@ export default function dings(state=initialState, action) {
     case FETCHING_DING_SUCCESS:
       return state.merge({
         isFetching:false,
-        [action.ding.dingId]:action.ding
+        [action.dingId]:action.ding,
       })
     case FETCHING_DINGS_SUCCESS:
       return state.merge({
@@ -131,15 +124,6 @@ export default function dings(state=initialState, action) {
       }).merge(action.dings)
     case REMOVE_FETCHING:
       return state.set('isFetching',false)
-    case CREATE_DING:
-      return state.merge({
-        [action.ding.dingId]:action.ding
-      })
-    case APPEND_DING:
-      return state.setIn(
-        ['dings', action.dingId,'timestamps',action.timestamp],
-        Map({uid:action.uid,timestamp:action.timestamp,value:action.value})
-        )
     case ADD_MULTIPLE_DINGS:
       return state.merge(action.dings)
     default:

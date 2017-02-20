@@ -1,4 +1,5 @@
 import { initialState } from 'config/constants'
+import { checkLastUpdate } from 'helpers/utils'
 import { fetchAll, saveQuestion } from 'helpers/api'
 
 const FETCHING_QUESTIONS = 'FETCHING_QUESTIONS'
@@ -31,9 +32,12 @@ function fetchingQuestionsSuccess (questions) {
 }
 
 export function handleFetchingQuestions (){
-  return function(dispatch){
+  return function(dispatch,getState){
+    if(!checkLastUpdate(getState().questions.get('lastUpdated'),10)){
+      return Promise.resolve(getState().questions)
+    }
     dispatch(fetchingQuestions())
-    fetchAll('questions')
+    return fetchAll('questions')
       .then((questions)=>dispatch(fetchingQuestionsSuccess(questions)))
       .catch((error)=>dispatch(fetchingQuestionsError(error)))
   }

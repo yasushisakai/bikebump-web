@@ -55,6 +55,7 @@ function addResponseError (error) {
 }
 
 export function handleAddResponse (response) {
+  console.log(response)
   return function(dispatch) {
     saveResponse(response)
       .then((responseWithId)=>dispatch(addResponse(responseWithId)))

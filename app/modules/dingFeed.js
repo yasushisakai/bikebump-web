@@ -3,10 +3,12 @@ import { listenToDings } from 'helpers/api'
 import { addListener } from 'modules/listeners'
 import { addMultipleDings, removeFetching } from 'modules/dings'
 
+
 const SETTING_DING_LISTENER = 'SETTING_DING_LISTENER'
 const SETTING_DING_LISTENER_ERROR = 'SETTING_DING_LISTENER_ERROR'
 const SETTING_DING_LISTENER_SUCCESS = 'SETTING_DING_LISTENER_SUCCESS'
 const REMOVE_FEED_FETCHING = 'REMOVE_FEED_FETCHING'
+const ADD_DING_ID = 'ADD_DING_ID'
 
 function settingDingListener () {
   return {
@@ -35,13 +37,20 @@ function removeFeedFetching (){
   }
 }
 
+export function addDingId(dingId){
+  return {
+    type:ADD_DING_ID,
+    dingId,
+  }
+}
+
+
 export function handleSetDingListener () {
   return function (dispatch,getState) {
 
     dispatch(settingDingListener())
 
     if(getState().listeners.get('dings')===true){
-      console.log('ding,true')
       return Promise.resolve(dispatch(removeFeedFetching()))
     }
 
@@ -78,6 +87,8 @@ export default function dingFeed(state=initialState,action){
         error:'',
         dingIds : action.dingIds
       })
+    case ADD_DING_ID:
+      return state.set('dingIds',state.get('dingIds').push(action.dingId))
     case REMOVE_FEED_FETCHING:
       return state.set('isFetching',false)
     default:
