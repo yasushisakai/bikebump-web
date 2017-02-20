@@ -28,10 +28,12 @@ function checkAuth (nextState, replace) {
   const nextPath = nextState.location.pathname
 
   if(isAuthed){
+    console.log('authed')
     if(nextPath=='/'){
       replace('/record')
     }
   }else{
+    console.log('not authed')
     if(nextPath=='/record'){
       replace('/signin')
     }
