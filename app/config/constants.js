@@ -51,4 +51,8 @@ export const isRemote = false
 //
 export const tileURL = 'https://api.mapbox.com/styles/v1/yasushisakai/ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAwNjUzM28weHRuMnJ4a2kifQ.ooHi0pGR-SdDraWzTRCoVA'
 
+export const tinyTileURL = 'https://api.mapbox.com/styles/v1/yasushisakai/cizesntvz00c52sqirwrxlivb/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAwNjUzM28weHRuMnJ4a2kifQ.ooHi0pGR-SdDraWzTRCoVA'
+
 export const attribution = '&copy; Mapbox &copy; OpenStreetMap &copy; DigitalGlobe'
+
+export const tinyAttribution = '&copy; Mapbox &copy; OpenStreetMap'

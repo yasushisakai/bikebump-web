@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {contents} from 'styles/styles.css'
 import {Map} from 'immutable' 
-import {tileURL,attribution} from 'config/constants'
+import {tinyTileURL,tinyAttribution} from 'config/constants'
 import leaflet from 'leaflet'
 // import mapzen from 'mapzen.js'
 import { insertCSSLink } from 'helpers/utils'
@@ -30,8 +30,8 @@ const TinyMapContainer = React.createClass({
     }else{
       position = [42.3602747,-71.0872227]
     }
-    this.map = leaflet.map('tinyMap',{zoomControl:false}).setView(position,17)
-    leaflet.tileLayer(tileURL,{attribution,maxZoom:20}).addTo(this.map)
+    this.map = leaflet.map('tinyMap',{zoomControl:false}).setView(position,16)
+    leaflet.tileLayer(tinyTileURL,{attribution:tinyAttribution,maxZoom:20}).addTo(this.map)
   },
   componentWillUpdate(){
     
@@ -40,11 +40,20 @@ const TinyMapContainer = React.createClass({
       const closestCoordinate = ding.get('closestRoadPoint').toJS()
       const coordinate = ding.get('coordinates').toJS()
 
-      leaflet.circle(coordinate,ding.get('radius'),{...defaultStyle,weight:1, opacity:0.1,color:'#fff'}).addTo(this.map)
-      leaflet.marker(coordinate,{icon}).addTo(this.map)
+      if(this.circle !== undefined) this.map.removeLayer(this.circle)
 
-      leaflet.circle(closestCoordinate,ding.get('radius'),{...defaultStyle,weight:2,color:'#ff0'}).addTo(this.map)
-      leaflet.marker(closestCoordinate,{icon}).addTo(this.map)
+      this.circle = leaflet.circle(coordinate,ding.get('radius'),{...defaultStyle,weight:1, opacity:0.1,color:'#ff0'}).addTo(this.map)
+
+      if(this.marker !== undefined) this.map.removeLayer(this.marker)
+
+      this.marker = leaflet.marker(coordinate,{icon}).addTo(this.map)
+
+      if(this.closestCircle !== undefined) this.map.removeLayer(this.closestCircle)
+
+      this.closestCircle = leaflet.circle(closestCoordinate,ding.get('radius'),{...defaultStyle,weight:2,color:'#f00'}).addTo(this.map)
+
+      if(this.closesetMarker !== undefined) this.map.removeLayer(this.closesetMarker)
+      this.closesetMarker = leaflet.marker(closestCoordinate,{icon}).addTo(this.map)
 
       this.map.panTo(coordinate)
       // this.map.zoomIn(14,{animate:true,duration:5})
