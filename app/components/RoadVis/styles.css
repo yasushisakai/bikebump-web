@@ -1,9 +1,11 @@
 .midMapContents {
-  flex: 1;
+  flex: 5;
   display: flex;
   flex-flow: column;
 }
 
 .roadInfoContents{
   flex: 1;
+  margin:15px 5% 5px 5%;
+  font-size: 0.7em;
 }

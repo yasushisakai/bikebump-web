@@ -61,23 +61,23 @@ const MapVisContainer = React.createClass({
     //
     // plot commutes
     //
-    if(checkLastUpdate(this.props.commutes.get('lastUpdated'))){
-      this.props.handleFetchingCommutes()
-        .then((result)=>{
-          Object.keys(result.commutes)
-            .map(key=>{
-              // console.log(key)
-              plotCommute(result.commutes[key],this.map)
-            })
-        })
-    }else{
-      this.props.commutes.keySeq().toArray()
-        .filter(key=>filterStateVariables(key))
-        .map(key=>{
-          // console.log(key)
-          plotCommute(this.props.commutes.get(key).toJS(),this.map)
-        })
-    }
+    // if(checkLastUpdate(this.props.commutes.get('lastUpdated'))){
+    //   this.props.handleFetchingCommutes()
+    //     .then((result)=>{
+    //       Object.keys(result.commutes)
+    //         .map(key=>{
+    //           // console.log(key)
+    //           plotCommute(result.commutes[key],this.map)
+    //         })
+    //     })
+    // }else{
+    //   this.props.commutes.keySeq().toArray()    FIXME
+    //     .filter(key=>filterStateVariables(key))
+    //     .map(key=>{
+    //       // console.log(key)
+    //       plotCommute(this.props.commutes.get(key).toJS(),this.map)
+    //     })
+    // }
 
     //
     // plot dings
@@ -105,7 +105,10 @@ const MapVisContainer = React.createClass({
     console.log(dingId)
   },
   componentWillUnmount(){
-    // this.map.remove()
+    this.map.eachLayer((layer)=>{
+      this.map.removeLayer(layer)
+    })
+    this.map.remove()
   },
   render () {
     return (

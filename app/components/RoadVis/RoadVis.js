@@ -16,7 +16,7 @@ export default function RoadVis (props) {
         <MidMapContainer roadId={props.roadId} />
       </div>
       <div className={roadInfoContents}>
-        {'roadInfo'}
+        {'Choose one proposal for each segment. The influence of one vote is increased by answering surveys (paw button). Costly options will damp your vote.'}
       </div>
     </div>
   )

@@ -98,7 +98,6 @@ const RespondContainer = React.createClass({
         }
       })
     })
-    console.log(unansweredResponses.length)
     return unansweredResponses
   },
   handleNext(){

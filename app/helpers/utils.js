@@ -56,11 +56,11 @@ export function getCenter(coordinates){
 }
 
 export function pointFromParameter(start,end,parameter){
-  const delta = [end[0]-start[0],end[1]-start[1]]
-  return [
-  start[0]+delta[0]*parameter,
-  start[1]+delta[1]*parameter
-  ]
+  const delta = {lat:end.lat-start.lat,lng:end.lng-start.lng}
+  return {
+  lat:start.lat+delta.lat*parameter,
+  lng:start.lng+delta.lng*parameter
+  }
 }
 
 
@@ -83,7 +83,7 @@ export function spliceRoad(geometry, {index=0, start, end}){
   for(let i=1;i<lineStringCoordinates.length;i++){
     
     // check if im doing it right
-    const partialDistance = distFromLatLngArray(prevCoordinate,lineStringCoordinates[i])
+    const partialDistance = distFromLatLng(prevCoordinate,lineStringCoordinates[i])
     pivotLength += partialDistance
     const nextPivot = pivotLength/totalLength
 
@@ -94,11 +94,13 @@ export function spliceRoad(geometry, {index=0, start, end}){
       isInside = true
     }
 
+
     if(isInside && nextPivot > end){
       const lastPoint = pointFromParameter(prevCoordinate,lineStringCoordinates[i],(end-pivot)/(nextPivot-pivot))
       points.push(lastPoint)
       break; 
     }
+
 
     if(isInside){
       points.push(lineStringCoordinates[i])
@@ -200,14 +202,20 @@ function distFromLatLngArray(start,end){
   })
 }
 
+export function randomColor(){
+  let color = '#'
+  for(let i=0;i<3;i++){
+    color+=("0"+(Math.floor(256*Math.random()).toString(16))).slice(-2).toUpperCase()
+  }
+  return color
+}
+
 export function getTotalLength(geometry){
   if(geometry.type === 'LineString'){
     return geometry.coordinates.reduce((length,coordinate,index,coordinates)=>{
       if(index === 0 ) return 0
       else{
-        const previousCoordinate = {lat:coordinates[index-1][0],lng:coordinates[index-1][1]}
-        const currentCoordinate = {lat:coordinate[0],lng:coordinate[1]}
-        return length + distFromLatLng(previousCoordinate,currentCoordinate)
+        return length + distFromLatLng(coordinates[index-1],coordinate)
       }
     },0)
   }else if(geometry.type === "MultiLineString"){
@@ -215,10 +223,7 @@ export function getTotalLength(geometry){
       const lineStringLength = lineString.reduce((partialLength,coordinate,index,coordinates)=>{
         if(index === 0 ) return 0
         else{
-          const previousCoordinate = {lat:coordinates[index-1][0],lng:coordinates[index-1][1]}
-          const currentCoordinate = {lat:coordinate[0],lng:coordinate[1]}
-
-          return partialLength + distFromLatLng(previousCoordinate,currentCoordinate)
+          return partialLength + distFromLatLng(coordinates[index-1],coordinate)
         }
       },0)
       return length+lineStringLength 

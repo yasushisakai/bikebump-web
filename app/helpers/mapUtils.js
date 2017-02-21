@@ -1,6 +1,7 @@
 import leaflet from 'leaflet'
 import { Map } from 'immutable'
 import { imgRoot } from 'config/constants'
+import { randomColor } from 'helpers/utils'
 
 export const defaultStyle={
   lineCap:'butt',
@@ -17,6 +18,9 @@ export const icon = leaflet.icon({
   popUpAnchor : [3,3],
 })
 
+export const popUpButtonStyleDisabled='cursor:pointer;padding:8px;font-size:1.5em;border:none;background-color:#fff;color:#ddd;'
+
+export const popUpButtonStyleEnabled='cursor:pointer;padding:8px;font-size:1.5em;border:none;background-color:#fff;color:#F7D008;'
 
 function latLngToPoint(coordinate){
   return leaflet.point(coordinate.lat,coordinate.lng)
@@ -101,9 +105,6 @@ export function plotRoad(road,_map,customStyle,callback) {
     path.addTo(_map)
   }else{ // multilineString
     road.geometry.coordinates.map((coordinates)=>{
-      const lineString = coordinates.map((coordinate)=>{
-        return coordinate.reverse()
-      })
       const path = leaflet.polyline(coordinates,style)
         path.addEventListener('click', ()=>callback(road.properties.id))
         path.addTo(_map)
@@ -112,18 +113,9 @@ export function plotRoad(road,_map,customStyle,callback) {
   }
 }
 
-
-export function plotSpliced(splicedRoad,map,customStyle={}){
-  //flip
-
-  const flipped = splicedRoad.map((coordinate)=>{
-    console.log(coordinate)
-    return coordinate.reverse()
-  })
-
-  const style={...defaultStyle, ...customStyle}
-
-  leaflet.polyline(flipped,style).addTo(map)
+export function plotPolyline(coords,_map,customStyle){
+  const style = {...defaultStyle, opacity:0.4, weight:10,color:randomColor() ,...customStyle}
+  return leaflet.polyline(coords,style).addTo(_map)
 }
 
 
@@ -140,24 +132,32 @@ export function plotCommute(commute,map,customStyle={}){
       return commute[key]
     })
 
-    const style = {...defaultStyle, opacity:0.1, weight:10,...customStyle}
+    const style = {...defaultStyle, opacity:0.1, weight:10, clickable:false, ...customStyle}
 
   leaflet.polyline(coords,style).addTo(map)
 }
 
 export function plotDing(ding,map,customStyle={}){
   const coords = ding.coordinates
-  const style = {...defaultStyle,...customStyle} 
+  const style = {...defaultStyle,clickable:false,weight:2, opacity:0.7,...customStyle} 
   // marker
-  leaflet.marker(coords,{icon}).addTo(map)
+  leaflet.marker(coords,{icon,clickable:false}).addTo(map)
   // circle
-  leaflet.circle(coords,10,style).addTo(map)
+  //leaflet.circle(coords,10,style).addTo(map)
   // line to cp
-  leaflet.polyline([coords,ding.closestRoadPoint],defaultStyle,map).addTo(map)
+  leaflet.polyline([coords,ding.closestRoadPoint],style,map).addTo(map)
 
-
+  let skip = false
+  let cnt = 0
   Object.keys(ding.timestamps).map((timestamp,index)=>{
-    leaflet.circle(coords,10+3*(index+1),style).addTo(map)
+    let colored = style
+    if(ding.timestamps[timestamp].value===0){
+      colored.color='#F20056'
+    }else{
+      colored.color = '#336699'
+    }
+
+    leaflet.circle(coords,10+3*(index),style).addTo(map)
   })
 
 }

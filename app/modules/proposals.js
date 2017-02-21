@@ -1,6 +1,7 @@
 import { fromJS,List } from 'immutable'
-import { save, saveProposal, fetchAll } from 'helpers/api'
+import { save, saveProposal, fetchPropsals  } from 'helpers/api'
 import { initialState } from 'config/constants'
+import {ADD_USER_VOTE,REMOVE_USER_VOTE} from 'modules/userVotes'
 
 const FETCHING_PROPOSALS = 'FETCHING_PROPOSALS'
 const FETCHING_PROPOSALS_ERROR = 'FETCHING_PROPOSALS_ERROR'
@@ -8,9 +9,6 @@ const FETCHING_PROPOSALS_SUCCESS = 'FETCHING_PROPOSALS_SUCCESS'
 
 const ADD_PROPOSAL = 'ADD_PROPOSAL'
 const ADD_PROPOSAL_ERROR = 'ADD_PROPOSAL_ERROR'
-
-const ADD_VOTE = 'ADD_VOTE'
-const REMOVE_VOTE = 'REMOVE_VOTE'
 
 
 function fetchingProposals() {
@@ -27,9 +25,10 @@ function fetchingProposalsError(error) {
   }
 }
 
-function fetchingProposalsSuccess(proposals) {
+function fetchingProposalsSuccess(roadId,proposals) {
   return {
     type: FETCHING_PROPOSALS_SUCCESS,
+    roadId,
     proposals
   }
 }
@@ -49,11 +48,11 @@ function addProposalError(error){
   }
 }
 
-export function handleFetchingProposals () {
+export function handleFetchingProposals (roadId) {
   return function(dispatch) {
     dispatch(fetchingProposals())
-    fetchAll('proposals')
-      .then((proposals)=>dispatch(fetchingProposalsSuccess(proposals)))
+    return fetchPropsals(roadId)
+      .then((proposals)=>dispatch(fetchingProposalsSuccess(roadId,proposals)))
       .catch((error)=>dispatch(fetchingProposalsError(error)))
   }
 }
@@ -66,21 +65,23 @@ export function handleAddProposal (proposal) {
   }
 }
 
-export function addVote (uid,roadId,proposalId) {
-  return {
-    type:ADD_VOTE,
-    roadId,
-    proposalId,
-    uid,
-  }
-}
+const initialProposalState = fromJS({
+  domain :{},
+  proposalId:'',
+  votes:{},
+  patternId: '',
+  roadId: '',
+})
 
-export function removeVote(uid,roadId,proposalId) {
-  return {
-    type:REMOVE_VOTE,
-    roadId,
-    proposalId,
-    uid,
+function proposal(state=initialProposalState,action){
+  switch(action.type){
+    case ADD_USER_VOTE:
+      return state.setIn(['votes',action.vote.uid],true)
+    case REMOVE_USER_VOTE:
+      console.log(action)
+      return state.deleteIn(['votes',action.vote.uid])
+    default:
+      return state
   }
 }
 
@@ -98,14 +99,14 @@ export default function proposals (state=initialState, action){
     case FETCHING_PROPOSALS_SUCCESS:
       return state.merge({
         isFetching:false,
-        error:''
-      }).merge(action.proposals)
+        error:'',
+        [action.roadId]:action.proposals,
+      })
     case ADD_PROPOSAL:
       return state.setIn([action.proposal.roadId,action.proposal.proposalId],action.proposal)
-    case ADD_VOTE:
-      return state.setIn([`${action.roadId}`,action.proposalId,'votes',action.uid],true)
-    case REMOVE_VOTE:
-      return state.deleteIn([`${action.roadId}`,action.proposalId,'votes',action.uid])
+    case ADD_USER_VOTE:
+    case REMOVE_USER_VOTE:
+      return state.setIn([`${action.vote.roadId}`,action.vote.proposalId],proposal(state.getIn([`${action.vote.roadId}`,action.vote.proposalId]),action))
     default:
       return state
       break;
