@@ -30,7 +30,6 @@ const TinyMapContainer = React.createClass({
     }else{
       position = [42.3602747,-71.0872227]
     }
-
     this.map = leaflet.map('tinyMap',{zoomControl:false}).setView(position,17)
     leaflet.tileLayer(tileURL,{attribution,maxZoom:20}).addTo(this.map)
   },
@@ -52,7 +51,7 @@ const TinyMapContainer = React.createClass({
     }
   },
   componentWillUnmount(){
-    // this.map.remove()
+    this.map.remove()
   },
   render () {
     return (

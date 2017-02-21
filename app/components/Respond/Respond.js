@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { contents } from 'styles/styles.css'
-import { StreetViewContainer, TinyMapContainer, QuestionPanelContainer } from 'containers'
+import { StreetViewContainer, TinyMapContainer, QuestionPanelContainer, StreetSideContainer } from 'containers'
 import {
   info, 
   mapAndStreetView,
@@ -42,7 +42,7 @@ export default function Respond (props) {
           <TinyMapContainer dingId={props.dingId}/>
         </div>
         <div className={streetView}>
-          <StreetViewContainer dingId={props.dingId} />
+          <StreetSideContainer dingId={props.dingId} />
         </div>
       </div>
       <div className={question}>

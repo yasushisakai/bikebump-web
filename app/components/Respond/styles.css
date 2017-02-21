@@ -1,5 +1,5 @@
 .info{
-  flex: 1;
+  flex: 0 0 auto;
   font-size: 0.5em;
   display: flex;
   flex-flow: row;
@@ -21,10 +21,12 @@
 
 .streetView{
   flex:1;
+  display: flex;
+  flex-flow: column;
 }
 
 .question {
-  flex: 5;
+  flex: 3;
   margin: 5px 3% 5px 3%;
   font-size:1.2em;
   display: flex;
@@ -60,8 +62,8 @@
 
 .nextButton {
   flex : 1;
-  font-size: 1.5em;
-  margin: 5px 5% 5px 5%;
+  font-size: 1.0em;
+  margin: 0 20px 5%;
   background-color: #555555;
   display: flex;
   align-items: center;
