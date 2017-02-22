@@ -37,7 +37,7 @@ const TinyMapContainer = React.createClass({
     
     if(this.props.dingId !== '' ){
       const ding = this.props.dings.get(this.props.dingId)
-      const closestCoordinate = ding.get('closestRoadPoint').toJS()
+      
       const coordinate = ding.get('coordinates').toJS()
 
       if(this.circle !== undefined) this.map.removeLayer(this.circle)
@@ -50,10 +50,13 @@ const TinyMapContainer = React.createClass({
 
       if(this.closestCircle !== undefined) this.map.removeLayer(this.closestCircle)
 
-      this.closestCircle = leaflet.circle(closestCoordinate,ding.get('radius'),{...defaultStyle,weight:2,color:'#f00'}).addTo(this.map)
+      if(ding.has('closestRoadPoint')){
+        const closestCoordinate = ding.get('closestRoadPoint').toJS()
+        this.closestCircle = leaflet.circle(closestCoordinate,ding.get('radius'),{...defaultStyle,weight:2,color:'#f00'}).addTo(this.map)
 
-      if(this.closesetMarker !== undefined) this.map.removeLayer(this.closesetMarker)
-      this.closesetMarker = leaflet.marker(closestCoordinate,{icon}).addTo(this.map)
+        if(this.closesetMarker !== undefined) this.map.removeLayer(this.closesetMarker)
+        this.closesetMarker = leaflet.marker(closestCoordinate,{icon}).addTo(this.map)
+      }
 
       this.map.panTo(coordinate)
       // this.map.zoomIn(14,{animate:true,duration:5})

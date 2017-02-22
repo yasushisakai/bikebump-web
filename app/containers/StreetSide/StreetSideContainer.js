@@ -28,7 +28,13 @@ const StreetSideContainer = React.createClass({
 
     // this.getBingMap(this.element)
     if(this.props.dingId !== '' && this.props.ding !== new Map() && this.element){
-      const location=this.props.ding.get('closestRoadPoint').toJS()
+      let location
+      if(this.props.ding.has('closestRoadPoint')){
+        location=this.props.ding.get('closestRoadPoint').toJS()
+      }else{
+        location=this.props.ding.get('coordinates').toJS()
+      }
+      
       const arrayLocation = [location.lat,location.lng]
       const direction = this.props.ding.get('direction').toJS()
       const angle = Math.atan2(direction.y,direction.x)*(180/Math.PI)
@@ -57,17 +63,18 @@ const StreetSideContainer = React.createClass({
       })
   },
   componentWillUpdate(){
-      console.log('hi there')
-      if(this.props.dingId !== '' && this.props.ding !== new Map() && this.element){
-      const location=this.props.ding.get('closestRoadPoint').toJS()
+      let location
+      if(this.props.ding.has('closestRoadPoint')){
+        location=this.props.ding.get('closestRoadPoint').toJS()
+      }else{
+        location=this.props.ding.get('coordinates').toJS()
+      }
       const arrayLocation = [location.lat,location.lng]
       const direction = this.props.ding.get('direction').toJS()
       const angle = Math.atan2(direction.y,direction.x)*(180/Math.PI)
       this.map.setView({center:new Microsoft.Maps.Location(arrayLocation[0],arrayLocation[1]),heading:angle})
-    }
   },
   render () {
-
     return (<div id='streetSide' className={streetSideMap}></div>)
   },
 })

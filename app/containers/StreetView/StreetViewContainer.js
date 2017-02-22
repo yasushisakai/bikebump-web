@@ -13,17 +13,15 @@ const StreetViewContainer = React.createClass({
     ding : PropTypes.instanceOf(Map).isRequired,
     handleFetchingDing : PropTypes.func.isRequired,
   },
-  // googleStreetViewTag(){
-  //   if(this.props.dingId !== '' && this.props.ding !== new Map()){
-  //     const url = formatGoogleStreetViewURL(this.props.ding.get('closestRoadPoint').toJS())
-  //     return <img src={url}/>
-  //   }else{
-  //     return null
-  //   }
-  // },
     googleStreetViewTag(){
     if(this.props.dingId !== '' && this.props.ding !== new Map()){
-      const url = formatGoogleStreetViewURL(this.props.ding.get('closestRoadPoint').toJS())
+      let url
+      if(this.props.ding.has('closestRoadPoint')){
+        url = formatGoogleStreetViewURL(this.props.ding.get('closestRoadPoint').toJS())
+      }
+      else{
+        url = formatGoogleStreetViewURL(this.props.ding.get('coordinates').toJS())
+      }
       return {height:'100%',background:`url(${url}) center center no-repeat`,backgroundSize:'cover'}
     }else{
       return {}

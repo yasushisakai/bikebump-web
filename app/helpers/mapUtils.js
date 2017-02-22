@@ -145,7 +145,7 @@ export function plotDing(ding,map,customStyle={}){
   // circle
   //leaflet.circle(coords,10,style).addTo(map)
   // line to cp
-  leaflet.polyline([coords,ding.closestRoadPoint],style,map).addTo(map)
+  //leaflet.polyline([coords,ding.closestRoadPoint],style,map).addTo(map)
 
   let skip = false
   let cnt = 0

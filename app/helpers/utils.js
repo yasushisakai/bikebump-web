@@ -6,7 +6,9 @@ import {
   updateDuration,
 } from 'config/constants'
 
-export function fetchGeoLocation() {
+import axios from 'axios'
+
+export function fetchGeoLocationNative() {
   return new Promise(function(resolve, reject) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -18,6 +20,12 @@ export function fetchGeoLocation() {
         enableHighAccuracy: true
       })
   })
+}
+
+export function fetchGeoLocation(){
+  return axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAmEAPgEUYJ71CWYjtz4vAvjXCpABpF_aU')
+    .then((result)=>result.data.location)
+    .catch((error)=>console.error(error))
 }
 
 export function formatGoogleStreetViewURL(coordinate,heading=0){
