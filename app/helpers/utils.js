@@ -8,7 +8,7 @@ import {
 
 import axios from 'axios'
 
-export function fetchGeoLocationNative() {
+export function fetchGeoLocation() {
   return new Promise(function(resolve, reject) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -22,7 +22,7 @@ export function fetchGeoLocationNative() {
   })
 }
 
-export function fetchGeoLocation(){
+export function fetchGeoLocationGoogle(){
   return axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAmEAPgEUYJ71CWYjtz4vAvjXCpABpF_aU')
     .then((result)=>result.data.location)
     .catch((error)=>console.error(error))
