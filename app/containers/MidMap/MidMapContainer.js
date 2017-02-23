@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
-import { insertCSSLink, spliceRoad } from 'helpers/utils'
+import { spliceRoad } from 'helpers/utils'
 import { tileURL, attribution} from 'config/constants'
 import { mapContents } from './styles.css'
 import * as roadActionCreators from 'modules/roads'
@@ -27,7 +27,6 @@ const MidMapContainer = React.createClass({
     handleAddVote:PropTypes.func.isRequired,
   },
   componentDidMount(){
-    insertCSSLink('https://unpkg.com/leaflet@1.0.2/dist/leaflet.css')
 
     this.props.handleFetchingPatterns()
     this.props.handleFetchingProposals(this.props.roadId)

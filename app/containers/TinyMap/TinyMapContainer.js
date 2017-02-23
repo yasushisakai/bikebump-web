@@ -6,7 +6,6 @@ import {Map} from 'immutable'
 import {tinyTileURL,tinyAttribution} from 'config/constants'
 import leaflet from 'leaflet'
 // import mapzen from 'mapzen.js'
-import { insertCSSLink } from 'helpers/utils'
 import { icon, defaultStyle } from 'helpers/mapUtils'
 
 import * as dingActionCreators from 'modules/dings'
@@ -21,8 +20,6 @@ const TinyMapContainer = React.createClass({
     nextResponsePair : PropTypes.array.isRequired,
   },
   componentDidMount(){
-
-    insertCSSLink('https://mapzen.com/js/mapzen.css')
 
     let position;
     if(this.props.latestLocation.lat === '0' && this.props.latestLocation.lng === '0'){

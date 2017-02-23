@@ -22,11 +22,6 @@ export function fetchGeoLocation() {
   })
 }
 
-export function fetchGeoLocationGoogle(){
-  return axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAmEAPgEUYJ71CWYjtz4vAvjXCpABpF_aU')
-    .then((result)=>result.data.location)
-    .catch((error)=>console.error(error))
-}
 
 export function formatGoogleStreetViewURL(coordinate,heading=0){
   return `https://maps.googleapis.com/maps/api/streetview?size=240x320&location=${coordinate.lat},${coordinate.lng}&heading=${heading}`
@@ -43,10 +38,6 @@ export function fitCanvas(canvas){
   const boundingRect = canvas.getBoundingClientRect()
   canvas.width = boundingRect.width
   canvas.height = boundingRect.height
-}
-
-export function flipCoordinate(coordinate){
-  return coordinate.reverse()
 }
 
 export function indexToFrequency(index,analyser) {
@@ -70,7 +61,6 @@ export function pointFromParameter(start,end,parameter){
   lng:start.lng+delta.lng*parameter
   }
 }
-
 
 export function spliceRoad(geometry, {index=0, start, end}){
   const totalLength = getSingleLineStringLength(geometry,index)
@@ -132,8 +122,6 @@ export function getSlopes (dataArray, target, range=2) {
   let result = [dataArray[target-range],dataArray[target+range]]
   return result.map((value)=>(targetValue-value)/range)
 }
-
-
 
 export function formatUser(name, email, avatar, uid) {
   return {
@@ -259,17 +247,6 @@ export function refreshLatLng(timestamp) {
 
 export function refreshCommute(timestamp) {
   return Date.now() - timestamp >= maxCommuteLife 
-}
-
-export function insertCSSLink(url) {
-  let head = document.head
-  let link = document.createElement('link')
-
-  link.type = 'text/css'
-  link.rel = 'stylesheet'
-  link.href = url
-
-  head.appendChild(link)
 }
 
 export function clearStorage() {

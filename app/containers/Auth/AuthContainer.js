@@ -43,9 +43,13 @@ const AuthContainer = React.createClass({
     ? this.context.router.push('record')
     : null
   },
+
   signInButtons () {
     if(localStorage.getItem('provider') === null){
-      return Object.values(services).map((service)=>{
+      return Object.keys(services).map((key)=>{ 
+        // Inigo bug: chrome ver:51.02704, Android ver 5.1.1
+        // Object.values is from chrome ver.54 and later
+        const service = services[key]
         return <AuthButton 
           onClick={this.props.handleUserAuthRedirect}
           service={service}
@@ -58,6 +62,7 @@ const AuthContainer = React.createClass({
         />
     }
   },
+
   render () {
     return (
       <Auth>
