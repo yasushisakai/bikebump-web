@@ -106,6 +106,9 @@ const MidMapContainer = React.createClass({
     container.appendChild(button)
     return container
   },
+  componentWillUpdate(){
+    this.map.invalidateSize()
+  },
   render () {
     if(!this.props.isFetching && this.props.road !== undefined && this.map){
       let cnt = 0

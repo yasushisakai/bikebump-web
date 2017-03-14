@@ -10,6 +10,7 @@ export default function User (props) {
     {'User'}
     <h2>Settings</h2>
     <Link to={calibrateLink}><div> calibrate </div></Link>
+    <Link to='/logout'>Logout</Link>
     </div>
   )
 }

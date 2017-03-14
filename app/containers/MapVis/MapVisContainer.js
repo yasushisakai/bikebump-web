@@ -96,6 +96,8 @@ const MapVisContainer = React.createClass({
             })
         })
     }
+
+
   },
   handleClickRoad(roadId){
     //console.log(roadId)
@@ -109,6 +111,9 @@ const MapVisContainer = React.createClass({
       this.map.removeLayer(layer)
     })
     this.map.remove()
+  },
+  componentWillUpdate(){
+    this.map.invalidateSize() // to show the whole tiles
   },
   render () {
     return (
