@@ -18,6 +18,8 @@ Navigation.propTypes=NavLinks.propTypes=ActionLinks.propTypes={
 
 const respondDivStyle={
   backgroundImage : `url(${imgRoot}choose.png)`,
+  backgroundSize:'50px 50px',
+  backgroundRepeat : 'no-repeat',
   width:'50px',
   height:'50px',
   display:'inline-block',
