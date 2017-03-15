@@ -182,6 +182,9 @@ const RecordContainer = React.createClass({
       this.pen.noStroke()
       this.pen.fill('red')
     }else{
+      this.pen.noStroke()
+      this.pen.fill('white')
+      this.pen.text('push to record your commute',this.canvas.width/2,this.canvas.height/4)
       this.pen.noFill()
       this.pen.stroke('white')
     }

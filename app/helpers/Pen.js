@@ -11,7 +11,7 @@ export default class Pen {
 
     this.ctx.textAlign = 'center'
     this.ctx.textBaseline = 'bottom'
-    this.ctx.font = '12px sans-serif'
+    this.ctx.font = '16px sans-serif'
     this.strokeWidth(1)
 
   }
