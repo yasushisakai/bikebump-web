@@ -1,6 +1,12 @@
 import React, { PropTypes } from 'react'
 import { contents } from 'styles/styles.css'
-import { StreetViewContainer, TinyMapContainer, QuestionPanelContainer, StreetSideContainer } from 'containers'
+import { 
+  QuestionPanelContainer,
+  MapAndStreetViewContainer,
+  StreetSideContainer,
+  TinyMapContainer, 
+  } from 'containers'
+
 import {
   info, 
   mapAndStreetView,
@@ -31,7 +37,7 @@ export default function Respond (props) {
   //   return optionDivs
   // }
   // return null
-  return props.hasUnanswered 
+/*  return props.hasUnanswered 
    ?(
     <div className={contents} >
       <div className={info}>
@@ -53,4 +59,20 @@ export default function Respond (props) {
       </div>
     </div>)
    : <div> {'no questions to ask, either pass by a ding or report by ringing the bell yourself!'} </div>
+*/
+   return (
+     <div className={contents}>
+       <div className={info}>
+         {'info'}
+       </div>
+       <div className={mapAndStreetView}>
+         <MapAndStreetViewContainer dingId={props.dingId}/>
+       </div>
+       <div className={question}>
+       </div>
+       <div className={footer}>
+       </div>
+     </div>
+   )
+
 }
