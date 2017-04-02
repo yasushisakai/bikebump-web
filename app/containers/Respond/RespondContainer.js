@@ -31,7 +31,6 @@ const RespondContainer = React.createClass({
   componentDidMount(){
 
     // let's assume that we have questions dings and responses
-
     this.props.handleSetDingListener()
 
     const promises = [

@@ -10,7 +10,7 @@ export const dingDetectionGap = 120
 export const updateDuration = 1 * 60 * 1000 // 1min 
 
 export const initialState = new Map({
-  isFetching: true,
+  isFetching: false,
   error: '',
   lastUpdated: 0,
 })

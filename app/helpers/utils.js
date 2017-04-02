@@ -31,6 +31,9 @@ export function filterStateVariables(key){
   return key !== 'isFetching' && key !== 'lastUpdated' && key !== 'error'
 }
 
+// TODO: write function to extract unanswered respondes
+// this is already implemented in RespondContainer.js
+
 export function fitCanvas(canvas){
   canvas.style.width = '100%'
   canvas.style.height = '100%'
@@ -158,6 +161,11 @@ export function updateTimeConstrain (timestamp) {
 }
 
 export function checkLastUpdate (timestamp,scale=1) {
+  console.warn('check Last Update is deprecated, change to isModuleStale')
+  return Date.now() - timestamp > (updateDuration*scale)
+}
+
+export function isModuleStale (timestamp,scale=1) {
   return Date.now() - timestamp > (updateDuration*scale)
 }
 

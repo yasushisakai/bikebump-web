@@ -40,7 +40,9 @@ function checkAuth (nextState, replace) {
 }
 
 const mode = isProduction === true ? 'production': 'development' 
+console.clear()
 console.log(`bikebump running (${mode})`)
+
 
 
 let app = document.getElementById('app')

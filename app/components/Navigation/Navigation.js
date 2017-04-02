@@ -16,6 +16,10 @@ Navigation.propTypes=NavLinks.propTypes=ActionLinks.propTypes={
   isRecording : PropTypes.bool.isRequired,
 }
 
+Navigation.defaultProps = {
+  isRecording : false,
+}
+
 const respondDivStyle={
   backgroundImage : `url(${imgRoot}choose.png)`,
   backgroundSize:'50px 50px',

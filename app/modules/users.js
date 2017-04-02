@@ -6,6 +6,7 @@ import { auth, redirectAuth, getCurrentUser, logout } from 'helpers/auth'
 const FETCHING_USER = 'FETCHING_USER'
 const FETCHING_USER_ERROR = 'FETCHING_USER_ERROR'
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
+const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER'
 
 const AUTH_USER = 'AUTH_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
@@ -30,6 +31,12 @@ export function fetchingUserSuccess(uid,user,timestamp){
     uid,
     user,
     timestamp,
+  }
+}
+
+export function removeFetchingUser () {
+  return {
+    type:REMOVE_FETCHING_USER,
   }
 }
 
@@ -113,7 +120,7 @@ function user(state=initialUserState,action){
 const initialState = fromJS({
   isAuthed: false,
   authedId: '',
-  isFetching: true,
+  isFetching: false,
   error: '',
 })
 
@@ -123,6 +130,8 @@ export default function users(state = initialState, action) {
       return state.merge({
         isFetching: true,
       })
+    case REMOVE_FETCHING_USER:
+      return state.set('isFetching',false)
     case FETCHING_USER_ERROR:
       return state.merge({
         isFetching: false,

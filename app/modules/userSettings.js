@@ -1,14 +1,17 @@
 import {initialState as baseState } from 'config/constants'
 import { fromJS } from 'immutable'
 import { fetchUserSettings, updateUserSettings } from 'helpers/api'
+import { isModuleStale } from 'helpers/utils'
 
 const FETCHING_USER_SETTINGS = 'FETCHING_USER_SETTINGS'
 const FETCHING_USER_SETTINGS_ERROR = 'FETCHING_USER_SETTINGS_ERROR'
 const FETCHING_USER_SETTINGS_SUCCESS = 'FETCHING_USER_SETTINGS_SUCCESS'
+const REMOVE_FETCHING_USER_SETTINGS = 'REMOVE_FETCHING_USER_SETTINGS'
 const UPDATE_USER_TARGET_FREQUENCY = 'UPDATE_USER_TARGET_FREQUENCY'
 const DISABLE_RING_BELL_MODE = 'DISABLE_RING_BELL_MODE'
 const ENABLE_RING_BELL_MODE = 'ENABLE_RING_BELL_MODE'
 const TOGGLE_CALIBRATION = 'TOGGLE_CALIBRATION'
+
 
 function fetchingUserSettings () {
   return {
@@ -29,6 +32,12 @@ function fetchingUserSettingsSuccess (uid,settings) {
     type:FETCHING_USER_SETTINGS_SUCCESS,
     uid,
     settings
+  }
+}
+
+function removeFetchingUserSettings () {
+  return {
+    type:REMOVE_FETCHING_USER_SETTINGS,
   }
 }
 
@@ -62,8 +71,18 @@ export  function toggleCalibration (){
 
 // this returns a promise 
 export function handleFetchingUserSettings (uid) {
-  return function (dispatch) {
+  return function (dispatch,getState) {
+    
+    if(getState().userSettings.get('isFetching')){
+      return
+    }
+
     dispatch(fetchingUserSettings())
+    if(!isModuleStale(getState().userSettings.get('lastUpdated'))) {
+    // it's fresh!
+      return Promise.resolve(dispatch(removeFetchingUserSettings()))
+    }
+
     return fetchUserSettings(uid)
       .then((settings)=>dispatch(fetchingUserSettingsSuccess(uid,settings)))
       .catch((error)=>dispatch(fetchingUserSettingsError(error)))
@@ -105,7 +124,7 @@ const initialState = baseState.merge({
 export default function userSettings (state = initialState, action) {
   switch (action.type) {
     case FETCHING_USER_SETTINGS:
-      return state.set('isFetching',true)
+      return state.set('isFetching', true)
     case FETCHING_USER_SETTINGS_ERROR:
       return state.merge({
         isFetching:false,
@@ -116,6 +135,8 @@ export default function userSettings (state = initialState, action) {
         isFetching:false,
         [action.uid]:settings(state.get(action.uid),action)
       })
+    case REMOVE_FETCHING_USER_SETTINGS:
+      return state.set('isFetching', false)
     case UPDATE_USER_TARGET_FREQUENCY:
     case DISABLE_RING_BELL_MODE:
     case ENABLE_RING_BELL_MODE:

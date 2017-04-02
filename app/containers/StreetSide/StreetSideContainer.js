@@ -78,6 +78,7 @@ const StreetSideContainer = React.createClass({
         const angle = Math.atan2(direction.y,direction.x)*(180/Math.PI)
         this.map.setView({center:new Microsoft.Maps.Location(arrayLocation[0],arrayLocation[1]),heading:angle})
       }else{
+        console.log(this.props.ding.toJS())
         location=this.props.ding.get('coordinates').toJS()
         const arrayLocation = [location.lat,location.lng]
         this.map.setView({center:new Microsoft.Maps.Location(arrayLocation[0],arrayLocation[1])})

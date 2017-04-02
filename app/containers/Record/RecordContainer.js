@@ -33,8 +33,6 @@ const RecordContainer = React.createClass({
   },
   componentDidMount () {
 
-    console.log('mounted')
-
     // setting dom elements
     this.canvas = document.createElement('canvas')
     this.recordElement = document.getElementById('record')
@@ -45,6 +43,7 @@ const RecordContainer = React.createClass({
 
     this.props.handleSetDingListener()
     this.props.handleFetchLatLng()
+    this.props.handleFetchingUserSettings()
     this.latLngInterval = null;
 
     // plot to html5 canvas (p5 replacement)
@@ -103,7 +102,9 @@ const RecordContainer = React.createClass({
   draw (){
     this.animation = requestAnimationFrame(this.draw)
 
-    if (this.props.isFetching) return 
+    if (this.props.isFetching) {
+      return 
+    }
 
     this.pen.clear()
 
@@ -178,7 +179,12 @@ const RecordContainer = React.createClass({
 
         }
         this.previousSpike = Date.now()
-      } 
+      } // detection ends
+      
+      this.pen.noStroke()
+      this.pen.fill('white')
+      this.pen.text('push again to stop recording',this.canvas.width/2,this.canvas.height/4)
+ 
       this.pen.noStroke()
       this.pen.fill('red')
     }else{
@@ -225,7 +231,6 @@ const RecordContainer = React.createClass({
     this.pen.updateMouse(event)
   },
   componentWillUnmount(){
-    console.log('unmounted')
     
     window.cancelAnimationFrame(this.animation)
 
@@ -252,7 +257,10 @@ function mapStateToProps (state) {
   return {
     isAuthed: state.users.get('isAuthed'),
     authedId,
-    isFetching : state.users.get('isFetching') || state.userSettings.get('isFetching') || state.dingFeed.get('isFetching'),
+    isFetching : 
+      state.users.get('isFetching') ||
+      state.userSettings.get('isFetching') ||
+      state.dingFeed.get('isFetching'),
     isRecording : state.record.get('isRecording'),
     currentCommuteId: state.record.get('currentCommuteId'),
     isUploading: state.record.get('isUploading'),
