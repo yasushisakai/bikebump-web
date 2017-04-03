@@ -44,9 +44,7 @@ const MainContainer = React.createClass({
   },
   render () {
     
-    // console.clear()
     const mode = isProduction ? 'production' : 'dev'
-    console.log(`bikebump running (${mode})`)
     
     return this.props.isFetching 
     ? <div> {'loading user...'} </div>

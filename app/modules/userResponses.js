@@ -1,5 +1,5 @@
 import { initialState } from 'config/constants'
-import { checkLastUpdate } from 'helpers/utils'
+import { isModuleStale } from 'helpers/utils'
 import { ADD_RESPONSE, ADD_RESPONSE_ERROR } from 'modules/responses'
 import {fetchUserResponses} from 'helpers/api'
 
@@ -64,7 +64,12 @@ export function setHasUnanswered(hasUnanswered){
 
 export function handleFetchingUserResponses (uid){
   return function(dispatch,getState){
-    if(!checkLastUpdate(getState().userResponses.get('lastUpdated'))){
+    
+    if(getState().userResponses.get('isFetching')){
+      return Promise.resolve(null)
+    }
+
+    if(!isModuleStale(getState().userResponses.get('lastUpdated'))){
       return Promise.resolve(getState().userResponses.get(uid))
     }
     dispatch(fetchingUserResponses())

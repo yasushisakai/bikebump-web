@@ -1,7 +1,7 @@
 import { initialState} from 'config/constants' 
 import { List } from 'immutable'
 import { fetchUserDings } from 'helpers/api'
-import { checkLastUpdate } from 'helpers/utils'
+import { isModuleStale } from 'helpers/utils'
 
 const FETCHING_USER_DINGS = 'FETCHING_USER_DINGS'
 const FETCHING_USER_DINGS_ERROR = 'FETCHING_USER_DINGS_ERROR'
@@ -42,9 +42,15 @@ function fetchingUserDingsSuccess (uid,dingIdsAndStatus) {
 
 export function handleFetchingUserDings (uid) {
   return function(dispatch,getState){
-    if(!checkLastUpdate(getState().userDings.get('lastUpdated'))){
+    
+    if(getState().userDings.get('isFetching')){
+      return Promise.resolve(null)
+    }
+
+    if(!isModuleStale(getState().userDings.get('lastUpdated'))){
       return Promise.resolve(getState().userDings.get('uid'))
     }
+
     dispatch(fetchingUserDings())
     return fetchUserDings(uid)
       .then((dings)=>{

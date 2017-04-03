@@ -1,5 +1,5 @@
 import { initialState } from 'config/constants'
-import { checkLastUpdate } from 'helpers/utils'
+import { isModuleStale } from 'helpers/utils'
 import { fetchAll, saveQuestion } from 'helpers/api'
 
 const FETCHING_QUESTIONS = 'FETCHING_QUESTIONS'
@@ -33,9 +33,17 @@ function fetchingQuestionsSuccess (questions) {
 
 export function handleFetchingQuestions (){
   return function(dispatch,getState){
-    if(!checkLastUpdate(getState().questions.get('lastUpdated'),10)){
+  
+    // if its fetching forget it
+    if(getState().questions.get('isFetching')) {
+      return Promise.resolve(null)
+    }
+    
+    // leaving no traces if there its too fresh
+    if(!isModuleStale(getState().questions.get('lastUpdated'),10)){
       return Promise.resolve(getState().questions)
     }
+
     dispatch(fetchingQuestions())
     return fetchAll('questions')
       .then((questions)=>dispatch(fetchingQuestionsSuccess(questions)))

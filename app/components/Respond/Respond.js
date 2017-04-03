@@ -1,10 +1,15 @@
 import React, { PropTypes } from 'react'
-import { contents } from 'styles/styles.css'
+
+import { 
+contents,
+} from 'styles/styles.css'
+
 import { 
   QuestionPanelContainer,
   MapAndStreetViewContainer,
   StreetSideContainer,
   TinyMapContainer, 
+  SurveyContainer,
   } from 'containers'
 
 import {
@@ -15,8 +20,8 @@ import {
   question, 
   options, 
   singleOption,
-  footer,
-  nextButton,
+  refreshQuestion,
+  refreshButton
 } from './styles.css'
 
 Respond.propTypes = {
@@ -60,17 +65,38 @@ export default function Respond (props) {
     </div>)
    : <div> {'no questions to ask, either pass by a ding or report by ringing the bell yourself!'} </div>
 */
+  // example IDS
+  // dingId
+  // without closest road, -Kd_of9811Ar-vq68eJ5
+  // with closest road, -KdfdFnJIhhpXBEfpSJa
+  // 
+  // question
+  // -KbuetTkYHqA5cGSNHDO
+  // -KbugLxBUoqOVyeiJpHv
+  // 
+  // userId
+
+  function handleClickOption (option) {
+    console.log(option)
+  }
+
+  function handleRefresh () {
+    console.log('refresh!')
+  }
+
    return (
      <div className={contents}>
        <div className={info}>
          {'info'}
        </div>
        <div className={mapAndStreetView}>
-         <MapAndStreetViewContainer dingId={props.dingId}/>
+         <MapAndStreetViewContainer dingId={'-Kd_of9811Ar-vq68eJ5'} />
        </div>
        <div className={question}>
+         <SurveyContainer questionId={'-KbuetTkYHqA5cGSNHDO'} onClickOption={handleClickOption}/>
        </div>
-       <div className={footer}>
+       <div className={ refreshQuestion }>
+         <div className={ refreshButton } onClick={handleRefresh}> refresh </div>
        </div>
      </div>
    )

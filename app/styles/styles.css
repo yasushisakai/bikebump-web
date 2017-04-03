@@ -8,9 +8,31 @@ body{
   padding:0;
   height:100%;
   font-family: sans-serif;
-  font-size: 24px;
+  font-size: 67.5%;
   background-color: #111111;
   color : #ffffff;
+}
+
+@media only screen and (max-width: 767px){
+ .container {
+  font-size: 180%;
+  }
+
+  .leaflet-container .leaflet-control-attribution{
+    font-size:9px;
+  }
+}
+
+@media only screen and (min-width: 768px )and (max-width: 1439px){
+ .container {
+  font-size: 200%;
+  }
+}
+
+@media only screen and (min-width: 1440px){
+ .container {
+  font-size: 250%;
+  }
 }
 
 .button {
@@ -44,3 +66,5 @@ body{
 a {
   color:#ffffff;
 }
+
+
