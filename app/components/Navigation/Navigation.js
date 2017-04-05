@@ -31,26 +31,34 @@ const respondDivStyle={
   verticalAlign : 'middle',
 }
 
+function vibrate() {
+  window.navigator.vibrate(50)
+  // console.log('mr brown can buzz')
+}
+
 function NavLinks ({isAuthed, isRecording,authedId}) {
   return isAuthed===true
   ? <div className={navLink}>
-    <Link className={link} to='/record'><Record className={isRecording===true? iconRecording :icon}/></Link>
-    <Link className={link} to='/map'><MapIcon className={icon}/></Link>
-    <Link className={link} to={`/user/${authedId}/respond`}><div style={respondDivStyle}></div></Link>
+    <Link className={link} onClick={vibrate} to='/record'><Record className={isRecording===true? iconRecording :icon}/></Link>
+    <Link className={link} onClick={vibrate} to='/map'><MapIcon className={icon}/></Link>
+    <Link className={link} onClick={vibrate} to={`/user/${authedId}/respond`}><div style={respondDivStyle}></div></Link>
   </div>
   : <div className={navLink}>
-    <Link className={link} to='/'><Home className={icon}/></Link>
-    <Link className={link} to='/map'><MapIcon className={icon}/></Link>
+    <Link className={link} onClick={vibrate} to='/'><Home className={icon}/></Link>
+    <Link className={link} onClick={vibrate} to='/map'><MapIcon className={icon}/></Link>
   </div>
 }
 
 function ActionLinks ({isAuthed,authedId}) {
+  
+  const accountLink = `/user/${authedId}`
+  
   return isAuthed === true
-  ? <div className={actionLink}>
-    <Link className={link} to={`/user/${authedId}`}> <Account className={icon}/></Link>
+  ? <div className={ actionLink }>
+    <Link className={ link } onClick={ vibrate } to={ accountLink }> <Account className={ icon }/></Link>
   </div>
-  : <div className={actionLink}>
-    <Link className={link} to='/signin'><SignIn className={icon}/></Link>
+  : <div className={ actionLink }>
+    <Link className={ link } onClick={ vibrate } to='/signin'><SignIn className={ icon }/></Link>
   </div>
 }
 

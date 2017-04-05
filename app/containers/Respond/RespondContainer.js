@@ -77,18 +77,17 @@ const RespondContainer = React.createClass({
       this.props.setNextQuery(dingId, questionId)
     }
   },
-  handleNext(){
-    this.props.setHasUnanswered(this.setNewQuestion(true,false))
-  },
   handleRefresh (){
-    console.log('refresh!')
+    // console.log('refresh!')
+    window.navigator.vibrate(50)
     const {questions, userDings, userResponses} = this.props
     this.handleNextQuery(questions, userDings, userResponses, true) 
   },
   handleOptionClick(index){
     const {dingId, questionId} = this.props.nextPair.toJS()
-    console.log(`userId: ${ this.props.uid }, dingId: ${ dingId }, questionId: ${ questionId } index: ${index }`)
-    
+    // console.log(`userId: ${ this.props.uid }, dingId: ${ dingId }, questionId: ${ questionId } index: ${index }`)
+    window.navigator.vibrate(50)
+
     this.props.handleAddResponse({
       dingId,
       questionId,
