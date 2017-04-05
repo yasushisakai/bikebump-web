@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import { Map } from 'immutable'
 import { qwrapper, qtext, qoptions, qoption, items2, items3, items4 } from './styles.css'
 const items = [items2, items3, items4]

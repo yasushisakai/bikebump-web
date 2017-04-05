@@ -21,7 +21,6 @@
   "homepage": "https://github.com/yasushisakai/bikebump#readme",
   "dependencies": {
     "axios": "^0.15.3",
-    "classnames": "^2.2.5",
     "firebase": "^3.6.5",
     "immutable": "^3.8.1",
     "inline-worker": "^1.1.0",
