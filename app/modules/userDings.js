@@ -53,9 +53,6 @@ export function handleFetchingUserDings (uid) {
 
     dispatch(fetchingUserDings())
     return fetchUserDings(uid)
-      .then((dings)=>{
-        return dings
-      })
       .then((dings)=>dispatch(fetchingUserDingsSuccess(uid,dings)))
       .catch((error)=>dispatch(fetchingUserDingsError(error)))
   }

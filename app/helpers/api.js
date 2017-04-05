@@ -1,5 +1,4 @@
 import {ref,isProduction} from 'config/constants'
-import axios from 'axios'
 import { apiRoot } from 'config/constants'
 import { userDingStatus } from 'modules/userDings'
 
@@ -48,7 +47,6 @@ export function fetchDings() {
 
 
 export function fetchDing(dingId) {
-  console.log(dingId)
   return ref.child(`dings/${dingId}`).once('value')
     .then(snapshot=>(snapshot.val()||{}))
 }
@@ -147,6 +145,11 @@ export function saveQuestion (question) {
   const questionWithId = {...question, questionId}
   return ref.child(`questions/${questionId}`).set(questionWithId)
     .then(()=>questionWithId)
+}
+
+export function fetchQuestion (questionId) {
+  return ref.child(`questions/${questionId}`).once('value')
+    .then( snapshot => snapshot.val())
 }
 
 export function fetchAll (branchName) {

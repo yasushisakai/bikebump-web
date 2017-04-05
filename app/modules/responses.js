@@ -46,7 +46,7 @@ function addResponse (response) {
   }
 }
 
-function addResponseError (error) {
+function addResponseErrorr (error) {
   console.warn(error)
   return{
     type:ADD_RESPONSE_ERROR,
@@ -58,8 +58,8 @@ export function handleAddResponse (response) {
   console.log(response)
   return function(dispatch) {
     saveResponse(response)
-      .then((responseWithId)=>dispatch(addResponse(responseWithId)))
-      .catch((error)=>dispatch(addResponseError(error)))
+      .then((responseWithId) => dispatch(addResponse(responseWithId)))
+      .catch((error) => dispatch(addResponseError(error)))
   }
 }
 

@@ -3,162 +3,144 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import { Respond } from 'components'
+
+import { getUnansweredQueries, pickNewQuery, removeQuery } from 'helpers/utils'
+
 import * as userDingsActionCreators from 'modules/userDings'
 import * as questionsActionCreators from 'modules/questions'
 import * as userResponsesActionCreators from 'modules/userResponses'
 import * as responsesActionCreators from 'modules/responses'
-import * as dingFeedActionCreators from 'modules/dingFeed'
 
 const RespondContainer = React.createClass({
   propTypes:{
-    hasUnanswered: PropTypes.bool.isRequired,
-    userDings: PropTypes.instanceOf(Map).isRequired,
+    // info need for this container
+    uid: PropTypes.string.isRequired,
     questions: PropTypes.instanceOf(Map).isRequired,
-    userResponses : PropTypes.instanceOf(Map).isRequired,
+    userDings: PropTypes.instanceOf(Map),
+    userResponses : PropTypes.instanceOf(Map),
+    nextPair: PropTypes.instanceOf(Map),
+    hasUnanswered: PropTypes.bool.isRequired,
 
+    // functions to fetch info we need
+    handleFetchingQuestions: PropTypes.func.isRequired,
     handleFetchingUserDings : PropTypes.func.isRequired,
     handleFetchingUserResponses : PropTypes.func.isRequired,
-    handleFetchingQuestions : PropTypes.func.isRequired,
-    handleSetDingListener:PropTypes.func.isRequired,
-    handleAddResponse:PropTypes.func.isRequired,
-
-    setNextResponse:PropTypes.func.isRequired,
+  
+    // function to register pair
+    setNextQuery: PropTypes.func.isRequired,
     setHasUnanswered: PropTypes.func.isRequired,
+
+    // for responding
+    handleAddResponse:PropTypes.func.isRequired,
   },
   contextTypes:{
     router: PropTypes.object.isRequired,
   },
-  componentDidMount(){
-
-    // let's assume that we have questions dings and responses
-    this.props.handleSetDingListener()
-
-    const promises = [
-      this.props.handleFetchingQuestions(),
-      this.props.handleFetchingUserResponses(this.props.uid),
-      this.props.handleFetchingUserDings(this.props.uid),
-    ]
-
-
-    Promise.all(promises)
-      .then(()=>{
-        this.props.setHasUnanswered(this.setNewQuestion(false,false))
-      })
-
-
+  componentWillMount(){
+    // fetching info!
+    // we need the question list, userResponses, and userDings
+    this.props.handleFetchingQuestions()
+    this.props.handleFetchingUserResponses(this.props.uid)
+    this.props.handleFetchingUserDings(this.props.uid)
   },
-  setNewQuestion(isRandom=false,deleteCurrent=true){
-    const completeList = this.createCompleteListOfPossibleResponses()
-    const extractedList = this.extractUnansweredResponses(completeList,deleteCurrent)
+  shouldComponentUpdate (nextProps) {
+//    return !nextProps.isFetching 
+  return true  
+  },
+  componentWillUpdate (nextProps) {
+    console.log('cwu', nextProps.isFetching)
 
-    if(extractedList.length === 0) return false
-
-    let pair;
-    if(isRandom){
-      pair=extractedList[Math.floor(Math.random()*extractedList.length)]
-    }else{
-      pair=extractedList[0]
+    if(!nextProps.isFetching && this.props.nextPair.get('dingId') === ''){
+      const {questions, userDings, userResponses } = nextProps
+      this.handleNextQuery(questions, userDings, userResponses)
+    }
+  },
+  handleNextQuery(questions, userDings, userResponses, isRandom = false, excludeCurrent = false){
+    let unAnswered = getUnansweredQueries(questions, userDings, userResponses)
+    
+    // exclude current next pair
+    if(excludeCurrent) {
+      if(unAnswered.isEmpty()) {
+        this.props.setHasUnanswered(false)
+        return 
+      } else {
+        const {dingId, questionId} = this.props.nextPair.toJS()
+        unAnswered = removeQuery(unAnswered, dingId, questionId)
+      }
     }
 
-    this.targetDingId = pair[0]
-    this.questionId = pair[1]
-
-    this.props.setNextResponse(pair)
-
-    return true
-
-  },
-  createCompleteListOfPossibleResponses(){
-    let exhaustiveList = {}
-    this.props.userDings.keySeq().toArray().map(dingId=>{
-      exhaustiveList[dingId] = []
-      this.props.questions
-      .keySeq()
-      .toArray()
-      .filter(qid=>(qid !== 'isFetching' && qid !== 'error' && qid !== 'lastUpdated'))
-      .map(qId=>{
-        exhaustiveList[dingId].push(qId)
-      })
-    })
-    return exhaustiveList
-  },
-  extractUnansweredResponses(responseList,deleteCurrent){
-    let unansweredResponses = []
-    Object.keys(responseList).map(dingId=>{
-      responseList[dingId].map(qId=>{
-        if(this.props.userResponses.getIn([dingId,qId]) === undefined){
-          if(deleteCurrent){
-            if(!(dingId===this.props.nextPair[0] && qId===this.props.nextPair[1])){
-              unansweredResponses.push([dingId,qId])
-            }
-          }else{
-            unansweredResponses.push([dingId,qId])
-          }
-        }
-      })
-    })
-    return unansweredResponses
+    if(unAnswered.isEmpty()){
+      this.props.setHasUnanswered(false)
+      } else {
+      this.props.setHasUnanswered(true)
+      const {dingId, questionId} = (pickNewQuery(unAnswered, isRandom).toJS())
+      this.props.setNextQuery(dingId, questionId)
+    }
   },
   handleNext(){
     this.props.setHasUnanswered(this.setNewQuestion(true,false))
   },
+  handleRefresh (){
+    console.log('refresh!')
+    const {questions, userDings, userResponses} = this.props
+    this.handleNextQuery(questions, userDings, userResponses, true) 
+  },
   handleOptionClick(index){
+    const {dingId, questionId} = this.props.nextPair.toJS()
+    console.log(`userId: ${ this.props.uid }, dingId: ${ dingId }, questionId: ${ questionId } index: ${index }`)
+    
     this.props.handleAddResponse({
-      dingId:this.props.nextPair[0],
-      questionId:this.props.nextPair[1],
-      uid: this.props.uid,
-      value:index
-    })
-    console.log({
-      dingId:this.props.nextPair[0],
-      questionId:this.props.nextPair[1],
+      dingId,
+      questionId,
       uid: this.props.uid,
       value:index
     })
 
-    console.log(this.props.nextPair)
-    this.props.setHasUnanswered(this.setNewQuestion(false))
-    //this.context.router.refresh()
-    //this.context.router.replace(`/user/${this.props.uid}/respond`)
-    // replace(`/user/${this.props.uid}/respond`)
-    // window.location.reload() <- works but not sufficient
-    // this.props.replace('/')
-    console.log(this.props.nextPair)
-    this.forceUpdate()
+    const {questions, userDings, userResponses} = this.props
+    this.handleNextQuery(questions, userDings, userResponses, false, true) 
   },
   render () {
-    return this.props.isFetching 
-    ? null
-    : (<Respond 
-      hasUnanswered={this.props.hasUnanswered}
-      onClickNext={this.handleNext} 
-      onClickOption={this.handleOptionClick}
-      dingId={this.targetDingId}
-      questionId={this.questionId}
-      />)
+    //const dingId = '-KdfdFnJIhhpXBEfpSJa'
+    //const questionId = '-KbuetTkYHqA5cGSNHDO'
+    const {dingId, questionId} = this.props.nextPair.toJS()
+    console.log(dingId, questionId)
+    return this.props.isFetching || dingId === '' 
+    ? <div> {'Loading question'} </div>
+    : <Respond 
+        dingId={ dingId }
+        questionId={ questionId }
+        clickOption={ this.handleOptionClick }
+        clickRefresh={ this.handleRefresh }
+      />
   }
 })
 
 function mapStateToProps (state,props) {
     const uid = props.params.uid
+    const userDings = state.userDings.get(uid)
+    const userResponses = state.userResponses.get(uid)
   return {
-    hasUnanswered:state.userResponses.get('hasUnanswered'),
-    isFetching: state.userDings.get('isFetching') || state.userResponses.get('isFetching') || state.questions.get('isFetching'),
+    isFetching: ( // we want to make sure everything is set
+        state.userDings.get('isFetching') ||
+        state.userResponses.get('isFetching') ||
+        state.questions.get('isFetching') ||
+        !userDings ||
+        !userResponses 
+      ),
     uid,
-    nextPair : state.userResponses.get('nextResponsePair'),
-    dings: state.dings || new Map(),
-    userDings : state.userDings.get(uid) || new Map(),
-    questions : state.questions || new Map(),
-    userResponses : state.userResponses.get(uid) || new Map(),
+    userDings: userDings,
+    userResponses,
+    questions : state.questions,
+    hasUnanswered: state.userResponses.get('hasUnanswered'),
+    nextPair: state.userResponses.get('nextPair')
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    ...userDingsActionCreators,
     ...questionsActionCreators,
     ...userResponsesActionCreators,
-    ...dingFeedActionCreators,
+    ...userDingsActionCreators,
     ...responsesActionCreators,
   },dispatch)
 }

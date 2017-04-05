@@ -7,6 +7,7 @@ import {
 } from 'config/constants'
 
 import axios from 'axios'
+import { Map, List } from 'immutable'
 
 export function fetchGeoLocation() {
   return new Promise(function(resolve, reject) {
@@ -23,16 +24,80 @@ export function fetchGeoLocation() {
 }
 
 
-export function formatGoogleStreetViewURL(coordinate,heading=0){
+export function formatGoogleStreetViewURL (coordinate,heading=0) {
   return `https://maps.googleapis.com/maps/api/streetview?size=240x320&location=${coordinate.lat},${coordinate.lng}&heading=${heading}`
 }
 
-export function filterStateVariables(key){
-  return key !== 'isFetching' && key !== 'lastUpdated' && key !== 'error'
+export function filterStateVariables (key) {
+  return (
+    key !== 'isFetching' &&
+    key !== 'lastUpdated' &&
+    key !== 'error'
+  )
 }
+
+
 
 // TODO: write function to extract unanswered respondes
 // this is already implemented in RespondContainer.js
+
+export function getUnansweredQueries (questions, userDings, userResponses) {
+  // first get all combinations of questionos - userDings
+  let combinations = new Map() 
+  userDings.mapKeys(dingId => {
+    const tempQuestions = questions.keySeq()
+      // filter irrelavent stuff
+      .filter(key => (key !== 'isFetching' && key !== 'lastUpdated' && key !== 'error'))
+      // extract ones that is answered userResponses are saved 
+      // [uid]/[dingId]/[questionId]
+      .filter(key => (!userResponses.hasIn([dingId,key])))
+    
+    // don't add when this dingId holds no questions
+    const questionsList = tempQuestions.toList()
+    if(questionsList.size > 0) {
+      combinations = combinations.set(dingId,questionsList)
+    }
+  })
+  return combinations
+}
+
+export function pickNewQuery (queries, isRandom = false) {
+  
+  if(queries.isEmpty()){
+    return null
+  } else {
+    let flattened = List()
+    queries.mapKeys(key => {
+      queries.get(key).map(qid => {
+        flattened = flattened.push(List([key, qid]))
+      })
+    })
+    let pair
+    if(isRandom) {
+       pair = flattened.get(Math.floor(Math.random()*flattened.size))
+    }else{
+       pair = flattened.first()
+    }
+    return Map({'dingId':pair.first(), 'questionId':pair.last()})
+  }
+}
+
+export function removeQuery (queries, dingId, questionId) {
+  if(queries.has(dingId)){
+    const index = queries.get(dingId).indexOf(questionId)
+    if(index < 0) return queries // returning original queries
+    
+    if(queries.get(dingId).size < 2){
+      return queries.delete(dingId) // delete the ding, since empty
+    } else {
+      const newList = queries.get(dingId).delete(index)
+      return queries.set(dingId, newList) // delete the index
+    }
+  } else {
+    return queries
+  }
+}
+
 
 export function fitCanvas(canvas){
   canvas.style.width = '100%'

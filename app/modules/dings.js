@@ -5,6 +5,7 @@ import { distFromLatLng } from 'helpers/utils'
 import { addDingId } from 'modules/dingFeed'
 
 const FETCHING_DINGS = 'FETCHING_DINGS'
+const FETCHING_SINGLE_DING = 'FETCHING_SINGLE_DING'
 const FETCHING_DINGS_ERROR = 'FETCHING_DINGS_ERROR'
 export const FETCHING_DING_SUCCESS = 'FETCHING_DING_SUCCESS'
 const FETCHING_DINGS_SUCCESS = 'FETCHING_DINGS_SUCCESS'
@@ -15,6 +16,12 @@ const ADD_MULTIPLE_DINGS = 'ADD_MULTIPLE_DINGS'
 function fetchingDings(){
   return {
     type:FETCHING_DINGS,
+  }
+}
+
+function fetchingSingleDing () {
+  return {
+    type: FETCHING_SINGLE_DING,
   }
 }
 
@@ -34,7 +41,6 @@ function fetchingDingsSuccess(dings){
 }
 
 function fetchingDingSuccess(dingId,ding){
-  console.log(dingId,ding)
   return {
     type:FETCHING_DING_SUCCESS,
     dingId,
@@ -53,7 +59,12 @@ export function handleFetchingDings(){
 
 export function handleFetchingDing(dingId){
   return function(dispatch,getState){
-    dispatch(fetchingDings())
+    
+    if(getState().dings.has(dingId)){
+      return Promise.resolve(getState().dings.get(dingId))
+    }
+
+    dispatch(fetchingSingleDing())
     return fetchDing(dingId)
       .then(ding=>dispatch(fetchingDingSuccess(dingId,ding)))
       .then(()=>{
@@ -98,13 +109,14 @@ export function handleComplieDing(uid,coordinates,timestamp,radius,value){
 
 const initialState = fromJS({
   lastUpdated : 0,
-  isFetching : true,
+  isFetching : false,
   error : '',
 })
 
 export default function dings(state=initialState, action) {
   switch (action.type) {
     case FETCHING_DINGS:
+    case FETCHING_SINGLE_DING:
       return state.merge({
         isFetching:true
       })

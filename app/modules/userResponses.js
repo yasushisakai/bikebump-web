@@ -1,4 +1,5 @@
-import { initialState } from 'config/constants'
+import { Map, fromJS } from 'immutable'
+import { initialState as baseState } from 'config/constants'
 import { isModuleStale } from 'helpers/utils'
 import { ADD_RESPONSE, ADD_RESPONSE_ERROR } from 'modules/responses'
 import {fetchUserResponses} from 'helpers/api'
@@ -10,7 +11,7 @@ const FETCHING_USER_RESPONSES_SUCCESS = 'FETCHING_USER_RESPONSES_SUCCESS'
 const USER_RESPONSE_ERROR = 'USER_RESPONSE_ERROR'
 // const ADD_USER_RESPONSE = 'ADD_USER_RESPONSE'
 
-const SET_NEXT_RESPONSE = 'SET_NEXT_RESPONSE'
+const SET_NEXT_QUERY = 'SET_NEXT_QUERY'
 const SET_HAS_UNANSWERED = 'SET_HAS_UNANSWERED'
 
 function fetchingUserResponses () {
@@ -18,7 +19,6 @@ function fetchingUserResponses () {
     type: FETCHING_USER_RESPONSES,
   }
 }
-
 
 function fetchingUserResponsesError (error) {
   console.warn(error)
@@ -28,7 +28,6 @@ function fetchingUserResponsesError (error) {
   }
 }
 
-
 function fetchingUserResponsesSuccess (uid,responses) {
  return {
   type: FETCHING_USER_RESPONSES_SUCCESS,
@@ -37,16 +36,17 @@ function fetchingUserResponsesSuccess (uid,responses) {
   }
 }
 
-export function setNextResponse(pair){
+export function setNextQuery(dingId, questionId){
   return {
-    type:SET_NEXT_RESPONSE,
-    pair,
+    type: SET_NEXT_QUERY,
+    dingId,
+    questionId,
   }
 }
 
 export function setHasUnanswered(hasUnanswered){
   return {
-    type:SET_HAS_UNANSWERED,
+    type: SET_HAS_UNANSWERED,
     hasUnanswered,
   }
 }
@@ -63,7 +63,7 @@ export function setHasUnanswered(hasUnanswered){
 // }
 
 export function handleFetchingUserResponses (uid){
-  return function(dispatch,getState){
+  return function(dispatch, getState){
     
     if(getState().userResponses.get('isFetching')){
       return Promise.resolve(null)
@@ -72,6 +72,7 @@ export function handleFetchingUserResponses (uid){
     if(!isModuleStale(getState().userResponses.get('lastUpdated'))){
       return Promise.resolve(getState().userResponses.get(uid))
     }
+
     dispatch(fetchingUserResponses())
       return fetchUserResponses(uid)
         .then((response)=>{
@@ -82,7 +83,15 @@ export function handleFetchingUserResponses (uid){
   }
 }
 
-export default function userResponses(state = initialState.set('nextResponsePair',[]).set('hasUnanswered',false),action){
+const initialNextPair = new Map({
+  dingId: '',
+  questionId: ''
+})
+
+let initialState = baseState.set('nextPair', initialNextPair)
+initialState = initialState.set('hasUnanswered', false)
+
+export default function userResponses(state = initialState, action){
   switch (action.type) {
     case FETCHING_USER_RESPONSES:
       return state.set('isFetching',true)
@@ -96,15 +105,15 @@ export default function userResponses(state = initialState.set('nextResponsePair
       return state.merge({
         isFetching:false,
         error:'',
-        [action.uid]:action.responses
+        [action.uid]: action.responses
       })
-    case SET_NEXT_RESPONSE:
-      return state.set('nextResponsePair',action.pair)
+    case SET_NEXT_QUERY:
+      return state.setIn(['nextPair','dingId'], action.dingId).setIn(['nextPair', 'questionId'], action.questionId)
     case SET_HAS_UNANSWERED:
       return state.set('hasUnanswered',action.hasUnanswered)
     case ADD_RESPONSE:
-      const {uid,dingId,questionId,responseId,value} = action.response
-      return state.setIn([uid,dingId,questionId,responseId],value)
+      const { uid, dingId, questionId, responseId, value } = action.response
+      return state.setIn([ uid, dingId, questionId, responseId ], value)
     default:
       return state
   }
