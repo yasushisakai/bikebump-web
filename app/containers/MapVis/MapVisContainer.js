@@ -48,6 +48,7 @@ const MapVisContainer = React.createClass({
     
     // fetch the commutes
     this.props.handleFetchingCommutes()
+
   },
   handleClickRoad (roadId ){
     this.context.router.push(`/roads/${roadId}`)
@@ -78,7 +79,7 @@ const MapVisContainer = React.createClass({
       })
 
       // commutes
-      nextProps.commutes.keySeq()
+      nextProps.commutes.keySeq().toArray()
         .filter(key => filterStateVariables(key))
         .map(key => {
           plotCommute(nextProps.commutes.get(key).toJS(),this.map)

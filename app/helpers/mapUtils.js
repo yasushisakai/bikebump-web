@@ -119,21 +119,17 @@ export function plotPolyline(coords,_map,customStyle){
 }
 
 
-export function plotCommute(commute,map,customStyle={}){
+export function plotCommute (commute,map,customStyle={}) {
   
-  if(commute.hasOwnProperty('commuteId')) return
-  if(commute.hasOwnProperty('lat')) return // FIXME
-
-  // console.log(Object.keys(commute).length)
-
   const coords = Object.keys(commute)
-    .filter(key=> key !== 'uid' && key !== 'commuteId')
-    .map(key=>{
+    .filter(key => key !== 'uid') // snip off uid value
+    .sort()
+    .map(key => {
       return commute[key]
     })
 
-    const style = {...defaultStyle, opacity:1.0, weight:10, clickable:false, ...customStyle}
-
+  const style = {...defaultStyle, color:'#ff0', opacity:0.1, weight:1, clickable:false, ...customStyle}
+  
   leaflet.polyline(coords,style).addTo(map)
 }
 
