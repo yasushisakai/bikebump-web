@@ -40,9 +40,7 @@ const RecordContainer = React.createClass({
     fitCanvas(this.canvas)
 
     // fetching data
-
     this.props.handleSetDingListener()
-    this.props.handleFetchLatLng()
     this.props.handleFetchingUserSettings()
     this.latLngInterval = null;
 
@@ -77,7 +75,6 @@ const RecordContainer = React.createClass({
     // library that prevents the phone to goto sleep mode
     this.noSleep = new NoSleep()
     this.noSleep.enable()
-
 
     // canvas functions 
     this.setup()
@@ -211,6 +208,7 @@ const RecordContainer = React.createClass({
       )
 
     if(distanceFromCenter < this.circleRadius){
+      window.navigator.vibrate(50)
       this.props.toggleRecording()
       .then(response=>{
         if(response.isRecording){

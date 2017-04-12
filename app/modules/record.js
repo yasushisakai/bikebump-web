@@ -1,6 +1,6 @@
 import { fromJS, toJS } from 'immutable'
 import { fetchGeoLocation, refreshCommute, formatWavFileName, distFromLatLng } from 'helpers/utils'
-import { createCommute, appendBreadcrumb, createUserDing } from 'helpers/api'
+import { createCommute, appendBreadcrumb, createUserDing, deleteCommute } from 'helpers/api'
 import { storeBlob } from 'helpers/storage'
 import { addCommute } from 'modules/commutes'
 import { addUserDing, userDingStatus } from 'modules/userDings'
@@ -20,6 +20,7 @@ const UPLOADING_CLIP_SUCCESS = 'UPLOADING_CLIP_SUCCESS'
 const FETCHING_LATLNG = 'FETCHING_LATLNG'
 const FETCHING_LATLNG_ERROR = 'FETCHING_LATLNG_ERROR'
 const FETCHING_LATLNG_SUCCESS = 'FETCHING_LATLNG_SUCCESS'
+
 
 function stopRecording () {
   return {
@@ -79,15 +80,14 @@ export function handleUpload(recorder,location,timestamp){
 }
 
 
-
 export function handleRecordInitiation (uid) {
   return function (dispatch,getState) {
     return createCommute(uid)
       .then((commuteId)=>dispatch(startRecording(commuteId)))
   }
 }
-
 export function toggleRecording () {
+
   return function(dispatch,getState){
 
     if(
@@ -99,7 +99,7 @@ export function toggleRecording () {
     }else{
       const authedId = getState().users.get('authedId')
       return dispatch(handleRecordInitiation(authedId))
-        .then((action)=>Promise.resolve({isRecording:true,commuteId:action.commuteId}))
+       .then((action)=>Promise.resolve({isRecording:true,commuteId:action.commuteId}))
     }
   }
 }
@@ -139,51 +139,77 @@ function insideDing(dingId) {
   }
 }
 
-function outsideDing(){
+function outsideDing (){
   return {
     type: OUTSIDE_DING,
   }
 }
 
 export function handleFetchLatLng (commuteId) {
-  return function(dispatch,getState) {
+  return function (dispatch, getState) {
+
+    if (!getState().record.get('isRecording')) {
+      return Promise.resolve(null)
+    }
+
+    const commuteId = getState().record.get('currentCommuteId')
+
     dispatch(fetchingLatLng())
     return fetchGeoLocation()
-      .then((coordinates)=>dispatch(fetchingLatLngSuccess(coordinates)))
-      .then(({location,timestamp})=>{
+      .then((coordinates) => dispatch(fetchingLatLngSuccess(coordinates)))
+      .then(({location,timestamp}) => {
+        
+        // detects whether its inside a existing geo fence
         let isInside = false
         let whichDing = ''
+        
+        // run through the dings to see which dings are we included
         getState().dingFeed.get('dingIds').toJS().map(dingId=>{
           const ding = getState().dings.get(dingId)
           const distance = distFromLatLng(ding.get('coordinates').toJS(),location)
+          
           if(distance < ding.get('radius')) {
             // append as passed by to userDings (+server)
             isInside = true
             whichDing = dingId
             const uid = getState().users.get('authedId')
             const currentStats = getState().userDings.getIn([uid,dingId])
-            if(currentStats !== userDingStatus.DINGED && currentStats !== userDingStatus.PASSEDBY){
-              createUserDing(uid,dingId,userDingStatus.PASSEDBY)
-                .then(dispatch(addUserDing(uid,dingId,userDingStatus.PASSEDBY)))
+            
+            if(
+              currentStats !== userDingStatus.DINGED &&
+              currentStats !== userDingStatus.PASSEDBY 
+            ){
+              // add this ding as my user ding
+              createUserDing(uid, dingId, userDingStatus.PASSEDBY, commuteId, timestamp)
+                .then(dispatch(addUserDing(uid, dingId, userDingStatus.PASSEDBY, commuteId, timestamp)))
             }
           }
         })
 
+        // mutate state according to 
         if(isInside){
-          if(!getState().record.get('isInside') || getState().record.get('whichDing') !== whichDing )dispatch(insideDing(whichDing))
+          if (
+            !getState().record.get('isInside') || // we weren't inside and, 
+            getState().record.get('whichDing') !== whichDing // or were inside of a different ding
+          )
+          dispatch(insideDing(whichDing))
         }else{
-          if(getState().record.get('isInside')) dispatch(outsideDing())
+          if (getState().record.get('isInside')) dispatch(outsideDing())
         }
-
         return {location,timestamp}
+      
       })
-      .then(({location,timestamp})=>{
-        if(refreshCommute(timestamp)){
+      .then(({location,timestamp}) => {
+        if (refreshCommute(timestamp)) {
           // if the commutee is too old reinitiate it
+          if(getState().record.get('breadcrumbNum') < 2) {
+            deleteCommute(commuteId)
+          }
+          
           dispatch(stopRecording())
           // handleRecordInitiation()
-        }else{
-          // else, the commute is still alive append
+        } else {
+          // else, the commute is still alive = append
           appendBreadcrumb(commuteId,location,timestamp)
         }
       })
@@ -196,7 +222,7 @@ const initialState = fromJS({
   isRecording: false,
   isCapturing: false,
   isUploading: false,
-  isInside :false,
+  isInside: false,
   whichDing:'',
   currentCommuteId:'',
   latestLocation:{

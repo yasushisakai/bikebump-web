@@ -10,6 +10,7 @@ import { plotRoad, plotCommute, plotDing } from 'helpers/mapUtils'
 
 import * as dingFeedActionCreators from 'modules/dingFeed'
 import * as roadsActionCreators from 'modules/roads'
+import * as commutesActionCreators from 'modules/commutes'
 
 const MapVisContainer = React.createClass({
   propTypes:{
@@ -19,6 +20,7 @@ const MapVisContainer = React.createClass({
     dingIds : PropTypes.array.isRequired,
 
     handleFetchingRoads : PropTypes.func.isRequired,
+    handleFetchingCommutes : PropTypes.func.isRequired,
     handleSetDingListener : PropTypes.func.isRequired,
   },
   contextTypes:{
@@ -38,33 +40,14 @@ const MapVisContainer = React.createClass({
     // fetching 
     // handleXXX function will avoid fetching
     // if target has been already there
-    // 
+    //
     this.props.handleFetchingRoads()
       
     // fetch dingFeed
     this.props.handleSetDingListener()
-
+    
     // fetch the commutes
-    // TODO: FETCH THE COMMUTES
-
-    //
-    // plot commutes
-    //
-    // if(isModuleStale(this.props.commutes.get('lastUpdated'))){
-    //   this.props.handleFetchingCommutes()
-    //     .then((result)=>{
-    //       Object.keys(result.commutes)
-    //         .map(key=>{
-    //           plotCommute(result.commutes[key],this.map)
-    //         })
-    //     })
-    // }else{
-    //   this.props.commutes.keySeq().toArray()    FIXME
-    //     .filter(key=>filterStateVariables(key))
-    //     .map(key=>{
-    //       plotCommute(this.props.commutes.get(key).toJS(),this.map)
-    //     })
-    // }
+    this.props.handleFetchingCommutes()
   },
   handleClickRoad (roadId ){
     this.context.router.push(`/roads/${roadId}`)
@@ -80,6 +63,7 @@ const MapVisContainer = React.createClass({
   componentWillUpdate (nextProps) {
     // once everthing is ready plot!
     if (!nextProps.isFetching && !this.mapHasLayers) {
+      
       //roads~
       nextProps.roads.keySeq().toArray()
       .filter(key => filterStateVariables(key))
@@ -93,6 +77,13 @@ const MapVisContainer = React.createClass({
         plotDing(nextProps.dings.get(key).toJS(),this.map)
       })
 
+      // commutes
+      nextProps.commutes.keySeq()
+        .filter(key => filterStateVariables(key))
+        .map(key => {
+          plotCommute(nextProps.commutes.get(key).toJS(),this.map)
+        })
+
       this.mapHasLayers = true
     }
 
@@ -105,12 +96,16 @@ const MapVisContainer = React.createClass({
   },
 })
 
-function mapStateToProps ({roads, dingFeed, dings}) {
-  const isFetching = dingFeed.get('isFetching') || roads.get('isFetching')
+function mapStateToProps ({roads, dingFeed, dings, commutes}) {
+  const isFetching = 
+    dingFeed.get('isFetching') || 
+    roads.get('isFetching') || 
+    commutes.get('isFetching') 
   return {
     isFetching,
     roads,
     dings,
+    commutes,
     dingIds:dingFeed.get('dingIds').toJS()
   }
 }
@@ -119,6 +114,7 @@ function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     ...roadsActionCreators,
     ...dingFeedActionCreators,
+    ...commutesActionCreators,
   },dispatch)
 }
 

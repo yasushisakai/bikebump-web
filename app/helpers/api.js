@@ -19,8 +19,8 @@ export function createDing(lat,lng,uid,timestamp,value){
     .then(result=>result.data)
 }
 
-export function createUserDing(uid,dingId,status=userDingStatus.DINGED){
-  return ref.child(`userDings/${uid}/${dingId}`).set(status)
+export function createUserDing (uid, dingId, status=userDingStatus.DINGED, commuteId, timestamp){
+  return ref.child(`userDings/${uid}/${dingId}`).set({status, commuteId, timestamp})
     .then(()=>({uid,dingId,status}))
 }
 
@@ -30,7 +30,7 @@ export function fetchUserDings (uid) {
 }
 
 
-export function listenToDings( callback, errorCallback){
+export function listenToDings (callback, errorCallback) {
   ref.child(`dings/`).on('value',
     (snapshot)=>{
       const dings = snapshot.val() || {}
@@ -84,6 +84,10 @@ export function createCommute (uid) {
 export function appendBreadcrumb (commuteId,coordinate,timestamp=Date.now()) {
   ref.child(`commutes/${commuteId}/${timestamp}`).set(coordinate)
     .then(()=>(null))
+}
+
+export function deleteCommute (commuteId) {
+  ref.child(`commutes/${commuteId}`).set(null)
 }
 
 export function fetchPatterns() {

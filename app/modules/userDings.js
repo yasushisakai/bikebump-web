@@ -58,12 +58,19 @@ export function handleFetchingUserDings (uid) {
   }
 }
 
-export function addUserDing (uid,dingId,status) {
+export function handleAddUserDing (uid, dingId, status, commuteId, timestamp) {
+  createUserDing(uid, dingId, status, commuteId, timestamp)
+    .then(() => dispatch(addUserDing(uid, dingId, status, commuteId, timestamp)))
+}
+
+export function addUserDing (uid, dingId, status, commuteId, timestamp) {
   return {
     type: ADD_USER_DING,
     uid,
     dingId,
     status,
+    commuteId,
+    timestamp,
   }
 }
 
@@ -84,7 +91,8 @@ export default function userDings (state=initialState,action) {
         [action.uid]:action.dingIdsAndStatus
       })
     case ADD_USER_DING:
-      return state.setIn([action.uid,action.dingId],action.status)
+      const {status, commuteId, timestamp} = action
+      return state.setIn([action.uid,action.dingId], {status, commuteId, timestamp})
     default:
       return state
   }

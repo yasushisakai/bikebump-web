@@ -1,8 +1,11 @@
 import { fromJS } from 'immutable'
 import { fetchCommutes, saveCommute } from 'helpers/api'
+import { isModuleStale } from 'helpers/utils'
+
 const FETCHING_COMMUTES = 'FETCHING_COMMUTES'
 const FETCHING_COMMUTES_ERROR = 'FETCHING_COMMUTES_ERROR'
 const FETCHING_COMMUTES_SUCCESS = 'FETCHING_COMMUTES_SUCCESS'
+const REMOVE_FETCHING_COMMUTES = 'REMOVE_FETCHING_COMMUTES'
 
 const ADD_COMMUTE = 'ADD_COMMUTE'
 const ADD_COMMUTE_ERROR = 'ADD_COMMUTE_ERROR'
@@ -30,15 +33,21 @@ function fetchingCommutesSuccess (commutes) {
 
 export function handleFetchingCommutes () {
   return function (dispatch,getState) {
+    
 
     if(getState().commutes.get('isFetching')){
       return 
     }
+
     dispatch(fetchingCommutes())
+    if(!isModuleStale(getState().commutes.get('lastUpdated'))){
+      dispatch(removeFetchingCommutes())
+    }
+
     return fetchCommutes()
       .then((commutes)=>dispatch(fetchingCommutesSuccess(commutes)))
       .catch((error)=>dispatch(fetchingCommutesError(error)))
-  }
+    }
 }
 
 export function addCommute (commute) {
@@ -56,6 +65,12 @@ function addCommuteError (error){
   }
 }
 
+function removeFetchingCommutes () {
+  return {
+    type: REMOVE_FETCHING_COMMUTES,
+  }
+}
+
 export function handleAddCommute (commute) {
   return function (dispatch) {
     dispatch(fetchingCommutes)
@@ -66,9 +81,9 @@ export function handleAddCommute (commute) {
 }
 
 const initalState = fromJS({
-  isFetching:false,
-  error:'',
-  lastUpdated:0,
+  isFetching: false,
+  error: '',
+  lastUpdated: 0,
 })
 
 export default function commutes(state=initalState,action){
@@ -89,6 +104,8 @@ export default function commutes(state=initalState,action){
         error:'',
         lastUpdated: Date.now(),
       }).merge(action.commutes)
+    case REMOVE_FETCHING_COMMUTES:
+      return state.set('isFetching', false)
     case ADD_COMMUTE:
       return state.merge({
         [action.commute.commuteId]:action.commute

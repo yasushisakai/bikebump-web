@@ -132,7 +132,7 @@ export function plotCommute(commute,map,customStyle={}){
       return commute[key]
     })
 
-    const style = {...defaultStyle, opacity:0.1, weight:10, clickable:false, ...customStyle}
+    const style = {...defaultStyle, opacity:1.0, weight:10, clickable:false, ...customStyle}
 
   leaflet.polyline(coords,style).addTo(map)
 }
