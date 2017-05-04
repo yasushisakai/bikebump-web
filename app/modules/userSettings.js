@@ -1,4 +1,4 @@
-import {initialState as baseState } from 'config/constants'
+import { initialState as baseState } from 'config/constants'
 import { fromJS } from 'immutable'
 import { fetchUserSettings, updateUserSettings } from 'helpers/api'
 import { isModuleStale } from 'helpers/utils'

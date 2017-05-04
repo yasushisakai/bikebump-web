@@ -28,18 +28,17 @@ function checkAuth (nextState, replace) {
   const nextPath = nextState.location.pathname
 
   if (isAuthed) {
-    if (nextPath == '/') {
+    if (nextPath === '/') {
       replace('/record')
     }
   } else {
-    if (nextPath == '/record') {
+    if (nextPath === '/record') {
       replace('/signin')
     }
   }
 }
 
 const mode = isProduction === true ? 'production' : 'development'
-console.clear()
 console.log(`bikebump running (${mode})`)
 
 let app = document.getElementById('app')

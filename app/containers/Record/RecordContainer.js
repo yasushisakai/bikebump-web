@@ -6,9 +6,8 @@ import { fitCanvas, detectionGap } from 'helpers/utils'
 import { Record } from 'components'
 import NoSleep from 'nosleep'
 import {Analyser, Recorder} from 'helpers/Sound'
-import { firebaseAuth, updateCycleDuration } from 'config/constants'
+import { updateCycleDuration } from 'config/constants'
 
-import * as userActionCreators from 'modules/users'
 import * as userSettingsActionCreators from 'modules/userSettings'
 import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
@@ -16,6 +15,7 @@ import * as dingFeedActionCreators from 'modules/dingFeed'
 
 const RecordContainer = React.createClass({
   propTypes: {
+    isFetching: PropTypes.bool.isRequired,
     isAuthed: PropTypes.bool.isRequired,
     authedId: PropTypes.string.isRequired,
     isRecording: PropTypes.bool.isRequired,
@@ -40,7 +40,7 @@ const RecordContainer = React.createClass({
 
     // fetching data
     this.props.handleSetDingListener()
-    this.props.handleFetchingUserSettings()
+    this.props.handleFetchingUserSettings(this.props.authedId)
     this.latLngInterval = null
 
     // plot to html5 canvas (p5 replacement)
