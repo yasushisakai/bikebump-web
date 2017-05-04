@@ -53,8 +53,6 @@ const MapVisContainer = React.createClass({
   handleClickRoad (roadId ){
     this.context.router.push(`/roads/${roadId}`)
   },
-  handleClickDing (dingId) {
-  },
   componentWillUnmount () {
     this.map.remove()
   },
