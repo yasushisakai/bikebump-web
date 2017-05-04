@@ -21,6 +21,7 @@ const RecordContainer = React.createClass({
     isRecording: PropTypes.bool.isRequired,
     isUploading: PropTypes.bool.isRequired,
     latestLocation: PropTypes.object.isRequired,
+    currentCommuteId: PropTypes.string,
     latestFetch: PropTypes.number.isRequired,
     targetFrequency: PropTypes.number,
 
@@ -29,6 +30,7 @@ const RecordContainer = React.createClass({
     toggleRecording: PropTypes.func.isRequired,
     handleFetchLatLng: PropTypes.func.isRequired,
     handleComplieDing: PropTypes.func.isRequired,
+    uploadingClip: PropTypes.func.isRequired,
     handleUpload: PropTypes.func.isRequired,
   },
   componentDidMount () {
@@ -78,6 +80,19 @@ const RecordContainer = React.createClass({
     // canvas functions
     this.setup()
     this.draw() // 'endless loop'
+  },
+  componentWillUnmount () {
+    window.cancelAnimationFrame(this.animation)
+
+    if (this.latLngInterval !== null) {
+      window.clearInterval(this.latLngInterval)
+      this.latLngInterval = null
+    }
+
+    // stop recording
+    if (this.props.isRecording === true) {
+      this.props.toggleRecording()
+    }
   },
   setup () {
     const dataArray = this.analyser.updateDataArray()
@@ -156,6 +171,7 @@ const RecordContainer = React.createClass({
           this.props.handleComplieDing(
             this.props.authedId,
             this.props.latestLocation,
+            this.props.currentCommuteId,
             this.props.latestFetch,
             10,
             0
@@ -222,19 +238,7 @@ const RecordContainer = React.createClass({
   mouseMoved (event) {
     this.pen.updateMouse(event)
   },
-  componentWillUnmount () {
-    window.cancelAnimationFrame(this.animation)
 
-    if (this.latLngInterval !== null) {
-      window.clearInterval(this.latLngInterval)
-      this.latLngInterval = null
-    }
-
-    // stop recording
-    if (this.props.isRecording === true) {
-      this.props.toggleRecording()
-    }
-  },
   render () {
     return (
       <Record/>

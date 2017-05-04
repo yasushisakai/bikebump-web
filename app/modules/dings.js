@@ -1,7 +1,6 @@
-import { fromJS, toJS, Map } from 'immutable'
+import { fromJS } from 'immutable'
 import { createDing, fetchDings, fetchDing, createUserDing } from 'helpers/api'
-import { addUserDing } from 'modules/userDings'
-import { distFromLatLng } from 'helpers/utils'
+import { addUserDing, userDingStatus } from 'modules/userDings'
 import { addDingId } from 'modules/dingFeed'
 
 const FETCHING_DINGS = 'FETCHING_DINGS'
@@ -92,13 +91,17 @@ export function addMultipleDings (dings) {
 // ding, updates the server, the state will be notified by the listener(dingFeed)
 // + it adds (to both FB and state) and userDing with the status of 'DINGED'
 //
-export function handleComplieDing (uid, coordinates, timestamp, radius, value) {
+export function handleComplieDing (uid, coordinates, commuteId, timestamp, radius, value) {
   return function (dispatch, getState) {
     return createDing(coordinates.lat, coordinates.lng, uid, timestamp, value)
-      .then(dingId => createUserDing(uid, dingId))
-      .then(response => {
-        const {uid, dingId, status} = response
-        return dispatch(addUserDing(uid, dingId, status))
+      .then(dingId => {
+        if (dingId !== null) {
+          return createUserDing(uid, dingId, userDingStatus.DINGED, commuteId, timestamp)
+            .then((response) => {
+              const {uid, dingId, status} = response
+              return dispatch(addUserDing(uid, dingId, status))
+            })
+        }
       })
   }
 }
