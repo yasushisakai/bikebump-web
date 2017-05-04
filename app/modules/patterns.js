@@ -10,21 +10,21 @@ const ADD_PATTERN = 'ADD_PATTERN'
 const ADD_PATTERN_ERROR = 'ADD_PATTERN_ERROR'
 
 const initialState = fromJS({
-  isFetching:true,
-  error:'',
-  lastUpdated:0,
+  isFetching: true,
+  error: '',
+  lastUpdated: 0,
 })
 
-function fetchingPatterns (){
+function fetchingPatterns () {
   return {
     type: FETCHING_PATTERNS,
   }
 }
-function fetchingPatternsError (error){
+function fetchingPatternsError (error) {
   console.warn(error)
   return {
     type: FETCHING_PATTERNS_ERROR,
-    error : 'error fetching patterns'
+    error: 'error fetching patterns',
   }
 }
 
@@ -32,65 +32,65 @@ function addPatternError (error) {
   console.warn(error)
   return {
     type: ADD_PATTERN_ERROR,
-    error: 'error adding pattern'
+    error: 'error adding pattern',
   }
 }
 
-function fetchingPatternsSuccess (patterns){
+function fetchingPatternsSuccess (patterns) {
   return {
     type: FETCHING_PATTERNS_SUCCESS,
-    patterns
+    patterns,
   }
 }
 
 function addPattern (pattern) {
   return {
     type: ADD_PATTERN,
-    pattern
+    pattern,
   }
 }
 
 export function handleFetchingPatterns () {
-  return function(dispatch,getState){
-    if(!checkLastUpdate(getState().patterns.get('lastUpdated'),10)){
+  return function (dispatch, getState) {
+    if (!checkLastUpdate(getState().patterns.get('lastUpdated'), 10)) {
       const justPatterns = getState().patterns.keySeq().toArray()
-        .filter(key=>(key!=='isFetching'&&key!=='error'&&key!=='lastUpdated'))
-        .map(key=>getState().patterns.get(key))
+        .filter(key => (key !== 'isFetching' && key !== 'error' && key !== 'lastUpdated'))
+        .map(key => getState().patterns.get(key))
       return Promise.resolve(justPatterns)
     }
     dispatch(fetchingPatterns())
     return fetchPatterns()
-      .then((patterns)=>dispatch(fetchingPatternsSuccess(patterns)))
-      .catch((error)=>dispatch(fetchingPatternsError(error)))
+      .then((patterns) => dispatch(fetchingPatternsSuccess(patterns)))
+      .catch((error) => dispatch(fetchingPatternsError(error)))
   }
 }
 
 export function handleAddPattern (pattern) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(fetchingPatterns)
     savePattern(pattern)
-      .then((patternWithId)=>dispatch(addPattern(patternWithId)))
-      .catch((error)=>dispatch(addPatternError(error)))
+      .then((patternWithId) => dispatch(addPattern(patternWithId)))
+      .catch((error) => dispatch(addPatternError(error)))
   }
 }
 
-export default function patterns (state=initialState, action){
+export default function patterns (state = initialState, action) {
   switch (action.type) {
     case FETCHING_PATTERNS:
-      return state.set('inFetching',true)
+      return state.set('inFetching', true)
     case ADD_PATTERN_ERROR:
     case FETCHING_PATTERNS_ERROR:
       return state.merge({
-        isFetching:false,
-        error:action.error,
+        isFetching: false,
+        error: action.error,
       })
     case FETCHING_PATTERNS_SUCCESS:
       return state.merge({
-        isFetching:false,
-        lastUpdated:Date.now(),
+        isFetching: false,
+        lastUpdated: Date.now(),
       }).merge(action.patterns)
     case ADD_PATTERN:
-      return state.set(action.pattern.patternId,action.pattern)
+      return state.set(action.pattern.patternId, action.pattern)
     default:
       return state
   }

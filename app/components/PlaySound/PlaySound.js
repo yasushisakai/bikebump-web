@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import {button} from './styles.css'
 
-PlaySound.propTypes={
+PlaySound.propTypes = {
   onClickPlaySound: PropTypes.func.isRequired,
 }
 

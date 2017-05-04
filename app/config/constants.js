@@ -1,20 +1,19 @@
 import firebase from 'firebase'
-import { Map } from 'immutable' 
+import { Map } from 'immutable'
 
-export const maxCommuteLife = 20000 // ms 
-export const updateCycleDuration = 5000 //ms
-export const renderTimeConstrain = 10000 //ms
-export const recordDuration = 5000 //ms
-export const waitDuration = 3000 //ms
+export const maxCommuteLife = 20000 // ms
+export const updateCycleDuration = 5000 // ms
+export const renderTimeConstrain = 10000 // ms
+export const recordDuration = 5000 // ms
+export const waitDuration = 3000 // ms
 export const dingDetectionGap = 120
-export const updateDuration = 1 * 60 * 1000 // 1min 
+export const updateDuration = 1 * 60 * 1000 // 1min
 
 export const initialState = new Map({
   isFetching: false,
   error: '',
   lastUpdated: 0,
 })
-
 
 //
 // GENERAL
@@ -31,20 +30,19 @@ export const apiRoot = isProduction ? 'https://bikebump.media.mit.edu/api/' : 'h
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAZE26Lxuw35m7ZmYZHYLacfOgw8x9cyng",
-  authDomain: "bikebump-ea3b1.firebaseapp.com",
-  databaseURL: "https://bikebump-ea3b1.firebaseio.com",
-  storageBucket: "bikebump-ea3b1.appspot.com",
-  messagingSenderId: "642352920574"
-};
+  apiKey: 'AIzaSyAZE26Lxuw35m7ZmYZHYLacfOgw8x9cyng',
+  authDomain: 'bikebump-ea3b1.firebaseapp.com',
+  databaseURL: 'https://bikebump-ea3b1.firebaseio.com',
+  storageBucket: 'bikebump-ea3b1.appspot.com',
+  messagingSenderId: '642352920574',
+}
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig)
 
 export const ref = firebase.database().ref()
 export const firebaseAuth = firebase.auth
 export const firebaseStorage = firebase.storage().ref()
 export const isRemote = false
-
 
 //
 // leaflet

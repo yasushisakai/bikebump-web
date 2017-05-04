@@ -4,6 +4,6 @@ import { Map } from 'immutable'
 
 export default function Record (props) {
   return (
-    <div id='record' className={recordContents}></div>
+    <div id='record' className={recordContents} />
   )
 }

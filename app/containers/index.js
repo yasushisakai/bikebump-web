@@ -15,9 +15,8 @@ export LayoutContainer from './Layout/LayoutContainer'
 // export TinyMapContainer from './TinyMap/TinyMapContainer'
 // export QuestionPanelContainer from './QuestionPanel/QuestionPanelContainer'
 export MidMapContainer from './MidMap/MidMapContainer'
-//export StreetSideContainer from './StreetSide/StreetSideContainer'
+// export StreetSideContainer from './StreetSide/StreetSideContainer'
 export MapAndStreetViewContainer from './MapAndStreetView/MapAndStreetViewContainer'
-
 
 // sub components
 export SurveyContainer from './Survey/SurveyContainer'

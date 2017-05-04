@@ -6,17 +6,17 @@ import { Map } from 'immutable'
 import * as roadsActionCreators from 'modules/roads'
 
 const RoadVisContainer = React.createClass({
-  propTypes:{
+  propTypes: {
     roadId: PropTypes.string.isRequired,
   },
   componentDidMount () {
   },
   render () {
-    return(<RoadVis roadId={this.props.roadId}/>)
+    return (<RoadVis roadId={this.props.roadId}/>)
   },
 })
 
-function mapStateToProps (state,props) {
+function mapStateToProps (state, props) {
   const roadId = props.params.roadId
   return {
     roadId,
@@ -25,9 +25,9 @@ function mapStateToProps (state,props) {
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    ...roadsActionCreators
-  },dispatch)
+    ...roadsActionCreators,
+  }, dispatch)
 }
 
-export default connect(mapStateToProps, 
+export default connect(mapStateToProps,
 mapDispatchToProps)(RoadVisContainer)

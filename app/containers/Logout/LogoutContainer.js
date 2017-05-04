@@ -5,11 +5,11 @@ import { Logout } from 'components'
 import * as userActionCreators from 'modules/users'
 
 const LogoutContainer = React.createClass({
-  propTypes:{
-    isAuthed:PropTypes.bool.isRequired,
-    handleUserLogout:PropTypes.func.isRequired,
+  propTypes: {
+    isAuthed: PropTypes.bool.isRequired,
+    handleUserLogout: PropTypes.func.isRequired,
   },
-  contextTypes:{
+  contextTypes: {
     router: PropTypes.object.isRequired,
   },
   componentDidMount () {
@@ -24,13 +24,13 @@ const LogoutContainer = React.createClass({
 
 function mapStateToProps (state) {
   return {
-    isAuthed:state.users.get('isAuthed'),
+    isAuthed: state.users.get('isAuthed'),
   }
 }
 
 function mapDispatchToProps (dispatch) {
-  return bindActionCreators(userActionCreators,dispatch)
+  return bindActionCreators(userActionCreators, dispatch)
 }
 
-export default connect(mapStateToProps, 
+export default connect(mapStateToProps,
 mapDispatchToProps)(LogoutContainer)

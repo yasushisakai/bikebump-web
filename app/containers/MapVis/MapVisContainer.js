@@ -13,74 +13,70 @@ import * as roadsActionCreators from 'modules/roads'
 import * as commutesActionCreators from 'modules/commutes'
 
 const MapVisContainer = React.createClass({
-  propTypes:{
-    isFetching:PropTypes.bool.isRequired,
+  propTypes: {
+    isFetching: PropTypes.bool.isRequired,
     roads: PropTypes.instanceOf(Map).isRequired,
     dings: PropTypes.instanceOf(Map).isRequired,
-    dingIds : PropTypes.array.isRequired,
+    dingIds: PropTypes.array.isRequired,
 
-    handleFetchingRoads : PropTypes.func.isRequired,
-    handleFetchingCommutes : PropTypes.func.isRequired,
-    handleSetDingListener : PropTypes.func.isRequired,
+    handleFetchingRoads: PropTypes.func.isRequired,
+    handleFetchingCommutes: PropTypes.func.isRequired,
+    handleSetDingListener: PropTypes.func.isRequired,
   },
-  contextTypes:{
-    router:PropTypes.object.isRequired,
+  contextTypes: {
+    router: PropTypes.object.isRequired,
   },
-  componentDidMount(){
-    
-    // initiating the map 
-    this.map = leaflet.map('mainMap').setView([42.355596, -71.101363],16)
-    leaflet.tileLayer(tileURL,{attribution,maxZoom:20}).addTo(this.map)
+  componentDidMount () {
+    // initiating the map
+    this.map = leaflet.map('mainMap').setView([42.355596, -71.101363], 16)
+    leaflet.tileLayer(tileURL, {attribution, maxZoom: 20}).addTo(this.map)
 
     // toggle to render vis elements only once per visit
-    this.mapHasLayers = false;
-
+    this.mapHasLayers = false
 
     //
-    // fetching 
+    // fetching
     // handleXXX function will avoid fetching
     // if target has been already there
     //
     this.props.handleFetchingRoads()
-      
+
     // fetch dingFeed
     this.props.handleSetDingListener()
-    
+
     // fetch the commutes
     this.props.handleFetchingCommutes()
-
   },
-  handleClickRoad (roadId ){
+  handleClickRoad (roadId) {
     this.context.router.push(`/roads/${roadId}`)
   },
   componentWillUnmount () {
     this.map.remove()
   },
   shouldComponentUpdate (nextProps) {
-    return !nextProps.isFetching 
+    return !nextProps.isFetching
   },
   componentWillUpdate (nextProps) {
     // once everthing is ready plot!
     if (!nextProps.isFetching && !this.mapHasLayers) {
-      
-      //roads~
+      // roads~
       nextProps.roads.keySeq().toArray()
       .filter(key => filterStateVariables(key))
       .map(key => {
-         plotRoad(nextProps.roads.get(key).toJS(), this.map, {}, this.handleClickRoad)
+        plotRoad(nextProps.roads.get(key).toJS(), this.map, {}, this.handleClickRoad)
       })
 
       // dings!
       nextProps.dingIds.map(key => {
         const ding = nextProps.dings.get(key)
-        plotDing(nextProps.dings.get(key).toJS(),this.map)
+        plotDing(nextProps.dings.get(key).toJS(), this.map)
       })
 
       // commutes
       nextProps.commutes.keySeq().toArray()
         .filter(key => filterStateVariables(key))
         .map(key => {
-          plotCommute(nextProps.commutes.get(key).toJS(),this.map)
+          plotCommute(nextProps.commutes.get(key).toJS(), this.map)
         })
 
       this.mapHasLayers = true
@@ -96,16 +92,16 @@ const MapVisContainer = React.createClass({
 })
 
 function mapStateToProps ({roads, dingFeed, dings, commutes}) {
-  const isFetching = 
-    dingFeed.get('isFetching') || 
-    roads.get('isFetching') || 
-    commutes.get('isFetching') 
+  const isFetching =
+    dingFeed.get('isFetching') ||
+    roads.get('isFetching') ||
+    commutes.get('isFetching')
   return {
     isFetching,
     roads,
     dings,
     commutes,
-    dingIds:dingFeed.get('dingIds').toJS()
+    dingIds: dingFeed.get('dingIds').toJS(),
   }
 }
 
@@ -114,10 +110,10 @@ function mapDispatchToProps (dispatch) {
     ...roadsActionCreators,
     ...dingFeedActionCreators,
     ...commutesActionCreators,
-  },dispatch)
+  }, dispatch)
 }
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps
 )(MapVisContainer)

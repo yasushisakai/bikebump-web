@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react'
 
-Clear.propTypes={
-  isAuthed : PropTypes.bool.isRequired,
-  authedId : PropTypes.string.isRequired,
-  onClick : PropTypes.func.isRequired,
+Clear.propTypes = {
+  isAuthed: PropTypes.bool.isRequired,
+  authedId: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 }
 
 export default function Clear (props) {

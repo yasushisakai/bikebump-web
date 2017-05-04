@@ -15,7 +15,7 @@ import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
 
 const RecordContainer = React.createClass({
-  propTypes:{
+  propTypes: {
     isAuthed: PropTypes.bool.isRequired,
     authedId: PropTypes.string.isRequired,
     isRecording: PropTypes.bool.isRequired,
@@ -24,15 +24,14 @@ const RecordContainer = React.createClass({
     latestFetch: PropTypes.number.isRequired,
     targetFrequency: PropTypes.number,
 
-    handleSetDingListener : PropTypes.func.isRequired,
-    handleFetchingUserSettings : PropTypes.func.isRequired,
+    handleSetDingListener: PropTypes.func.isRequired,
+    handleFetchingUserSettings: PropTypes.func.isRequired,
     toggleRecording: PropTypes.func.isRequired,
-    handleFetchLatLng: PropTypes.func.isRequired, 
+    handleFetchLatLng: PropTypes.func.isRequired,
     handleComplieDing: PropTypes.func.isRequired,
     handleUpload: PropTypes.func.isRequired,
   },
   componentDidMount () {
-
     // setting dom elements
     this.canvas = document.createElement('canvas')
     this.recordElement = document.getElementById('record')
@@ -42,20 +41,20 @@ const RecordContainer = React.createClass({
     // fetching data
     this.props.handleSetDingListener()
     this.props.handleFetchingUserSettings()
-    this.latLngInterval = null;
+    this.latLngInterval = null
 
     // plot to html5 canvas (p5 replacement)
     this.pen = new Pen(this.canvas)
-    
-    // audio 
+
+    // audio
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
     this.analyser = new Analyser(this.audioContext)
     this.analyser.setIsInFocus(true)
 
-    if(navigator.getUserMedia){
+    if (navigator.getUserMedia) {
       navigator.getUserMedia(
-        {audio:true},
-        (stream)=>{
+        {audio: true},
+        (stream) => {
           let source = this.audioContext.createMediaStreamSource(stream)
           source.connect(this.analyser.input)
           this.analyser.connect()
@@ -63,11 +62,11 @@ const RecordContainer = React.createClass({
           this.recorder = new Recorder(source)
           this.recorder.record()
         },
-        (error)=>{
+        (error) => {
           console.error(error)
         }
       )
-    }else{
+    } else {
       console.error('user get media error')
       // switch to button mode
     }
@@ -76,14 +75,14 @@ const RecordContainer = React.createClass({
     this.noSleep = new NoSleep()
     this.noSleep.enable()
 
-    // canvas functions 
+    // canvas functions
     this.setup()
     this.draw() // 'endless loop'
   },
-  setup (){
+  setup () {
     const dataArray = this.analyser.updateDataArray()
     this.binWidth = this.canvas.width / dataArray.length
-    this.circleRadius = this.canvas.width*0.325
+    this.circleRadius = this.canvas.width * 0.325
 
     //
     // Detection
@@ -96,59 +95,58 @@ const RecordContainer = React.createClass({
     this.canvas.onclick = this.mousePressed
     this.canvas.addEventListener('mousemove', this.mouseMoved)
   },
-  draw (){
+  draw () {
     this.animation = requestAnimationFrame(this.draw)
 
     if (this.props.isFetching) {
-      return 
+      return
     }
 
     this.pen.clear()
 
-    if(this.props.isRecording){
-
+    if (this.props.isRecording) {
       // draw the polyline
       const dataArray = this.analyser.updateDataArray()
       this.pen.stroke('white')
       this.pen.ctx.beginPath()
-      dataArray.map((bin,index)=>{
+      dataArray.map((bin, index) => {
         const x = index * this.binWidth
-        const y = this.canvas.height * (1-bin/256)
-        this.pen.ctx.lineTo(x,y)
+        const y = this.canvas.height * (1 - bin / 256)
+        this.pen.ctx.lineTo(x, y)
       })
       this.pen.ctx.stroke()
 
       // draw current target frequency
       const freqIndex = this.analyser.frequencyToIndex(this.props.targetFrequency)
       this.pen.stroke('red')
-      this.pen.drawVerticalAxis(freqIndex*this.binWidth,this.canvas.height)
+      this.pen.drawVerticalAxis(freqIndex * this.binWidth, this.canvas.height)
 
       //
       // Detection
       // climbing up the stairs
       //
       const freqSlope = this.analyser.getSlopes(freqIndex)
-      if(detectionGap(this.previousSpike)){
+      if (detectionGap(this.previousSpike)) {
         this.isDing = false
       }
 
-      if((freqSlope[0]>10 || freqSlope[1]>10) && !this.firstFlag && detectionGap(this.previousSpike)) {
-        console.log('1',freqSlope)
+      if ((freqSlope[0] > 10 || freqSlope[1] > 10) && !this.firstFlag && detectionGap(this.previousSpike)) {
+        console.log('1', freqSlope)
         this.firstFlag = true
         this.previousSpike = Date.now()
       }
 
-      if(this.firstFlag && detectionGap(this.previousSpike) && !this.secondFlag){
-        console.log('2',freqSlope)
-        if (freqSlope[0]>10 || freqSlope[1]>10) this.secondFlag = true
-        else{this.firstFlag = false}
+      if (this.firstFlag && detectionGap(this.previousSpike) && !this.secondFlag) {
+        console.log('2', freqSlope)
+        if (freqSlope[0] > 10 || freqSlope[1] > 10) this.secondFlag = true
+        else { this.firstFlag = false }
         this.previousSpike = Date.now()
-      } 
+      }
 
-      if(this.secondFlag && detectionGap(this.previousSpike)){
-        console.log('3',freqSlope)
+      if (this.secondFlag && detectionGap(this.previousSpike)) {
+        console.log('3', freqSlope)
         this.firstFlag = this.secondFlag = false
-        if(freqSlope[0]>5 && freqSlope[1]>5){
+        if (freqSlope[0] > 5 && freqSlope[1] > 5) {
           console.log('ding')
           this.isDing = true
 
@@ -169,79 +167,73 @@ const RecordContainer = React.createClass({
             this.props.latestFetch
           )
 
-          if(!this.props.isUploading){
+          if (!this.props.isUploading) {
             this.props.uploadingClip()
             this.recorder.export
           }
-
         }
         this.previousSpike = Date.now()
       } // detection ends
-      
+
       this.pen.noStroke()
       this.pen.fill('white')
-      this.pen.text('push again to stop recording',this.canvas.width/2,this.canvas.height/4)
- 
+      this.pen.text('push again to stop recording', this.canvas.width / 2, this.canvas.height / 4)
+
       this.pen.noStroke()
       this.pen.fill('red')
-    }else{
+    } else {
       this.pen.noStroke()
       this.pen.fill('white')
-      this.pen.text('push to record your commute',this.canvas.width/2,this.canvas.height/4)
+      this.pen.text('push to record your commute', this.canvas.width / 2, this.canvas.height / 4)
       this.pen.noFill()
       this.pen.stroke('white')
     }
-    this.pen.drawCircle(this.canvas.width/2,this.canvas.height/2,this.circleRadius)
-
+    this.pen.drawCircle(this.canvas.width / 2, this.canvas.height / 2, this.circleRadius)
   },
-  updatePosition(commuteId){
+  updatePosition (commuteId) {
     // window.navigator.vibrate(100)
     this.props.handleFetchLatLng()
   },
-  mousePressed (event){
-
+  mousePressed (event) {
     const distanceFromCenter = this.pen.distance(
       this.pen.mouseX,
       this.pen.mouseY,
-      this.canvas.width/2.0,
-      this.canvas.height/2.0
+      this.canvas.width / 2.0,
+      this.canvas.height / 2.0
       )
 
-    if(distanceFromCenter < this.circleRadius){
+    if (distanceFromCenter < this.circleRadius) {
       window.navigator.vibrate(50)
       this.props.toggleRecording()
-      .then(response=>{
-        if(response.isRecording){
-          const fetchFunc = this.updatePosition.bind(this,response.commuteId)
+      .then(response => {
+        if (response.isRecording) {
+          const fetchFunc = this.updatePosition.bind(this, response.commuteId)
           fetchFunc()
           this.latLngInterval = window.setInterval(fetchFunc, updateCycleDuration)
-        }else{
-          if(this.latLngInterval !== null){
+        } else {
+          if (this.latLngInterval !== null) {
             window.clearInterval(this.latLngInterval)
           }
           this.latLngInterval = null
         }
       })
     }
-
   },
-  mouseMoved (event){
+  mouseMoved (event) {
     this.pen.updateMouse(event)
   },
-  componentWillUnmount(){
-    
+  componentWillUnmount () {
     window.cancelAnimationFrame(this.animation)
 
-    if(this.latLngInterval !== null) {
+    if (this.latLngInterval !== null) {
       window.clearInterval(this.latLngInterval)
       this.latLngInterval = null
     }
 
     // stop recording
-    if(this.props.isRecording === true) {
+    if (this.props.isRecording === true) {
       this.props.toggleRecording()
     }
-
   },
   render () {
     return (
@@ -255,16 +247,16 @@ function mapStateToProps (state) {
   return {
     isAuthed: state.users.get('isAuthed'),
     authedId,
-    isFetching : 
+    isFetching:
       state.users.get('isFetching') ||
       state.userSettings.get('isFetching') ||
       state.dingFeed.get('isFetching'),
-    isRecording : state.record.get('isRecording'),
+    isRecording: state.record.get('isRecording'),
     currentCommuteId: state.record.get('currentCommuteId'),
     isUploading: state.record.get('isUploading'),
-    latestLocation : state.record.get('latestLocation').toJS(),
-    latestFetch : state.record.get('latestFetch'),
-    targetFrequency : state.userSettings.getIn([authedId,'targetFrequency']),
+    latestLocation: state.record.get('latestLocation').toJS(),
+    latestFetch: state.record.get('latestFetch'),
+    targetFrequency: state.userSettings.getIn([authedId, 'targetFrequency']),
   }
 }
 
@@ -273,9 +265,9 @@ function mapDispatchToProps (dispatch) {
     ...userSettingsActionCreators,
     ...recordActionCreators,
     ...dingsActionCreators,
-    ...dingFeedActionCreators, 
+    ...dingFeedActionCreators,
   }, dispatch)
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(RecordContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(RecordContainer)
 // export default RecordContainer

@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { logoutContents } from './styles.css'
 
 Logout.propTypes = {
-  isAuthed : PropTypes.bool.isRequired,
+  isAuthed: PropTypes.bool.isRequired,
 }
 
 export default function Logout (props) {

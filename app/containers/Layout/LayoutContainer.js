@@ -5,20 +5,20 @@ import { connect } from 'react-redux'
 import {Layout} from 'components'
 
 const LayoutContainer = React.createClass({
-  componentDidMount() {
+  componentDidMount () {
     const layoutElement = document.getElementById('layout')
     const newElement = document.createElement('div')
-    newElement.id='newElement'
+    newElement.id = 'newElement'
     newElement.style.width = '100%'
     newElement.style.hwight = '100%'
-    layoutElement .appendChild(newElement)
+    layoutElement.appendChild(newElement)
     console.log(layoutElement)
   },
   render () {
     return (
       <Layout />
     )
-  }
+  },
 })
 
 // function mapStateToProps (state) {
@@ -31,7 +31,7 @@ const LayoutContainer = React.createClass({
 //   return bindActionCreators(,dispatch)
 // }
 
-// export default connect(mapStateToProps, 
+// export default connect(mapStateToProps,
 // mapDispatchToProps)(LayoutContainer)
 
 export default LayoutContainer

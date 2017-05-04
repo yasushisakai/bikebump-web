@@ -8,22 +8,21 @@ import * as userDingsActionCreators from 'modules/userDings'
 import * as userVotesActionCreators from 'modules/userVotes'
 import * as userResponsesActionCreators from 'modules/userResponses'
 
-
 const UserContainer = React.createClass({
-  propTypes:{
+  propTypes: {
     isFetching: PropTypes.bool.isRequired,
     isAuthed: PropTypes.bool.isRequired,
     authedId: PropTypes.string.isRequired,
     handleFetchingUserDings: PropTypes.func.isRequired,
     handleFetchingUserResponses: PropTypes.func.isRequired,
-    handleFetchingUserVotes : PropTypes.func.isRequired,
+    handleFetchingUserVotes: PropTypes.func.isRequired,
     dingIds: PropTypes.object,
   },
-  contextTypes:{
-    router : PropTypes.object.isRequired,
+  contextTypes: {
+    router: PropTypes.object.isRequired,
   },
   componentDidMount () {
-    if(this.context.router.params.uid !== this.props.authedId) {this.context.router.push('/signin')}
+    if (this.context.router.params.uid !== this.props.authedId) { this.context.router.push('/signin') }
 
     // fetch user stuff
     if (this.props.isAuthed === true) { // reload
@@ -31,30 +30,29 @@ const UserContainer = React.createClass({
       this.props.handleFetchingUserVotes()
       this.props.handleFetchingUserResponses()
     }
-
   },
   render () {
     return this.props.isFetching === true
     ? null
-    :( <User uid={this.props.authedId} dingIds={this.props.dingIds}/> )
+    : (<User uid={this.props.authedId} dingIds={this.props.dingIds}/>)
   },
 })
 
-function mapStateToProps ({users,userDings,userVotes,userResponses},props) {
+function mapStateToProps ({users, userDings, userVotes, userResponses}, props) {
   return {
     isFetching: users.get('isFetching') || userDings.get('isFetching') || userVotes.get('isFetching'),
-    authedId : users.get('authedId'),
-    isAuthed : users.get('isAuthed'),
-    dingIds : userDings.get(props.routeParams.uid)
+    authedId: users.get('authedId'),
+    isAuthed: users.get('isAuthed'),
+    dingIds: userDings.get(props.routeParams.uid),
   }
 }
 
 function mapDispatchToProps (dispatch) {
-  return bindActionCreators ({
+  return bindActionCreators({
     ...userDingsActionCreators,
     ...userVotesActionCreators,
     ...userResponsesActionCreators,
-  },dispatch)
+  }, dispatch)
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(UserContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(UserContainer)

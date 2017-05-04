@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { formatUser, clearStorage } from 'helpers/utils'
 import { auth, redirectAuth, getCurrentUser, logout } from 'helpers/auth'
-// users 
+// users
 
 const FETCHING_USER = 'FETCHING_USER'
 const FETCHING_USER_ERROR = 'FETCHING_USER_ERROR'
@@ -11,23 +11,23 @@ const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER'
 const AUTH_USER = 'AUTH_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
 
-export function fetchingUser(){
+export function fetchingUser () {
   return {
-    type:FETCHING_USER,
+    type: FETCHING_USER,
   }
 }
 
-function fetchingUserError(error){
+function fetchingUserError (error) {
   console.warn(error)
   return {
-    type:FETCHING_USER_ERROR,
-    error:"error fetching user"
+    type: FETCHING_USER_ERROR,
+    error: 'error fetching user',
   }
 }
 
-export function fetchingUserSuccess(uid,user,timestamp){
+export function fetchingUserSuccess (uid, user, timestamp) {
   return {
-    type:FETCHING_USER_SUCCESS,
+    type: FETCHING_USER_SUCCESS,
     uid,
     user,
     timestamp,
@@ -36,20 +36,20 @@ export function fetchingUserSuccess(uid,user,timestamp){
 
 export function removeFetchingUser () {
   return {
-    type:REMOVE_FETCHING_USER,
+    type: REMOVE_FETCHING_USER,
   }
 }
 
-export function authUser(uid){
-  return{
-    type:AUTH_USER,
+export function authUser (uid) {
+  return {
+    type: AUTH_USER,
     uid,
   }
 }
 
-function unauthUser(){
-  return{
-    type:UNAUTH_USER,
+function unauthUser () {
+  return {
+    type: UNAUTH_USER,
   }
 }
 
@@ -59,39 +59,39 @@ export function handleUserAuthRedirect (service) {
     dispatch(fetchingUser)
     return auth(service)
   }
-} 
+}
 
 // this is triggered only when it is redirected from handleUserRedirect
 export function handleUserAuthReturn (service) {
   return function (dispatch) {
     dispatch(fetchingUser)
     return redirectAuth(service)
-      .then((user)=>dispatch(fetchingUserSuccess(user.uid,user,Date.now())))
-      .then((user)=>dispatch(authUser(user.uid)))
-      .catch((error)=>dispatch(fetchingUserError(error)))
+      .then((user) => dispatch(fetchingUserSuccess(user.uid, user, Date.now())))
+      .then((user) => dispatch(authUser(user.uid)))
+      .catch((error) => dispatch(fetchingUserError(error)))
   }
 }
 
-export function handleUserLogout (){
+export function handleUserLogout () {
   return function (dispatch) {
     logout()
-      .then(()=>dispatch(unauthUser()))
+      .then(() => dispatch(unauthUser()))
   }
-} 
+}
 
-export function handleClearUser (){
+export function handleClearUser () {
   return function (dispatch) {
     getCurrentUser()
-      .then((user)=>{
-        if(user){
+      .then((user) => {
+        if (user) {
           clearStorage()
           return user.delete()
-        }else{
+        } else {
           return null
         }
       })
-      .then(()=>{dispatch(unauthUser())})
-      .catch((error)=>dispatch(fetchingUserError(error))) 
+      .then(() => { dispatch(unauthUser()) })
+      .catch((error) => dispatch(fetchingUserError(error)))
   }
 }
 
@@ -102,17 +102,17 @@ const initialUserState = fromJS({
     uid: '',
     avatar: '',
     email: '',
-  }
+  },
 })
 
-function user(state=initialUserState,action){
-  switch (action.type){
+function user (state = initialUserState, action) {
+  switch (action.type) {
     case FETCHING_USER_SUCCESS:
       return state.merge({
         lastUpdated: action.timestamp,
         info: action.user,
       })
-      default:
+    default:
       return state
   }
 }
@@ -124,14 +124,14 @@ const initialState = fromJS({
   error: '',
 })
 
-export default function users(state = initialState, action) {
+export default function users (state = initialState, action) {
   switch (action.type) {
     case FETCHING_USER:
       return state.merge({
         isFetching: true,
       })
     case REMOVE_FETCHING_USER:
-      return state.set('isFetching',false)
+      return state.set('isFetching', false)
     case FETCHING_USER_ERROR:
       return state.merge({
         isFetching: false,
@@ -142,7 +142,7 @@ export default function users(state = initialState, action) {
       ? state.merge({
         isFetching: false,
         error: '',
-      }) 
+      })
       : state.merge({
         isFetching: false,
         error: '',
@@ -156,7 +156,7 @@ export default function users(state = initialState, action) {
     case UNAUTH_USER:
       return state.merge({
         isAuthed: false,
-        authedId: ''
+        authedId: '',
       })
     default:
       return state

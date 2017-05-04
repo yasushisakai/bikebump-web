@@ -1,7 +1,7 @@
 import React from 'react'
 import { Router, Route, IndexRoute } from 'react-router'
 
-import { 
+import {
   MainContainer,
   HomeContainer,
   RecordContainer,
@@ -18,8 +18,8 @@ import {
   LayoutContainer,
 } from 'containers'
 
-export default function getRoutes(checkAuth, history){
-  return(
+export default function getRoutes (checkAuth, history) {
+  return (
     <Router history={history}>
       <Route path='/' component={MainContainer}>
         <Route path='record' component={RecordContainer} onEnter={checkAuth} />
@@ -40,5 +40,5 @@ export default function getRoutes(checkAuth, history){
         <IndexRoute component={HomeContainer} onEnter={checkAuth}/>
       </Route>
     </Router>
-    )
+  )
 }

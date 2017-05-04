@@ -8,38 +8,38 @@ const REMOVE_FETCHING_ROAD = 'REMOVE_FETCHING_ROAD'
 const FETCH_SINGLE_ROAD = 'FETCH_SINGLE_ROAD'
 
 const initialState = fromJS({
-  isFetching:false,
-  lastUpdated:0,
-  error:''
+  isFetching: false,
+  lastUpdated: 0,
+  error: '',
 })
 
 function fetchingRoad () {
   return {
-    type:FETCHING_ROAD
+    type: FETCHING_ROAD,
   }
 }
 
 function fetchingRoadError (error) {
   console.warn(error)
   return {
-    type:FETCHING_ROAD_ERROR,
-    error : 'error fetching road'
+    type: FETCHING_ROAD_ERROR,
+    error: 'error fetching road',
   }
 }
 
-function fetchSingleRoad(roadId,road){
+function fetchSingleRoad (roadId, road) {
   return {
-    type:FETCH_SINGLE_ROAD,
+    type: FETCH_SINGLE_ROAD,
     roadId,
-    road
+    road,
   }
 }
 
-export function handleFetchSingleRoad(roadId){
-  return function (dispatch){
+export function handleFetchSingleRoad (roadId) {
+  return function (dispatch) {
     dispatch(fetchingRoad())
     return fetchRoad(roadId)
-      .then(road => dispatch(fetchSingleRoad(roadId,road)))
+      .then(road => dispatch(fetchSingleRoad(roadId, road)))
       .catch(error => dispatch(fetchingRoadError(error)))
   }
 }
@@ -47,56 +47,55 @@ export function handleFetchSingleRoad(roadId){
 // lets get the roads once
 function fetchingRoadSuccess (roads) {
   return {
-    type:FETCHING_ROAD_SUCCESS,
-    roads
+    type: FETCHING_ROAD_SUCCESS,
+    roads,
   }
 }
 
 function removeFetchingRoad () {
   return {
-    type:REMOVE_FETCHING_ROAD,
+    type: REMOVE_FETCHING_ROAD,
   }
 }
 // fetch road
 
 export function handleFetchingRoads () {
-  return function(dispatch,getState){
-    if(getState().roads.get('isFetching')) return
+  return function (dispatch, getState) {
+    if (getState().roads.get('isFetching')) return
 
     dispatch(fetchingRoad())
-    if(!isModuleStale(getState().roads.get('lastUpdated'))){
+    if (!isModuleStale(getState().roads.get('lastUpdated'))) {
       return Promise.resolve(dispatch(removeFetchingRoad()))
     }
 
     return fetchRoads()
-      .then((roads)=>dispatch(fetchingRoadSuccess(roads)))
-      .catch((error)=>dispatch(fetchingRoadError(error)))
+      .then((roads) => dispatch(fetchingRoadSuccess(roads)))
+      .catch((error) => dispatch(fetchingRoadError(error)))
   }
 }
 
-
-export default function roads (state=initialState,action){
+export default function roads (state = initialState, action) {
   switch (action.type) {
     case FETCHING_ROAD:
-      return state.set('isFetching',true)
+      return state.set('isFetching', true)
     case FETCHING_ROAD_ERROR:
       return state.merge({
-        isFetching:false,
-        error:action.error,
+        isFetching: false,
+        error: action.error,
       })
     case FETCHING_ROAD_SUCCESS:
       return state.merge(action.roads).merge({
-        isFetching:false,
-        error:'',
+        isFetching: false,
+        error: '',
         lastUpdated: Date.now(),
       })
     case REMOVE_FETCHING_ROAD:
-      return state.set('isFetching',false)
+      return state.set('isFetching', false)
     case FETCH_SINGLE_ROAD:
-    return state.merge({
-      isFetching:false,
-      [action.roadId]:action.road,
-    })
+      return state.merge({
+        isFetching: false,
+        [action.roadId]: action.road,
+      })
     default:
       return state
   }

@@ -6,82 +6,81 @@ import * as usersActionCreators from 'modules/users'
 import { button } from 'styles/styles.css'
 import { services } from 'helpers/auth'
 
-AuthButton.propTypes={
+AuthButton.propTypes = {
   service: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   //color: PropTypes.string.isRequired,
 }
 
-function AuthButton(props){
-  return(
-    <div 
-    className={button} 
-    onClick={props.onClick.bind(this,props.service)} >
+function AuthButton (props) {
+  return (
+    <div
+    className={button}
+    onClick={props.onClick.bind(this, props.service)} >
     {`login with ${props.service} account`}
     </div>
-    )
+  )
 }
 
 const AuthContainer = React.createClass({
-  propTypes:{
+  propTypes: {
     isFetching: PropTypes.bool.isRequired,
-    isAuthed:PropTypes.bool.isRequired,
+    isAuthed: PropTypes.bool.isRequired,
     error: PropTypes.string.isRequired,
-    handleUserAuthRedirect : PropTypes.func.isRequired,
+    handleUserAuthRedirect: PropTypes.func.isRequired,
     handleUserAuthReturn: PropTypes.func.isRequired,
   },
-  contextTypes:{
+  contextTypes: {
     router: PropTypes.object.isRequired,
   },
-  componentDidMount (){
-    if(sessionStorage.getItem('redirectAuth') === 'true'){
+  componentDidMount () {
+    if (sessionStorage.getItem('redirectAuth') === 'true') {
       this.props.handleUserAuthReturn()
     }
   },
-  componentDidUpdate (){
-    this.props.isAuthed === true 
+  componentDidUpdate () {
+    this.props.isAuthed === true
     ? this.context.router.push('record')
     : null
   },
 
   signInButtons () {
-    if(localStorage.getItem('provider') === null){
-      return Object.keys(services).map((key)=>{ 
+    if (localStorage.getItem('provider') === null) {
+      return Object.keys(services).map((key) => {
         // Inigo bug: chrome ver:51.02704, Android ver 5.1.1
         // Object.values is from chrome ver.54 and later
         const service = services[key]
-        return <AuthButton 
+        return <AuthButton
           onClick={this.props.handleUserAuthRedirect}
           service={service}
           key={service} />
       })
-    }else{
-      return <AuthButton 
+    } else {
+      return <AuthButton
         onClick={this.props.handleUserAuthRedirect}
-        service={localStorage.getItem('provider')}
-        />
+        service={localStorage.getItem('provider')}/>
     }
   },
 
   render () {
     return (
       <Auth>
-        {this.signInButtons()} 
+        {this.signInButtons()}
       </Auth>
     )
   },
 })
 
-function mapStateToProps({users}){
-  return{
-    isFetching : users.get('isFetching'),
+function mapStateToProps ({users}) {
+  return {
+    isFetching: users.get('isFetching'),
     isAuthed: users.get('isAuthed'),
-    error : users.get('error'),
+    error: users.get('error'),
   }
 }
 
-function mapDispatchToProps(dispatch){
-  return bindActionCreators(usersActionCreators,dispatch)
+function mapDispatchToProps (dispatch) {
+  return bindActionCreators(usersActionCreators, dispatch)
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(AuthContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(AuthContainer)

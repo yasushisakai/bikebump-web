@@ -14,11 +14,11 @@ const store = createStore(combineReducers(
   {...reducerModules, routing: routerReducer}),
   compose(
     applyMiddleware(thunk),
-    window.devToolsExtension ? window.devToolsExtension() : (f)=>f 
+    window.devToolsExtension ? window.devToolsExtension() : (f) => f
   )
 )
 const witchHistory = isProduction ? browserHistory : hashHistory
-const history = syncHistoryWithStore(witchHistory,store)
+const history = syncHistoryWithStore(witchHistory, store)
 
 function checkAuth (nextState, replace) {
   // if(store.getState().users.get('isFetching') === true){
@@ -27,23 +27,20 @@ function checkAuth (nextState, replace) {
   const isAuthed = checkIfAuthed(store)
   const nextPath = nextState.location.pathname
 
-  if(isAuthed){
-    if(nextPath=='/'){
+  if (isAuthed) {
+    if (nextPath == '/') {
       replace('/record')
     }
-  }else{
-    if(nextPath=='/record'){
+  } else {
+    if (nextPath == '/record') {
       replace('/signin')
     }
   }
-
 }
 
-const mode = isProduction === true ? 'production': 'development' 
+const mode = isProduction === true ? 'production' : 'development'
 console.clear()
 console.log(`bikebump running (${mode})`)
-
-
 
 let app = document.getElementById('app')
 app.style.height = '100%'
@@ -52,7 +49,7 @@ app.style.width = '100%'
 
 ReactDOM.render(
     <Provider store={store}>
-      {getRoutes(checkAuth,history)}
+      {getRoutes(checkAuth, history)}
     </Provider>,
     app
   )

@@ -3,6 +3,6 @@ import { mapContents } from './styles.css'
 
 export default function MapVis (props) {
   return (
-    <div id="mainMap" className={mapContents}></div>
-    )
+    <div id='mainMap' className={mapContents} />
+  )
 }

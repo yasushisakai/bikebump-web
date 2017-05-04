@@ -12,56 +12,54 @@ const ADD_COMMUTE_ERROR = 'ADD_COMMUTE_ERROR'
 
 function fetchingCommutes () {
   return {
-    type:FETCHING_COMMUTES,
+    type: FETCHING_COMMUTES,
   }
 }
 
 function fetchingCommutesError (error) {
   console.warn(error)
   return {
-    type : FETCHING_COMMUTES_ERROR,
-    error : 'error fetching commutes'
+    type: FETCHING_COMMUTES_ERROR,
+    error: 'error fetching commutes',
   }
 }
 
 function fetchingCommutesSuccess (commutes) {
   return {
-    type:FETCHING_COMMUTES_SUCCESS,
-    commutes
+    type: FETCHING_COMMUTES_SUCCESS,
+    commutes,
   }
 }
 
 export function handleFetchingCommutes () {
-  return function (dispatch,getState) {
-    
-
-    if(getState().commutes.get('isFetching')){
-      return 
+  return function (dispatch, getState) {
+    if (getState().commutes.get('isFetching')) {
+      return
     }
 
     dispatch(fetchingCommutes())
-    if(!isModuleStale(getState().commutes.get('lastUpdated'))){
+    if (!isModuleStale(getState().commutes.get('lastUpdated'))) {
       dispatch(removeFetchingCommutes())
     }
 
     return fetchCommutes()
-      .then((commutes)=>dispatch(fetchingCommutesSuccess(commutes)))
-      .catch((error)=>dispatch(fetchingCommutesError(error)))
-    }
+      .then((commutes) => dispatch(fetchingCommutesSuccess(commutes)))
+      .catch((error) => dispatch(fetchingCommutesError(error)))
+  }
 }
 
 export function addCommute (commute) {
-  return{
-    type:ADD_COMMUTE,
+  return {
+    type: ADD_COMMUTE,
     commute,
   }
 }
 
-function addCommuteError (error){
+function addCommuteError (error) {
   console.warn(error)
   return {
-    type:ADD_COMMUTE_ERROR,
-    error : 'error adding commute'
+    type: ADD_COMMUTE_ERROR,
+    error: 'error adding commute',
   }
 }
 
@@ -75,8 +73,8 @@ export function handleAddCommute (commute) {
   return function (dispatch) {
     dispatch(fetchingCommutes)
     saveCommute(commute)
-      .then((commuteWithId)=>dispatch(addCommute(commuteWithId)))
-      .catch((error)=>dispatch(addCommuteError(error)))
+      .then((commuteWithId) => dispatch(addCommute(commuteWithId)))
+      .catch((error) => dispatch(addCommuteError(error)))
   }
 }
 
@@ -86,29 +84,29 @@ const initalState = fromJS({
   lastUpdated: 0,
 })
 
-export default function commutes(state=initalState,action){
-  switch(action.type){
+export default function commutes (state = initalState, action) {
+  switch (action.type) {
     case FETCHING_COMMUTES:
       return state.merge({
-        isFetching:true,
+        isFetching: true,
       })
     case ADD_COMMUTE_ERROR:
     case FETCHING_COMMUTES_ERROR:
       return state.merge({
-        isFetching:false,
-        error
+        isFetching: false,
+        error,
       })
     case FETCHING_COMMUTES_SUCCESS:
       return state.merge({
-        isFetching:false,
-        error:'',
+        isFetching: false,
+        error: '',
         lastUpdated: Date.now(),
       }).merge(action.commutes)
     case REMOVE_FETCHING_COMMUTES:
       return state.set('isFetching', false)
     case ADD_COMMUTE:
       return state.merge({
-        [action.commute.commuteId]:action.commute
+        [action.commute.commuteId]: action.commute,
       })
     default:
       return state

@@ -4,25 +4,25 @@ import { bindActionCreators } from 'redux'
 import { firebaseAuth, isProduction } from 'config/constants'
 import { fetchUIdfromEmail } from 'helpers/auth'
 import { formatUser } from 'helpers/utils'
-import { body, container} from 'styles/styles.css' 
+import { body, container} from 'styles/styles.css'
 import { Navigation } from 'components'
 import * as usersActionCreators from 'modules/users'
 
 const MainContainer = React.createClass({
-  propTypes:{
+  propTypes: {
     isFetching: PropTypes.bool.isRequired,
-    error : PropTypes.string.isRequired,
+    error: PropTypes.string.isRequired,
     isAuthed: PropTypes.bool.isRequired,
     authedId: PropTypes.string.isRequired,
 
     fetchingUserSuccess: PropTypes.func.isRequired,
-    authUser : PropTypes.func.isRequired,
+    authUser: PropTypes.func.isRequired,
     removeFetchingUser: PropTypes.func.isRequired,
   },
   componentDidMount () {
     this.props.fetchingUser()
-    firebaseAuth().onAuthStateChanged((user)=>{
-      if(user){
+    firebaseAuth().onAuthStateChanged((user) => {
+      if (user) {
         // user is signed in
         const userInfo = formatUser(
           user.displayName,
@@ -30,23 +30,21 @@ const MainContainer = React.createClass({
           user.photoURL,
           user.uid
           )
-        this.props.fetchingUserSuccess(user.uid,userInfo,Date.now())
+        this.props.fetchingUserSuccess(user.uid, userInfo, Date.now())
         this.props.authUser(user.uid)
-      }else{
-        // user is not signed 
+      } else {
+        // user is not signed
         this.props.removeFetchingUser()
       }
     })
-
   },
   shouldComponentUpdate (nextProps) {
     return true
   },
   render () {
-    
     const mode = isProduction ? 'production' : 'dev'
-    
-    return this.props.isFetching 
+
+    return this.props.isFetching
     ? <div> {'loading user...'} </div>
     : (
       <div className={container}>
@@ -57,12 +55,12 @@ const MainContainer = React.createClass({
   },
 })
 
-function mapStateToProps ({users,record}) {
+function mapStateToProps ({users, record}) {
   return {
-  isFetching : users.get('isFetching'),
-  error: users.get('error'),
-  isAuthed : users.get('isAuthed'),
-  authedId: users.get('authedId'),
+    isFetching: users.get('isFetching'),
+    error: users.get('error'),
+    isAuthed: users.get('isAuthed'),
+    authedId: users.get('authedId'),
   }
 }
 
