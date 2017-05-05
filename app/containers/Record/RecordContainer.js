@@ -5,7 +5,7 @@ import Pen from 'helpers/Pen'
 import { fitCanvas, detectionGap } from 'helpers/utils'
 import { Record } from 'components'
 import NoSleep from 'nosleep'
-import {Analyser, Recorder} from 'helpers/Sound'
+import { Analyser, Recorder } from 'helpers/Sound'
 import { updateCycleDuration } from 'config/constants'
 
 import * as userSettingsActionCreators from 'modules/userSettings'
@@ -165,9 +165,16 @@ const RecordContainer = React.createClass({
           console.log('ding')
           this.isDing = true
 
+          // save/upload the ding, will not upload if its already 'isUploading'
+          // timestamp and latlng will be used to tie it to the ding
+          this.props.handleUpload(
+            this.recorder,
+            this.props.latestLocation,
+            this.props.latestFetch
+          )
           window.navigator.vibrate(100)
 
-          // ding
+          // assign ding to firebase
           this.props.handleComplieDing(
             this.props.authedId,
             this.props.latestLocation,
@@ -176,18 +183,8 @@ const RecordContainer = React.createClass({
             10,
             0
           )
-
-          this.props.handleUpload(
-            this.recorder,
-            this.props.latestLocation,
-            this.props.latestFetch
-          )
-
-          if (!this.props.isUploading) {
-            this.props.uploadingClip()
-            this.recorder.export
-          }
         }
+
         this.previousSpike = Date.now()
       } // detection ends
 

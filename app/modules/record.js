@@ -1,13 +1,11 @@
-import { fromJS, toJS } from 'immutable'
+import { fromJS } from 'immutable'
 import { fetchGeoLocation, refreshCommute, formatWavFileName, distFromLatLng } from 'helpers/utils'
 import { createCommute, appendBreadcrumb, createUserDing, deleteCommute } from 'helpers/api'
 import { storeBlob } from 'helpers/storage'
-import { addCommute } from 'modules/commutes'
 import { addUserDing, userDingStatus } from 'modules/userDings'
 
 const STOP_RECORDING = 'STOP_RECORDING'
 const START_RECORDING = 'START_RECORDING'
-const UPDATE_BREADCRUMB = 'UPDATE_BREADCRUMB'
 const RECORD_ERROR = 'RECORD_ERROR'
 
 const INSIDE_DING = 'INSIDE_DING'
@@ -31,14 +29,6 @@ function startRecording (commuteId) {
   return {
     type: START_RECORDING,
     commuteId,
-  }
-}
-
-function recordError (error) {
-  console.warn(error)
-  return {
-    type: RECORD_ERROR,
-    error: 'error recording',
   }
 }
 
@@ -117,12 +107,6 @@ function fetchingLatLngSuccess (location, timestamp = Date.now()) {
     type: FETCHING_LATLNG_SUCCESS,
     location,
     timestamp,
-  }
-}
-
-function locationChange () {
-  return {
-    type: LOCATION_CHANGE,
   }
 }
 
