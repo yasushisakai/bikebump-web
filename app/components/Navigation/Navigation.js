@@ -1,12 +1,10 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { imgRoot } from 'config/constants'
-import { navigation, navLink, actionLink, link, icon, iconImage, iconRecording } from './styles.css'
+import { navigation, navLink, actionLink, link, icon, iconRecording } from './styles.css'
 import Account from 'react-icons/lib/md/account-circle'
-import SignOut from 'react-icons/lib/fa/sign-out'
 import SignIn from 'react-icons/lib/fa/sign-in'
 import MapIcon from 'react-icons/lib/fa/map-o'
-import Paw from 'react-icons/lib/fa/paw'
 import Record from 'react-icons/lib/md/radio-button-checked'
 import Home from 'react-icons/lib/md/home'
 
