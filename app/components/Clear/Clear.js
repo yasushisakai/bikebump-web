@@ -9,9 +9,9 @@ Clear.propTypes = {
 export default function Clear (props) {
   return (
     <div>
-    <h2> Clear </h2>
+    <h2> {'Clear'} </h2>
     <div>{`am I authed? ${props.isAuthed}, ${props.authedId}`}</div>
-    <div onClick={props.onClick}>clear data</div>
+    <div onClick={props.onClick}>{'clear data'}</div>
     </div>
   )
 }

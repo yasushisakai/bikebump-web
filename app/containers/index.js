@@ -11,12 +11,8 @@ export PlaySoundContainer from './PlaySound/PlaySoundContainer'
 export RoadVisContainer from './RoadVis/RoadVisContainer'
 export CalibrateContainer from './Calibrate/CalibrateContainer'
 export LayoutContainer from './Layout/LayoutContainer'
-// export StreetViewContainer from './StreetView/StreetViewContainer'
-// export TinyMapContainer from './TinyMap/TinyMapContainer'
-// export QuestionPanelContainer from './QuestionPanel/QuestionPanelContainer'
 export MidMapContainer from './MidMap/MidMapContainer'
-// export StreetSideContainer from './StreetSide/StreetSideContainer'
 export MapAndStreetViewContainer from './MapAndStreetView/MapAndStreetViewContainer'
-
+export RecordSoundContainer from './RecordSound/RecordSoundContainer'
 // sub components
 export SurveyContainer from './Survey/SurveyContainer'

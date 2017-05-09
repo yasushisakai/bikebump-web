@@ -11,7 +11,6 @@ import {
   LogoutContainer,
   ClearContainer,
   RespondContainer,
-  SoundClipContainer,
   PlaySoundContainer,
   RoadVisContainer,
   CalibrateContainer,

@@ -7,6 +7,7 @@ import * as userActionCreators from 'modules/users'
 const ClearContainer = React.createClass({
   propTypes: {
     isAuthed: PropTypes.bool.isRequired,
+    isFetching: PropTypes.bool.isRequired,
     authedId: PropTypes.string.isRequired,
     handleClearUser: PropTypes.func.isRequired,
   },
