@@ -1,6 +1,7 @@
 export users from './users'
 export commutes from './commutes'
 export record from './record'
+export recordSound from './recordSound'
 export roads from './roads'
 export listeners from './listeners'
 export dings from './dings'

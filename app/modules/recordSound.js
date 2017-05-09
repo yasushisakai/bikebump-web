@@ -16,6 +16,16 @@ function setRecordTrue () {
   }
 }
 
+export function setRecording (flag) {
+  return function (dispatch, getState) {
+    if (flag) {
+      return dispatch(setRecordTrue())
+    } else {
+      return dispatch(setRecordFalse())
+    }
+  }
+}
+
 export function toggleRecord () {
   return function (dispatch, getState) {
     if (getState().recordSound.get('isRecording')) {
@@ -37,5 +47,7 @@ export default function recordSound (state = initialState, action) {
       return state.set('isRecording', false)
     case SET_RECORD_TRUE:
       return state.set('isRecording', true)
+    default :
+      return state
   }
 }

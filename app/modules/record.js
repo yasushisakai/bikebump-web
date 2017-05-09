@@ -61,7 +61,7 @@ export function handleUpload (recorder, location, timestamp) {
       const filename = formatWavFileName(timestamp, location)
       console.log(filename)
       storeBlob(filename, blob)
-        .then(() => uploadingClipSuccess())
+        .then(() => dispatch(uploadingClipSuccess()))
     })
   }
 }

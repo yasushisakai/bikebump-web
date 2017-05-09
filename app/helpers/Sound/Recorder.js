@@ -20,7 +20,7 @@ export default class Recorder {
   config = {
     bufferLen: 4096,
     numChannels: 2,
-    totalLength: 60,
+    totalLength: 60, // 44100 / (4096 * 60)
     mimeType: 'audio/wav',
   };
 
@@ -35,8 +35,8 @@ export default class Recorder {
     Object.assign(this.config, cfg)
     this.context = source.context
     this.node = (this.context.createScriptProcessor ||
-        this.context.createJavaScriptNode).call(this.context,
-            this.config.bufferLen, this.config.numChannels, this.config.numChannels)
+      this.context.createJavaScriptNode).call(this.context,
+      this.config.bufferLen, this.config.numChannels, this.config.numChannels)
 
     this.node.onaudioprocess = (e) => {
       if (!this.recording) return
@@ -45,9 +45,10 @@ export default class Recorder {
       for (var channel = 0; channel < this.config.numChannels; channel++) {
         buffer.push(e.inputBuffer.getChannelData(channel))
       }
+
       this.worker.postMessage({
         command: 'record',
-        buffer: buffer,
+        buffer,
       })
     }
 
@@ -55,14 +56,17 @@ export default class Recorder {
     this.node.connect(this.context.destination)    // this should not be necessary
 
     let self = {}
+    // this runs in a separate thread
     this.worker = new InlineWorker(function () {
-      let recLength = 0,
-        recBuffers = [],
-        pivot = 0,
-        sampleRate,
-        totalLength,
-        numChannels
+      let recLength
+      let recBuffers
+      let pivot
+      let sampleRate
+      let totalLength
+      let numChannels
+      let bufferLen
 
+      // mapping message and functions
       this.onmessage = function (e) {
         switch (e.data.command) {
           case 'init':
@@ -84,7 +88,11 @@ export default class Recorder {
       }
 
       function init (config) {
+        // initiation of values
         sampleRate = config.sampleRate
+        pivot = 0
+        // fixed buffer that will be constantly overwritten
+        recBuffers = []
         numChannels = config.numChannels
         totalLength = config.totalLength
         bufferLen = config.bufferLen
@@ -97,29 +105,28 @@ export default class Recorder {
           recBuffers[channel][pivot] = inputBuffer[channel]
         }
         pivot++
-                // recLength += inputBuffer[0].length;
-        if (pivot > 59) {
+
+        // loop
+        if (pivot === totalLength) {
           pivot = 0
         }
       }
 
-      function develop (pivot) {
-        const beginning = recBuffers.splice(pivot)
-        recBuffers = beginning.concat(recBuffers)
-      }
-
       function exportWAV (type) {
         let buffers = []
-        develop(pivot)
+
         for (let channel = 0; channel < numChannels; channel++) {
-          buffers.push(mergeBuffers(recBuffers[channel], recLength))
+          const developed = develop(recBuffers[channel])
+          buffers.push(mergeBuffers(developed, recLength))
         }
+
         let interleaved
         if (numChannels === 2) {
           interleaved = interleave(buffers[0], buffers[1])
         } else {
           interleaved = buffers[0]
         }
+
         let dataview = encodeWAV(interleaved)
         let audioBlob = new Blob([dataview], {type: type})
 
@@ -129,7 +136,8 @@ export default class Recorder {
       function getBuffer () {
         let buffers = []
         for (let channel = 0; channel < numChannels; channel++) {
-          buffers.push(mergeBuffers(recBuffers[channel], recLength))
+          const developed = develop(recBuffers[channel])
+          buffers.push(mergeBuffers(developed, recLength))
         }
         this.postMessage({command: 'getBuffer', data: buffers})
       }
@@ -147,24 +155,37 @@ export default class Recorder {
         }
       }
 
+      // flatten rec buffers to one long array
       function mergeBuffers (recBuffers, recLength) {
         let result = new Float32Array(recLength)
         let offset = 0
         for (let i = 0; i < recBuffers.length; i++) {
+          // layouted in a serial way recBuf[0][0], recBuf[0][1], ..., recBuf[0][n], recBuf[1][0], recBuf[1][1], ..., recBuf[1][n], ... recBuf[m][n]
           result.set(recBuffers[i], offset)
           offset += recBuffers[i].length
         }
         return result
       }
 
+      // shift, unshift and develop the array
+      // this will **not** change recBuffers
+      function develop (recBuffer, pivot) {
+        let beginning = recBuffer.slice(pivot)
+        const end = recBuffer.slice(0, pivot)
+        beginning.concat(end)
+        return beginning
+      }
+
+      // intertwin the (two)
       function interleave (inputL, inputR) {
         let length = inputL.length + inputR.length
         let result = new Float32Array(length)
 
-        let index = 0,
-          inputIndex = 0
+        let index = 0
+        let inputIndex = 0
 
         while (index < length) {
+          // L[0], R[0], L[1], R[1], ..., L[n], R[n]
           result[index++] = inputL[inputIndex]
           result[index++] = inputR[inputIndex]
           inputIndex++
