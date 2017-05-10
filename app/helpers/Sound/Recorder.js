@@ -19,8 +19,8 @@ import InlineWorker from 'inline-worker'
 export default class Recorder {
   config = {
     bufferLen: 4096,
-    numChannels: 2,
-    totalLength: 60, // 44100 / (4096 * 60)
+    numChannels: 1,
+    totalLength: 44, // Math.ceil((4 * 44100) / 4096)
     mimeType: 'audio/wav',
   };
 
@@ -113,10 +113,13 @@ export default class Recorder {
       }
 
       function exportWAV (type) {
+        console.log(pivot)
         let buffers = []
 
         for (let channel = 0; channel < numChannels; channel++) {
+          // console.log(JSON.stringify(recBuffers[channel]))
           const developed = develop(recBuffers[channel])
+          // console.log(JSON.stringify(developed))
           buffers.push(mergeBuffers(developed, recLength))
         }
 
@@ -170,10 +173,15 @@ export default class Recorder {
       // shift, unshift and develop the array
       // this will **not** change recBuffers
       function develop (recBuffer, pivot) {
-        let beginning = recBuffer.slice(pivot)
-        const end = recBuffer.slice(0, pivot)
-        beginning.concat(end)
-        return beginning
+        console.log('original', recBuffer.length)
+        // using slice and developping does not work
+        let copyBuffer = recBuffer // splice changes the original recBuffer
+        const cursor = pivot === 0 ? recBuffer.length - 1 : pivot - 1
+        let beginning = copyBuffer.splice(cursor)
+        const concatnated = beginning.concat(copyBuffer)
+        console.log('concat', concatnated.length)
+        return concatnated
+        // return beginning.concat(end)
       }
 
       // intertwin the (two)
