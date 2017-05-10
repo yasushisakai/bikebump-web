@@ -118,7 +118,7 @@ export default class Recorder {
 
         for (let channel = 0; channel < numChannels; channel++) {
           // console.log(JSON.stringify(recBuffers[channel]))
-          const developed = develop(recBuffers[channel])
+          const developed = develop(recBuffers[channel], pivot)
           // console.log(JSON.stringify(developed))
           buffers.push(mergeBuffers(developed, recLength))
         }
@@ -173,15 +173,12 @@ export default class Recorder {
       // shift, unshift and develop the array
       // this will **not** change recBuffers
       function develop (recBuffer, pivot) {
-        console.log('original', recBuffer.length)
         // using slice and developping does not work
-        let copyBuffer = recBuffer // splice changes the original recBuffer
+        // plus it seems slow?
+        let copyBuffer = recBuffer.slice() // splice changes the original recBuffer
         const cursor = pivot === 0 ? recBuffer.length - 1 : pivot - 1
         let beginning = copyBuffer.splice(cursor)
-        const concatnated = beginning.concat(copyBuffer)
-        console.log('concat', concatnated.length)
-        return concatnated
-        // return beginning.concat(end)
+        return beginning.concat(copyBuffer)
       }
 
       // intertwin the (two)
