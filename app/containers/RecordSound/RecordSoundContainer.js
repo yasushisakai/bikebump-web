@@ -22,7 +22,11 @@ const RecordSoundContainer = React.createClass({
         {audio: true},
         (stream) => {
           let source = this.audioContext.createMediaStreamSource(stream)
-          this.recorder = new Recorder(source)
+          const config = {
+            recordDuration: 6000,
+            numChannels: 1, // mono
+          }
+          this.recorder = new Recorder(source, config)
           this.recorder.record()
         },
         (error) => {

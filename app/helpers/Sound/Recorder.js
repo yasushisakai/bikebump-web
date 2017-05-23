@@ -18,9 +18,10 @@ import InlineWorker from 'inline-worker'
 
 export default class Recorder {
   config = {
+    recordDuration: 4000, // in milliseconds
     bufferLen: 4096,
     numChannels: 1,
-    totalLength: 44, // Math.ceil((4 * 44100) / 4096)
+    // totalLength: 44, // Math.ceil((4 * 44100) / 4096)
     mimeType: 'audio/wav',
   };
 
@@ -32,6 +33,8 @@ export default class Recorder {
   };
 
   constructor (source, cfg) {
+    console.log('cfg', cfg)
+    console.log('this.config', this.config)
     Object.assign(this.config, cfg)
     this.context = source.context
     this.node = (this.context.createScriptProcessor ||
@@ -58,10 +61,11 @@ export default class Recorder {
     let self = {}
     // this runs in a separate thread
     this.worker = new InlineWorker(function () {
+      let sampleRate // this is handled by the context
+      let recordDuration
       let recLength
       let recBuffers
       let pivot
-      let sampleRate
       let totalLength
       let numChannels
       let bufferLen
@@ -71,6 +75,7 @@ export default class Recorder {
         switch (e.data.command) {
           case 'init':
             init(e.data.config)
+            console.log('onmessage', e.data.config)
             break
           case 'record':
             record(e.data.buffer)
@@ -89,13 +94,17 @@ export default class Recorder {
 
       function init (config) {
         // initiation of values
+        console.log(config)
         sampleRate = config.sampleRate
+        recordDuration = config.recordDuration
         pivot = 0
         // fixed buffer that will be constantly overwritten
         recBuffers = []
         numChannels = config.numChannels
-        totalLength = config.totalLength
         bufferLen = config.bufferLen
+        // get the closest int for recording the millisecond data
+        totalLength = Math.ceil((recordDuration * sampleRate / 1000.0) / bufferLen)
+        console.log(recordDuration, sampleRate, totalLength)
         recLength = bufferLen * totalLength
         initBuffers()
       }
@@ -252,9 +261,9 @@ export default class Recorder {
       command: 'init',
       config: {
         sampleRate: this.context.sampleRate,
+        recordDuration: this.config.recordDuration,
         numChannels: this.config.numChannels,
         bufferLen: this.config.bufferLen,
-        totalLength: this.config.totalLength,
       },
     })
 

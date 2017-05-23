@@ -60,7 +60,6 @@ const RecordContainer = React.createClass({
           let source = this.audioContext.createMediaStreamSource(stream)
           source.connect(this.analyser.input)
           this.analyser.connect()
-
           this.recorder = new Recorder(source)
           this.recorder.record()
         },
