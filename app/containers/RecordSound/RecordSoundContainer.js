@@ -42,7 +42,7 @@ const RecordSoundContainer = React.createClass({
     if (!this.props.isRecording) {
       this.props.setRecording(true)
       this.recorder.exportWAV((blob) => {
-        const filename = 'testRecording.wav'
+        const filename = `test/testRecord_${Date.now()}.wav`
         storeBlob(filename, blob)
           .then(() => this.props.setRecording(false))
       })
