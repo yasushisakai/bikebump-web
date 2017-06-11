@@ -64,7 +64,8 @@ export default class Recorder {
       let sampleRate // this is handled by the context
       let recordDuration
       let recLength
-      let recBuffers
+      let recBuffers // meat part!!
+      let testBuffer
       let pivot
       let totalLength
       let numChannels
@@ -113,6 +114,7 @@ export default class Recorder {
         for (var channel = 0; channel < numChannels; channel++) {
           recBuffers[channel][pivot] = inputBuffer[channel]
         }
+
         pivot++
 
         // loop
@@ -122,7 +124,6 @@ export default class Recorder {
       }
 
       function exportWAV (type) {
-        console.log(pivot)
         let buffers = []
 
         for (let channel = 0; channel < numChannels; channel++) {
@@ -179,14 +180,14 @@ export default class Recorder {
         return result
       }
 
-      // shift, unshift and develop the array
-      // this will **not** change recBuffers
+      //
+      // creates a new array with the right order
+      // breaks the array at the pivot point
+      // concats the latter part to the formor part
+      //
       function develop (recBuffer, pivot) {
-        // using slice and developping does not work
-        // plus it seems slow?
-        let copyBuffer = recBuffer.slice() // splice changes the original recBuffer
-        const cursor = pivot === 0 ? recBuffer.length - 1 : pivot - 1
-        let beginning = copyBuffer.splice(cursor)
+        let copyBuffer = recBuffer.slice()
+        let beginning = copyBuffer.splice(pivot)
         return beginning.concat(copyBuffer)
       }
 
