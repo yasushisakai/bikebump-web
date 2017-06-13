@@ -49,9 +49,13 @@ export default class Analyser {
     this.isInFocus = isInFocus
   }
 
-  getPeakIndex () {
-    return this.dataArray.reduce((maxIndex, currentValue, index, array) =>
-      currentValue > array[maxIndex] ? index : maxIndex, 0)
+  getPeakIndex (start = 0, end) {
+    return this.dataArray
+        .slice(start, end)
+        .reduce(
+          (maxIndex, currentValue, index, array) =>
+            currentValue > array[maxIndex] ? index : maxIndex, 0
+          ) + start
   }
 
   getSlopes (target, range = 2) {

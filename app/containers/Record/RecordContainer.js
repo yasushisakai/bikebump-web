@@ -139,6 +139,8 @@ const RecordContainer = React.createClass({
       // Detection
       // climbing up the stairs
       //
+
+      /*
       const freqSlope = this.analyser.getSlopes(freqIndex)
       if (detectionGap(this.previousSpike)) {
         this.isDing = false
@@ -186,6 +188,7 @@ const RecordContainer = React.createClass({
 
         this.previousSpike = Date.now()
       } // detection ends
+      */
 
       this.pen.noStroke()
       this.pen.fill('white')

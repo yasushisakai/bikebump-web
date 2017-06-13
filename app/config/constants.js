@@ -1,6 +1,13 @@
 import firebase from 'firebase'
 import { Map } from 'immutable'
 
+//
+// THRESHOLDS
+//
+
+export const threshold = 10
+export const thresholdLength = 300 // ms
+export const doubleDingDuration = 1000 // ms
 export const maxCommuteLife = 20000 // ms
 export const updateCycleDuration = 5000 // ms
 export const renderTimeConstrain = 10000 // ms
@@ -9,17 +16,11 @@ export const waitDuration = 3000 // ms
 export const dingDetectionGap = 120
 export const updateDuration = 1 * 60 * 1000 // 1min
 
-export const initialState = new Map({
-  isFetching: false,
-  error: '',
-  lastUpdated: 0,
-})
-
 //
 // GENERAL
 //
 
-export const isProduction = process.env.NODE_ENV == 'production'
+export const isProduction = process.env.NODE_ENV === 'production'
 export const rootUrl = isProduction ? 'https://bikebump.media.mit.edu' : 'http://localhost:8080'
 export const imgRoot = `${rootUrl}/static/img/`
 export const apiRoot = isProduction ? 'https://bikebump.media.mit.edu/api/' : 'http://localhost:8081/api/'
@@ -56,3 +57,14 @@ export const lightURL = 'https://api.mapbox.com/styles/v1/yasushisakai/cj14tdytp
 export const attribution = '&copy; Mapbox &copy; OpenStreetMap &copy; DigitalGlobe'
 
 export const tinyAttribution = '&copy; Mapbox &copy; OpenStreetMap'
+
+//
+// MISC
+//
+
+export const initialState = new Map({
+  isFetching: false,
+  error: '',
+  lastUpdated: 0,
+})
+

@@ -3,10 +3,15 @@ import { fetchGeoLocation, refreshCommute, formatWavFileName, distFromLatLng } f
 import { createCommute, appendBreadcrumb, createUserDing, deleteCommute } from 'helpers/api'
 import { storeBlob } from 'helpers/storage'
 import { addUserDing, userDingStatus } from 'modules/userDings'
+import { thresholdLength } from ''
 
 const STOP_RECORDING = 'STOP_RECORDING'
 const START_RECORDING = 'START_RECORDING'
 const RECORD_ERROR = 'RECORD_ERROR'
+
+const WAIT_DETECTION = 'WAIT_DETECTION'
+const LEAVE_DETECTION = 'LEAVE_DETECTION'
+const RETURN_DETECTION = 'RETURN_DETECTION'
 
 const INSIDE_DING = 'INSIDE_DING'
 const OUTSIDE_DING = 'OUTSIDE_DING'
@@ -19,6 +24,20 @@ const FETCHING_LATLNG = 'FETCHING_LATLNG'
 const FETCHING_LATLNG_ERROR = 'FETCHING_LATLNG_ERROR'
 const FETCHING_LATLNG_SUCCESS = 'FETCHING_LATLNG_SUCCESS'
 
+const detectionStatus = {
+  INITIAL: 0,
+  WAITING: 1,
+  LEAVING: 2,
+}
+
+/*
+const dingType = {
+  NOT_DING: 0,
+  SINGLE_DING: 1,
+  DOUBLE_DING: 2,
+}
+*/
+
 function stopRecording () {
   return {
     type: STOP_RECORDING,
@@ -29,6 +48,47 @@ function startRecording (commuteId) {
   return {
     type: START_RECORDING,
     commuteId,
+  }
+}
+
+function waitDetection () {
+  return {
+    type: WAIT_DETECTION,
+  }
+}
+
+export function handleDetection (detection) {
+  return function (dispatch, getState) {
+    if (detection) {
+      if (getState().record.get('detectionStatus') === detectionStatus.INITIAL) {
+        dispatch(waitDetection())
+        return false
+      } else if (
+      // at this point the detection has been verified
+      getState().record.get('detectionStatus') === detectionStatus.WAITING &&
+      Date.now() - getState().record.get('lastTimeOverThreshold') > thresholdLength
+      ) {
+        dispatch(leaveDetection())
+        return true
+      }
+    } else {
+      if (getState().record.get('detectionStatus') !== detectionStatus.INITIAL) {
+        dispatch(returnDetection())
+        return false
+      }
+    }
+  }
+}
+
+function leaveDetection () {
+  return {
+    type: LEAVE_DETECTION,
+  }
+}
+
+function returnDetection () {
+  return {
+    type: RETURN_DETECTION,
   }
 }
 
@@ -194,6 +254,7 @@ export function handleFetchLatLng (commuteId) {
 const initialState = fromJS({
   isFetchingLatLng: false,
   isRecording: false,
+  detectionStatus: detectionStatus.INITIAL,
   isCapturing: false,
   isUploading: false,
   isInside: false,
@@ -204,6 +265,8 @@ const initialState = fromJS({
     lng: 0,
   },
   latestFetchAttempt: 0,
+  lastTimeOverThreshold: 0,
+  lastDetection: 0,
   latestFetch: 0,
   error: '',
 })
@@ -220,6 +283,19 @@ export default function record (state = initialState, action) {
         isRecording: true,
         currentCommuteId: action.commuteId,
       })
+    case WAIT_DETECTION:
+      return state.merge({
+          detectionStatus : detectionStatus.WAITING,
+          lastTimeOverThreshold : Date.now(),
+        })
+    case LEAVE_DETECTION:
+      return state.merge({
+          detectionStatus : detectionStatus.LEAVING,
+          lastTimeOverThreshold : Date.now(),
+          lastDetection: Date.now(),
+        })
+    case RETURN_DETECTION:
+      return state.set('detectionStatus', detectionStatus.INITIAL)
     case UPLOADING_CLIP:
       return state.set('isUploading', true)
     case UPLOADING_CLIP_SUCCESS:
