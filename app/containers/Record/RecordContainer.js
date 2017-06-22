@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Pen from 'helpers/Pen'
-import { fitCanvas, detectionGap } from 'helpers/utils'
+import { fitCanvas } from 'helpers/utils'
 import { Record } from 'components'
 import NoSleep from 'nosleep'
 import { Analyser, Recorder } from 'helpers/Sound'
@@ -12,7 +12,7 @@ import * as userSettingsActionCreators from 'modules/userSettings'
 import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
-
+import * as userDingActionCreators from 'modules/userDings'
 const RecordContainer = React.createClass({
   propTypes: {
     isFetching: PropTypes.bool.isRequired,
@@ -23,15 +23,18 @@ const RecordContainer = React.createClass({
     latestLocation: PropTypes.object.isRequired,
     currentCommuteId: PropTypes.string,
     latestFetch: PropTypes.number.isRequired,
+    lastDetection: PropTypes.number.isRequired,
     targetFrequency: PropTypes.number,
 
     handleSetDingListener: PropTypes.func.isRequired,
     handleFetchingUserSettings: PropTypes.func.isRequired,
+    handleFetchingUserDings: PropTypes.func.isRequired,
     toggleRecording: PropTypes.func.isRequired,
     handleFetchLatLng: PropTypes.func.isRequired,
     handleComplieDing: PropTypes.func.isRequired,
     uploadingClip: PropTypes.func.isRequired,
     handleUpload: PropTypes.func.isRequired,
+    handleDetection: PropTypes.func.isRequired,
   },
   componentDidMount () {
     // setting dom elements
@@ -43,10 +46,11 @@ const RecordContainer = React.createClass({
     // fetching data
     this.props.handleSetDingListener()
     this.props.handleFetchingUserSettings(this.props.authedId)
+    this.props.handleFetchingUserDings(this.props.authedId)
     this.latLngInterval = null
 
-    // plot to html5 canvas (p5 replacement)
     this.pen = new Pen(this.canvas)
+    // plot to html5 canvas (p5 replacement) this.pen = new Pen(this.canvas)
 
     // audio
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
@@ -139,6 +143,8 @@ const RecordContainer = React.createClass({
       // Detection
       // climbing up the stairs
       //
+
+      const detection = this.props.handleDetection(this.analyser.getSlopes(freqIndex))
 
       /*
       const freqSlope = this.analyser.getSlopes(freqIndex)
@@ -259,6 +265,7 @@ function mapStateToProps (state) {
     isUploading: state.record.get('isUploading'),
     latestLocation: state.record.get('latestLocation').toJS(),
     latestFetch: state.record.get('latestFetch'),
+    lastDetection: state.record.get('lastDetection'),
     targetFrequency: state.userSettings.getIn([authedId, 'targetFrequency']),
   }
 }
@@ -269,6 +276,7 @@ function mapDispatchToProps (dispatch) {
     ...recordActionCreators,
     ...dingsActionCreators,
     ...dingFeedActionCreators,
+    ...userDingActionCreators,
   }, dispatch)
 }
 

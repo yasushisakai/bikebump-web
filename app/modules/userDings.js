@@ -1,5 +1,4 @@
-import { initialState} from 'config/constants'
-import { List } from 'immutable'
+import { initialState } from 'config/constants'
 import { fetchUserDings } from 'helpers/api'
 import { isModuleStale } from 'helpers/utils'
 
@@ -57,12 +56,8 @@ export function handleFetchingUserDings (uid) {
   }
 }
 
-export function handleAddUserDing (uid, dingId, status, commuteId, timestamp) {
-  createUserDing(uid, dingId, status, commuteId, timestamp)
-    .then(() => dispatch(addUserDing(uid, dingId, status, commuteId, timestamp)))
-}
-
 export function addUserDing (uid, dingId, status, commuteId, timestamp) {
+  console.log(commuteId)
   return {
     type: ADD_USER_DING,
     uid,
@@ -83,14 +78,12 @@ export default function userDings (state = initialState, action) {
         error: action.error,
       })
     case FETCHING_USER_DINGS_SUCCESS:
-
       return state.merge({
         isFetching: false,
         [action.uid]: action.dingIdsAndStatus,
       })
     case ADD_USER_DING:
-      const {status, commuteId, timestamp} = action
-      return state.setIn([action.uid, action.dingId], {status, commuteId, timestamp})
+      return state.setIn([action.uid, action.dingId], {status: action.status, commuteId: action.commuteId, timestamp: action.timestamp})
     default:
       return state
   }

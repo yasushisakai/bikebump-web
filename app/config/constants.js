@@ -5,9 +5,9 @@ import { Map } from 'immutable'
 // THRESHOLDS
 //
 
-export const threshold = 10
+export const threshold = 5
 export const thresholdLength = 300 // ms
-export const doubleDingDuration = 1000 // ms
+export const doubleDingDuration = 1500 // ms
 export const maxCommuteLife = 20000 // ms
 export const updateCycleDuration = 5000 // ms
 export const renderTimeConstrain = 10000 // ms

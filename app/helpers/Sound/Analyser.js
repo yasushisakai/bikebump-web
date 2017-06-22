@@ -6,7 +6,8 @@ export default class Analyser {
       maxDecibels = -10,
       highpassFrequency = 2200,
       lowRange = 2000,
-      highRange = 4000
+      highRange = 4000,
+      nAverage = 5
     ) {
     this.analyser = audioContext.createAnalyser()
     this.analyser.fftSize = fftSize
@@ -57,6 +58,7 @@ export default class Analyser {
             currentValue > array[maxIndex] ? index : maxIndex, 0
           ) + start
   }
+
 
   getSlopes (target, range = 2) {
     const targetValue = this.dataArray[target]

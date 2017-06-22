@@ -33,8 +33,6 @@ export default class Recorder {
   };
 
   constructor (source, cfg) {
-    console.log('cfg', cfg)
-    console.log('this.config', this.config)
     Object.assign(this.config, cfg)
     this.context = source.context
     this.node = (this.context.createScriptProcessor ||

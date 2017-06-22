@@ -3,7 +3,7 @@ import { fetchGeoLocation, refreshCommute, formatWavFileName, distFromLatLng } f
 import { createCommute, appendBreadcrumb, createUserDing, deleteCommute } from 'helpers/api'
 import { storeBlob } from 'helpers/storage'
 import { addUserDing, userDingStatus } from 'modules/userDings'
-import { thresholdLength } from ''
+import { doubleDingDuration, threshold, thresholdLength } from 'config/constants'
 
 const STOP_RECORDING = 'STOP_RECORDING'
 const START_RECORDING = 'START_RECORDING'
@@ -52,31 +52,39 @@ function startRecording (commuteId) {
 }
 
 function waitDetection () {
+  console.log('wait detection', Date.now())
   return {
     type: WAIT_DETECTION,
   }
 }
 
-export function handleDetection (detection) {
+export function handleDetection (slopes) {
   return function (dispatch, getState) {
-    if (detection) {
+    if (slopes[0] > threshold && slopes[1] > threshold) {
       if (getState().record.get('detectionStatus') === detectionStatus.INITIAL) {
         dispatch(waitDetection())
-        return false
       } else if (
       // at this point the detection has been verified
       getState().record.get('detectionStatus') === detectionStatus.WAITING &&
       Date.now() - getState().record.get('lastTimeOverThreshold') > thresholdLength
       ) {
+        if (Date.now() - getState().record.get('lastDetection') < doubleDingDuration) {
+          console.log('double ding')
+        } else {
+          console.log('single ding')
+        }
         dispatch(leaveDetection())
         return true
       }
-    } else {
-      if (getState().record.get('detectionStatus') !== detectionStatus.INITIAL) {
+    } else if (slopes[0] < threshold * 0.75 && slopes[1] < threshold * 0.75) {
+      if (getState().record.get('detectionStatus') === detectionStatus.LEAVING) {
+        console.log(Date.now() - getState().record.get('lastDetection'))
         dispatch(returnDetection())
-        return false
       }
+    } else {
+      dispatch(returnDetection())
     }
+    return false
   }
 }
 
@@ -199,7 +207,8 @@ export function handleFetchLatLng (commuteId) {
         let isInside = false
         let whichDing = ''
 
-        // run through the dings to see which dings are we included
+        // run through the dings to see which dings are we including
+        // rule: each fetch should only add one passed by ding
         getState().dingFeed.get('dingIds').toJS().map(dingId => {
           const ding = getState().dings.get(dingId)
           const distance = distFromLatLng(ding.get('coordinates').toJS(), location)
@@ -209,7 +218,12 @@ export function handleFetchLatLng (commuteId) {
             isInside = true
             whichDing = dingId
             const uid = getState().users.get('authedId')
-            const currentStats = getState().userDings.getIn([uid, dingId])
+
+            // console.log(getState().userDings.getIn([uid, dingId]).toJS())
+
+            const currentStats = getState().userDings.getIn([uid, dingId, 'status'])
+
+            // console.log(currentStats)
 
             if (
               currentStats !== userDingStatus.DINGED &&

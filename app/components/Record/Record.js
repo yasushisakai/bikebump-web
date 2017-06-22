@@ -1,6 +1,5 @@
-import React, { PropTypes, Component } from 'react'
+import React from 'react'
 import { recordContents } from './styles.css'
-import { Map } from 'immutable'
 
 export default function Record (props) {
   return (
