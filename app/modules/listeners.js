@@ -1,11 +1,11 @@
-import { Map } from 'immutable'
-const ADD_LISTENER = 'ADD_LISTENER'
+import { Map } from 'immutable';
+const ADD_LISTENER = 'ADD_LISTENER';
 
 export function addListener (listenerId) {
   return {
     type: ADD_LISTENER,
     listenerId,
-  }
+  };
 }
 
 export default function listeners (state = Map({}), action) {
@@ -13,8 +13,8 @@ export default function listeners (state = Map({}), action) {
     case ADD_LISTENER:
       return state.merge({
         [action.listenerId]: true,
-      })
+      });
     default:
-      return state
+      return state;
   }
 }

@@ -1,33 +1,34 @@
-import React, { PropTypes } from 'react'
-import { largeButton, callibrateContents } from './styles.css'
+// @flow
+import React from 'react';
+import { largeButton, callibrateContents } from './styles.css';
 // import ToggleButton from 'react-toggle-button'
 
-Calibrate.propTypes = {
-  isFetching: PropTypes.bool.isRequired,
-  // isCalibrating: PropTypes.bool.isRequired,
-  // toggleCalibration: PropTypes.func.isRequired,
-  //targetFrequency : PropTypes.number.isRequired,
+type Props = {
+  isFetching: boolean;
+  isCalibrating?: boolean;
+  toggleCalibration?: () => void;
+  targetFrequency?: number;
 }
 
-export default function Calibrate (props) {
+export default function Calibrate ({isFetching, isCalibrating, toggleCalibration, targetFrequency}: Props) {
   const buttonStyle = {
-    backgroundColor: props.isCalibrating ? '#ff0000' : '#444444',
-  }
+    backgroundColor: isCalibrating ? '#ff0000' : '#444444',
+  };
 
   return (
-    props.isFetching
-    ? <div id='calibrate' className={callibrateContents} />
-    : (<div id='calibrate' className={callibrateContents}>
-    { props.isCalibrating === true
-      ? 'calibrating...'
-      : `target bell frequency: ${props.targetFrequency}`
-    }
-      <div className={largeButton} style={buttonStyle} onClick={props.toggleCalibration}>
-        { props.isCalibrating === true
-          ? 'stop calibration'
-          : 'start calibration'
+    isFetching
+      ? <div id='calibrate' className={callibrateContents} />
+      : (<div id='calibrate' className={callibrateContents}>
+        { isCalibrating === true
+          ? 'calibrating...'
+          : `target bell frequency: ${targetFrequency}`
         }
-      </div>
-    </div>)
-  )
+        <div className={largeButton} style={buttonStyle} onClick={toggleCalibration}>
+          { isCalibrating === true
+            ? 'stop calibration'
+            : 'start calibration'
+          }
+        </div>
+      </div>)
+  );
 }

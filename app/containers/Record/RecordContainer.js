@@ -1,18 +1,18 @@
-import React, { PropTypes } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import Pen from 'helpers/Pen'
-import { fitCanvas } from 'helpers/utils'
-import { Record } from 'components'
-import NoSleep from 'nosleep'
-import { Analyser, Recorder } from 'helpers/Sound'
-import { updateCycleDuration } from 'config/constants'
+import React, { PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import Pen from 'helpers/Pen';
+import { fitCanvas } from 'helpers/utils';
+import { Record } from 'components';
+import NoSleep from 'nosleep';
+import { Analyser, Recorder } from 'helpers/Sound';
+import { updateCycleDuration } from 'config/constants';
 
-import * as userSettingsActionCreators from 'modules/userSettings'
-import * as recordActionCreators from 'modules/record'
-import * as dingsActionCreators from 'modules/dings'
-import * as dingFeedActionCreators from 'modules/dingFeed'
-import * as userDingActionCreators from 'modules/userDings'
+import * as userSettingsActionCreators from 'modules/userSettings';
+import * as recordActionCreators from 'modules/record';
+import * as dingsActionCreators from 'modules/dings';
+import * as dingFeedActionCreators from 'modules/dingFeed';
+import * as userDingActionCreators from 'modules/userDings';
 
 const RecordContainer = React.createClass({
   propTypes: {
@@ -39,113 +39,113 @@ const RecordContainer = React.createClass({
   },
   componentDidMount () {
     // setting dom elements
-    this.canvas = document.createElement('canvas')
-    this.recordElement = document.getElementById('record')
-    this.recordElement.appendChild(this.canvas)
-    fitCanvas(this.canvas)
+    this.canvas = document.createElement('canvas');
+    this.recordElement = document.getElementById('record');
+    this.recordElement.appendChild(this.canvas);
+    fitCanvas(this.canvas);
 
     // fetching data
-    this.props.handleSetDingListener()
-    this.props.handleFetchingUserSettings(this.props.authedId)
-    this.props.handleFetchingUserDings(this.props.authedId)
-    this.latLngInterval = null
+    this.props.handleSetDingListener();
+    this.props.handleFetchingUserSettings(this.props.authedId);
+    this.props.handleFetchingUserDings(this.props.authedId);
+    this.latLngInterval = null;
 
-    this.pen = new Pen(this.canvas)
+    this.pen = new Pen(this.canvas);
     // plot to html5 canvas (p5 replacement) this.pen = new Pen(this.canvas)
 
     // audio
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
-    this.analyser = new Analyser(this.audioContext)
-    this.analyser.setIsInFocus(true)
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    this.analyser = new Analyser(this.audioContext);
+    this.analyser.setIsInFocus(true);
 
     if (navigator.getUserMedia) {
       navigator.getUserMedia(
         {audio: true},
         (stream) => {
-          let source = this.audioContext.createMediaStreamSource(stream)
-          source.connect(this.analyser.input)
-          this.analyser.connect()
-          this.recorder = new Recorder(source)
-          this.recorder.record()
+          let source = this.audioContext.createMediaStreamSource(stream);
+          source.connect(this.analyser.input);
+          this.analyser.connect();
+          this.recorder = new Recorder(source);
+          this.recorder.record();
         },
         (error) => {
-          console.error(error)
+          console.error(error);
         }
-      )
+      );
     } else {
-      console.error('user get media error')
+      console.error('user get media error');
       // switch to button mode
     }
 
     // library that prevents the phone to goto sleep mode
-    this.noSleep = new NoSleep()
-    this.noSleep.enable()
+    this.noSleep = new NoSleep();
+    this.noSleep.enable();
 
     // canvas functions
-    this.setup()
-    this.draw() // 'endless loop'
+    this.setup();
+    this.draw(); // 'endless loop'
   },
   componentWillUnmount () {
-    window.cancelAnimationFrame(this.animation)
+    window.cancelAnimationFrame(this.animation);
 
     if (this.latLngInterval !== null) {
-      window.clearInterval(this.latLngInterval)
-      this.latLngInterval = null
+      window.clearInterval(this.latLngInterval);
+      this.latLngInterval = null;
     }
 
     // stop recording
     if (this.props.isRecording === true) {
-      this.props.toggleRecording()
+      this.props.toggleRecording();
     }
   },
   setup () {
-    const dataArray = this.analyser.updateDataArray()
-    this.binWidth = this.canvas.width / dataArray.length
-    this.circleRadius = this.canvas.width * 0.325
+    const dataArray = this.analyser.updateDataArray();
+    this.binWidth = this.canvas.width / dataArray.length;
+    this.circleRadius = this.canvas.width * 0.325;
 
     //
     // Detection
     //
-    this.firstFlag = false
-    this.secondFlag = false
-    this.isDing = false
-    this.previousSpike = Date.now()
+    this.firstFlag = false;
+    this.secondFlag = false;
+    this.isDing = false;
+    this.previousSpike = Date.now();
 
-    this.canvas.onclick = this.mousePressed
-    this.canvas.addEventListener('mousemove', this.mouseMoved)
+    this.canvas.onclick = this.mousePressed;
+    this.canvas.addEventListener('mousemove', this.mouseMoved);
   },
   draw () {
-    this.animation = requestAnimationFrame(this.draw)
+    this.animation = requestAnimationFrame(this.draw);
 
     if (this.props.isFetching) {
-      return
+      return;
     }
 
-    this.pen.clear()
+    this.pen.clear();
 
     if (this.props.isRecording) {
       // draw the polyline
-      const dataArray = this.analyser.updateDataArray()
-      this.pen.stroke('white')
-      this.pen.ctx.beginPath()
+      const dataArray = this.analyser.updateDataArray();
+      this.pen.stroke('white');
+      this.pen.ctx.beginPath();
       dataArray.map((bin, index) => {
-        const x = index * this.binWidth
-        const y = this.canvas.height * (1 - bin / 256)
-        this.pen.ctx.lineTo(x, y)
-      })
-      this.pen.ctx.stroke()
+        const x = index * this.binWidth;
+        const y = this.canvas.height * (1 - bin / 256);
+        this.pen.ctx.lineTo(x, y);
+      });
+      this.pen.ctx.stroke();
 
       // draw current target frequency
-      const freqIndex = this.analyser.frequencyToIndex(this.props.targetFrequency)
-      this.pen.stroke('red')
-      this.pen.drawVerticalAxis(freqIndex * this.binWidth, this.canvas.height)
+      const freqIndex = this.analyser.frequencyToIndex(this.props.targetFrequency);
+      this.pen.stroke('red');
+      this.pen.drawVerticalAxis(freqIndex * this.binWidth, this.canvas.height);
 
       //
       // Detection
       // climbing up the stairs
       //
 
-      this.props.handleDetection(this.analyser.getSlopes(freqIndex))
+      this.props.handleDetection(this.analyser.getSlopes(freqIndex));
 
       /*
       const freqSlope = this.analyser.getSlopes(freqIndex)
@@ -197,24 +197,24 @@ const RecordContainer = React.createClass({
       } // detection ends
       */
 
-      this.pen.noStroke()
-      this.pen.fill('white')
-      this.pen.text('push again to stop recording', this.canvas.width / 2, this.canvas.height / 4)
+      this.pen.noStroke();
+      this.pen.fill('white');
+      this.pen.text('push again to stop recording', this.canvas.width / 2, this.canvas.height / 4);
 
-      this.pen.noStroke()
-      this.pen.fill('red')
+      this.pen.noStroke();
+      this.pen.fill('red');
     } else {
-      this.pen.noStroke()
-      this.pen.fill('white')
-      this.pen.text('push to record your commute', this.canvas.width / 2, this.canvas.height / 4)
-      this.pen.noFill()
-      this.pen.stroke('white')
+      this.pen.noStroke();
+      this.pen.fill('white');
+      this.pen.text('push to record your commute', this.canvas.width / 2, this.canvas.height / 4);
+      this.pen.noFill();
+      this.pen.stroke('white');
     }
-    this.pen.drawCircle(this.canvas.width / 2, this.canvas.height / 2, this.circleRadius)
+    this.pen.drawCircle(this.canvas.width / 2, this.canvas.height / 2, this.circleRadius);
   },
   updatePosition (commuteId) {
     // window.navigator.vibrate(100)
-    this.props.handleFetchLatLng()
+    this.props.handleFetchLatLng();
   },
   mousePressed (event) {
     const distanceFromCenter = this.pen.distance(
@@ -222,38 +222,38 @@ const RecordContainer = React.createClass({
       this.pen.mouseY,
       this.canvas.width / 2.0,
       this.canvas.height / 2.0
-      )
+    );
 
     if (distanceFromCenter < this.circleRadius) {
-      window.navigator.vibrate(50)
+      window.navigator.vibrate(50);
       this.props.toggleRecording()
-      .then(response => {
-        if (response.isRecording) {
-          const fetchFunc = this.updatePosition.bind(this, response.commuteId)
-          fetchFunc()
-          this.latLngInterval = window.setInterval(fetchFunc, updateCycleDuration)
-        } else {
-          if (this.latLngInterval !== null) {
-            window.clearInterval(this.latLngInterval)
+        .then(response => {
+          if (response.isRecording) {
+            const fetchFunc = this.updatePosition.bind(this, response.commuteId);
+            fetchFunc();
+            this.latLngInterval = window.setInterval(fetchFunc, updateCycleDuration);
+          } else {
+            if (this.latLngInterval !== null) {
+              window.clearInterval(this.latLngInterval);
+            }
+            this.latLngInterval = null;
           }
-          this.latLngInterval = null
-        }
-      })
+        });
     }
   },
   mouseMoved (event) {
-    this.pen.updateMouse(event)
+    this.pen.updateMouse(event);
   },
 
   render () {
     return (
       <Record/>
-    )
+    );
   },
-})
+});
 
 function mapStateToProps (state) {
-  const authedId = state.users.get('authedId')
+  const authedId = state.users.get('authedId');
   return {
     isAuthed: state.users.get('isAuthed'),
     authedId,
@@ -268,7 +268,7 @@ function mapStateToProps (state) {
     latestFetch: state.record.get('latestFetch'),
     lastDetection: state.record.get('lastDetection'),
     targetFrequency: state.userSettings.getIn([authedId, 'targetFrequency']),
-  }
+  };
 }
 
 function mapDispatchToProps (dispatch) {
@@ -278,8 +278,8 @@ function mapDispatchToProps (dispatch) {
     ...dingsActionCreators,
     ...dingFeedActionCreators,
     ...userDingActionCreators,
-  }, dispatch)
+  }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RecordContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(RecordContainer);
 // export default RecordContainer

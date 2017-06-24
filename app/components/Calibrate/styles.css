@@ -2,11 +2,10 @@
   cursor : pointer;
 }
 
-
 .calibrateContents{
-  composes: contents from 'styles/styles.css';
+  ime-mode: contents from 'styles/styles.css';
 }
 
 .largeButton {
-  composes: largeButton from 'styles/styles.css';
+  ime-mode: largeButton from 'styles/styles.css';
 }

@@ -1,18 +1,19 @@
-import React, { PropTypes } from 'react'
+// @flow
+import React from 'react';
 
-RecordSound.propTypes = {
-  isRecording: PropTypes.bool.isRequired,
-  handleRecord: PropTypes.func.isRequired,
-}
+type Props = {
+  isRecording: boolean;
+  handleRecord: () => void;
+};
 
-export default function RecordSound (props) {
+export default function RecordSound ({isRecording, handleRecord}: Props) {
   function status () {
-    return props.isRecording ? 'start recording' : 'stop recording'
+    return isRecording ? 'start recording' : 'stop recording';
   }
   return (
     <div>
-    <h2>{'RecordSound'}</h2>
-    <div onClick={props.handleRecord}> {status()} </div>
+      <h2>{'RecordSound'}</h2>
+      <div onClick={handleRecord}> {status()} </div>
     </div>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import React, { PropTypes } from 'react'
-import { bindActionCreators } from 'redux'
-import { Map } from 'immutable'
-import { connect } from 'react-redux'
-import { formatGoogleStreetViewURL} from 'helpers/utils'
-import { streetSideMap } from './styles.css'
+import React, { PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
+import { Map } from 'immutable';
+import { connect } from 'react-redux';
+import { formatGoogleStreetViewURL} from 'helpers/utils';
+import { streetSideMap } from './styles.css';
 
-import * as dingActionCreators from 'modules/dings'
+import * as dingActionCreators from 'modules/dings';
 
 const StreetSideContainer = React.createClass({
   propTypes: {
@@ -16,7 +16,7 @@ const StreetSideContainer = React.createClass({
     nextResponsePair: PropTypes.array.isRequired,
   },
   componentDidMount () {
-    this.element = document.getElementById('streetSide')
+    this.element = document.getElementById('streetSide');
 
     // load bing
     // let bingMaps = document.createElement('script')
@@ -28,19 +28,19 @@ const StreetSideContainer = React.createClass({
 
     // this.getBingMap(this.element)
     if (this.props.dingId !== '' && this.props.ding !== new Map() && this.element) {
-      let location
+      let location;
       if (this.props.ding.has('closestRoadPoint')) {
-        location = this.props.ding.get('closestRoadPoint').toJS()
-        const arrayLocation = [location.lat, location.lng]
-        const direction = this.props.ding.get('direction').toJS()
-        const angle = Math.atan2(direction.y, direction.x) * (180 / Math.PI)
+        location = this.props.ding.get('closestRoadPoint').toJS();
+        const arrayLocation = [location.lat, location.lng];
+        const direction = this.props.ding.get('direction').toJS();
+        const angle = Math.atan2(direction.y, direction.x) * (180 / Math.PI);
         // console.log(direction,angle)
         // console.log(arrayLocation)
-        this.getBingMap(this.element, arrayLocation, angle)
+        this.getBingMap(this.element, arrayLocation, angle);
       } else {
-        location = this.props.ding.get('coordinates').toJS()
-        const arrayLocation = [location.lat, location.lng]
-        this.getBingMap(this.element, arrayLocation, null)
+        location = this.props.ding.get('coordinates').toJS();
+        const arrayLocation = [location.lat, location.lng];
+        this.getBingMap(this.element, arrayLocation, null);
       }
     }
   },
@@ -50,13 +50,13 @@ const StreetSideContainer = React.createClass({
       mapTypeId: Microsoft.Maps.MapTypeId.streetside,
       zoom: 18,
       center: new Microsoft.Maps.Location(location[0], location[1],),
-    }
+    };
 
     if (heading !== null) {
-      bingMapInitOptions.heading = heading
+      bingMapInitOptions.heading = heading;
     }
 
-    this.map = new Microsoft.Maps.Map(element, bingMapInitOptions)
+    this.map = new Microsoft.Maps.Map(element, bingMapInitOptions);
 
     this.map.setOptions({ streetsideOptions: { overviewMapMode: Microsoft.Maps.OverviewMapMode.hidden,
       showCurrentAddress: false,
@@ -65,27 +65,27 @@ const StreetSideContainer = React.createClass({
       disablePanoramaNavigation: true,
       showHeadingCompass: false,
       showZoomButtons: false },
-    })
+    });
   },
   componentWillUpdate () {
-    let location
+    let location;
     if (this.props.ding.has('closestRoadPoint')) {
-      location = this.props.ding.get('closestRoadPoint').toJS()
-      const arrayLocation = [location.lat, location.lng]
-      const direction = this.props.ding.get('direction').toJS()
-      const angle = Math.atan2(direction.y, direction.x) * (180 / Math.PI)
-      this.map.setView({center: new Microsoft.Maps.Location(arrayLocation[0], arrayLocation[1]), heading: angle})
+      location = this.props.ding.get('closestRoadPoint').toJS();
+      const arrayLocation = [location.lat, location.lng];
+      const direction = this.props.ding.get('direction').toJS();
+      const angle = Math.atan2(direction.y, direction.x) * (180 / Math.PI);
+      this.map.setView({center: new Microsoft.Maps.Location(arrayLocation[0], arrayLocation[1]), heading: angle});
     } else {
-      console.log(this.props.ding.toJS())
-      location = this.props.ding.get('coordinates').toJS()
-      const arrayLocation = [location.lat, location.lng]
-      this.map.setView({center: new Microsoft.Maps.Location(arrayLocation[0], arrayLocation[1])})
+      console.log(this.props.ding.toJS());
+      location = this.props.ding.get('coordinates').toJS();
+      const arrayLocation = [location.lat, location.lng];
+      this.map.setView({center: new Microsoft.Maps.Location(arrayLocation[0], arrayLocation[1])});
     }
   },
   render () {
-    return (<div id='streetSide' className={streetSideMap} />)
+    return (<div id='streetSide' className={streetSideMap} />);
   },
-})
+});
 
 function mapStateToProps (state, props) {
   return {
@@ -93,14 +93,14 @@ function mapStateToProps (state, props) {
     dingId: props.dingId,
     ding: state.dings.get(props.dingId) || new Map(),
     nextResponsePair: state.userResponses.get('nextResponsePair'),
-  }
+  };
 }
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     ...dingActionCreators,
-  }, dispatch)
+  }, dispatch);
 }
 
 export default connect(mapStateToProps,
-mapDispatchToProps)(StreetSideContainer)
+  mapDispatchToProps)(StreetSideContainer);

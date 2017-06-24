@@ -20,8 +20,7 @@
   "rules": {
     "no-console": [2, {"allow": ["log", "warn", "error"]}],
     "comma-dangle" : [2, "always-multiline"],
-    "semi": [2, "never"],
-    "no-extra-semi": 2,
+    "semi": [2, "always"],
     "jsx-quotes": [2, "prefer-single"],
     "react/jsx-boolean-value": [2, "always"],
     "react/jsx-closing-bracket-location": [2, {"selfClosing": "after-props", "nonEmpty": "after-props"}],
@@ -30,5 +29,5 @@
     "react/jsx-no-literals": 2,
     "react/self-closing-comp": 2,
     "react/sort-comp": 2
-  },
+  }
 }

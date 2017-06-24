@@ -1,25 +1,25 @@
-import React, { PropTypes } from 'react'
-import { Auth } from 'components'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import * as usersActionCreators from 'modules/users'
-import { button } from 'styles/styles.css'
-import { services } from 'helpers/auth'
+import React, { PropTypes } from 'react';
+import { Auth } from 'components';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as usersActionCreators from 'modules/users';
+import { button } from 'styles/styles.css';
+import { services } from 'helpers/auth';
 
 AuthButton.propTypes = {
   service: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  //color: PropTypes.string.isRequired,
-}
+  // color: PropTypes.string.isRequired,
+};
 
 function AuthButton (props) {
   return (
     <div
-    className={button}
-    onClick={props.onClick.bind(this, props.service)} >
-    {`login with ${props.service} account`}
+      className={button}
+      onClick={props.onClick.bind(this, props.service)} >
+      {`login with ${props.service} account`}
     </div>
-  )
+  );
 }
 
 const AuthContainer = React.createClass({
@@ -35,13 +35,13 @@ const AuthContainer = React.createClass({
   },
   componentDidMount () {
     if (sessionStorage.getItem('redirectAuth') === 'true') {
-      this.props.handleUserAuthReturn()
+      this.props.handleUserAuthReturn();
     }
   },
   componentDidUpdate () {
     this.props.isAuthed === true
-    ? this.context.router.push('record')
-    : null
+      ? this.context.router.push('record')
+      : null;
   },
 
   signInButtons () {
@@ -49,16 +49,16 @@ const AuthContainer = React.createClass({
       return Object.keys(services).map((key) => {
         // Inigo bug: chrome ver:51.02704, Android ver 5.1.1
         // Object.values is from chrome ver.54 and later
-        const service = services[key]
+        const service = services[key];
         return <AuthButton
           onClick={this.props.handleUserAuthRedirect}
           service={service}
-          key={service} />
-      })
+          key={service} />;
+      });
     } else {
       return <AuthButton
         onClick={this.props.handleUserAuthRedirect}
-        service={localStorage.getItem('provider')}/>
+        service={localStorage.getItem('provider')}/>;
     }
   },
 
@@ -67,20 +67,20 @@ const AuthContainer = React.createClass({
       <Auth>
         {this.signInButtons()}
       </Auth>
-    )
+    );
   },
-})
+});
 
 function mapStateToProps ({users}) {
   return {
     isFetching: users.get('isFetching'),
     isAuthed: users.get('isAuthed'),
     error: users.get('error'),
-  }
+  };
 }
 
 function mapDispatchToProps (dispatch) {
-  return bindActionCreators(usersActionCreators, dispatch)
+  return bindActionCreators(usersActionCreators, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(AuthContainer);

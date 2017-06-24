@@ -1,12 +1,12 @@
-import React, {PropTypes} from 'react'
-import { User } from 'components'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { toJS } from 'immutable'
+import React, {PropTypes} from 'react';
+import { User } from 'components';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { toJS } from 'immutable';
 
-import * as userDingsActionCreators from 'modules/userDings'
-import * as userVotesActionCreators from 'modules/userVotes'
-import * as userResponsesActionCreators from 'modules/userResponses'
+import * as userDingsActionCreators from 'modules/userDings';
+import * as userVotesActionCreators from 'modules/userVotes';
+import * as userResponsesActionCreators from 'modules/userResponses';
 
 const UserContainer = React.createClass({
   propTypes: {
@@ -22,21 +22,21 @@ const UserContainer = React.createClass({
     router: PropTypes.object.isRequired,
   },
   componentDidMount () {
-    if (this.context.router.params.uid !== this.props.authedId) { this.context.router.push('/signin') }
+    if (this.context.router.params.uid !== this.props.authedId) { this.context.router.push('/signin'); }
 
     // fetch user stuff
     if (this.props.isAuthed === true) { // reload
-      this.props.handleFetchingUserDings()
-      this.props.handleFetchingUserVotes()
-      this.props.handleFetchingUserResponses()
+      this.props.handleFetchingUserDings();
+      this.props.handleFetchingUserVotes();
+      this.props.handleFetchingUserResponses();
     }
   },
   render () {
     return this.props.isFetching === true
-    ? null
-    : (<User uid={this.props.authedId} dingIds={this.props.dingIds}/>)
+      ? null
+      : (<User uid={this.props.authedId} dingIds={this.props.dingIds}/>);
   },
-})
+});
 
 function mapStateToProps ({users, userDings, userVotes, userResponses}, props) {
   return {
@@ -44,7 +44,7 @@ function mapStateToProps ({users, userDings, userVotes, userResponses}, props) {
     authedId: users.get('authedId'),
     isAuthed: users.get('isAuthed'),
     dingIds: userDings.get(props.routeParams.uid),
-  }
+  };
 }
 
 function mapDispatchToProps (dispatch) {
@@ -52,7 +52,7 @@ function mapDispatchToProps (dispatch) {
     ...userDingsActionCreators,
     ...userVotesActionCreators,
     ...userResponsesActionCreators,
-  }, dispatch)
+  }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(UserContainer);

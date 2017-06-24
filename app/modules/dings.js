@@ -1,41 +1,41 @@
-import { fromJS } from 'immutable'
-import { createDing, fetchDings, fetchDing, createUserDing } from 'helpers/api'
-import { addUserDing, userDingStatus } from 'modules/userDings'
-import { addDingId } from 'modules/dingFeed'
+import { fromJS } from 'immutable';
+import { createDing, fetchDings, fetchDing, createUserDing } from 'helpers/api';
+import { addUserDing, userDingStatus } from 'modules/userDings';
+import { addDingId } from 'modules/dingFeed';
 
-const FETCHING_DINGS = 'FETCHING_DINGS'
-const FETCHING_SINGLE_DING = 'FETCHING_SINGLE_DING'
-const FETCHING_DINGS_ERROR = 'FETCHING_DINGS_ERROR'
-export const FETCHING_DING_SUCCESS = 'FETCHING_DING_SUCCESS'
-const FETCHING_DINGS_SUCCESS = 'FETCHING_DINGS_SUCCESS'
-const REMOVE_FETCHING = 'REMOVE_FETCHING'
-const ADD_MULTIPLE_DINGS = 'ADD_MULTIPLE_DINGS'
+const FETCHING_DINGS = 'FETCHING_DINGS';
+const FETCHING_SINGLE_DING = 'FETCHING_SINGLE_DING';
+const FETCHING_DINGS_ERROR = 'FETCHING_DINGS_ERROR';
+export const FETCHING_DING_SUCCESS = 'FETCHING_DING_SUCCESS';
+const FETCHING_DINGS_SUCCESS = 'FETCHING_DINGS_SUCCESS';
+const REMOVE_FETCHING = 'REMOVE_FETCHING';
+const ADD_MULTIPLE_DINGS = 'ADD_MULTIPLE_DINGS';
 
 function fetchingDings () {
   return {
     type: FETCHING_DINGS,
-  }
+  };
 }
 
 function fetchingSingleDing () {
   return {
     type: FETCHING_SINGLE_DING,
-  }
+  };
 }
 
 function fetchingDingsError (error) {
-  console.warn(error)
+  console.warn(error);
   return {
     type: FETCHING_DINGS_ERROR,
     error: 'error fetching dings',
-  }
+  };
 }
 
 function fetchingDingsSuccess (dings) {
   return {
     type: FETCHING_DINGS_SUCCESS,
     dings,
-  }
+  };
 }
 
 function fetchingDingSuccess (dingId, ding) {
@@ -43,47 +43,47 @@ function fetchingDingSuccess (dingId, ding) {
     type: FETCHING_DING_SUCCESS,
     dingId,
     ding,
-  }
+  };
 }
 
 export function handleFetchingDings () {
   return function (dispatch) {
-    dispatch(fetchingDings())
+    dispatch(fetchingDings());
     return fetchDings()
       .then(dings => dispatch(fetchingDingsSuccess(dings)))
-      .catch(error => dispatch(fetchingDingsError(error)))
-  }
+      .catch(error => dispatch(fetchingDingsError(error)));
+  };
 }
 
 export function handleFetchingDing (dingId) {
   return function (dispatch, getState) {
     if (getState().dings.has(dingId)) {
-      return Promise.resolve(getState().dings.get(dingId))
+      return Promise.resolve(getState().dings.get(dingId));
     }
 
-    dispatch(fetchingSingleDing())
+    dispatch(fetchingSingleDing());
     return fetchDing(dingId)
       .then(ding => dispatch(fetchingDingSuccess(dingId, ding)))
       .then(() => {
         if (!getState().dingFeed.get('dingIds').has(dingId)) {
-          dispatch(addDingId(dingId))
+          dispatch(addDingId(dingId));
         }
       })
-      .catch(error => dispatch(fetchingDingsError(error)))
-  }
+      .catch(error => dispatch(fetchingDingsError(error)));
+  };
 }
 
 export function removeFetching () {
   return {
     type: REMOVE_FETCHING,
-  }
+  };
 }
 
 export function addMultipleDings (dings) {
   return {
     type: ADD_MULTIPLE_DINGS,
     dings,
-  }
+  };
 }
 
 //
@@ -98,19 +98,19 @@ export function handleComplieDing (uid, coordinates, commuteId, timestamp, radiu
         if (dingId !== null) {
           return createUserDing(uid, dingId, userDingStatus.DINGED, commuteId, timestamp)
             .then((response) => {
-              const {uid, dingId, status} = response
-              return dispatch(addUserDing(uid, dingId, status))
-            })
+              const {uid, dingId, status} = response;
+              return dispatch(addUserDing(uid, dingId, status));
+            });
         }
-      })
-  }
+      });
+  };
 }
 
 const initialState = fromJS({
   lastUpdated: 0,
   isFetching: false,
   error: '',
-})
+});
 
 export default function dings (state = initialState, action) {
   switch (action.type) {
@@ -118,26 +118,26 @@ export default function dings (state = initialState, action) {
     case FETCHING_SINGLE_DING:
       return state.merge({
         isFetching: true,
-      })
+      });
     case FETCHING_DINGS_ERROR:
       return state.merge({
         isFetching: false,
         error: action.error,
-      })
+      });
     case FETCHING_DING_SUCCESS:
       return state.merge({
         isFetching: false,
         [action.dingId]: action.ding,
-      })
+      });
     case FETCHING_DINGS_SUCCESS:
       return state.merge({
         isFetching: false,
-      }).merge(action.dings)
+      }).merge(action.dings);
     case REMOVE_FETCHING:
-      return state.set('isFetching', false)
+      return state.set('isFetching', false);
     case ADD_MULTIPLE_DINGS:
-      return state.merge(action.dings)
+      return state.merge(action.dings);
     default:
-      return state
+      return state;
   }
 }

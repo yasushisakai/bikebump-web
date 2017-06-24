@@ -1,17 +1,18 @@
-import React, { PropTypes } from 'react'
+// @flow
+import React from 'react';
 
-Clear.propTypes = {
-  isAuthed: PropTypes.bool.isRequired,
-  authedId: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+type Props = {
+  isAuthed: boolean;
+  authedId: string;
+  onClick: () => void;
 }
 
-export default function Clear (props) {
+export default function Clear ({isAuthed, authedId, onClick}: Props) {
   return (
     <div>
-    <h2> {'Clear'} </h2>
-    <div>{`am I authed? ${props.isAuthed}, ${props.authedId}`}</div>
-    <div onClick={props.onClick}>{'clear data'}</div>
+      <h2> {'Clear'} </h2>
+      <div>{`am I authed? ${isAuthed}, ${authedId}`}</div>
+      <div onClick={onClick}>{'clear data'}</div>
     </div>
-  )
+  );
 }

@@ -1,8 +1,9 @@
-import React, { PropTypes } from 'react'
-import { mapContents } from './styles.css'
+// @flow
+import React from 'react';
+import { mapContents } from './styles.css';
 
-export default function MapVis (props) {
+export default function MapVis () {
   return (
     <div id='mainMap' className={mapContents} />
-  )
+  );
 }

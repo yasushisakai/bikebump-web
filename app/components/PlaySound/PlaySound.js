@@ -1,14 +1,15 @@
-import React, { PropTypes } from 'react'
-import {button} from './styles.css'
+// @flow
+import React from 'react';
+import {button} from './styles.css';
 
-PlaySound.propTypes = {
-  onClickPlaySound: PropTypes.func.isRequired,
+type Props = {
+  onClickPlaySound: () => void;
 }
 
-export default function PlaySound (props) {
+export default function PlaySound ({onClickPlaySound}: Props) {
   return (
     <div>
-      <div className={button} onClick={props.onClickPlaySound}>Play Sound</div>
+      <div className={button} onClick={onClickPlaySound}>{'Play Sound'} </div>
     </div>
-  )
+  );
 }
