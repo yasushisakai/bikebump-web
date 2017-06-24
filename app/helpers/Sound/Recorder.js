@@ -74,7 +74,6 @@ export default class Recorder {
         switch (e.data.command) {
           case 'init':
             init(e.data.config)
-            console.log('onmessage', e.data.config)
             break
           case 'record':
             record(e.data.buffer)
@@ -93,7 +92,6 @@ export default class Recorder {
 
       function init (config) {
         // initiation of values
-        console.log(config)
         sampleRate = config.sampleRate
         recordDuration = config.recordDuration
         pivot = 0
@@ -103,7 +101,6 @@ export default class Recorder {
         bufferLen = config.bufferLen
         // get the closest int for recording the millisecond data
         totalLength = Math.ceil((recordDuration * sampleRate / 1000.0) / bufferLen)
-        console.log(recordDuration, sampleRate, totalLength)
         recLength = bufferLen * totalLength
         initBuffers()
       }
@@ -125,9 +122,7 @@ export default class Recorder {
         let buffers = []
 
         for (let channel = 0; channel < numChannels; channel++) {
-          // console.log(JSON.stringify(recBuffers[channel]))
           const developed = develop(recBuffers[channel], pivot)
-          // console.log(JSON.stringify(developed))
           buffers.push(mergeBuffers(developed, recLength))
         }
 

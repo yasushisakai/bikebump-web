@@ -13,6 +13,9 @@ const WAIT_DETECTION = 'WAIT_DETECTION'
 const LEAVE_DETECTION = 'LEAVE_DETECTION'
 const RETURN_DETECTION = 'RETURN_DETECTION'
 
+const ADD_PENDING = 'ADD_PENDING_DING'
+const REMOVE_PENDING = 'REMOVE_PENDING'
+
 const INSIDE_DING = 'INSIDE_DING'
 const OUTSIDE_DING = 'OUTSIDE_DING'
 
@@ -52,7 +55,6 @@ function startRecording (commuteId) {
 }
 
 function waitDetection () {
-  console.log('wait detection', Date.now())
   return {
     type: WAIT_DETECTION,
   }
@@ -68,15 +70,24 @@ export function handleDetection (slopes) {
       getState().record.get('detectionStatus') === detectionStatus.WAITING &&
       Date.now() - getState().record.get('lastTimeOverThreshold') > thresholdLength
       ) {
+        /*
         if (Date.now() - getState().record.get('lastDetection') < doubleDingDuration) {
           console.log('double ding')
         } else {
           console.log('single ding')
         }
+        */
+        console.log('DING!')
+        if (getState().record.get('isPending')) {
+          console.log('check distance, and flush')
+        } else {
+          const coordinates = getState().record.get('latestLocation')
+          dispatch(addPending(coordinates.get('lat'), coordinates.get('lng'), Date.now()))
+        }
         dispatch(leaveDetection())
         return true
       }
-    } else if (slopes[0] < threshold * 0.75 && slopes[1] < threshold * 0.75) {
+    } else if (slopes[0] < threshold && slopes[1] < threshold) {
       if (getState().record.get('detectionStatus') === detectionStatus.LEAVING) {
         console.log(Date.now() - getState().record.get('lastDetection'))
         dispatch(returnDetection())
@@ -99,6 +110,32 @@ function returnDetection () {
     type: RETURN_DETECTION,
   }
 }
+
+function addPending (lat, lng, timestamp) {
+  return {
+    type: ADD_PENDING,
+    lat,
+    lng,
+    timestamp,
+  }
+}
+
+function removePending () {
+  return {
+    type: REMOVE_PENDING,
+  }
+}
+
+/*
+export function handleReleasePending (timestamp) { 
+  return function (dispatch, getState) {
+    if(!getState().record.get('isPending')) {
+
+    }
+  }
+}
+
+*/
 
 export function uploadingClip () {
   return {
@@ -283,6 +320,11 @@ const initialState = fromJS({
   lastDetection: 0,
   latestFetch: 0,
   error: '',
+  isPending: false,
+  pending: {
+    dingId: '',
+    timestamp: 0,
+  },
 })
 
 export default function record (state = initialState, action) {
@@ -310,6 +352,22 @@ export default function record (state = initialState, action) {
         })
     case RETURN_DETECTION:
       return state.set('detectionStatus', detectionStatus.INITIAL)
+    case ADD_PENDING:
+      return state.merge({
+        isPending: true,
+        pending: {
+          dingId: action.dingId,
+          timestamp: action.timestamp,
+        },
+      })
+    case REMOVE_PENDING:
+      return state.merge({
+        isPending: false,
+        pending: {
+          dingId: '',
+          timestamp: 0,
+        },
+      })
     case UPLOADING_CLIP:
       return state.set('isUploading', true)
     case UPLOADING_CLIP_SUCCESS:

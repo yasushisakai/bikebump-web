@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import ReactDOM from 'react-dom'
 import thunk from 'redux-thunk'
@@ -41,7 +42,7 @@ function checkAuth (nextState, replace) {
 const mode = isProduction === true ? 'production' : 'development'
 console.log(`bikebump running (${mode})`)
 
-let app = document.getElementById('app')
+let app: HTMLElement = (document.getElementById('app'): any)
 app.style.height = '100%'
 app.style.width = '100%'
 // app.style.display = 'flex'

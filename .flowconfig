@@ -1,0 +1,10 @@
+[ignore]
+.*/dist/.*
+.*/node_modules/react-motion/*.
+
+[include]
+
+[libs]
+
+[options]
+module.system.node.resolve_dirname=app

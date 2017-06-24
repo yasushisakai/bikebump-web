@@ -13,6 +13,7 @@ import * as recordActionCreators from 'modules/record'
 import * as dingsActionCreators from 'modules/dings'
 import * as dingFeedActionCreators from 'modules/dingFeed'
 import * as userDingActionCreators from 'modules/userDings'
+
 const RecordContainer = React.createClass({
   propTypes: {
     isFetching: PropTypes.bool.isRequired,
@@ -144,7 +145,7 @@ const RecordContainer = React.createClass({
       // climbing up the stairs
       //
 
-      const detection = this.props.handleDetection(this.analyser.getSlopes(freqIndex))
+      this.props.handleDetection(this.analyser.getSlopes(freqIndex))
 
       /*
       const freqSlope = this.analyser.getSlopes(freqIndex)
