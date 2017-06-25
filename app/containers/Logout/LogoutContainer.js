@@ -1,26 +1,30 @@
+// @flow
 import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Logout } from 'components';
 import * as userActionCreators from 'modules/users';
 
-const LogoutContainer = React.createClass({
-  propTypes: {
-    isAuthed: PropTypes.bool.isRequired,
-    handleUserLogout: PropTypes.func.isRequired,
-  },
+class LogoutContainer extends React.Component {
   contextTypes: {
     router: PropTypes.object.isRequired,
-  },
+  }
+
   componentDidMount () {
     this.props.handleUserLogout();
-  },
+  }
+
+  props: {
+    isAuthed: boolean,
+    handleUserLogout: Function,
+  }
+
   render () {
     return (
       <Logout isAuthed={this.props.isAuthed} />
     );
-  },
-});
+  }
+}
 
 function mapStateToProps (state) {
   return {
@@ -28,7 +32,7 @@ function mapStateToProps (state) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators(userActionCreators, dispatch);
 }
 

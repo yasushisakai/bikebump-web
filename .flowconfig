@@ -2,12 +2,13 @@
 .*/dist/.*
 .*/node_modules/react-motion/*.
 .*/node_modules/fbjs/*.
+# .*/node_modules/immutable/*.
 
 [include]
-# ./node_modules/immutable/dist/immutable.js.flow
 
 [libs]
+# ./node_modules/immutable/dist/immutable.js.flow
 
 [options]
 module.system.node.resolve_dirname=app
-module.name_mapper='\(immutable\)' -> ./node_modules/immutable/dist/immutable.js.flow
+module.name_mapper='(immutable)' -> '<PROJECT_ROOT>/node_modules/immutable.js.flow'

@@ -4,10 +4,10 @@ import { largeButton, callibrateContents } from './styles.css';
 // import ToggleButton from 'react-toggle-button'
 
 type Props = {
-  isFetching: boolean;
-  isCalibrating?: boolean;
-  toggleCalibration?: () => void;
-  targetFrequency?: number;
+  isFetching: boolean,
+  isCalibrating: boolean,
+  toggleCalibration: Function,
+  targetFrequency: number,
 }
 
 export default function Calibrate ({isFetching, isCalibrating, toggleCalibration, targetFrequency}: Props) {
@@ -15,14 +15,13 @@ export default function Calibrate ({isFetching, isCalibrating, toggleCalibration
     backgroundColor: isCalibrating ? '#ff0000' : '#444444',
   };
 
+  const status: string = isCalibrating ? 'calibrating' : `target frequency: ${targetFrequency}`;
+
   return (
     isFetching
       ? <div id='calibrate' className={callibrateContents} />
       : (<div id='calibrate' className={callibrateContents}>
-        { isCalibrating === true
-          ? 'calibrating...'
-          : `target bell frequency: ${targetFrequency}`
-        }
+        { status }
         <div className={largeButton} style={buttonStyle} onClick={toggleCalibration}>
           { isCalibrating === true
             ? 'stop calibration'

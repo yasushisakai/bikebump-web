@@ -1,31 +1,35 @@
-import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
+// @flow
+import React from 'react';
+import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { contents } from 'styles/styles.css';
 import { Map } from 'immutable';
 import { lightURL } from 'config/constants';
 import leaflet from 'leaflet';
 // import mapzen from 'mapzen.js'
-import { icon, defaultStyle } from 'helpers/mapUtils';
+import { defaultStyle } from 'helpers/mapUtils';
 import { isModuleStale } from 'helpers/utils';
+import { Ding, LatLng } from 'types';
 
 import * as dingActionCreators from 'modules/dings';
 
-const MapAndStreetViewContainer = React.createClass({
-  propTypes: {
-    latestFetchAttempt: PropTypes.number.isRequired,
-    latestLocation: PropTypes.object.isRequired,
+type MapAndStreetViewProps = {
+    latestFetchAttempt: number,
+    latestLocation: LatLng,
 
-    isFetching: PropTypes.bool.isRequired,
-    dingId: PropTypes.string.isRequired,
-    ding: PropTypes.instanceOf(Map),
+    isFetching: boolean,
+    dingId: string,
+    ding: Map,
 
-    handleFetchingDing: PropTypes.func.isRequired,
-  },
+    handleFetchingDing: Function,
+}
+
+class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewProps, void> {
   componentWillMount () {
     // fetching
     this.props.handleFetchingDing(this.props.dingId);
-  },
+  }
+
   componentDidMount () {
     // init map
     let position;
@@ -48,27 +52,36 @@ const MapAndStreetViewContainer = React.createClass({
       // sometimes component never updates after mounting
       this.drawCircles(this.props);
     }
-  },
-  componentWillReceiveProps (nextProps) {
+  }
+
+  componentWillReceiveProps (nextProps: MapAndStreetViewProps) {
     if (this.props.dingId !== nextProps.dingId) {
       this.props.handleFetchingDing(nextProps.dingId);
     }
-  },
-  shouldComponentUpdate (nextProps) {
+  }
+
+  shouldComponentUpdate (nextProps: MapAndStreetViewProps) {
     // only draw when
     return !nextProps.isFetching || (this.props.dingId !== nextProps.dingId);
-  },
-  componentWillUpdate (nextProps) {
+  }
+
+  componentWillUpdate (nextProps: MapAndStreetViewProps) {
     console.log('mapStreet', 'cwu', nextProps.dingId);
     if (!nextProps.isFetching) {
       this.drawCircles(nextProps);
     }
-  },
+  }
+
   componentWillUnmount () {
     this.map.remove();
-  },
-  drawCircles (props) { // also focuses the map to the report
-    const coordinate = props.ding.get('coordinates').toJS();
+  }
+
+  map: leaflet.Map;
+  reportedLocation: leaflet.Circle;
+  closestRoad: leaflet.Circle;
+
+  drawCircles (props: MapAndStreetViewProps) { // also focuses the map to the report
+    const coordinate: LatLng = props.ding.get('coordinates').toJS();
     this.map.panTo(coordinate);
 
     // remove previous dings
@@ -94,17 +107,18 @@ const MapAndStreetViewContainer = React.createClass({
         {...defaultStyle, weight: 1, opacity: 0.8, color: '#00f'}
       ).addTo(this.map);
     }
-  },
+  }
+
   render () {
     return (
       <div id='tinyMap' className={contents} />
     );
-  },
-});
+  }
+}
 
 function mapStateToProps (state, props) {
-  const dingId = props.dingId;
-  const ding = state.dings.get(dingId);
+  const dingId: string = props.dingId;
+  const ding: Ding = state.dings.get(dingId);
   return {
     latestLocation: state.record.get('latestLocation').toJS(),
     latestFetchAttempt: state.record.get('latestFetchAttempt'),
@@ -115,7 +129,7 @@ function mapStateToProps (state, props) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators(dingActionCreators, dispatch);
 }
 

@@ -1,31 +1,35 @@
+// @flow
 import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { tileURL, attribution, img_root } from 'config/constants';
+import { tileURL, attribution } from 'config/constants';
 import { MapVis } from 'components';
 import leaflet from 'leaflet';
 import { Map } from 'immutable';
-import { isModuleStale, filterStateVariables } from 'helpers/utils';
+import { filterStateVariables } from 'helpers/utils';
 import { plotRoad, plotCommute, plotDing } from 'helpers/mapUtils';
 
 import * as dingFeedActionCreators from 'modules/dingFeed';
 import * as roadsActionCreators from 'modules/roads';
 import * as commutesActionCreators from 'modules/commutes';
 
-const MapVisContainer = React.createClass({
-  propTypes: {
-    isFetching: PropTypes.bool.isRequired,
-    roads: PropTypes.instanceOf(Map).isRequired,
-    dings: PropTypes.instanceOf(Map).isRequired,
-    dingIds: PropTypes.array.isRequired,
+type MapVisContaierProps = {
+    isFetching: boolean;
+    roads: Map;
+    dings: Map;
+    dingIds: Array<string>;
+    commutes: Map;
 
-    handleFetchingRoads: PropTypes.func.isRequired,
-    handleFetchingCommutes: PropTypes.func.isRequired,
-    handleSetDingListener: PropTypes.func.isRequired,
-  },
+    handleFetchingRoads: Function;
+    handleFetchingCommutes: Function;
+    handleSetDingListener: Function;
+}
+
+class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
   contextTypes: {
     router: PropTypes.object.isRequired,
-  },
+  }
+
   componentDidMount () {
     // initiating the map
     this.map = leaflet.map('mainMap').setView([42.355596, -71.101363], 16);
@@ -46,17 +50,13 @@ const MapVisContainer = React.createClass({
 
     // fetch the commutes
     this.props.handleFetchingCommutes();
-  },
-  handleClickRoad (roadId) {
-    this.context.router.push(`/roads/${roadId}`);
-  },
-  componentWillUnmount () {
-    this.map.remove();
-  },
+  }
+
   shouldComponentUpdate (nextProps) {
     return !nextProps.isFetching;
-  },
-  componentWillUpdate (nextProps) {
+  }
+
+  componentWillUpdate (nextProps: MapVisContaierProps) {
     // once everthing is ready plot!
     if (!nextProps.isFetching && !this.mapHasLayers) {
       // roads~
@@ -68,7 +68,6 @@ const MapVisContainer = React.createClass({
 
       // dings!
       nextProps.dingIds.map(key => {
-        const ding = nextProps.dings.get(key);
         plotDing(nextProps.dings.get(key).toJS(), this.map);
       });
 
@@ -83,16 +82,28 @@ const MapVisContainer = React.createClass({
     }
 
     this.map.invalidateSize(); // to show the whole tiles
-  },
+  }
+
+  componentWillUnmount () {
+    this.map.remove();
+  }
+
+  handleClickRoad (roadId) {
+    this.context.router.push(`/roads/${roadId}`);
+  }
+
+  map: leaflet.Map;
+  mapHasLayers: boolean;
+
   render () {
     return (
       <MapVis/>
     );
-  },
-});
+  }
+}
 
 function mapStateToProps ({roads, dingFeed, dings, commutes}) {
-  const isFetching =
+  const isFetching: boolean =
     dingFeed.get('isFetching') ||
     roads.get('isFetching') ||
     commutes.get('isFetching');
@@ -105,7 +116,7 @@ function mapStateToProps ({roads, dingFeed, dings, commutes}) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators({
     ...roadsActionCreators,
     ...dingFeedActionCreators,

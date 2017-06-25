@@ -1,51 +1,64 @@
+// @flow
 import React, { PropTypes } from 'react';
 import { Auth } from 'components';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, type Dispatch } from 'redux';
 import * as usersActionCreators from 'modules/users';
 import { button } from 'styles/styles.css';
 import { services } from 'helpers/auth';
 
-AuthButton.propTypes = {
-  service: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-  // color: PropTypes.string.isRequired,
-};
+type AuthButtonProps = {
+  service: string;
+  onClick: Function;
+}
 
-function AuthButton (props) {
+function AuthButton ({service, onClick}: AuthButtonProps) {
   return (
     <div
       className={button}
-      onClick={props.onClick.bind(this, props.service)} >
-      {`login with ${props.service} account`}
+      onClick={onClick.bind(this, service)} >
+      {`login with ${service} account`}
     </div>
   );
 }
 
-const AuthContainer = React.createClass({
-  propTypes: {
-    isFetching: PropTypes.bool.isRequired,
-    isAuthed: PropTypes.bool.isRequired,
-    error: PropTypes.string.isRequired,
-    handleUserAuthRedirect: PropTypes.func.isRequired,
-    handleUserAuthReturn: PropTypes.func.isRequired,
-  },
+class AuthContainer extends React.Component {
   contextTypes: {
     router: PropTypes.object.isRequired,
-  },
+  }
+
   componentDidMount () {
     if (sessionStorage.getItem('redirectAuth') === 'true') {
       this.props.handleUserAuthReturn();
     }
-  },
+  }
+
   componentDidUpdate () {
     this.props.isAuthed === true
       ? this.context.router.push('record')
       : null;
-  },
+  }
+
+  props: {
+    isFetching: boolean,
+    isAuthed: boolean,
+    error: string,
+    handleUserAuthRedirect: Function,
+    handleUserAuthReturn: Function,
+  }
 
   signInButtons () {
-    if (localStorage.getItem('provider') === null) {
+    const getProvider = () => {
+      let getItem: ?string = localStorage.getItem('provider');
+      if (typeof getItem === 'string') {
+        return getItem;
+      } else {
+        console.error('no provider found');
+        return 'none';
+      }
+    };
+
+    if (typeof localStorage.getItem('provider') !== 'string') {
       return Object.keys(services).map((key) => {
         // Inigo bug: chrome ver:51.02704, Android ver 5.1.1
         // Object.values is from chrome ver.54 and later
@@ -56,11 +69,12 @@ const AuthContainer = React.createClass({
           key={service} />;
       });
     } else {
+      const serviceProvider: string = getProvider();
       return <AuthButton
-        onClick={this.props.handleUserAuthRedirect}
-        service={localStorage.getItem('provider')}/>;
+        service={serviceProvider}
+        onClick={this.props.handleUserAuthRedirect}/>;
     }
-  },
+  }
 
   render () {
     return (
@@ -68,8 +82,8 @@ const AuthContainer = React.createClass({
         {this.signInButtons()}
       </Auth>
     );
-  },
-});
+  }
+}
 
 function mapStateToProps ({users}) {
   return {
@@ -79,7 +93,7 @@ function mapStateToProps ({users}) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators(usersActionCreators, dispatch);
 }
 

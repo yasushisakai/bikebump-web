@@ -1,19 +1,22 @@
-import React, { PropTypes } from 'react';
+// @flow
+import React from 'react';
 import { Clear } from 'components';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, type Dispatch } from 'redux';
 import * as userActionCreators from 'modules/users';
 
-const ClearContainer = React.createClass({
-  propTypes: {
-    isAuthed: PropTypes.bool.isRequired,
-    isFetching: PropTypes.bool.isRequired,
-    authedId: PropTypes.string.isRequired,
-    handleClearUser: PropTypes.func.isRequired,
-  },
+class ClearContainer extends React.Component {
+  props: {
+    isAuthed: boolean,
+    isFetching: boolean,
+    authedId: string,
+    handleClearUser: Function,
+  }
+
   handleClick () {
     this.props.handleClearUser();
-  },
+  }
+
   render () {
     return (
       <Clear
@@ -22,8 +25,8 @@ const ClearContainer = React.createClass({
         authedId={this.props.authedId}
         onClick={this.handleClick}/>
     );
-  },
-});
+  }
+}
 
 function mapStateToProps ({users}) {
   return {
@@ -32,7 +35,7 @@ function mapStateToProps ({users}) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators(userActionCreators, dispatch);
 }
 

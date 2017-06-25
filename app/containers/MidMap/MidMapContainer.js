@@ -1,31 +1,41 @@
-import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
+// @flow
+import React from 'react';
+import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Map } from 'immutable';
 import { spliceRoad } from 'helpers/utils';
-import { tileURL, attribution} from 'config/constants';
+import { tileURL, attribution } from 'config/constants';
 import { mapContents } from './styles.css';
 import * as roadActionCreators from 'modules/roads';
 import * as proposalsActionCreators from 'modules/proposals';
 import * as patternsActionCreators from 'modules/patterns';
 import * as userVotesActionCreators from 'modules/userVotes';
-import {plotRoad, plotPolyline, roadLineStringToLatLngBound, plotDing, popUpButtonStyleDisabled, popUpButtonStyleEnabled} from 'helpers/mapUtils';
+import { plotRoad, plotPolyline, roadLineStringToLatLngBound, plotDing, popUpButtonStyleDisabled, popUpButtonStyleEnabled } from 'helpers/mapUtils';
 import leaflet from 'leaflet';
+import { LatLng } from 'types';
 
-const MidMapContainer = React.createClass({
-  propTypes: {
-    roadId: PropTypes.number.isRequired,
-    latestLocation: PropTypes.object.isRequired,
-    proposals: PropTypes.instanceOf(Map).isRequired,
-    patterns: PropTypes.instanceOf(Map).isRequired,
-    userVotes: PropTypes.object.isRequired,
+type MidMapContainerProps = {
 
-    handleFetchSingleRoad: PropTypes.func.isRequired,
-    handleFetchingPatterns: PropTypes.func.isRequired,
-    handleFetchingProposals: PropTypes.func.isRequired,
-    handleFetchingUserVotes: PropTypes.func.isRequired,
-    handleAddVote: PropTypes.func.isRequired,
-  },
+  authedId: string;
+  roadId: number;
+  road: Map;
+  roads: any;
+  dings: Map;
+  latestLocation: LatLng;
+
+  proposals: Map;
+  patterns: Map;
+  userVotes: any;
+
+  handleFetchSingleRoad: Function;
+  handleFetchingPatterns: Function;
+  handleFetchingProposals: Function;
+  handleFetchingUserVotes: Function;
+  handleRemoveVote: Function;
+  handleAddVote: Function;
+}
+
+class MidMapContainer extends React.Component<void, MidMapContainerProps, void> {
   componentDidMount () {
     this.props.handleFetchingPatterns();
     this.props.handleFetchingProposals(this.props.roadId);
@@ -37,18 +47,18 @@ const MidMapContainer = React.createClass({
     if (this.props.latestLocation.lat === 0) {
       location = [42.355596, -71.101363];
     } else {
-      const {lat, lng} = this.props.latestLocation;
+      const { lat, lng } = this.props.latestLocation;
       location = [lat, lng];
     }
 
     this.map = leaflet.map('midMap').setView(location, 17);
 
-    leaflet.tileLayer(tileURL, {attribution}).addTo(this.map);
+    leaflet.tileLayer(tileURL, { attribution }).addTo(this.map);
 
     // fetch road
     if (this.props.road === undefined) {
       this.props.handleFetchSingleRoad(this.props.roadId)
-        .then(({road}) => {
+        .then(({ road }) => {
           plotRoad(road, this.map);
           const bound = roadLineStringToLatLngBound(road);
           this.map.fitBounds(bound);
@@ -70,15 +80,23 @@ const MidMapContainer = React.createClass({
           plotDing(this.props.dings.get(key).toJS(), this.map);
         });
     }
-  },
+  }
+
+  componentWillUpdate () {
+    this.map.invalidateSize();
+  }
+
   componentWillUnmount () {
     this.map.remove();
-  },
+  }
+
+  map: leaflet.Map;
+
   getPopupContents (proposal, callback) {
     const pattern = this.props.patterns.get(proposal.get('patternId'));
     const budget = pattern.get('budget');
     const text = pattern.get('text');
-    let container = document.createElement('div');
+    let container: HTMLElement = document.createElement('div');
     container.style = 'font-size:1.8em;';
     container.innerHTML = `<h1>${text}</h1>$${budget}/ft`;
     let button = document.createElement('button');
@@ -102,19 +120,17 @@ const MidMapContainer = React.createClass({
     );
     container.appendChild(button);
     return container;
-  },
-  componentWillUpdate () {
-    this.map.invalidateSize();
-  },
+  }
+
   render () {
     if (!this.props.isFetching && this.props.road !== undefined && this.map) {
       let cnt = 0;
       this.props.proposals.map((obj, idx) => {
         const spliced = spliceRoad(
           this.props.road.get('geometry').toJS(),
-          {...obj.get('domain').toJS(), index: 0})
+          { ...obj.get('domain').toJS(), index: 0 })
           .map(coord => {
-            const shifted = {lat: parseFloat(coord.lat) + 0.0001 * cnt, lng: parseFloat(coord.lng) + 0.0000 * cnt};
+            const shifted = { lat: parseFloat(coord.lat) + 0.0001 * cnt, lng: parseFloat(coord.lng) + 0.0000 * cnt };
             return shifted;
           });
         plotPolyline(spliced, this.map).bindPopup(this.getPopupContents(obj));
@@ -124,8 +140,8 @@ const MidMapContainer = React.createClass({
     return (
       <div id='midMap' className={mapContents} />
     );
-  },
-});
+  }
+}
 
 function mapStateToProps (state, props) {
   const roadId = parseInt(props.roadId);
@@ -143,7 +159,7 @@ function mapStateToProps (state, props) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators({
     ...roadActionCreators,
     ...patternsActionCreators,

@@ -11,7 +11,7 @@ export default function Clear ({isAuthed, authedId, onClick}: Props) {
   return (
     <div>
       <h2> {'Clear'} </h2>
-      <div>{`am I authed? ${isAuthed}, ${authedId}`}</div>
+      <div>{`am I authed? ${isAuthed ? 'yes' : 'no'}, ${authedId}`}</div>
       <div onClick={onClick}>{'clear data'}</div>
     </div>
   );

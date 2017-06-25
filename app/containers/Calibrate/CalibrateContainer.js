@@ -1,42 +1,38 @@
-import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
+// @flow
+import React from 'react';
+import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Calibrate } from 'components';
-import { toJS, Map } from 'immutable';
-import { getSlopes, frequencyToIndex, indexToFrequency, insertAfter, fitCanvas} from 'helpers/utils';
+import { Map } from 'immutable';
+import { fitCanvas } from 'helpers/utils';
 import * as userSettingsActionCreators from 'modules/userSettings';
 import { Analyser } from 'helpers/Sound';
 import Pen from 'helpers/Pen';
-import {updateUserSettings} from 'helpers/api';
+import { updateUserSettings } from 'helpers/api';
 
-const CalibrateContainer = React.createClass({
-  propTypes: {
-    uid: PropTypes.string.isRequired,
-    isFetching: PropTypes.bool.isRequired,
-    isCalibrating: PropTypes.bool.isRequired,
-    // isRingBellEnabled : PropTypes.bool.isRequired,
-    noSettings: PropTypes.bool.isRequired,
-    settings: PropTypes.object.isRequired,
+type Props = {
+    uid: string;
+    isFetching: boolean;
+    isCalibrating: boolean;
+    noSettings: boolean;
+    settings: any;
+    enableRingBellMode: Function;
+    disableRingBellMode: Function;
+    handleFetchingUserSettings: Function;
+    handleUpdateTargetFrequency: Function;
+    toggleCalibration: Function;
+};
 
-    enableRingBellMode: PropTypes.func.isRequired,
-    disableRingBellMode: PropTypes.func.isRequired,
-    handleFetchingUserSettings: PropTypes.func.isRequired,
-    toggleCalibration: PropTypes.func.isRequired,
-  },
+class CalibrateContainer extends React.Component<void, Props, void> {
   componentDidMount () {
-    this.calibrateElement = document.getElementById('calibrate');
-    this.canvas = document.createElement('canvas');
     this.calibrateElement.insertBefore(this.canvas, this.calibrateElement.firstChild);
     fitCanvas(this.canvas);
-
     this.pen = new Pen(this.canvas);
-
     if (this.props.noSettings) {
       this.props.handleFetchingUserSettings(this.props.uid);
     }
 
     this.maxSlopes = [0, 0];
-
     this.audioContext = new AudioContext();
     this.analyser = new Analyser(this.audioContext);
     this.analyser.setIsInFocus(true);
@@ -45,7 +41,7 @@ const CalibrateContainer = React.createClass({
 
     if (navigator.getUserMedia) {
       navigator.getUserMedia(
-        {audio: true},
+        { audio: true },
         (stream) => {
           let source = this.audioContext.createMediaStreamSource(stream);
           source.connect(this.analyser.input);
@@ -61,7 +57,24 @@ const CalibrateContainer = React.createClass({
 
     this.setup();
     this.draw();
-  },
+  }
+
+  componentWillUnmount () {
+    window.cancelAnimationFrame(this.animation);
+  }
+
+  // FIXME: clear any types up
+  calibrateElement: HTMLElement = ((document.getElementById('calibrate'):any): HTMLElement);
+  canvas: HTMLCanvasElement = document.createElement('canvas');
+  pen: any;
+  slopes: Array<number>;
+  maxSlopes: Array<number>;
+  audioContext: any;
+  analyser: any;
+  animation: ?number;
+  targetFrequency: number;
+  binWidth: number;
+
   toggleCalibration () {
     this.props.toggleCalibration();
     if (!this.props.isCalibrating) {
@@ -69,8 +82,9 @@ const CalibrateContainer = React.createClass({
     } else {
       this.props.handleUpdateTargetFrequency(this.props.uid, this.targetFrequency);
     }
-  },
-  toggleRingBell (value) {
+  }
+
+  toggleRingBell (value: boolean) {
     if (value) {
       this.props.disableRingBellMode(this.props.uid);
     } else {
@@ -78,11 +92,17 @@ const CalibrateContainer = React.createClass({
     }
 
     updateUserSettings(this.props.uid, 'useRingBell', !value);
-  },
+  }
+
+  //
+  // p5.js functions
+  //
+
   setup () {
     const dataArray = this.analyser.updateDataArray();
     this.binWidth = this.canvas.width / dataArray.length;
-  },
+  }
+
   draw () {
     this.animation = window.requestAnimationFrame(this.draw);
     this.pen.clear();
@@ -125,10 +145,8 @@ const CalibrateContainer = React.createClass({
       currentFreqIndex * this.binWidth,
       this.canvas.height * 0.5
     );
-  },
-  componentWillUnmount () {
-    window.cancelAnimationFrame(this.animation);
-  },
+  }
+
   render () {
     return (
       <Calibrate
@@ -137,13 +155,13 @@ const CalibrateContainer = React.createClass({
         toggleCalibration={this.toggleCalibration}
         targetFrequency={this.props.settings.get('targetFrequency')}
         isRingBellEnabled={this.props.settings.get('useRingBells')}
-        toggleRingBell={this.toggleRingBell}/>
+        toggleRingBell={this.toggleRingBell} />
     );
-  },
-});
+  }
+}
 
 function mapStateToProps (state, props) {
-  const uid = props.params.uid;
+  const uid: string = props.params.uid;
   return {
     uid,
     isCalibrating: state.userSettings.get('isCalibrating'),
@@ -154,7 +172,7 @@ function mapStateToProps (state, props) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators(userSettingsActionCreators, dispatch);
 }
 

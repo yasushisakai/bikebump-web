@@ -1,25 +1,27 @@
-import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React from 'react';
+// import { bindActionCreators } from 'redux';
+// import { connect } from 'react-redux';
 
 import {Layout} from 'components';
 
-const LayoutContainer = React.createClass({
+class LayoutContainer extends React.Component {
+
   componentDidMount () {
-    const layoutElement = document.getElementById('layout');
-    const newElement = document.createElement('div');
+    const layoutElement: HTMLElement = document.getElementById('layout');
+    const newElement: HTMLDivElement = document.createElement('div');
+
     newElement.id = 'newElement';
     newElement.style.width = '100%';
-    newElement.style.hwight = '100%';
+    newElement.style.height = '100%';
     layoutElement.appendChild(newElement);
-    console.log(layoutElement);
-  },
+  }
+
   render () {
     return (
       <Layout />
     );
-  },
-});
+  }
+}
 
 // function mapStateToProps (state) {
 //   return {
