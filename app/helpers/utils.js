@@ -1,3 +1,4 @@
+// @flow
 import {
   minimalLatLngRefresh,
   renderTimeConstrain,
@@ -9,12 +10,13 @@ import {
 import { Map, List } from 'immutable';
 
 import {pickBy, isFunction} from 'lodash';
+import type { LatLng } from 'types';
 
 export function extractActionCreators (itemAction) {
   return pickBy(itemAction, isFunction);
 }
 
-export function fetchGeoLocation () {
+export function fetchGeoLocation (): Promise<any> {
   return new Promise(function (resolve, reject) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -28,11 +30,11 @@ export function fetchGeoLocation () {
   });
 }
 
-export function formatGoogleStreetViewURL (coordinate, heading = 0) {
+export function formatGoogleStreetViewURL (coordinate: LatLng, heading = 0): string {
   return `https://maps.googleapis.com/maps/api/streetview?size=240x320&location=${coordinate.lat},${coordinate.lng}&heading=${heading}`;
 }
 
-export function filterStateVariables (key) {
+export function filterStateVariables (key: string): boolean {
   return (
     key !== 'isFetching' &&
     key !== 'lastUpdated' &&
@@ -43,7 +45,7 @@ export function filterStateVariables (key) {
 // TODO: write function to extract unanswered respondes
 // this is already implemented in RespondContainer.js
 
-export function getUnansweredQueries (questions, userDings, userResponses) {
+export function getUnansweredQueries (questions, userDings: Map<any, any>, userResponses) {
   // first get all combinations of questionos - userDings
   let combinations = new Map();
   userDings.mapKeys(dingId => {
@@ -99,7 +101,7 @@ export function removeQuery (queries, dingId, questionId) {
   }
 }
 
-export function fitCanvas (canvas) {
+export function fitCanvas (canvas: HTMLCanvasElement): void {
   canvas.style.width = '100%';
   canvas.style.height = '100%';
 
@@ -108,15 +110,15 @@ export function fitCanvas (canvas) {
   canvas.height = boundingRect.height;
 }
 
-export function indexToFrequency (index, analyser) {
+export function indexToFrequency (index: number, analyser) {
   return index * analyser.binUnit;
 }
 
-export function frequencyToIndex (frequency, analyser) {
+export function frequencyToIndex (frequency: number, analyser) {
   return Math.round(frequency / analyser.binUnit);
 }
 
-export function getCenter (coordinates) {
+export function getCenter (coordinates: LatLng) {
   return coordinates.reduce((prev, current) => {
     return [prev[0] + current[0], prev[1] + current[1]];
   }, [0, 0]).map((element) => { return element / coordinates.length; });
@@ -213,11 +215,6 @@ export function formatWavFileName (timestamp, location) {
   return `soundClipsWeb/${timestamp}_${lat}_${lng}.wav`;
 }
 
-function zeroAdd (num) {
-  if (num < 10) return `0${num}`;
-  else return `${num}`;
-}
-
 export function updateTimeConstrain (timestamp) {
   return Date.now() - timestamp > renderTimeConstrain;
 }
@@ -255,16 +252,6 @@ export function distFromLatLng (start, end) {
   const d = R * c; // Distance in meters
 
   return d;
-}
-
-function distFromLatLngArray (start, end) {
-  return distFromLatLng({
-    lat: start[0],
-    lng: start[1],
-  }, {
-    lat: end[0],
-    lng: end[1],
-  });
 }
 
 export function randomColor () {

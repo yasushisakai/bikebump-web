@@ -52,7 +52,11 @@ class MainContainer extends React.Component {
       ? <div> {'loading user...'} </div>
       : (
         <div className={container}>
-          <Navigation isAuthed={this.props.isAuthed} isRecording={this.props.isRecording} authedId={this.props.authedId} />
+          <Navigation 
+            isAuthed={this.props.isAuthed}
+            isRecording={this.props.isRecording}
+            authedId={this.props.authedId}
+          />
           {this.props.children}
         </div>
       );
@@ -62,6 +66,7 @@ class MainContainer extends React.Component {
 function mapStateToProps ({ users, record }) {
   return {
     isFetching: users.get('isFetching'),
+    isRecording: record.get('isRecording'),
     error: users.get('error'),
     isAuthed: users.get('isAuthed'),
     authedId: users.get('authedId'),
