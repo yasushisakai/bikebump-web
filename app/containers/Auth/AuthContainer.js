@@ -12,6 +12,14 @@ type AuthButtonProps = {
   onClick: Function;
 }
 
+type AuthContainerProps = {
+  isFetching: boolean;
+  isAuthed: boolean;
+  error: string;
+  handleUserAuthRedirect: Function;
+  handleUserAuthReturn: Function;
+}
+
 function AuthButton ({service, onClick}: AuthButtonProps) {
   return (
     <div
@@ -22,9 +30,10 @@ function AuthButton ({service, onClick}: AuthButtonProps) {
   );
 }
 
-class AuthContainer extends React.Component {
-  contextTypes: {
-    router: PropTypes.object.isRequired,
+class AuthContainer extends React.Component<void, AuthContainerProps, void> {
+  constructor (props, context) {
+    super(props);
+    context.router;
   }
 
   componentDidMount () {
@@ -34,17 +43,9 @@ class AuthContainer extends React.Component {
   }
 
   componentDidUpdate () {
-    this.props.isAuthed === true
+    this.props.isAuthed
       ? this.context.router.push('record')
       : null;
-  }
-
-  props: {
-    isFetching: boolean,
-    isAuthed: boolean,
-    error: string,
-    handleUserAuthRedirect: Function,
-    handleUserAuthReturn: Function,
   }
 
   signInButtons () {
@@ -84,6 +85,10 @@ class AuthContainer extends React.Component {
     );
   }
 }
+
+AuthContainer.contextTypes = {
+  router: PropTypes.object.isRequired,
+};
 
 function mapStateToProps ({users}) {
   return {

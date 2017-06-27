@@ -1,18 +1,19 @@
-import React, { PropTypes } from 'react';
+// @flow
+import React from 'react';
 import { RecordSound } from 'components';
 import { connect } from 'react-redux';
 import { Recorder } from 'helpers/Sound';
 import { storeBlob } from 'helpers/storage';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, type Dispatch } from 'redux';
 import * as recordSoundActionCreators from 'modules/recordSound';
 
-const RecordSoundContainer = React.createClass({
-  propTypes: {
-    isRecording: PropTypes.bool.isRequired,
-    lastStart: PropTypes.number.isRequired,
+type Props = {
+    isRecording: boolean;
+    lastStart: number;
+    setRecording: Function;
+  }
 
-    setRecording: PropTypes.func.isRequired,
-  },
+class RecordSoundContainer extends React.Component<void, Props, void> {
   componentDidMount () {
     // audio
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -37,7 +38,12 @@ const RecordSoundContainer = React.createClass({
       console.error('user get media error');
       // switch to button mode
     }
-  },
+  }
+
+  // FIXME: resove any things
+  audioContext: any;
+  recorder: any;
+
   handleRecord () {
     if (!this.props.isRecording) {
       this.props.setRecording(true);
@@ -47,15 +53,16 @@ const RecordSoundContainer = React.createClass({
           .then(() => this.props.setRecording(false));
       });
     }
-  },
+  }
+
   render () {
     return (
       <RecordSound
         isRecording={this.props.isRecording}
         handleRecord={this.handleRecord}/>
     );
-  },
-});
+  }
+}
 
 function mapStateToProps ({recordSound}) {
   return {
@@ -64,7 +71,7 @@ function mapStateToProps ({recordSound}) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators(recordSoundActionCreators, dispatch);
 }
 

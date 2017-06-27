@@ -1,20 +1,18 @@
-import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
+// @flow
+import React from 'react';
+import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import {RoadVis} from 'components';
-import { Map } from 'immutable';
+import { RoadVis } from 'components';
 import * as roadsActionCreators from 'modules/roads';
 
-const RoadVisContainer = React.createClass({
-  propTypes: {
-    roadId: PropTypes.string.isRequired,
-  },
-  componentDidMount () {
-  },
+class RoadVisContainer extends React.Component {
+  props: {
+    roadId: string
+  }
   render () {
     return (<RoadVis roadId={this.props.roadId}/>);
-  },
-});
+  }
+}
 
 function mapStateToProps (state, props) {
   const roadId = props.params.roadId;
@@ -23,7 +21,7 @@ function mapStateToProps (state, props) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators({
     ...roadsActionCreators,
   }, dispatch);

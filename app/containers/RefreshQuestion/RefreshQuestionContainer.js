@@ -1,21 +1,24 @@
-import React, { PropTypes } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+// @flow
+import React from 'react';
+// import { bindActionCreators, type Dispatch } from 'redux';
+// import { connect } from 'react-redux';
 
-const RefreshQuestionContainer = React.createClass({
-  propTypes:{
-    isFetching : PropTypes.bool.isRequired,
-    
-    onClickOption: PropTypes.func.isRequired, 
-  },
+type Props = {
+  isFetching: boolean;
+  onClickOption: Function;
+}
+
+class RefreshQuestionContainer extends React.Component<void, Props, void> {
   componentDidMount () {
-  },
-  componentWillUpdate () {
-  },
-  render () {
-    return null
   }
-})
+  componentWillUpdate () {
+  }
+  render () {
+    return null;
+  }
+}
+
+/*
 function mapStateToProps (state,props,) {
   return {
   }
@@ -27,5 +30,7 @@ function mapDispatchToProps (dispatch) {
 
 export default connect(mapStateToProps, 
 mapDispatchToProps)(RefreshQuestionContainer)
+*/
 
+export default RefreshQuestionContainer;
 

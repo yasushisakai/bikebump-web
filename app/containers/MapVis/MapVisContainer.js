@@ -13,12 +13,14 @@ import * as dingFeedActionCreators from 'modules/dingFeed';
 import * as roadsActionCreators from 'modules/roads';
 import * as commutesActionCreators from 'modules/commutes';
 
+import type { Commute, Ding, Road } from 'types';
+
 type MapVisContaierProps = {
     isFetching: boolean;
-    roads: Map;
-    dings: Map;
+    roads: Map<number, Road>;
+    dings: Map<string, Ding>;
     dingIds: Array<string>;
-    commutes: Map;
+    commutes: Map<string, Commute>;
 
     handleFetchingRoads: Function;
     handleFetchingCommutes: Function;
@@ -63,19 +65,22 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
       nextProps.roads.keySeq().toArray()
         .filter(key => filterStateVariables(key))
         .map(key => {
-          plotRoad(nextProps.roads.get(key).toJS(), this.map, {}, this.handleClickRoad);
+          const road: Road = ((nextProps.roads.get(key):any): Map<any, any>).toJS();
+          plotRoad(road, this.map, {}, this.handleClickRoad);
         });
 
       // dings!
       nextProps.dingIds.map(key => {
-        plotDing(nextProps.dings.get(key).toJS(), this.map);
+        const ding: Ding = ((nextProps.dings.get(key):any): Map<any, any>).toJS();
+        plotDing(ding, this.map);
       });
 
       // commutes
       nextProps.commutes.keySeq().toArray()
         .filter(key => filterStateVariables(key))
         .map(key => {
-          plotCommute(nextProps.commutes.get(key).toJS(), this.map);
+          const commute: Commute = ((nextProps.commutes.get(key):any): Map<any, any>).toJS();
+          plotCommute(commute, this.map);
         });
 
       this.mapHasLayers = true;

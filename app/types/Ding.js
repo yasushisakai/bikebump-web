@@ -1,5 +1,5 @@
 // @flow
-import { LatLng } from 'types';
+import type { LatLng } from './LatLng';
 
 export type Ding = {
     radius: number;
@@ -20,3 +20,4 @@ export type BreadCrumbs = {
     uid: string;
     value: number;
 };
+

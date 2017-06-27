@@ -1,8 +1,9 @@
-import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
+// @flow
+import React from 'react';
+import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import Pen from 'helpers/Pen';
-import { fitCanvas } from 'helpers/utils';
+import { fitCanvas, extractActionCreators } from 'helpers/utils';
 import { Record } from 'components';
 import NoSleep from 'nosleep';
 import { Analyser, Recorder } from 'helpers/Sound';
@@ -13,34 +14,22 @@ import * as recordActionCreators from 'modules/record';
 import * as dingsActionCreators from 'modules/dings';
 import * as dingFeedActionCreators from 'modules/dingFeed';
 import * as userDingActionCreators from 'modules/userDings';
+import type { LatLng } from 'types';
 
-const RecordContainer = React.createClass({
-  propTypes: {
-    isFetching: PropTypes.bool.isRequired,
-    isAuthed: PropTypes.bool.isRequired,
-    authedId: PropTypes.string.isRequired,
-    isRecording: PropTypes.bool.isRequired,
-    isUploading: PropTypes.bool.isRequired,
-    latestLocation: PropTypes.object.isRequired,
-    currentCommuteId: PropTypes.string,
-    latestFetch: PropTypes.number.isRequired,
-    lastDetection: PropTypes.number.isRequired,
-    targetFrequency: PropTypes.number,
+class RecordContainer extends React.Component {
+  constructor (props) {
+    super(props);
+    this.draw = this.draw.bind(this);
+    this.setup = this.setup.bind(this);
+    this.mouseMoved = this.mouseMoved.bind(this);
+    this.updatePosition = this.updatePosition.bind(this);
+    this.mousePressed = this.mousePressed.bind(this);
+  }
 
-    handleSetDingListener: PropTypes.func.isRequired,
-    handleFetchingUserSettings: PropTypes.func.isRequired,
-    handleFetchingUserDings: PropTypes.func.isRequired,
-    toggleRecording: PropTypes.func.isRequired,
-    handleFetchLatLng: PropTypes.func.isRequired,
-    handleComplieDing: PropTypes.func.isRequired,
-    uploadingClip: PropTypes.func.isRequired,
-    handleUpload: PropTypes.func.isRequired,
-    handleDetection: PropTypes.func.isRequired,
-  },
   componentDidMount () {
     // setting dom elements
     this.canvas = document.createElement('canvas');
-    this.recordElement = document.getElementById('record');
+    this.recordElement = ((document.getElementById('record'): any): HTMLElement);
     this.recordElement.appendChild(this.canvas);
     fitCanvas(this.canvas);
 
@@ -84,7 +73,8 @@ const RecordContainer = React.createClass({
     // canvas functions
     this.setup();
     this.draw(); // 'endless loop'
-  },
+  }
+
   componentWillUnmount () {
     window.cancelAnimationFrame(this.animation);
 
@@ -97,7 +87,49 @@ const RecordContainer = React.createClass({
     if (this.props.isRecording === true) {
       this.props.toggleRecording();
     }
-  },
+  }
+
+  // FIXME: fix any stuff
+  recordElement: HTMLElement;
+  canvas: HTMLCanvasElement;
+  pen: any;
+  audioContext: any;
+  analyser: any;
+  recorder: any;
+  noSleep: any;
+  animation: number;
+  latLngInterval: ?number;
+  binWidth: number;
+  circleRadius: number;
+
+  firstFlag: boolean;
+  secondFlag: boolean;
+  isDing: boolean;
+  previousSpike: number;
+
+  props:{
+    isFetching: bool;
+    isAuthed: bool;
+    authedId: string;
+    isRecording: bool;
+    isUploading: bool;
+    latestLocation: LatLng;
+    currentCommuteId: string;
+    latestFetch: number;
+    lastDetection: number;
+    targetFrequency: number;
+
+    handleSetDingListener: Function;
+    handleFetchingUserSettings: Function;
+    handleFetchingUserDings: Function;
+    toggleRecording: Function;
+    handleFetchLatLng: Function;
+    handleComplieDing: Function;
+    uploadingClip: Function;
+    handleUpload: Function;
+    handleDetection: Function;
+  }
+
   setup () {
     const dataArray = this.analyser.updateDataArray();
     this.binWidth = this.canvas.width / dataArray.length;
@@ -113,16 +145,14 @@ const RecordContainer = React.createClass({
 
     this.canvas.onclick = this.mousePressed;
     this.canvas.addEventListener('mousemove', this.mouseMoved);
-  },
+  }
+
   draw () {
     this.animation = requestAnimationFrame(this.draw);
-
     if (this.props.isFetching) {
       return;
     }
-
     this.pen.clear();
-
     if (this.props.isRecording) {
       // draw the polyline
       const dataArray = this.analyser.updateDataArray();
@@ -211,12 +241,14 @@ const RecordContainer = React.createClass({
       this.pen.stroke('white');
     }
     this.pen.drawCircle(this.canvas.width / 2, this.canvas.height / 2, this.circleRadius);
-  },
-  updatePosition (commuteId) {
+  }
+
+  updatePosition (commuteId: string) {
     // window.navigator.vibrate(100)
     this.props.handleFetchLatLng();
-  },
-  mousePressed (event) {
+  }
+
+  mousePressed (event: MouseEvent) {
     const distanceFromCenter = this.pen.distance(
       this.pen.mouseX,
       this.pen.mouseY,
@@ -240,17 +272,18 @@ const RecordContainer = React.createClass({
           }
         });
     }
-  },
-  mouseMoved (event) {
+  }
+
+  mouseMoved (event: MouseEvent) {
     this.pen.updateMouse(event);
-  },
+  }
 
   render () {
     return (
       <Record/>
     );
-  },
-});
+  }
+}
 
 function mapStateToProps (state) {
   const authedId = state.users.get('authedId');
@@ -271,13 +304,13 @@ function mapStateToProps (state) {
   };
 }
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch: Dispatch<*>) {
   return bindActionCreators({
-    ...userSettingsActionCreators,
-    ...recordActionCreators,
-    ...dingsActionCreators,
-    ...dingFeedActionCreators,
-    ...userDingActionCreators,
+    ...extractActionCreators(userSettingsActionCreators),
+    ...extractActionCreators(recordActionCreators),
+    ...extractActionCreators(dingsActionCreators),
+    ...extractActionCreators(dingFeedActionCreators),
+    ...extractActionCreators(userDingActionCreators),
   }, dispatch);
 }
 

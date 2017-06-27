@@ -21,10 +21,12 @@
   "homepage": "https://github.com/yasushisakai/bikebump#readme",
   "dependencies": {
     "axios": "^0.15.3",
+    "bingmaps": "^1.0.13",
     "firebase": "^3.6.5",
     "immutable": "^3.8.1",
     "inline-worker": "^1.1.0",
     "leaflet": "^1.0.2",
+    "lodash": "^4.17.4",
     "mapzen.js": "^0.6.3",
     "mojs": "^0.2.0",
     "nosleep": "BHSPitMonkey/NoSleep.js",

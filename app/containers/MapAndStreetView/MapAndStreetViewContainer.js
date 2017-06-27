@@ -8,10 +8,10 @@ import { lightURL } from 'config/constants';
 import leaflet from 'leaflet';
 // import mapzen from 'mapzen.js'
 import { defaultStyle } from 'helpers/mapUtils';
-import { isModuleStale } from 'helpers/utils';
-import { Ding, LatLng } from 'types';
+import { extractActionCreators, isModuleStale } from 'helpers/utils';
 
 import * as dingActionCreators from 'modules/dings';
+import { type LatLng, type Ding } from 'types';
 
 type MapAndStreetViewProps = {
     latestFetchAttempt: number,
@@ -19,12 +19,17 @@ type MapAndStreetViewProps = {
 
     isFetching: boolean,
     dingId: string,
-    ding: Map,
+    ding: Map<any, any>,
 
     handleFetchingDing: Function,
 }
 
 class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewProps, void> {
+  constructor (props) {
+    super(props);
+    this.drawCircles = this.drawCircles.bind(this);
+  }
+
   componentWillMount () {
     // fetching
     this.props.handleFetchingDing(this.props.dingId);
@@ -98,7 +103,7 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
 
     // if there is a road, draw that too
     if (props.ding.has('road')) {
-      const {x, y} = props.ding.getIn(['road', 'point']).toJS();
+      const {x, y} = ((props.ding.getIn(['road', 'point']): any): Map<string, number>).toJS();
       const closestPoint = {lat: y, lng: x};
 
       this.closestRoad = leaflet.circle(
@@ -119,6 +124,7 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
 function mapStateToProps (state, props) {
   const dingId: string = props.dingId;
   const ding: Ding = state.dings.get(dingId);
+
   return {
     latestLocation: state.record.get('latestLocation').toJS(),
     latestFetchAttempt: state.record.get('latestFetchAttempt'),
@@ -130,7 +136,7 @@ function mapStateToProps (state, props) {
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
-  return bindActionCreators(dingActionCreators, dispatch);
+  return bindActionCreators(extractActionCreators(dingActionCreators), dispatch);
 }
 
 export default connect(mapStateToProps,

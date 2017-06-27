@@ -8,6 +8,12 @@ import {
 
 import { Map, List } from 'immutable';
 
+import {pickBy, isFunction} from 'lodash';
+
+export function extractActionCreators (itemAction) {
+  return pickBy(itemAction, isFunction);
+}
+
 export function fetchGeoLocation () {
   return new Promise(function (resolve, reject) {
     navigator.geolocation.getCurrentPosition(

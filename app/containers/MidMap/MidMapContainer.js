@@ -12,19 +12,19 @@ import * as patternsActionCreators from 'modules/patterns';
 import * as userVotesActionCreators from 'modules/userVotes';
 import { plotRoad, plotPolyline, roadLineStringToLatLngBound, plotDing, popUpButtonStyleDisabled, popUpButtonStyleEnabled } from 'helpers/mapUtils';
 import leaflet from 'leaflet';
-import { LatLng } from 'types';
+import type { LatLng, Road, Ding } from 'types';
 
 type MidMapContainerProps = {
 
   authedId: string;
   roadId: number;
-  road: Map;
-  roads: any;
-  dings: Map;
+  road: Road;
+  roads: Map<number, Road>;
+  dings: Map<string, Ding>;
   latestLocation: LatLng;
 
-  proposals: Map;
-  patterns: Map;
+  proposals: Map<string, any>;
+  patterns: Map<string, any>;
   userVotes: any;
 
   handleFetchSingleRoad: Function;
@@ -56,7 +56,7 @@ class MidMapContainer extends React.Component<void, MidMapContainerProps, void> 
     leaflet.tileLayer(tileURL, { attribution }).addTo(this.map);
 
     // fetch road
-    if (this.props.road === undefined) {
+    if (this.props.road) {
       this.props.handleFetchSingleRoad(this.props.roadId)
         .then(({ road }) => {
           plotRoad(road, this.map);
@@ -64,8 +64,8 @@ class MidMapContainer extends React.Component<void, MidMapContainerProps, void> 
           this.map.fitBounds(bound);
         });
     } else {
-      plotRoad(this.props.road.toJS(), this.map);
-      const bound = roadLineStringToLatLngBound(this.props.road.toJS());
+      plotRoad(this.props.road, this.map);
+      const bound = roadLineStringToLatLngBound(this.props.road);
       this.map.fitBounds(bound);
     }
 
@@ -77,7 +77,7 @@ class MidMapContainer extends React.Component<void, MidMapContainerProps, void> 
           return this.props.dings.getIn([key, 'roadId']) === this.props.roadId;
         })
         .map(key => {
-          plotDing(this.props.dings.get(key).toJS(), this.map);
+          plotDing(((this.props.dings.get(key): any): Map<any, any>).toJS(), this.map);
         });
     }
   }
@@ -97,7 +97,7 @@ class MidMapContainer extends React.Component<void, MidMapContainerProps, void> 
     const budget = pattern.get('budget');
     const text = pattern.get('text');
     let container: HTMLElement = document.createElement('div');
-    container.style = 'font-size:1.8em;';
+    container.style.fontSize = '1.8em';
     container.innerHTML = `<h1>${text}</h1>$${budget}/ft`;
     let button = document.createElement('button');
     if (proposal.get('proposalId') === this.props.userVotes.get(`${this.props.roadId}`)) {
@@ -127,7 +127,7 @@ class MidMapContainer extends React.Component<void, MidMapContainerProps, void> 
       let cnt = 0;
       this.props.proposals.map((obj, idx) => {
         const spliced = spliceRoad(
-          this.props.road.get('geometry').toJS(),
+          this.props.road,
           { ...obj.get('domain').toJS(), index: 0 })
           .map(coord => {
             const shifted = { lat: parseFloat(coord.lat) + 0.0001 * cnt, lng: parseFloat(coord.lng) + 0.0000 * cnt };
@@ -153,7 +153,7 @@ function mapStateToProps (state, props) {
     patterns: state.patterns || new Map(),
     proposals: state.proposals.get(`${roadId}`) || new Map(),
     roadId,
-    road: state.roads.get(`${roadId}`),
+    road: ((state.roads.get(`${roadId}`): any): Map<any, any>).toJS(),
     latestLocation: state.record.get('latestLocation').toJS(),
     userVotes: state.userVotes.get(authedId) || new Map(),
   };

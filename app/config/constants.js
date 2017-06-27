@@ -1,6 +1,6 @@
 // @flow
 import firebase from 'firebase';
-import { Map } from 'immutable';
+import { fromJS } from 'immutable';
 //
 // THRESHOLDS
 //
@@ -61,7 +61,7 @@ export const tinyAttribution: string = '&copy; Mapbox &copy; OpenStreetMap';
 // MISC
 //
 
-export const initialState = new Map({
+export const initialState = fromJS({
   isFetching: false,
   error: '',
   lastUpdated: 0,

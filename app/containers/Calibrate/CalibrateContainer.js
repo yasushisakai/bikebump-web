@@ -24,7 +24,16 @@ type Props = {
 };
 
 class CalibrateContainer extends React.Component<void, Props, void> {
+  constructor (props) {
+    super(props);
+    this.toggleCalibration = this.toggleCalibration.bind(this);
+    this.toggleRingBell = this.toggleRingBell.bind(this);
+    this.setup = this.setup.bind(this);
+    this.draw = this.draw.bind(this);
+  }
   componentDidMount () {
+    this.calibrateElement = ((document.getElementById('calibrate'):any): HTMLElement);
+    this.canvas = document.createElement('canvas');
     this.calibrateElement.insertBefore(this.canvas, this.calibrateElement.firstChild);
     fitCanvas(this.canvas);
     this.pen = new Pen(this.canvas);
@@ -64,8 +73,8 @@ class CalibrateContainer extends React.Component<void, Props, void> {
   }
 
   // FIXME: clear any types up
-  calibrateElement: HTMLElement = ((document.getElementById('calibrate'):any): HTMLElement);
-  canvas: HTMLCanvasElement = document.createElement('canvas');
+  calibrateElement: HTMLElement;
+  canvas: HTMLCanvasElement;
   pen: any;
   slopes: Array<number>;
   maxSlopes: Array<number>;
