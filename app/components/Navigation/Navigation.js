@@ -36,25 +36,69 @@ function vibrate () {
   // console.log('mr brown can buzz')
 }
 
+type IconProps = {
+  isRecording : boolean
+}
+
+function RecordButton ({isRecording}: IconProps) {
+  if (isRecording) {
+    return (<div className={divLink}>
+      <Record className={`${icon} ${recording}`}/>
+      <div className={`${captionText} ${recording}`}>{`record`}</div>
+    </div>);
+  } else {
+    return (<div className={divLink}>
+      <Link className={link} onClick={vibrate} to='/record'>
+        <Record className={icon}/>
+      </Link>
+      <div className={captionText}>{`record`}</div>
+    </div>);
+  }
+}
+
+function MapButton ({isRecording}: IconProps) {
+  const label: string = 'map';
+  if (isRecording) {
+    return (<div className={divLink}>
+      <MapIcon className={`${icon} ${disabled}`}/>
+      <div className={`${captionText} ${disabled}`}>{label}</div>
+    </div>);
+  } else {
+    return (<div className={divLink}>
+      <Link className={link} onClick={vibrate} to={label}>
+        <MapIcon className={icon}/>
+      </Link>
+      <div className={captionText}>{label}</div>
+    </div>);
+  }
+}
+
+function SurveyButton ({isAuthed, isRecording, authedId}: Props) {
+  if (isRecording) {
+    return (
+      <div className={divLink}>
+        <div style={{...respondDivStyle, ...respondDivDisabled}} />
+        <div className={`${captionText} ${disabled}`}>{'survey'}</div>
+      </div>
+    );
+  } else {
+    return (
+      <div className={divLink}>
+        <Link className={link} onClick={vibrate} to={`/user/${authedId}/respond`}>
+          <div style={respondDivStyle} />
+        </Link>
+        <div className={captionText}>{'survey'}</div>
+      </div>
+    );
+  }
+}
+
 function NavLinks ({isAuthed, isRecording, authedId}: Props) {
   return isAuthed
     ? <div className={navLink}>
-      <div className={divLink}>
-        <Link className={link} onClick={vibrate} to='/record'>
-          <Record className={isRecording === true ? `${icon} ${recording}` : `${icon}`}/>
-        </Link>
-        <div className={captionText}>{`record`}</div>
-      </div>
-      <div className={divLink}>
-        <Link className={link} onClick={vibrate} to='/map'>
-          <MapIcon className={isRecording ? `${icon} ${disabled}` : `${icon}`}/></Link>
-        <div className={captionText}>{'map'}</div>
-      </div>
-      <div className={divLink}>
-        <Link className={link} onClick={vibrate} to={`/user/${authedId}/respond`}>
-          <div style={isRecording ? {...respondDivStyle, ...respondDivDisabled} : respondDivStyle} /></Link>
-        <div className={captionText}>{'survey'}</div>
-      </div>
+      <RecordButton isRecording={isRecording} />
+      <MapButton isRecording={isRecording} />
+      <SurveyButton isAuthed={isAuthed} isRecording={isRecording} authedId={authedId} />
     </div>
     : <div className={navLink}>
       <div className={divLink}>
