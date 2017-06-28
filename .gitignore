@@ -1,6 +1,4 @@
 node_modules/
-flow-typed/
-!flow-typed/bikebump/**
 
 goodies/data/
 dist/
