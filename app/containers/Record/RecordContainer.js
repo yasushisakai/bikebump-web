@@ -3,7 +3,7 @@ import React from 'react';
 import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import Pen, { type Point2D } from 'helpers/Pen';
-import FrequencyGraph from 'helpers/frequencyGraph';
+import FrequencyGraph from 'helpers/FrequencyGraph';
 import { fitCanvas, extractActionCreators } from 'helpers/utils';
 import { Record } from 'components';
 import { Analyser, Recorder } from 'helpers/Sound';
