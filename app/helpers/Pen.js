@@ -11,7 +11,7 @@ export default class Pen {
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'bottom';
     this.ctx.font = '16px sans-serif';
-    this.strokeWidth(1);
+    this.strokeWeight(2);
   }
 
   drawLine (sx, sy, ex, ey) {
@@ -30,7 +30,7 @@ export default class Pen {
     this.ctx.strokeStyle = color;
   }
 
-  strokeWidth (width) {
+  strokeWeight (width) {
     this.ctx.lineWidth = width;
   }
 

@@ -101,7 +101,7 @@ class RecordContainer extends React.Component {
   latLngInterval: ?number;
   binWidth: number;
   circleRadius: number;
-  
+
   transitionParameter: number;
   transitionDirection: number;
 
@@ -153,7 +153,6 @@ class RecordContainer extends React.Component {
   }
 
   draw () {
-
     this.animation = requestAnimationFrame(this.draw);
     if (this.props.isFetching) {
       return;
