@@ -42,7 +42,7 @@ function checkAuth (nextState, replace) {
 const mode = isProduction === true ? 'production' : 'development';
 console.log(`bikebump running (${mode})`);
 
-let app: HTMLElement = (document.getElementById('app'): any);
+let app = ((document.getElementById('app'): any): HTMLElement);
 app.style.height = '100%';
 app.style.width = '100%';
 // app.style.display = 'flex'

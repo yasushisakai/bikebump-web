@@ -1,3 +1,5 @@
+import { maxFreq, minFreq } from 'config/constants';
+
 export default class Analyser {
   constructor (
     audioContext,
@@ -5,8 +7,8 @@ export default class Analyser {
     minDecibels = -80,
     maxDecibels = -10,
     highpassFrequency = 2200,
-    lowRange = 2000,
-    highRange = 4000,
+    lowRange = minFreq,
+    highRange = maxFreq,
     nAverage = 5
   ) {
     this.analyser = audioContext.createAnalyser();

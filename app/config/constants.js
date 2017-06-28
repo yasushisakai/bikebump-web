@@ -16,6 +16,10 @@ export const waitDuration: number = 3000; // ms
 export const dingDetectionGap: number = 120;
 export const updateDuration: number = 1 * 60 * 1000; // 1min
 
+// the range of frequency in consideration
+export const minFreq: number = 2000;
+export const maxFreq: number = 4000;
+
 //
 // GENERAL
 //

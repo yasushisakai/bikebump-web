@@ -29,7 +29,6 @@
     "lodash": "^4.17.4",
     "mapzen.js": "^0.6.3",
     "mojs": "^0.2.0",
-    "nosleep": "BHSPitMonkey/NoSleep.js",
     "p5": "^0.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

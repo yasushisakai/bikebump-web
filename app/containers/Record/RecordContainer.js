@@ -2,13 +2,12 @@
 import React from 'react';
 import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import Pen from 'helpers/Pen';
+import Pen, { type Point2D } from 'helpers/Pen';
+import FrequencyGraph from 'helpers/frequencyGraph';
 import { fitCanvas, extractActionCreators } from 'helpers/utils';
 import { Record } from 'components';
-import NoSleep from 'nosleep';
 import { Analyser, Recorder } from 'helpers/Sound';
 import { updateCycleDuration } from 'config/constants';
-
 import * as userSettingsActionCreators from 'modules/userSettings';
 import * as recordActionCreators from 'modules/record';
 import * as dingsActionCreators from 'modules/dings';
@@ -66,10 +65,6 @@ class RecordContainer extends React.Component {
       // switch to button mode
     }
 
-    // library that prevents the phone to goto sleep mode
-    this.noSleep = new NoSleep();
-    this.noSleep.enable();
-
     // canvas functions
     this.setup();
     this.draw(); // 'endless loop'
@@ -92,11 +87,11 @@ class RecordContainer extends React.Component {
   // FIXME: fix any stuff
   recordElement: HTMLElement;
   canvas: HTMLCanvasElement;
-  pen: any;
+  pen: Pen;
+  frequencyGraph: FrequencyGraph;
   audioContext: any;
   analyser: any;
   recorder: any;
-  noSleep: any;
   animation: number;
   latLngInterval: ?number;
   binWidth: number;
@@ -110,12 +105,19 @@ class RecordContainer extends React.Component {
   isDing: boolean;
   previousSpike: number;
 
+  msStarted: number;
+  singleCycleDuration: number;
+  snakeLength: number;
+  snakePointList: Array<Point2D>;
+
   props:{
     isFetching: bool;
     isAuthed: bool;
     authedId: string;
     isRecording: bool;
     isUploading: bool;
+    isInside: bool;
+    whichDing: string;
     latestLocation: LatLng;
     currentCommuteId: string;
     latestFetch: number;
@@ -136,9 +138,24 @@ class RecordContainer extends React.Component {
   setup () {
     const dataArray = this.analyser.updateDataArray();
     this.binWidth = this.canvas.width / dataArray.length;
-    this.circleRadius = this.canvas.width * 0.325;
+    this.circleRadius = this.canvas.width * 0.3;
 
     this.transitionParameter = 0.0;
+
+    const freqStart: Point2D = {
+      x: this.canvas.width * 0.5 - this.circleRadius,
+      y: this.canvas.height * 0.5 + this.circleRadius + this.canvas.height * 0.15,
+    };
+
+    const freqSize: Point2D = {
+      x: this.circleRadius * 2, // width
+      y: this.canvas.height * 0.05,
+    };
+
+    this.frequencyGraph = new FrequencyGraph(this.pen, freqStart, freqSize);
+    this.frequencyGraph.addLabel(2000, '2k');
+    this.frequencyGraph.addLabel(3000, '3k');
+    this.frequencyGraph.addLabel(4000, '4k');
 
     //
     // Detection
@@ -150,6 +167,11 @@ class RecordContainer extends React.Component {
 
     this.canvas.onclick = this.mousePressed;
     this.canvas.addEventListener('mousemove', this.mouseMoved);
+
+    this.msStarted = 0;
+    this.singleCycleDuration = 10 * 1000; // ms (1min)
+    this.snakeLength = 1000;
+    this.snakePointList = [];
   }
 
   draw () {
@@ -158,29 +180,76 @@ class RecordContainer extends React.Component {
       return;
     }
     this.pen.clear();
+
     if (this.props.isRecording) {
+      const timeElapsed = Date.now() - this.msStarted;
+
+      if (this.props.isInside) {
+        const start = {x: 15, y: 15};
+        const size = {x: this.canvas.width - 30, y: this.canvas.height - 30};
+        this.pen.stroke('white');
+        this.pen.drawRectangle(start, size);
+      }
+
       // draw the polyline
       const dataArray = this.analyser.updateDataArray();
-      this.pen.stroke('white');
-      this.pen.ctx.beginPath();
-      dataArray.map((bin, index) => {
-        const x = index * this.binWidth;
-        const y = this.canvas.height * (1 - bin / 256);
-        this.pen.ctx.lineTo(x, y);
-      });
-      this.pen.ctx.stroke();
+      const freqIndex: number = this.analyser.frequencyToIndex(this.props.targetFrequency);
+
+      this.frequencyGraph.update(dataArray);
+      this.frequencyGraph.draw(this.props.targetFrequency);
 
       // draw current target frequency
-      const freqIndex = this.analyser.frequencyToIndex(this.props.targetFrequency);
-      this.pen.stroke('red');
-      this.pen.drawVerticalAxis(freqIndex * this.binWidth, this.canvas.height);
+      // this.pen.stroke('red');
+      // this.pen.drawVerticalAxis(freqIndex * this.binWidth, this.canvas.height);
+      const cyclePosition = (timeElapsed % this.singleCycleDuration) / this.singleCycleDuration;
+      const rad = (cyclePosition * 360) / 180 * Math.PI - 0.5 * Math.PI;
+      const slopes: Array<number> = this.analyser.getSlopes(freqIndex).map((v) => Math.max(0, v));
 
+      this.pen.stroke('white');
+
+      const inner: Point2D = {
+        x: Math.cos(rad) * (this.circleRadius - slopes[0]) + this.pen.width * 0.5,
+        y: Math.sin(rad) * (this.circleRadius - slopes[0]) + this.pen.height * 0.5,
+      };
+
+      const outer: Point2D = {
+        x: Math.cos(rad) * (this.circleRadius + slopes[1]) + this.pen.width * 0.5,
+        y: Math.sin(rad) * (this.circleRadius + slopes[1]) + this.pen.height * 0.5,
+      };
+      this.pen.drawCircle(inner.x, inner.y, 2);
+      this.pen.drawCircle(outer.x, outer.y, 2);
+
+      this.pen.drawLinePoints(inner, outer);
+
+      /*
+      if (this.snakePointList.length >= this.snakeLength) {
+        this.snakePointList.splice(0, 2);
+      }
+      */
+
+      if (this.snakePointList.length !== 0) {
+        this.snakePointList.splice(Math.floor(this.snakePointList.length / 2) + 1, 0, outer, inner);
+      } else {
+        this.snakePointList = [outer, inner];
+      }
+
+      if (this.snakePointList.length >= this.snakeLength) {
+        this.snakePointList.pop();
+        this.snakePointList.shift();
+      }
+      // this.fill('rgba(0,0,0,0)');
+      this.pen.stroke('rgba(255, 255, 255, 0.1)');
+      this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius - slopes[0]);
+      this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius + slopes[1]);
+
+      this.pen.noFill();
+      this.pen.stroke('rgba(255, 255, 255, 0.3)');
+      this.pen.drawPolyline(this.snakePointList);
+      this.pen.ctx.stroke();
       //
       // Detection
       // climbing up the stairs
       //
-
-      this.props.handleDetection(this.analyser.getSlopes(freqIndex));
 
       /*
       const freqSlope = this.analyser.getSlopes(freqIndex)
@@ -232,20 +301,19 @@ class RecordContainer extends React.Component {
       } // detection ends
       */
 
-      this.pen.noStroke();
-      this.pen.fill('white');
-      this.pen.text('push again to stop recording', this.canvas.width / 2, this.canvas.height / 4);
-
-      this.pen.noStroke();
-      this.pen.fill('red');
+      this.props.handleDetection(slopes);
+      this.pen.stroke('rgba(255, 0, 0, 0.3)');
+      // this.pen.fill('red');
     } else {
-      this.pen.noStroke();
-      this.pen.fill('white');
-      this.pen.text('push to record your commute', this.canvas.width / 2, this.canvas.height / 4);
-      this.pen.noFill();
       this.pen.stroke('white');
     }
-    this.pen.drawCircle(this.canvas.width / 2, this.canvas.height / 2, this.circleRadius);
+    // this.pen.stroke('white');
+    this.pen.fill('rgba(0.0, 0.0, 0.0, 0.0)');
+    this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius);
+    this.pen.noStroke();
+    // this.pen.fill('white');
+    const status = this.props.isRecording ? 'push to stop' : 'push to start';
+    this.pen.text(status, this.canvas.width * 0.5, this.canvas.height * 0.5 - this.circleRadius - 75);
   }
 
   updatePosition (commuteId: string) {
@@ -265,15 +333,18 @@ class RecordContainer extends React.Component {
       window.navigator.vibrate(50);
       this.props.toggleRecording()
         .then(response => {
-          if (response.isRecording) {
+          if (response.isRecording) { // takes change immediately
             const fetchFunc = this.updatePosition.bind(this, response.commuteId);
             fetchFunc();
             this.latLngInterval = window.setInterval(fetchFunc, updateCycleDuration);
+            this.snakePointList = [];
+            this.msStarted = Date.now();
           } else {
             if (this.latLngInterval !== null) {
               window.clearInterval(this.latLngInterval);
             }
             this.latLngInterval = null;
+            // this.msStarted = 0;
           }
         });
     }
@@ -300,6 +371,8 @@ function mapStateToProps (state) {
       state.userSettings.get('isFetching') ||
       state.dingFeed.get('isFetching'),
     isRecording: state.record.get('isRecording'),
+    isInside: state.record.get('isInside'),
+    whichDing: state.record.get('whichDing'),
     currentCommuteId: state.record.get('currentCommuteId'),
     isUploading: state.record.get('isUploading'),
     latestLocation: state.record.get('latestLocation').toJS(),

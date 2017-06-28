@@ -52,11 +52,10 @@ class MainContainer extends React.Component {
       ? <div> {'loading user...'} </div>
       : (
         <div className={container}>
-          <Navigation 
+          <Navigation
             isAuthed={this.props.isAuthed}
             isRecording={this.props.isRecording}
-            authedId={this.props.authedId}
-          />
+            authedId={this.props.authedId}/>
           {this.props.children}
         </div>
       );
