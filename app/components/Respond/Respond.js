@@ -1,20 +1,12 @@
 // @flow
 import React from 'react';
 
-import { contents } from 'styles/styles.css';
-
 import {
   MapAndStreetViewContainer,
   SurveyContainer,
 } from 'containers';
 
-import {
-  info,
-  mapAndStreetView,
-  question,
-  refreshQuestion,
-  refreshButton,
-} from './styles.css';
+import { zIndexContents, mapAndStreetView, survey } from './styles.css';
 
 type Props = {
   dingId: string;
@@ -24,21 +16,15 @@ type Props = {
 }
 
 export default function Respond ({dingId, questionId, clickRefresh, clickOption}: Props) {
-  const whichIds = `dingId: ${dingId}, questionId: ${questionId}`;
+  // const whichIds = `dingId: ${dingId}, questionId: ${questionId}`;
 
   return (
-    <div className={contents}>
-      <div className={info}>
-        { whichIds }
-      </div>
+    <div className={zIndexContents}>
       <div className={mapAndStreetView}>
         <MapAndStreetViewContainer dingId={dingId} />
       </div>
-      <div className={question}>
-        <SurveyContainer questionId={questionId} onClickOption={clickOption}/>
-      </div>
-      <div className={refreshQuestion}>
-        <div className={refreshButton} onClick={clickRefresh}> {'refresh'} </div>
+      <div className={survey}>
+        <SurveyContainer questionId={questionId} onClickOption={clickOption} onClickRefresh={clickRefresh}/>
       </div>
     </div>
   );

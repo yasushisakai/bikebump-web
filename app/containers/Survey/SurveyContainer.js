@@ -2,9 +2,14 @@
 import React from 'react';
 import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { Map } from 'immutable';
-import { qwrapper, qtext, qoptions, qoption, items2, items3, items4 } from './styles.css';
+import { btn, icon, other, qwrapper, qbuttons, qtextbox, qtext, qoptions, qoption, qoptiontext, items2, items3, items4 } from './styles.css';
+import RefreshIcon from 'react-icons/lib/fa/refresh';
+import QuestionIcon from 'react-icons/lib/fa/question';
 import type { Question } from 'types';
+import { Option } from 'components';
+
 const items = [items2, items3, items4];
 
 import * as questionActionCreators from 'modules/questions';
@@ -15,6 +20,7 @@ import * as questionActionCreators from 'modules/questions';
     question: Question;
 
     onClickOption: Function;
+    onClickRefresh: Function;
     handleFetchingSingleQuestion: Function;
   }
 
@@ -25,7 +31,10 @@ class SurveyContainer extends React.Component<void, Props, void> {
   renderOptions (questionOptions: Array<string>) {
     const classNameForOption = `${qoption} ${items[questionOptions.length - 2]}`;
     return questionOptions.map((option, index) => {
-      return <div className={classNameForOption} onClick={() => this.props.onClickOption(index)} key={index}>{ option }</div>;
+      return (<div className={classNameForOption} onClick={() => this.props.onClickOption(index)} key={index}>
+        <span className={qoptiontext}>{ option }</span>
+      </div>
+      );
     });
   }
   render () {
@@ -33,11 +42,21 @@ class SurveyContainer extends React.Component<void, Props, void> {
       ? <div> {'Loading Question'} </div>
       : (
         <div className={qwrapper}>
-          <div className={qtext}>
-            { this.props.question.questionText }
+          <div className={qtextbox}>
+            <span className={qtext}>{ this.props.question.questionText }</span>
           </div>
-          <div className={qoptions}>
-            { this.renderOptions(this.props.question.values) }
+          <div className={qbuttons}>
+            <div className={qoptions}>
+              { this.renderOptions(this.props.question.values) }
+            </div>
+            <div className={other}>
+              <div className={btn}>
+                <Link to='/record'><QuestionIcon className={icon}/></Link>
+              </div>
+              <div className={btn} onClick={this.props.onClickRefresh}>
+                <RefreshIcon className={icon}/>
+              </div>
+            </div>
           </div>
         </div>
       );

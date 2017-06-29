@@ -115,8 +115,16 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
   }
 
   render () {
+    const style = {
+      height: '100%',
+      width: '100%',
+      margin: 0,
+      padding: 0,
+    };
     return (
-      <div id='tinyMap' className={contents} />
+      <div style={style}>
+        <div id='tinyMap' className={contents} style={{height: '100%'}}/>
+      </div>
     );
   }
 }

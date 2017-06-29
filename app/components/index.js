@@ -12,4 +12,5 @@ export RoadVis from './RoadVis/RoadVis';
 export Calibrate from './Calibrate/Calibrate';
 export Layout from './Layout/Layout';
 export RecordSound from './RecordSound/RecordSound';
+export Option from './Option/Option';
 
