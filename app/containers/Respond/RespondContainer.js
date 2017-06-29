@@ -106,11 +106,13 @@ class RespondContainer extends React.Component<void, Props, void> {
       // console.log(`userId: ${ this.props.uid }, dingId: ${ dingId }, questionId: ${ questionId } index: ${index }`)
       window.navigator.vibrate(50);
 
+      console.log(this.props.questions.getIn([questionId, 'values', index, 'value']));
+
       this.props.handleAddResponse({
         dingId,
         questionId,
         uid: this.props.uid,
-        value: index,
+        value: this.props.questions.getIn([questionId, 'values', index, 'value']),
       });
 
       const {questions, userDings, userResponses} = this.props;

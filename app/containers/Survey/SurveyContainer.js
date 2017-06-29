@@ -4,13 +4,20 @@ import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Map } from 'immutable';
-import { btn, icon, other, qwrapper, qbuttons, qtextbox, qtext, qoptions, qoption, qoptiontext, items2, items3, items4 } from './styles.css';
+import {
+  btn,
+  icon,
+  other,
+  qwrapper,
+  qbuttons,
+  qtextbox,
+  qtext,
+  qoptions,
+} from './styles.css';
 import RefreshIcon from 'react-icons/lib/fa/refresh';
 import QuestionIcon from 'react-icons/lib/fa/question';
 import type { Question } from 'types';
 import { Option } from 'components';
-
-const items = [items2, items3, items4];
 
 import * as questionActionCreators from 'modules/questions';
 
@@ -25,17 +32,49 @@ import * as questionActionCreators from 'modules/questions';
   }
 
 class SurveyContainer extends React.Component<void, Props, void> {
+  constructor (props) {
+    super(props);
+    this.getOptionSize = this.getOptionSize.bind(this);
+  }
   componentWillMount () {
     // this.props.handleFetchingSingleQuestion(this.props.questionId)
+    // FIXME: Hardcoding
+    this.optionsWidth = window.innerWidth * 0.8;
+    this.optionsHeight = window.innerHeight * 0.192;
   }
+  componentDidMount () {
+    console.log('hi, there');
+    if (document.getElementById('options') !== null) {
+      this.optionsWidth = document.getElementById('options').clientWidth;
+      this.optionsHeight = document.getElementById('options').clientHeight;
+    }
+  }
+
+  optionsWidth: number;
+  optionsHeight: number;
+  optionSize: number;
+
+  getOptionSize () {
+    const optionNum = this.props.question.values.length;
+    console.log(this.optionsWidth, this.optionsHeight);
+    const unitHeight = this.optionsHeight - 5;
+    const unitWidth = this.optionsWidth * (1 - ((optionNum - 1) * 0.05)) / optionNum;
+    console.log(unitWidth, unitHeight);
+    this.optionSize = unitHeight < unitWidth ? unitHeight : unitWidth;
+  }
+
   renderOptions (questionOptions: Array<string>) {
-    const classNameForOption = `${qoption} ${items[questionOptions.length - 2]}`;
-    return questionOptions.map((option, index) => {
-      return (<div className={classNameForOption} onClick={() => this.props.onClickOption(index)} key={index}>
-        <span className={qoptiontext}>{ option }</span>
-      </div>
-      );
-    });
+    this.getOptionSize();
+    return questionOptions.map((option, index) =>
+      <Option
+        size={this.optionSize}
+        label={option.label}
+        color={option.color}
+        background={option.background} // FIXME
+        otherResponses={10}
+        key={index}
+        onClick={() => this.props.onClickOption(index)}/>
+    );
   }
   render () {
     return this.props.isFetching
@@ -46,7 +85,7 @@ class SurveyContainer extends React.Component<void, Props, void> {
             <span className={qtext}>{ this.props.question.questionText }</span>
           </div>
           <div className={qbuttons}>
-            <div className={qoptions}>
+            <div id={'options'} className={qoptions}>
               { this.renderOptions(this.props.question.values) }
             </div>
             <div className={other}>

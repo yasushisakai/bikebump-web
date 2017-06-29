@@ -1,17 +1,25 @@
 .option {
-    text-align: center;
     display: flex;
     flex-flow: column;
+    background-color: #111;
+    border-radius: 50%;
+    box-shadow: rgba(0,0,0,0.9) 0 0 5px;
+    text-align: center;
 }
 
 .label {
-    flex: 1;
-    font-size: 1.25em;
+    flex:1;
+    font-size: 1em;
     font-weight: 500;
+    margin-top: 25%;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .otherresponses {
-    flex: 1;
-    font-size: 1em;
-    font-weight: 400;
+    flex:1;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.65em;
+    font-weight: 300;
 }
