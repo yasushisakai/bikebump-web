@@ -7,7 +7,7 @@ import FrequencyGraph from 'helpers/FrequencyGraph';
 import { fitCanvas, extractActionCreators } from 'helpers/utils';
 import { Record } from 'components';
 import { Analyser, Recorder } from 'helpers/Sound';
-import { updateCycleDuration } from 'config/constants';
+import { updateCycleDuration, threshold } from 'config/constants';
 import * as userSettingsActionCreators from 'modules/userSettings';
 import * as recordActionCreators from 'modules/record';
 import * as dingsActionCreators from 'modules/dings';
@@ -110,6 +110,7 @@ class RecordContainer extends React.Component {
   singleCycleDuration: number;
   snakeLength: number;
   snakePointList: Array<Point2D>;
+  detectionList: Array<number>;
 
   props:{
     isFetching: bool;
@@ -146,18 +147,18 @@ class RecordContainer extends React.Component {
 
     const freqStart: Point2D = {
       x: this.canvas.width * 0.5 - this.circleRadius,
-      y: this.canvas.height * 0.5 + this.circleRadius + this.canvas.height * 0.05,
+      y: this.canvas.height * 0.5 + this.circleRadius + this.canvas.height * 0.07,
     };
 
     const freqSize: Point2D = {
       x: this.circleRadius * 2, // width
-      y: this.canvas.height * 0.05,
+      y: this.canvas.height * 0.07,
     };
 
     this.frequencyGraph = new FrequencyGraph(this.pen, freqStart, freqSize);
-    this.frequencyGraph.addLabel(2000, '2k');
-    this.frequencyGraph.addLabel(3000, '3k');
-    this.frequencyGraph.addLabel(4000, '4k');
+    this.frequencyGraph.addLabel(2000, '2K');
+    this.frequencyGraph.addLabel(3000, '3K');
+    this.frequencyGraph.addLabel(4000, '4K');
 
     //
     // Detection
@@ -166,13 +167,14 @@ class RecordContainer extends React.Component {
     this.secondFlag = false;
     this.isDing = false;
     this.previousSpike = Date.now();
+    this.detectionList = [];
 
     this.canvas.onclick = this.mousePressed;
     this.canvas.addEventListener('mousemove', this.mouseMoved);
     this.canvas.addEventListener('resize', this.resize);
 
     this.msStarted = 0;
-    this.singleCycleDuration = 10 * 1000; // ms (1min)
+    this.singleCycleDuration = 3 * 1000; // ms (1min)
     this.snakeLength = 1000;
     this.snakePointList = [];
   }
@@ -182,10 +184,20 @@ class RecordContainer extends React.Component {
     if (this.props.isFetching) {
       return;
     }
+
     this.pen.clear();
 
     if (this.props.isRecording) {
       const timeElapsed = Date.now() - this.msStarted;
+      const cyclePosition = (timeElapsed % this.singleCycleDuration) / this.singleCycleDuration;
+      const rad = (cyclePosition * 360) / 180 * Math.PI - 0.5 * Math.PI;
+
+      const freqIndex: number = this.analyser.frequencyToIndex(this.props.targetFrequency);
+      const slopes: Array<number> = this.analyser.getSlopes(freqIndex).map((v) => Math.max(0, v));
+      if (this.props.handleDetection(slopes)) {
+        console.log('hello detection', [Date.now(), rad]);
+        this.detectionList.push([Date.now(), rad]);
+      }
 
       if (this.props.isInside) {
         const start = {x: 15, y: 15};
@@ -196,19 +208,14 @@ class RecordContainer extends React.Component {
 
       // draw the polyline
       const dataArray = this.analyser.updateDataArray();
-      const freqIndex: number = this.analyser.frequencyToIndex(this.props.targetFrequency);
-
       this.frequencyGraph.update(dataArray);
       this.frequencyGraph.draw(this.props.targetFrequency);
 
-      // draw current target frequency
-      // this.pen.stroke('red');
-      // this.pen.drawVerticalAxis(freqIndex * this.binWidth, this.canvas.height);
-      const cyclePosition = (timeElapsed % this.singleCycleDuration) / this.singleCycleDuration;
-      const rad = (cyclePosition * 360) / 180 * Math.PI - 0.5 * Math.PI;
-      const slopes: Array<number> = this.analyser.getSlopes(freqIndex).map((v) => Math.max(0, v));
-
-      this.pen.stroke('white');
+      this.pen.stroke('rgba(255, 255, 255, 0.1)');
+      this.pen.ctx.setLineDash([4, 8]);
+      this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius - threshold);
+      this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius + threshold);
+      this.pen.ctx.setLineDash([0]);
 
       const inner: Point2D = {
         x: Math.cos(rad) * (this.circleRadius - slopes[0]) + this.pen.width * 0.5,
@@ -219,9 +226,6 @@ class RecordContainer extends React.Component {
         x: Math.cos(rad) * (this.circleRadius + slopes[1]) + this.pen.width * 0.5,
         y: Math.sin(rad) * (this.circleRadius + slopes[1]) + this.pen.height * 0.5,
       };
-
-
-      console.log(this.props.detectionStatus);
 
       switch (this.props.detectionStatus) {
         case 0 : // initial
@@ -240,11 +244,23 @@ class RecordContainer extends React.Component {
       this.pen.drawCircle(outer.x, outer.y, 2);
       this.pen.drawLinePoints(inner, outer);
 
-      /*
-      if (this.snakePointList.length >= this.snakeLength) {
-        this.snakePointList.splice(0, 2);
+      switch (this.props.detectionStatus) {
+        case 0 : // initial
+          this.pen.stroke('rgba(255, 255, 255, 0.05)');
+          break;
+        case 1 : // waiting
+          this.pen.stroke('rgba(0, 255, 0, 0.2)');
+          break;
+        case 2 : // cooling
+          this.pen.stroke('rgba(255, 0, 0, 0.2)');
+          break;
+        default:
+          this.pen.stroke('rgba(255, 255, 255, 0.1)');
       }
-      */
+      // damp alpha :(
+      // this.fill('rgba(0,0,0,0)');
+      this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius - slopes[0]);
+      this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius + slopes[1]);
 
       if (this.snakePointList.length !== 0) {
         this.snakePointList.splice(Math.floor(this.snakePointList.length / 2) + 1, 0, outer, inner);
@@ -256,17 +272,12 @@ class RecordContainer extends React.Component {
         this.snakePointList.pop();
         this.snakePointList.shift();
       }
-      // this.fill('rgba(0,0,0,0)');
-      this.pen.stroke('rgba(255, 255, 255, 0.1)');
-      this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius - slopes[0]);
-      this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius + slopes[1]);
 
       this.pen.noFill();
       this.pen.stroke('rgba(255, 255, 255, 0.3)');
       this.pen.drawPolyline(this.snakePointList);
       this.pen.ctx.stroke();
 
-      this.props.handleDetection(slopes);
       this.pen.stroke('rgba(255, 0, 0, 0.3)');
       // this.pen.fill('red');
     } else {
@@ -279,6 +290,24 @@ class RecordContainer extends React.Component {
     // this.pen.fill('white');
     const status = this.props.isRecording ? 'push to stop' : 'push to start';
     this.pen.text(status, this.canvas.width * 0.5, this.canvas.height * 0.5 - this.circleRadius - 75);
+
+    const now = Date.now();
+    this.pen.stroke('rgba(255, 255, 255, 0.4)');
+    this.detectionList.map((detection) => {
+      if ((now - detection[0]) < this.singleCycleDuration) {
+        const innerDetectionCoordinate = {
+          x: Math.cos(detection[1]) * (this.circleRadius * 0.85) + this.pen.width * 0.5,
+          y: Math.sin(detection[1]) * (this.circleRadius * 0.85) + this.pen.height * 0.5,
+        };
+        const outerDetectionCoordinate = {
+          x: Math.cos(detection[1]) * (this.circleRadius * 1.15) + this.pen.width * 0.5,
+          y: Math.sin(detection[1]) * (this.circleRadius * 1.15) + this.pen.height * 0.5,
+        };
+        this.pen.drawCircle(innerDetectionCoordinate.x, innerDetectionCoordinate.y, 4);
+        this.pen.drawCircle(outerDetectionCoordinate.x, outerDetectionCoordinate.y, 4);
+        this.pen.drawLinePoints(innerDetectionCoordinate, outerDetectionCoordinate);
+      }
+    });
   }
 
   updatePosition (commuteId: string) {
@@ -303,6 +332,7 @@ class RecordContainer extends React.Component {
             fetchFunc();
             this.latLngInterval = window.setInterval(fetchFunc, updateCycleDuration);
             this.snakePointList = [];
+            this.detectionList = [];
             this.msStarted = Date.now();
           } else {
             if (this.latLngInterval !== null) {

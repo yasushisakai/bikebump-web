@@ -6,7 +6,7 @@ import { fromJS } from 'immutable';
 //
 
 export const threshold: number = 5;
-export const thresholdLength: number = 300; // ms
+export const thresholdLength: number = 100; // ms
 export const doubleDingDuration: number = 1500; // ms
 export const maxCommuteLife: number = 20000; // ms
 export const updateCycleDuration: number = 5000; // ms
@@ -17,8 +17,8 @@ export const dingDetectionGap: number = 120;
 export const updateDuration: number = 1 * 60 * 1000; // 1min
 
 // the range of frequency in consideration
-export const minFreq: number = 2000;
-export const maxFreq: number = 4000;
+export const minFreq: number = 1950;
+export const maxFreq: number = 4050;
 
 //
 // GENERAL

@@ -81,7 +81,7 @@ export function handleDetection (slopes) {
       }
     } else {
       if (status !== detectionStatus.INITIAL) {
-        console.log(Date.now() - getState().record.get('lastDetection'));
+        // console.log(Date.now() - getState().record.get('lastDetection'));
         dispatch(returnDetection());
       }
       return false;

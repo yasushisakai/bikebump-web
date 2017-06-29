@@ -33,7 +33,6 @@ const respondDivDisabled: any = {
 
 function vibrate () {
   window.navigator.vibrate(50);
-  // console.log('mr brown can buzz')
 }
 
 type IconProps = {

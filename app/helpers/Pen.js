@@ -24,7 +24,7 @@ export default class Pen {
 
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'bottom';
-    this.ctx.font = '14px sans-serif';
+    this.ctx.font = '14px "Helvetica Neue", Helvetica, Arial, sans-serif';
     this.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0)';
     this.ctx.lineWidth = 0.5;
@@ -67,6 +67,7 @@ export default class Pen {
   }
 
   clear (): void {
+    this.fill('rgba(0, 0, 0, 0)');
     this.ctx.clearRect(0, 0, this.width, this.height);
   }
 

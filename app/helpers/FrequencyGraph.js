@@ -50,8 +50,6 @@ export default class FrequencyGraph {
       verbose = `${frequency}`;
     }
 
-    console.log(verbose);
-
     if (frequency <= maxFreq && frequency >= minFreq) {
       const parameter = (frequency - this.minFreq) / (this.maxFreq - this.minFreq);
       this.labels[`${verbose}`] = this.startCoordinate.x + this.graphSize.x * parameter;
@@ -76,7 +74,7 @@ export default class FrequencyGraph {
 
     if (typeof targetFreq === 'number') {
       const x: number = this.startCoordinate.x + (targetFreq - minFreq) / (maxFreq - minFreq) * this.graphSize.x;
-      this.pen.text('T', x, this.startCoordinate.y + this.graphSize.y + 30);
+      this.pen.text('*', x, this.startCoordinate.y + this.graphSize.y + 30);
       this.pen.stroke('rgba(255, 0, 0, 0.3)');
       this.pen.drawLine(x, this.startCoordinate.y, x, this.startCoordinate.y + this.graphSize.y);
     }
@@ -91,6 +89,9 @@ export default class FrequencyGraph {
     });
     this.pen.lineTo(this.pen.addPoints(this.startCoordinate, this.graphSize));
     this.pen.endPath();
+
+    this.pen.stroke('rgba(255,255,255,0.1)');
+    this.pen.drawRectangle(this.startCoordinate, this.graphSize);
 
     // labels
     Object.keys(this.labels).map((key) => {
