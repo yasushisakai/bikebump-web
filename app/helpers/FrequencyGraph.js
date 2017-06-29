@@ -89,6 +89,7 @@ export default class FrequencyGraph {
       const y = this.startCoordinate.y + (1 - Math.min(data / this.maxValue, 1.0)) * this.graphSize.y;
       this.pen.lineTo({x, y});
     });
+    this.pen.lineTo(this.pen.addPoints(this.startCoordinate, this.graphSize));
     this.pen.endPath();
 
     // labels

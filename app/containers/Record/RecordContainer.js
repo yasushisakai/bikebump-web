@@ -23,6 +23,7 @@ class RecordContainer extends React.Component {
     this.mouseMoved = this.mouseMoved.bind(this);
     this.updatePosition = this.updatePosition.bind(this);
     this.mousePressed = this.mousePressed.bind(this);
+    this.resize = this.resize.bind(this);
   }
 
   componentDidMount () {
@@ -123,6 +124,7 @@ class RecordContainer extends React.Component {
     latestFetch: number;
     lastDetection: number;
     targetFrequency: number;
+    detectionStatus: number;
 
     handleSetDingListener: Function;
     handleFetchingUserSettings: Function;
@@ -144,7 +146,7 @@ class RecordContainer extends React.Component {
 
     const freqStart: Point2D = {
       x: this.canvas.width * 0.5 - this.circleRadius,
-      y: this.canvas.height * 0.5 + this.circleRadius + this.canvas.height * 0.15,
+      y: this.canvas.height * 0.5 + this.circleRadius + this.canvas.height * 0.05,
     };
 
     const freqSize: Point2D = {
@@ -167,6 +169,7 @@ class RecordContainer extends React.Component {
 
     this.canvas.onclick = this.mousePressed;
     this.canvas.addEventListener('mousemove', this.mouseMoved);
+    this.canvas.addEventListener('resize', this.resize);
 
     this.msStarted = 0;
     this.singleCycleDuration = 10 * 1000; // ms (1min)
@@ -216,9 +219,25 @@ class RecordContainer extends React.Component {
         x: Math.cos(rad) * (this.circleRadius + slopes[1]) + this.pen.width * 0.5,
         y: Math.sin(rad) * (this.circleRadius + slopes[1]) + this.pen.height * 0.5,
       };
+
+
+      console.log(this.props.detectionStatus);
+
+      switch (this.props.detectionStatus) {
+        case 0 : // initial
+          this.pen.stroke('rgb(255, 255, 255)');
+          break;
+        case 1 : // waiting
+          this.pen.stroke('rgb(0, 255, 0)');
+          break;
+        case 2 : // cooling
+          this.pen.stroke('rgb(255, 0, 0)');
+          break;
+        default:
+          this.pen.stroke('rgb(255, 255, 255)');
+      }
       this.pen.drawCircle(inner.x, inner.y, 2);
       this.pen.drawCircle(outer.x, outer.y, 2);
-
       this.pen.drawLinePoints(inner, outer);
 
       /*
@@ -246,60 +265,6 @@ class RecordContainer extends React.Component {
       this.pen.stroke('rgba(255, 255, 255, 0.3)');
       this.pen.drawPolyline(this.snakePointList);
       this.pen.ctx.stroke();
-      //
-      // Detection
-      // climbing up the stairs
-      //
-
-      /*
-      const freqSlope = this.analyser.getSlopes(freqIndex)
-      if (detectionGap(this.previousSpike)) {
-        this.isDing = false
-      }
-
-      if ((freqSlope[0] > 10 || freqSlope[1] > 10) && !this.firstFlag && detectionGap(this.previousSpike)) {
-        console.log('1', freqSlope)
-        this.firstFlag = true
-        this.previousSpike = Date.now()
-      }
-
-      if (this.firstFlag && detectionGap(this.previousSpike) && !this.secondFlag) {
-        console.log('2', freqSlope)
-        if (freqSlope[0] > 10 || freqSlope[1] > 10) this.secondFlag = true
-        else { this.firstFlag = false }
-        this.previousSpike = Date.now()
-      }
-
-      if (this.secondFlag && detectionGap(this.previousSpike)) {
-        console.log('3', freqSlope)
-        this.firstFlag = this.secondFlag = false
-        if (freqSlope[0] > 5 && freqSlope[1] > 5) {
-          console.log('ding')
-          this.isDing = true
-
-          // save/upload the ding, will not upload if its already 'isUploading'
-          // timestamp and latlng will be used to tie it to the ding
-          this.props.handleUpload(
-            this.recorder,
-            this.props.latestLocation,
-            this.props.latestFetch
-          )
-          window.navigator.vibrate(100)
-
-          // assign ding to firebase
-          this.props.handleComplieDing(
-            this.props.authedId,
-            this.props.latestLocation,
-            this.props.currentCommuteId,
-            this.props.latestFetch,
-            10,
-            0
-          )
-        }
-
-        this.previousSpike = Date.now()
-      } // detection ends
-      */
 
       this.props.handleDetection(slopes);
       this.pen.stroke('rgba(255, 0, 0, 0.3)');
@@ -354,6 +319,11 @@ class RecordContainer extends React.Component {
     this.pen.updateMouse(event);
   }
 
+  resize () {
+    console.log('hello');
+    this.pen.resize();
+  }
+
   render () {
     return (
       <Record/>
@@ -378,6 +348,7 @@ function mapStateToProps (state) {
     latestLocation: state.record.get('latestLocation').toJS(),
     latestFetch: state.record.get('latestFetch'),
     lastDetection: state.record.get('lastDetection'),
+    detectionStatus: state.record.get('detectionStatus'),
     targetFrequency: state.userSettings.getIn([authedId, 'targetFrequency']),
   };
 }

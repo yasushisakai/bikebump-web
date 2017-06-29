@@ -24,7 +24,7 @@ export default class Pen {
 
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'bottom';
-    this.ctx.font = '16px sans-serif';
+    this.ctx.font = '14px sans-serif';
     this.ctx.strokeStyle = 'rgba(0, 0, 0, 0)';
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0)';
     this.ctx.lineWidth = 0.5;
@@ -36,6 +36,12 @@ export default class Pen {
     this.ctx.moveTo(sx, sy);
     this.ctx.lineTo(ex, ey);
     this.ctx.stroke();
+  }
+
+  resize () {
+    this.ctx = this.canvas.getContext('2d');
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
   }
 
   drawLinePoints (start: Point2D, end: Point2D): void {

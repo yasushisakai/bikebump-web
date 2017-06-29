@@ -62,40 +62,30 @@ function waitDetection () {
 
 export function handleDetection (slopes) {
   return function (dispatch, getState) {
+    const status = getState().record.get('detectionStatus');
     if (slopes[0] > threshold && slopes[1] > threshold) {
-      if (getState().record.get('detectionStatus') === detectionStatus.INITIAL) {
+      if (status === detectionStatus.INITIAL) {
         dispatch(waitDetection());
-      } else if (
-      // at this point the detection has been verified
-        getState().record.get('detectionStatus') === detectionStatus.WAITING &&
-      Date.now() - getState().record.get('lastTimeOverThreshold') > thresholdLength
-      ) {
-        /*
-        if (Date.now() - getState().record.get('lastDetection') < doubleDingDuration) {
-          console.log('double ding')
+      } else if (status === detectionStatus.WAITING) {
+        if (Date.now() - getState().record.get('lastTimeOverThreshold') > thresholdLength) {
+          // detection!
+          console.log('DING');
+          dispatch(leaveDetection());
+          return true;
         } else {
-          console.log('single ding')
+          // waiting...
+          return false;
         }
-        */
-        console.log('DING!');
-        if (getState().record.get('isPending')) {
-          console.log('check distance, and flush');
-        } else {
-          const coordinates = getState().record.get('latestLocation');
-          dispatch(addPending(coordinates.get('lat'), coordinates.get('lng'), Date.now()));
-        }
-        dispatch(leaveDetection());
-        return true;
+      } else { // status === detectionStatus.LEAVING
+        return false;
       }
-    } else if (slopes[0] < threshold && slopes[1] < threshold) {
-      if (getState().record.get('detectionStatus') === detectionStatus.LEAVING) {
+    } else {
+      if (status !== detectionStatus.INITIAL) {
         console.log(Date.now() - getState().record.get('lastDetection'));
         dispatch(returnDetection());
       }
-    } else {
-      dispatch(returnDetection());
+      return false;
     }
-    return false;
   };
 }
 
@@ -351,7 +341,10 @@ export default function record (state = initialState, action) {
         lastDetection: Date.now(),
       });
     case RETURN_DETECTION:
-      return state.set('detectionStatus', detectionStatus.INITIAL);
+      return state.merge({
+        detectionStatus: detectionStatus.INITIAL,
+        lastTimeOverThreshold: Date.now(),
+      });
     case ADD_PENDING:
       return state.merge({
         isPending: true,
