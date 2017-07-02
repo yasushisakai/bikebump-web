@@ -14,5 +14,8 @@ export LayoutContainer from './Layout/LayoutContainer';
 export MidMapContainer from './MidMap/MidMapContainer';
 export MapAndStreetViewContainer from './MapAndStreetView/MapAndStreetViewContainer';
 export RecordSoundContainer from './RecordSound/RecordSoundContainer';
+export ProposalContainer from './Proposal/ProposalContainer';
+export ProposalListContainer from './ProposalList/ProposalListContainer';
 // sub components
 export SurveyContainer from './Survey/SurveyContainer';
+export ProposalListItemContainer from './ProposalList/ProposalListItemContainer';

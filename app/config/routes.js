@@ -16,6 +16,8 @@ import {
   RoadVisContainer,
   CalibrateContainer,
   LayoutContainer,
+  ProposalListContainer,
+  ProposalContainer,
 } from 'containers';
 
 export default function getRoutes (checkAuth, history) {
@@ -30,6 +32,8 @@ export default function getRoutes (checkAuth, history) {
           <Route path='respond' component={RespondContainer} onEnter={checkAuth}/>
           <IndexRoute component={UserContainer} onEnter={checkAuth} />
         </Route>
+        <Route path='proposals' component={ProposalListContainer} onEnter={checkAuth}/>
+        <Route path='proposals/:proposalId' component={ProposalContainer} onEnter={checkAuth} />
         <Route path='signin' component={AuthContainer} onEnter={checkAuth}/>
         <Route path='logout' component={LogoutContainer} />
         <Route path='clear' component={ClearContainer} />

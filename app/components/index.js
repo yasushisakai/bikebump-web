@@ -13,4 +13,7 @@ export Calibrate from './Calibrate/Calibrate';
 export Layout from './Layout/Layout';
 export RecordSound from './RecordSound/RecordSound';
 export Option from './Option/Option';
+export Proposal from './Proposal/Proposal';
+export ProposalList from './ProposalList/ProposalList';
+export ProposalListItem from './ProposalList/ProposalListItem';
 

@@ -7,6 +7,7 @@ import Account from 'react-icons/lib/md/account-circle';
 import SignIn from 'react-icons/lib/fa/sign-in';
 import MapIcon from 'react-icons/lib/fa/map-o';
 import Record from 'react-icons/lib/md/radio-button-checked';
+import PrioritizeIcon from 'react-icons/lib/fa/list-ol';
 import Home from 'react-icons/lib/md/home';
 
 type Props = {
@@ -15,12 +16,13 @@ type Props = {
   isRecording: boolean;
 };
 
+const iconSize: number = 41;
 const respondDivStyle: any = {
   background: `url(${imgRoot}choose.png)`,
-  backgroundSize: '50px 50px',
+  backgroundSize: `${iconSize}px ${iconSize}px`,
   backgroundRepeat: 'no-repeat',
-  width: '50px',
-  height: '50px',
+  width: `${iconSize}px`,
+  height: `${iconSize}px`,
   display: 'inline-block',
   margin: 'auto',
   verticalAlign: 'middle',
@@ -92,12 +94,33 @@ function SurveyButton ({isAuthed, isRecording, authedId}: Props) {
   }
 }
 
+function PrioritizeButton ({isAuthed, isRecording, authedId}: Props) {
+  if (isRecording) {
+    return (
+      <div className={divLink}>
+        <PrioritizeIcon className={`${icon} ${disabled}`}/>
+        <div className={`${captionText} ${disabled}`}>{'prioritize'}</div>
+      </div>
+    );
+  } else {
+    return (
+      <div className={divLink}>
+        <Link className={link} onClick={vibrate} to={`/proposals`}>
+          <PrioritizeIcon className={icon} />
+        </Link>
+        <div className={captionText}>{'prioritize'}</div>
+      </div>
+    );
+  }
+}
+
 function NavLinks ({isAuthed, isRecording, authedId}: Props) {
   return isAuthed
     ? <div className={navLink}>
       <RecordButton isRecording={isRecording} />
       <MapButton isRecording={isRecording} />
       <SurveyButton isAuthed={isAuthed} isRecording={isRecording} authedId={authedId} />
+      <PrioritizeButton isAuthd={isAuthed} isRecording={isRecording} authedId={authedId} />
     </div>
     : <div className={navLink}>
       <div className={divLink}>

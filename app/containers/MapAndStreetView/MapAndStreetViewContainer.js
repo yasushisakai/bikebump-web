@@ -49,7 +49,8 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
       ];
     }
 
-    this.map = leaflet.map('tinyMap', {zoomControl: false}).setView(position, 18);
+    this.map = leaflet.map('tinyMap', {zoomControl: false})
+      .setView(position, 16);
 
     leaflet.tileLayer(lightURL, { maxZoom: 20 }).addTo(this.map);
 
@@ -98,7 +99,7 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
     this.reportedLocation = leaflet.circle(
       coordinate,
       props.ding.get('radius'),
-      {...defaultStyle, weight: 1, opacity: 0.5, color: '#f00'}
+      {...defaultStyle, weight: 3, opacity: 0.8, color: '#f00'}
     ).addTo(this.map);
 
     // if there is a road, draw that too
