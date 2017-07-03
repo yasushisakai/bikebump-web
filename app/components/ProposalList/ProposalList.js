@@ -2,7 +2,7 @@
 import React from 'react';
 import { ProposalListItemContainer } from 'containers';
 import { Map } from 'immutable';
-import { proposalListContainer, listContainer, roadCategory, userUnitStats, userUnits, smallMetaInfo } from './styles.css';
+import { proposalListContainer, listContainer, roadCategory, userUnits } from './styles.css';
 
 type Props = {
     roadProposals: any;
@@ -13,7 +13,7 @@ type Props = {
 function RoadCategory ({roadId, roads, children}) {
   const roadName: string = roads.getIn([roadId, 'properties', 'name']);
   return (<div style={{width: '100%', height: '100%'}}>
-    <div className={roadCategory}>{roadName}</div>
+    <div id={`road-${roadId}`} className={roadCategory}>{roadName}</div>
     { children }
   </div>);
 }

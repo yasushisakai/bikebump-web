@@ -103,6 +103,25 @@ function mapStateToProps (state, props) {
       'sampleProposalId',
       'sampleProposalId',
     ],
+    12116724: [
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+      'sampleProposalId',
+    ],
   });
 
   console.log(userProposals.get('units'));

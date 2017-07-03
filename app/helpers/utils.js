@@ -1,6 +1,6 @@
 // @flow
+
 import {
-  minimalLatLngRefresh,
   renderTimeConstrain,
   maxCommuteLife,
   dingDetectionGap,
@@ -9,14 +9,16 @@ import {
 
 import { Map, List } from 'immutable';
 
-import {pickBy, isFunction} from 'lodash';
-import type { LatLng } from 'types';
+import { pickBy, isFunction } from 'lodash';
+import type { LineString, MultiLineString } from 'types';
 
-export function extractActionCreators (itemAction) {
+import { latLng, LatLng } from 'leaflet';
+
+export function extractActionCreators (itemAction: any) {
   return pickBy(itemAction, isFunction);
 }
 
-export function fetchGeoLocation (): Promise<any> {
+export function fetchGeoLocation (): Promise<LatLng> {
   return new Promise(function (resolve, reject) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -30,7 +32,7 @@ export function fetchGeoLocation (): Promise<any> {
   });
 }
 
-export function formatGoogleStreetViewURL (coordinate: LatLng, heading = 0): string {
+export function formatGoogleStreetViewURL (coordinate: latLng, heading:number = 0): string {
   return `https://maps.googleapis.com/maps/api/streetview?size=240x320&location=${coordinate.lat},${coordinate.lng}&heading=${heading}`;
 }
 
@@ -110,29 +112,49 @@ export function fitCanvas (canvas: HTMLCanvasElement): void {
   canvas.height = boundingRect.height;
 }
 
-export function indexToFrequency (index: number, analyser) {
+export function indexToFrequency (index: number, analyser): number {
   return index * analyser.binUnit;
 }
 
-export function frequencyToIndex (frequency: number, analyser) {
+export function frequencyToIndex (frequency: number, analyser): number {
   return Math.round(frequency / analyser.binUnit);
 }
 
-export function getCenter (coordinates: LatLng) {
+export function getCenter (coordinates: LatLng[]): LatLng {
   return coordinates.reduce((prev, current) => {
     return [prev[0] + current[0], prev[1] + current[1]];
   }, [0, 0]).map((element) => { return element / coordinates.length; });
 }
 
-export function pointFromParameter (start, end, parameter) {
-  const delta = {lat: end.lat - start.lat, lng: end.lng - start.lng};
+export function pointFromParameter (start: LatLng, end: LatLng, parameter: number): LatLng {
+  const delta: LatLng = {lat: end.lat - start.lat, lng: end.lng - start.lng};
   return {
     lat: start.lat + delta.lat * parameter,
     lng: start.lng + delta.lng * parameter,
   };
 }
 
-export function spliceRoad (geometry, {index = 0, start, end}) {
+export function flipCoordinate(coordArray: number[]): number[]{
+  return coordArray.reverse();
+}
+
+export function flipCoordinates(coords: number[][]): number[][]{
+  return coords.map((coord) => flipCoordinate(coord))
+}
+
+type Geometry = LineString | MultiLineString;
+
+export function flipGeometry(geometry: Geometry): Geometry{
+  if (geometry.type === 'LineString' ) {
+    return {...geometry, coordinates:flipCoordinates(geometry.coordinates)};
+  } else {
+    const coordinates = geometry.coordinates;
+    const newCoordinates = coordinates.map((lineString) => flipCoordinates(lineString));
+    return {...geometry, coordinates:newCoordinates};
+  }
+}
+
+export function spliceRoad (geometry: Geometry, {start, end, index=0}) {
   const totalLength = getSingleLineStringLength(geometry, index);
   let pivot = 0;
   let pivotLength = 0;
@@ -146,51 +168,53 @@ export function spliceRoad (geometry, {index = 0, start, end}) {
     lineStringCoordinates = geometry.coordinates[index];
   }
 
-  let points = [];
-  let prevCoordinate = lineStringCoordinates[0];
+  let points: LatLng[] = [];
+  let prevCoordinate: LatLng = arrayToLatLng(lineStringCoordinates[0]);
   for (let i = 1; i < lineStringCoordinates.length; i++) {
     // check if im doing it right
-    const partialDistance = distFromLatLng(prevCoordinate, lineStringCoordinates[i]);
+    const currCoordinate: LatLng = arrayToLatLng(lineStringCoordinates[i]);
+    const partialDistance = distFromLatLng(prevCoordinate, currCoordinate);
+    console.log(partialDistance);
     pivotLength += partialDistance;
     const nextPivot = pivotLength / totalLength;
 
     if (!isInside && nextPivot > start) {
-      const startPoint = pointFromParameter(prevCoordinate, lineStringCoordinates[i], (start - pivot) / (nextPivot - pivot));
+      const startPoint = pointFromParameter(prevCoordinate, currCoordinate, (start - pivot) / (nextPivot - pivot));
       points.push(startPoint);
       // points.push(lineStringCoordinates[i])
       isInside = true;
     }
 
     if (isInside && nextPivot > end) {
-      const lastPoint = pointFromParameter(prevCoordinate, lineStringCoordinates[i], (end - pivot) / (nextPivot - pivot));
+      const lastPoint = pointFromParameter(prevCoordinate, currCoordinate, (end - pivot) / (nextPivot - pivot));
       points.push(lastPoint);
       break;
     }
 
     if (isInside) {
-      points.push(lineStringCoordinates[i]);
+      points.push(currCoordinate);
     }
 
-    prevCoordinate = lineStringCoordinates[i];
+    prevCoordinate = currCoordinate;
     pivot = nextPivot;
   }
   return points;
 }
 
-export function formatGeoLocation (coords) {
+export function formatGeoLocation (coords: {latitude: number, longitude: number}): LatLng {
   return {
     lat: coords.latitude,
     lng: coords.longitude,
   };
 }
 
-export function getSlopes (dataArray, target, range = 2) {
+export function getSlopes (dataArray: Uint8Array, target: number, range: number = 2) {
   const targetValue = dataArray[target];
   let result = [dataArray[target - range], dataArray[target + range]];
   return result.map((value) => (targetValue - value) / range);
 }
 
-export function formatUser (name, email, avatar, uid) {
+export function formatUser (name: string, email: string, avatar: string, uid: string) {
   return {
     name,
     email,
@@ -199,7 +223,7 @@ export function formatUser (name, email, avatar, uid) {
   };
 }
 
-export function formatWavFileName (timestamp, location) {
+export function formatWavFileName (timestamp: number, location: LatLng): string {
   // const now = new Date(timestamp)
   // const day = zeroAdd(now.getDate())
   // const month = zeroAdd(now.getMonth() + 1)
@@ -215,16 +239,16 @@ export function formatWavFileName (timestamp, location) {
   return `soundClipsWeb/${timestamp}_${lat}_${lng}.wav`;
 }
 
-export function updateTimeConstrain (timestamp) {
+export function updateTimeConstrain (timestamp: number): boolean {
   return Date.now() - timestamp > renderTimeConstrain;
 }
 
-export function checkLastUpdate (timestamp, scale = 1) {
+export function checkLastUpdate (timestamp: number, scale: number = 1): boolean {
   console.warn('check Last Update is deprecated, change to isModuleStale');
   return Date.now() - timestamp > (updateDuration * scale);
 }
 
-export function isModuleStale (timestamp, scale = 1) {
+export function isModuleStale (timestamp: number, scale: number = 1): boolean {
   return Date.now() - timestamp > (updateDuration * scale);
 }
 
@@ -240,7 +264,7 @@ export function isModuleStale (timestamp, scale = 1) {
  * @param lng2
  * @returns {number} : distance in METERS
  */
-export function distFromLatLng (start, end) {
+export function distFromLatLng (start: LatLng, end: LatLng): number {
   const R = 6378.137 * 1000; // Radius of the earth in m
   const dLat = (end.lat - start.lat) * (Math.PI / 180.0);
   const dLon = (end.lng - start.lng) * (Math.PI / 180.0);
@@ -252,6 +276,15 @@ export function distFromLatLng (start, end) {
   const d = R * c; // Distance in meters
 
   return d;
+}
+
+function distFromLatLngArray (coord0: number[], coord1: number[]): number {
+  return distFromLatLng(arrayToLatLng(coord0), arrayToLatLng(coord1));
+}
+
+function arrayToLatLng (coordinateArray: Array<number, 2>): LatLng {
+  // assuming [lng, lat];
+  return {lng: coordinateArray[0], lat: coordinateArray[1]};
 }
 
 export function randomColor () {
@@ -267,7 +300,7 @@ export function getTotalLength (geometry) {
     return geometry.coordinates.reduce((length, coordinate, index, coordinates) => {
       if (index === 0) return 0;
       else {
-        return length + distFromLatLng(coordinates[index - 1], coordinate);
+        return length + distFromLatLngArray(coordinates[index - 1], coordinate);
       }
     }, 0);
   } else if (geometry.type === 'MultiLineString') {
@@ -275,7 +308,8 @@ export function getTotalLength (geometry) {
       const lineStringLength = lineString.reduce((partialLength, coordinate, index, coordinates) => {
         if (index === 0) return 0;
         else {
-          return partialLength + distFromLatLng(coordinates[index - 1], coordinate);
+
+          return partialLength + distFromLatLngArray(coordinates[index - 1], coordinate);
         }
       }, 0);
       return length + lineStringLength;

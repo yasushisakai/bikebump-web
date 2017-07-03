@@ -1,17 +1,18 @@
-import leaflet from 'leaflet';
+// @flow
+import leaflet, { polyline, Polyline, latLng, LatLng, latLngBounds, icon, Icon, point, Point, LineUtil, marker, Marker } from 'leaflet';
 import { Map } from 'immutable';
 import { imgRoot } from 'config/constants';
-import { randomColor } from 'helpers/utils';
+import { randomColor, flipGeometry } from 'helpers/utils';
 
 export const defaultStyle = {
   lineCap: 'butt',
-  color: '#fff',
+  color: '#f00',
   opacity: 1,
   weight: 1,
   fill: false,
 };
 
-export const icon = leaflet.icon({
+export const crossIcon: Icon = icon({
   iconUrl: `${imgRoot}cross.png`,
   iconSize: [5, 5],
   iconAnchor: [3, 3],
@@ -22,12 +23,12 @@ export const popUpButtonStyleDisabled = 'cursor:pointer;padding:8px;font-size:1.
 
 export const popUpButtonStyleEnabled = 'cursor:pointer;padding:8px;font-size:1.5em;border:none;background-color:#fff;color:#F7D008;';
 
-function latLngToPoint (coordinate) {
-  return leaflet.point(coordinate.lat, coordinate.lng);
+function latLngToPoint (coordinate: LatLng): Point {
+  return point(coordinate.lat, coordinate.lng);
 }
 
-export function roadLineStringToLatLngBound (road,) {
-  let latLngs = [];
+export function roadLineStringToLatLngBound (road) {
+  let latLngs: LatLng[] = [];
   if (road.geometry.type === 'LineString') {
     latLngs = road.geometry.coordinates;
   } else {
@@ -38,18 +39,18 @@ export function roadLineStringToLatLngBound (road,) {
     });
   }
 
-  return leaflet.latLngBounds(latLngs);
+  return latLngBounds(latLngs);
 }
 
-function pointToLatLng (point) {
-  return leaflet.latLng(point.x, point.y);
+function pointToLatLng (point: Point): LatLng {
+  return latLng(point.x, point.y);
 }
 
 export function getClosestPoint (coordinate, road) {
   // no need to use leaflet Point,
 
   let closestDistance = 99999999999999999;
-  let closestPoint = null;
+  let closestPoint: ?LatLng = null;
 
   const basePoint = latLngToPoint(coordinate);
 
@@ -60,10 +61,10 @@ export function getClosestPoint (coordinate, road) {
         const p2 = latLngToPoint(coord);
 
         // FIXME: this leaflet function is cheesy
-        const tempDist = leaflet.LineUtil.pointToSegmentDistance(basePoint, p1, p2);
+        const tempDist = LineUtil.pointToSegmentDistance(basePoint, p1, p2);
         if (tempDist < closestDistance) {
           closestDistance = tempDist;
-          closestPoint = leaflet.LineUtil.closestPointOnSegment(basePoint, p1, p2);
+          closestPoint = LineUtil.closestPointOnSegment(basePoint, p1, p2);
         }
       }
     });
@@ -74,17 +75,17 @@ export function getClosestPoint (coordinate, road) {
           const p1 = latLngToPoint(road.geometry.coordinates[index - 1]);
           const p2 = latLngToPoint(coord);
 
-          const tempDist = leaflet.LineUtil.pointToSegmentDistance(basePoint, p1, p2);
+          const tempDist = LineUtil.pointToSegmentDistance(basePoint, p1, p2);
           if (tempDist < closestDistance) {
             closestDistance = tempDist;
-            closestPoint = leaflet.LineUtil.closestPointOnSegment(basePoint, p1, p2);
+            closestPoint = LineUtil.closestPointOnSegment(basePoint, p1, p2);
           }
         }
       });
     });
   }
 
-  let closestDistanceInMeters = leaflet.latLng(coordinate).distanceTo(closestPoint);
+  let closestDistanceInMeters = latLng(coordinate).distanceTo(closestPoint);
 
   return {distance: closestDistanceInMeters, point: closestPoint};
 }
@@ -95,16 +96,22 @@ export function getClosestPoint (coordinate, road) {
 
 export function plotRoad (road, _map, customStyle, callback) {
   const style = {...defaultStyle, opacity: 0.4, weight: 20, ...customStyle};
+  console.log('plotRoad', road);
 
-  if (road.geometry.type === 'LineString') {
-    const path = leaflet.polyline(road.geometry.coordinates, style);
-    path.addEventListener('click', () => callback(road.properties.id));
+  const geometry = flipGeometry(road.geometry);
+
+  if (geometry.type === 'LineString') {
+    //const coordinates = road.geometry.coordinates.map((coordinate) => [coordinate[1], coordinate[0]]);
+    const path = leaflet.polyline(geometry.coordinates, style).addTo(_map);
+    // path.addEventListener('click', () => callback(road.properties.id));
     path.addTo(_map);
+    return [path];
   } else { // multilineString
-    road.geometry.coordinates.map((coordinates) => {
+    return geometry.coordinates.map((coordinates) => {
       const path = leaflet.polyline(coordinates, style);
       path.addEventListener('click', () => callback(road.properties.id));
       path.addTo(_map);
+      return path;
     });
   }
 }
@@ -122,16 +129,16 @@ export function plotCommute (commute, map, customStyle = {}) {
       return commute[key];
     });
 
-  const style = {...defaultStyle, color: '#ff0', opacity: 0.1, weight: 1, clickable: false, ...customStyle};
+  const style = {...defaultStyle, color: '#ff0', opacity: 0.1, weight: 1, interactive: false, clickable: false, ...customStyle};
 
-  leaflet.polyline(coords, style).addTo(map);
+  polyline(coords, style).addTo(map);
 }
 
 export function plotDing (ding, map, customStyle = {}) {
   const coords = ding.coordinates;
   const style = {...defaultStyle, clickable: false, weight: 2, opacity: 0.7, ...customStyle};
   // marker
-  leaflet.marker(coords, {icon, clickable: false}).addTo(map);
+  marker(coords, {icon: crossIcon, interaction: false, clickable: false}).addTo(map);
   // circle
   // leaflet.circle(coords,10,style).addTo(map)
   // line to cp

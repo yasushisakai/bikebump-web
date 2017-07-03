@@ -1,0 +1,85 @@
+.proposalContainer {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.overlayInfo {
+
+}
+
+.userInfo {
+    width: 30%;
+    font-size: 0.8em;
+    z-index: 2;
+    position: absolute;
+    top: 10px;
+    right: 5%;
+    text-align: left;
+}
+
+.proposalBack {
+    z-index: 2;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    height: 30%;
+}
+
+.proposalMid {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.proposalFore {
+    display:flex;
+    flex-flow: column;
+    padding: 5px 5% 0px 5%;
+    height: 100%;
+}
+
+.proposalInfo {
+    flex: 1;
+}
+
+.voteSelecter {
+    flex: 1;
+    display:flex;
+    flex-flow: row;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.patternTitle {
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-decoration: none;
+    margin-bottom: 10px;
+    font-size: 1.0em;
+}
+
+.patternDetails {
+    position:absolute;
+    right: 5%;
+}
+
+.smallMetaInfo {
+    font-size: 0.65em;
+    font-weight: 300;
+}
+
+.option {
+    flex: 0 1;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: table;
+    text-align: center;
+}
+
+.optionText {
+    display: table-cell;
+    vertical-align: middle;
+}

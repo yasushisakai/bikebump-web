@@ -10,7 +10,15 @@ import * as roadActionCreators from 'modules/roads';
 import * as proposalsActionCreators from 'modules/proposals';
 import * as patternsActionCreators from 'modules/patterns';
 import * as userVotesActionCreators from 'modules/userVotes';
-import { plotRoad, plotPolyline, roadLineStringToLatLngBound, plotDing, popUpButtonStyleDisabled, popUpButtonStyleEnabled } from 'helpers/mapUtils';
+import { 
+  plotRoad, 
+  plotPolyline, 
+  roadLineStringToLatLngBound, 
+  plotDing,
+  popUpButtonStyleDisabled,
+  popUpButtonStyleEnabled
+} from 'helpers/mapUtils';
+
 import leaflet from 'leaflet';
 import type { LatLng, Road, Ding } from 'types';
 

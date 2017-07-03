@@ -12,6 +12,15 @@
     border-bottom: 1px solid #fff;
 }
 
+.userUnits {
+    text-align: right;
+    position:absolute;
+    font-size: 0.8em;
+    top:15%;
+    right: 5%;
+    width: 30%;
+}
+
 .listContainer {
     flex: 1 1 auto;
     width:100%;
@@ -54,14 +63,6 @@
     font-size: 1.0em;
 }
 
-.userUnits {
-    text-align: right;
-    position:absolute;
-    font-size: 0.8em;
-    top:15%;
-    right: 5%;
-    width: 30%;
-}
 
 .smallMetaInfo {
     font-size: 0.65em;

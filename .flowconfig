@@ -12,4 +12,4 @@
 
 [options]
 module.system.node.resolve_dirname=app
-module.name_mapper='(Microsoft\)' -> '<PROJECT_ROOT>/flow-typed/GeneralStub.js.flow'
+# module.name_mapper='(Microsoft\)' -> '<PROJECT_ROOT>/flow-typed/GeneralStub.js.flow'

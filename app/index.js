@@ -18,8 +18,9 @@ compose(
   window.devToolsExtension ? window.devToolsExtension() : (f) => f
 )
 );
-const witchHistory = isProduction ? browserHistory : hashHistory;
-const history = syncHistoryWithStore(witchHistory, store);
+const whichHistory = isProduction ? browserHistory : hashHistory;
+// const whichHistory = browserHistory;
+const history = syncHistoryWithStore(whichHistory, store);
 
 function checkAuth (nextState, replace) {
   // if(store.getState().users.get('isFetching') === true){

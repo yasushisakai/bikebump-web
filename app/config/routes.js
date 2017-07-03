@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Route, IndexRoute } from 'react-router';
+import { isProduction } from 'config/constants';
 
 import {
   MainContainer,
@@ -20,9 +21,23 @@ import {
   ProposalContainer,
 } from 'containers';
 
+function hashLinkScroll () {
+  if(!isProduction) return;
+  const { hash } = window.location;
+  if (hash !== '') {
+    setTimeout(() => {
+      const id = hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView();
+      }
+    }, 0);
+  }
+}
+
 export default function getRoutes (checkAuth, history) {
   return (
-    <Router history={history}>
+    <Router history={history} onUpdate={hashLinkScroll}>
       <Route path='/' component={MainContainer}>
         <Route path='record' component={RecordContainer} onEnter={checkAuth} />
         <Route path='map' component={MapVisContainer} onEnter={checkAuth} />

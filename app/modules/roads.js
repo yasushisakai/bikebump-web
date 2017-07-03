@@ -36,8 +36,16 @@ function fetchSingleRoad (roadId, road) {
 }
 
 export function handleFetchSingleRoad (roadId) {
-  return function (dispatch) {
+  return function (dispatch, getState) {
+    if(getState().roads.get('isFetching')) return;
+
     dispatch(fetchingRoad());
+
+    if(getState().roads.get(`${roadId}`)) {
+      dispatch(removeFetchingRoad());
+      return Promise.resolve(getState().roads.get(roadId));
+    }
+
     return fetchRoad(roadId)
       .then(road => dispatch(fetchSingleRoad(roadId, road)))
       .catch(error => dispatch(fetchingRoadError(error)));

@@ -19,3 +19,4 @@ export ProposalListContainer from './ProposalList/ProposalListContainer';
 // sub components
 export SurveyContainer from './Survey/SurveyContainer';
 export ProposalListItemContainer from './ProposalList/ProposalListItemContainer';
+export ProposalMapContainer from './ProposalMap/ProposalMapContainer';

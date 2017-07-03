@@ -14,12 +14,12 @@ export const emptyRoad: Road = {
   properties: {},
 };
 
-type LineString = {
+export type LineString = {
     type: string;
     coordinates: Array<Array<number>>;
 };
 
-type MultiLineString = {
+export type MultiLineString = {
     type: string;
     coordinates: Array<Array<Array<number>>>;
 };
