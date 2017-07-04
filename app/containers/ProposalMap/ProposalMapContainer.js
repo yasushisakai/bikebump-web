@@ -4,9 +4,9 @@ import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import { handleFetchSingleRoad } from 'modules/roads';
-import { plotRoad, plotPolyline } from 'helpers/mapUtils';
+import { plotRoad } from 'helpers/mapUtils';
 import { spliceRoad, flipGeometry } from 'helpers/utils';
-import { map, Map, tileLayer, TileLayer, polyline, Polyline, latLngBounds, LatLngBounds, LatLng } from 'leaflet';
+import { map, Map, tileLayer, polyline, Polyline, latLngBounds, LatLngBounds, LatLng } from 'leaflet';
 import { lightURL, attribution } from 'config/constants';
 import { proposalMap } from './styles.css';
 
@@ -31,30 +31,28 @@ class ProposalMapContainer extends React.Component<void, Props, void> {
     tileLayer(lightURL, {attribution}).addTo(this.map);
 
     // calculate bbox from domain
-    this.mapHasLayers = false; 
+    this.mapHasLayers = false;
   }
 
   componentWillUpdate (nextProps: Props) {
-
-    if(!nextProps.isFetching && !this.mapHasLayers){
+    if (!nextProps.isFetching && !this.mapHasLayers) {
       let road = nextProps.road.toJS();
-      plotRoad(road, this.map, {}, ()=>{});
+      plotRoad(road, this.map, {}, () => {});
 
       const geometry = flipGeometry(road.geometry);
 
       // plot spliced 
-      const splicedRoadGeometry: LatLng[] = spliceRoad(geometry, { ...nextProps.domain, index:0 });
+      const splicedRoadGeometry: LatLng[] = spliceRoad(geometry, { ...nextProps.domain, index: 0 });
       // console.log(splicedRoadGeometry);
 
-      const splicedRoadPolyline: Polyline = polyline(splicedRoadGeometry, {color:'#000'});
+      const splicedRoadPolyline: Polyline = polyline(splicedRoadGeometry, {color: '#000'});
       splicedRoadPolyline.addTo(this.map);
 
       const bounds: LatLngBounds = latLngBounds(splicedRoadGeometry);
 
       this.map.fitBounds(bounds);
-      
-      this.mapHasLayers = true;
 
+      this.mapHasLayers = true;
     }
   }
 
@@ -76,7 +74,7 @@ function mapStateToProps ({roads}, props) {
     isFetching: roads.get('isFetching'),
     roadId: props.roadId,
     road,
-    domain: props.domain
+    domain: props.domain,
   };
 }
 

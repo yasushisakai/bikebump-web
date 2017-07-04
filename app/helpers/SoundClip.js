@@ -1,32 +1,27 @@
-import React, { PropTypes } from 'react';
-// import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux';
 import { storeBlob } from 'helpers/storage';
-import { recordDuration, waitDuration } from 'config/constants';
 
 import Recorder from 'helpers/Recorder';
 import { fetchGeoLocation, formatWavFileName } from 'helpers/utils';
-import {startCapture, stopCapture, uploadingClip, uploadingClipSuccess} from 'modules/record';
 
 export default class SoundClip {
   constructor () {
     this.isCapturing = false;
-    const audio_context = new AudioContext();
+    const audioContext = new AudioContext();
 
     // the thing to see the frequencies
-    this.analyzer = audio_context.createAnalyser();
+    this.analyzer = audioContext.createAnalyser();
     this.analyzer.minDecibels = -90;
     this.analyzer.maxDecibels = -10;
     this.analyzer.smoothingTimeConstant = 0.85;
     this.analyzer.fftSize = 1024;
     // this.analyzer.getByteFrequencyData.bind(this)l
 
-    this.highpassFilter = audio_context.createBiquadFilter();
+    this.highpassFilter = audioContext.createBiquadFilter();
     this.highpassFilter.type = 'highpass';
     this.highpassFilter.frequency.value = 2600;
     this.highpassFilter.Q.value = 15;
 
-    this.bandpassFilter = audio_context.createBiquadFilter();
+    this.bandpassFilter = audioContext.createBiquadFilter();
     this.bandpassFilter.type = 'bandpass';
     this.bandpassFilter.frequency.value = 3000;
     this.bandpassFilter.Q.value = 15;
@@ -47,13 +42,13 @@ export default class SoundClip {
         { audio: true },
         (stream) => {
           // Recorder
-          const input = audio_context.createMediaStreamSource(stream);
+          const input = audioContext.createMediaStreamSource(stream);
           this.recorder = new Recorder(input);
           this.record();
           console.log('recording...');
 
           // Ding Detection
-          this.source = audio_context.createMediaStreamSource(stream);
+          this.source = audioContext.createMediaStreamSource(stream);
           this.source.connect(this.bandpassFilter);
           this.bandpassFilter.connect(this.highpassFilter);
           this.highpassFilter.connect(this.analyzer);

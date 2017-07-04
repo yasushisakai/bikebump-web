@@ -85,6 +85,7 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
   map: leaflet.Map;
   reportedLocation: leaflet.Circle;
   closestRoad: leaflet.Circle;
+  drawCircles: Function;
 
   drawCircles (props: MapAndStreetViewProps) { // also focuses the map to the report
     const coordinate: LatLng = props.ding.get('coordinates').toJS();

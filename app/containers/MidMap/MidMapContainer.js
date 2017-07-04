@@ -10,13 +10,13 @@ import * as roadActionCreators from 'modules/roads';
 import * as proposalsActionCreators from 'modules/proposals';
 import * as patternsActionCreators from 'modules/patterns';
 import * as userVotesActionCreators from 'modules/userVotes';
-import { 
-  plotRoad, 
-  plotPolyline, 
-  roadLineStringToLatLngBound, 
+import {
+  plotRoad,
+  plotPolyline,
+  roadLineStringToLatLngBound,
   plotDing,
   popUpButtonStyleDisabled,
-  popUpButtonStyleEnabled
+  popUpButtonStyleEnabled,
 } from 'helpers/mapUtils';
 
 import leaflet from 'leaflet';
@@ -67,12 +67,12 @@ class MidMapContainer extends React.Component<void, MidMapContainerProps, void> 
     if (this.props.road) {
       this.props.handleFetchSingleRoad(this.props.roadId)
         .then(({ road }) => {
-          plotRoad(road, this.map);
+          plotRoad(road, this.map, {}, () => {});
           const bound = roadLineStringToLatLngBound(road);
           this.map.fitBounds(bound);
         });
     } else {
-      plotRoad(this.props.road, this.map);
+      plotRoad(this.props.road, this.map, {}, () => {});
       const bound = roadLineStringToLatLngBound(this.props.road);
       this.map.fitBounds(bound);
     }
@@ -135,13 +135,13 @@ class MidMapContainer extends React.Component<void, MidMapContainerProps, void> 
       let cnt = 0;
       this.props.proposals.map((obj, idx) => {
         const spliced = spliceRoad(
-          this.props.road,
+          this.props.road.geometry,
           { ...obj.get('domain').toJS(), index: 0 })
           .map(coord => {
             const shifted = { lat: parseFloat(coord.lat) + 0.0001 * cnt, lng: parseFloat(coord.lng) + 0.0000 * cnt };
             return shifted;
           });
-        plotPolyline(spliced, this.map).bindPopup(this.getPopupContents(obj));
+        plotPolyline(spliced, this.map, {}).bindPopup(this.getPopupContents(obj));
         cnt++;
       });
     }

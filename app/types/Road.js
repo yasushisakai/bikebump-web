@@ -15,13 +15,13 @@ export const emptyRoad: Road = {
 };
 
 export type LineString = {
-    type: string;
+    type: 'LineString';
     coordinates: Array<Array<number>>;
 };
 
 export type MultiLineString = {
-    type: string;
+    type: 'MultiLineString';
     coordinates: Array<Array<Array<number>>>;
 };
 
-type RoadGeometry = LineString | MultiLineString;
+export type RoadGeometry = LineString | MultiLineString;

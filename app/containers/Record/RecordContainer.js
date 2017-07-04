@@ -110,7 +110,14 @@ class RecordContainer extends React.Component {
   singleCycleDuration: number;
   snakeLength: number;
   snakePointList: Array<Point2D>;
-  detectionList: Array<number>;
+  detectionList: Array<Array<number>>;
+
+  draw: Function;
+  setup: Function;
+  mouseMoved: Function;
+  updatePosition: Function;
+  mousePressed: Function;
+  resize: Function;
 
   props:{
     isFetching: bool;

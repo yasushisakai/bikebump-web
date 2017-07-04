@@ -38,10 +38,10 @@ type Props = {
 
 export default function Proposal ({ proposalId, userUnits, patternId, pattern, proposal }: Props) {
   const imageURL = `${imgRoot}patternBackgrounds/${pattern.image}.jpg`;
-  const backgroundImageStyle: CSSStyleDeclaration = {
-    background: `url(${imageURL}) center`,
-    backgroundSize: 'cover',
-  };
+  let backgroundImageStyle: CSSStyleDeclaration = new CSSStyleDeclaration();
+  backgroundImageStyle.background = `url(${imageURL}) center`;
+  backgroundImageStyle.backgroundSize = 'cover';
+
   return (
     <div className={proposalContainer}>
       <ProposalMapContainer roadId={8615571} domain={{start: 0.1, end: 0.6}}/>

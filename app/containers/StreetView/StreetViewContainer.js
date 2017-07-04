@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { bindActionCreators, type Dispatch } from 'redux';
 import { Map } from 'immutable';

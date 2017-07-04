@@ -1,12 +1,12 @@
 // @flow
 import Pen, {type Point2D} from './Pen';
-import {maxFreq, minFreq} from 'config/constants';
+import {maxFreq, minFreq, fftSize} from 'config/constants';
 
 export default class FrequencyGraph {
   pen: Pen;
   startCoordinate: Point2D;
   graphSize: Point2D;
-  dataArray :Uint8Array;
+  dataArray : Uint8Array;
   maxValue: number;
   maxValueAverageBin: number;
   maxValues: Array<number>;
@@ -26,7 +26,7 @@ export default class FrequencyGraph {
     this.maxValue = 10.0;
     this.maxValueAverageBin = 5;
     this.maxValues = [];
-    this.dataArray = [];
+    this.dataArray = new Uint8Array(fftSize / 2);
     this.labels = {};
     this.axis = [];
   }
@@ -34,7 +34,9 @@ export default class FrequencyGraph {
   update (newDataArray: Uint8Array): void {
     this.dataArray = newDataArray;
     this.binWidth = this.graphSize.x / this.dataArray.length;
-    this.maxValues.push(this.dataArray.slice().sort().reverse()[0]);
+
+    const maxValue = this.dataArray.reduce((prev, curr) => prev < curr ? curr : prev, 0);
+    this.maxValues.push(maxValue);
 
     if (this.maxValues.length > this.maxValueAverageBin) {
       this.maxValues.shift();
@@ -45,7 +47,7 @@ export default class FrequencyGraph {
     this.maxValue = Math.max(this.maxValue, 0.01);
   }
 
-  addLabel (frequency: number, verbose = '') {
+  addLabel (frequency: number, verbose: string = '') {
     if (verbose === '') {
       verbose = `${frequency}`;
     }
@@ -56,10 +58,10 @@ export default class FrequencyGraph {
     }
   }
 
-  addAxis (frequency: number, color = 'rgb(255, 0, 0, 0.2)') {
+  addAxis (frequency: number, color: string = 'rgb(255, 0, 0, 0.2)') {
     if (frequency <= maxFreq && frequency >= minFreq) {
       const parameter = (frequency - this.minFreq) / (this.maxFreq - this.minFreq);
-      this.axis.push = [color, this.startCoordinate.x + this.graphSize.x * parameter];
+      this.axis.push([color, this.startCoordinate.x + this.graphSize.x * parameter]);
     }
   }
 
@@ -82,11 +84,14 @@ export default class FrequencyGraph {
     this.pen.stroke('rgba(255, 255, 255, 0.3)');
     this.pen.fill('rgba(0, 0, 0, 0)');
     this.pen.moveTo(startPoint);
+
     this.dataArray.map((data, index) => {
       const x = index * this.binWidth + this.startCoordinate.x;
       const y = this.startCoordinate.y + (1 - Math.min(data / this.maxValue, 1.0)) * this.graphSize.y;
       this.pen.lineTo({x, y});
+      return x; // weird, we need to return some number
     });
+
     this.pen.lineTo(this.pen.addPoints(this.startCoordinate, this.graphSize));
     this.pen.endPath();
 

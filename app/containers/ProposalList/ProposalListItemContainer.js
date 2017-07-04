@@ -34,7 +34,7 @@ class ProposalListItemContainer extends React.Component<void, Props, void> {
 
     const userProposal = {
       proposals: {
-        861557: {
+        '861557': {
           'anotherProposalId': 20,
           'sampleProposalId': 10,
         },

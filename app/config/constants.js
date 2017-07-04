@@ -19,6 +19,7 @@ export const updateDuration: number = 1 * 60 * 1000; // 1min
 // the range of frequency in consideration
 export const minFreq: number = 1950;
 export const maxFreq: number = 4050;
+export const fftSize: number = 1024;
 
 //
 // GENERAL

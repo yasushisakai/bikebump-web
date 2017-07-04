@@ -4,7 +4,7 @@ import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import { ProposalList } from 'components';
-import { Map } from 'immutable';
+import { Map, fromJS } from 'immutable';
 
 import { handleFetchingRoads } from 'modules/roads';
 
@@ -29,6 +29,7 @@ class ProposalListContainer extends React.Component {
 }
 
 function mapStateToProps (state, props) {
+  /*
   const proposals = new Map({
     sampleProposalId: {
       currentUnits: 10,
@@ -72,10 +73,11 @@ function mapStateToProps (state, props) {
       units: 250,
     },
   });
+  */
 
-  const userProposals = new Map({
+  const userProposals = fromJS({
     proposals: {
-      861557: {
+      '861557': {
         anotherProposalId: 20,
         sampleProposalId: 10,
       },
@@ -83,8 +85,8 @@ function mapStateToProps (state, props) {
     units: 70,
   });
 
-  const roadProposals = new Map({
-    8615571: [
+  const roadProposals = fromJS({
+    '8615571': [
       'sampleProposalId',
       'sampleProposalId',
       'sampleProposalId',
@@ -103,7 +105,7 @@ function mapStateToProps (state, props) {
       'sampleProposalId',
       'sampleProposalId',
     ],
-    12116724: [
+    '12116724': [
       'sampleProposalId',
       'sampleProposalId',
       'sampleProposalId',

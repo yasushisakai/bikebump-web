@@ -44,15 +44,18 @@ class SurveyContainer extends React.Component<void, Props, void> {
   }
   componentDidMount () {
     console.log('hi, there');
-    if (document.getElementById('options') !== null) {
-      this.optionsWidth = document.getElementById('options').clientWidth;
-      this.optionsHeight = document.getElementById('options').clientHeight;
+    const optionsElement = document.getElementById('options');
+    if (optionsElement) {
+      this.optionsWidth = optionsElement.clientWidth;
+      this.optionsHeight = optionsElement.clientHeight;
     }
   }
 
   optionsWidth: number;
   optionsHeight: number;
   optionSize: number;
+
+  getOptionSize: Function;
 
   getOptionSize () {
     const optionNum = this.props.question.values.length;
@@ -63,9 +66,9 @@ class SurveyContainer extends React.Component<void, Props, void> {
     this.optionSize = unitHeight < unitWidth ? unitHeight : unitWidth;
   }
 
-  renderOptions (questionOptions: Array<string>) {
+  renderQuestionOptions () {
     this.getOptionSize();
-    return questionOptions.map((option, index) =>
+    return this.props.question.values.map((option, index) =>
       <Option
         size={this.optionSize}
         label={option.label}
@@ -86,7 +89,7 @@ class SurveyContainer extends React.Component<void, Props, void> {
           </div>
           <div className={qbuttons}>
             <div id={'options'} className={qoptions}>
-              { this.renderOptions(this.props.question.values) }
+              { this.renderQuestionOptions() }
             </div>
             <div className={other}>
               <div className={btn}>

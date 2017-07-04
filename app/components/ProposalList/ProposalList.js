@@ -3,6 +3,7 @@ import React from 'react';
 import { ProposalListItemContainer } from 'containers';
 import { Map } from 'immutable';
 import { proposalListContainer, listContainer, roadCategory, userUnits } from './styles.css';
+import type { Road } from 'types';
 
 type Props = {
     roadProposals: any;
@@ -10,8 +11,14 @@ type Props = {
     unitsLeft: string;
 }
 
-function RoadCategory ({roadId, roads, children}) {
-  const roadName: string = roads.getIn([roadId, 'properties', 'name']);
+type RoadCategoryType = {
+  roadId: string;
+  roads: Map<string, Road>;
+  children: React.Component<*>;
+}
+
+function RoadCategory ({roadId, roads, children}: RoadCategoryType) {
+  const roadName: string = roads.getIn([roadId, 'properties', 'name'], `no name road: ${roadId}`);
   return (<div style={{width: '100%', height: '100%'}}>
     <div id={`road-${roadId}`} className={roadCategory}>{roadName}</div>
     { children }

@@ -54,10 +54,12 @@ class RespondContainer extends React.Component<void, Props, void> {
     this.props.handleFetchingUserResponses(this.props.uid);
     this.props.handleFetchingUserDings(this.props.uid);
   }
+
   shouldComponentUpdate (nextProps: Props) {
     //    return !nextProps.isFetching
     return true;
   }
+
   componentWillUpdate (nextProps: Props) {
     console.log('cwu', nextProps.isFetching);
 
@@ -67,6 +69,10 @@ class RespondContainer extends React.Component<void, Props, void> {
       this.handleNextQuery(nextProps.questions, nextProps.userDings, nextProps.userResponses);
     }
   }
+
+  handleNextQuery: Function;
+  handleRefresh: Function;
+  handleOptionClick: Function;
 
   handleNextQuery (questions, userDings, userResponses, isRandom = false, excludeCurrent = false) {
     let unAnswered = getUnansweredQueries(questions, userDings, userResponses);
@@ -87,8 +93,11 @@ class RespondContainer extends React.Component<void, Props, void> {
       this.props.setHasUnanswered(false);
     } else {
       this.props.setHasUnanswered(true);
-      const {dingId, questionId} = (pickNewQuery(unAnswered, isRandom).toJS());
-      this.props.setNextQuery(dingId, questionId);
+      let newQuery = pickNewQuery(unAnswered, isRandom);
+      if (newQuery) {
+        const {dingId, questionId} = newQuery.toJS();
+        this.props.setNextQuery(dingId, questionId);
+      }
     }
   }
 

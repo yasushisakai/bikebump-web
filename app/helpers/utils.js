@@ -10,7 +10,7 @@ import {
 import { Map, List } from 'immutable';
 
 import { pickBy, isFunction } from 'lodash';
-import type { LineString, MultiLineString } from 'types';
+import type { RoadGeometry, Question, Ding, Response } from 'types';
 
 import { latLng, LatLng } from 'leaflet';
 
@@ -36,7 +36,7 @@ export function formatGoogleStreetViewURL (coordinate: latLng, heading:number = 
   return `https://maps.googleapis.com/maps/api/streetview?size=240x320&location=${coordinate.lat},${coordinate.lng}&heading=${heading}`;
 }
 
-export function filterStateVariables (key: string): boolean {
+export function filterStateVariables (key: string | number): boolean {
   return (
     key !== 'isFetching' &&
     key !== 'lastUpdated' &&
@@ -44,39 +44,47 @@ export function filterStateVariables (key: string): boolean {
   );
 }
 
+type Queries = Map<string, List<string>>;
 // TODO: write function to extract unanswered respondes
 // this is already implemented in RespondContainer.js
-
-export function getUnansweredQueries (questions, userDings: Map<any, any>, userResponses) {
+// returns Map<dingId, List<qid:string>>>
+export function getUnansweredQueries (
+  questions: Map<string, Question>,
+  userDings: Map<string, Ding>,
+  userResponses: Map<string, Response>
+): Queries {
   // first get all combinations of questionos - userDings
-  let combinations = new Map();
-  userDings.mapKeys(dingId => {
+  let queries: Map<string, List<string>> = new Map();
+  userDings.mapKeys((dingId) => {
+    // [uid]/[dingId]/[questionId]
+    // below is a list of unanswered questions for this ding.
     const tempQuestions = questions.keySeq()
-      // filter irrelavent stuff
       .filter(key => (key !== 'isFetching' && key !== 'lastUpdated' && key !== 'error'))
-      // extract ones that is answered userResponses are saved
-      // [uid]/[dingId]/[questionId]
       .filter(key => (!userResponses.hasIn([dingId, key])));
 
+    const questionsList = tempQuestions.toList(); // gets rid of key, just the values
+
     // don't add when this dingId holds no questions
-    const questionsList = tempQuestions.toList();
     if (questionsList.size > 0) {
-      combinations = combinations.set(dingId, questionsList);
+      queries = queries.set(dingId, questionsList);
     }
   });
-  return combinations;
+  return queries;
 }
 
-export function pickNewQuery (queries, isRandom = false) {
+// returns Map<{'dingId': string, 'questionId': string}>
+export function pickNewQuery (queries: Queries, isRandom: boolean = false): ?Map<string, string> {
   if (queries.isEmpty()) {
     return null;
   } else {
-    let flattened = List();
+    // [[dingId, questionId], ... ]
+    let flattened: List<List<string>> = List();
     queries.mapKeys(key => {
-      queries.get(key).map(qid => {
+      queries.get(key).map((qid) => {
         flattened = flattened.push(List([key, qid]));
       });
     });
+
     let pair;
     if (isRandom) {
       pair = flattened.get(Math.floor(Math.random() * flattened.size));
@@ -87,7 +95,8 @@ export function pickNewQuery (queries, isRandom = false) {
   }
 }
 
-export function removeQuery (queries, dingId, questionId) {
+// returns a new query()
+export function removeQuery (queries: Queries, dingId: string, questionId: string): Queries {
   if (queries.has(dingId)) {
     const index = queries.get(dingId).indexOf(questionId);
     if (index < 0) return queries; // returning original queries
@@ -112,11 +121,11 @@ export function fitCanvas (canvas: HTMLCanvasElement): void {
   canvas.height = boundingRect.height;
 }
 
-export function indexToFrequency (index: number, analyser): number {
+export function indexToFrequency (index: number, analyser: any): number {
   return index * analyser.binUnit;
 }
 
-export function frequencyToIndex (frequency: number, analyser): number {
+export function frequencyToIndex (frequency: number, analyser: any): number {
   return Math.round(frequency / analyser.binUnit);
 }
 
@@ -134,33 +143,31 @@ export function pointFromParameter (start: LatLng, end: LatLng, parameter: numbe
   };
 }
 
-export function flipCoordinate(coordArray: number[]): number[]{
+export function flipCoordinate (coordArray: Array<number>): Array<number> {
   return coordArray.reverse();
 }
 
-export function flipCoordinates(coords: number[][]): number[][]{
-  return coords.map((coord) => flipCoordinate(coord))
+export function flipCoordinates (coords: Array<Array<number>>): Array<Array<number>> {
+  return coords.map((coord) => flipCoordinate(coord));
 }
 
-type Geometry = LineString | MultiLineString;
-
-export function flipGeometry(geometry: Geometry): Geometry{
-  if (geometry.type === 'LineString' ) {
-    return {...geometry, coordinates:flipCoordinates(geometry.coordinates)};
+export function flipGeometry (geometry: RoadGeometry): RoadGeometry {
+  if (geometry.type === 'LineString') {
+    return {type: 'LineString', coordinates: flipCoordinates(geometry.coordinates)};
   } else {
     const coordinates = geometry.coordinates;
     const newCoordinates = coordinates.map((lineString) => flipCoordinates(lineString));
-    return {...geometry, coordinates:newCoordinates};
+    return {type: 'MultiLineString', coordinates: newCoordinates};
   }
 }
 
-export function spliceRoad (geometry: Geometry, {start, end, index=0}) {
+export function spliceRoad (geometry: RoadGeometry, {start, end, index = 0}: {[string]: number}) {
   const totalLength = getSingleLineStringLength(geometry, index);
   let pivot = 0;
   let pivotLength = 0;
   let isInside = false;
 
-  let lineStringCoordinates;
+  let lineStringCoordinates: Array<Array<number>> = [];
 
   if (geometry.type === 'LineString') {
     lineStringCoordinates = geometry.coordinates;
@@ -282,7 +289,7 @@ function distFromLatLngArray (coord0: number[], coord1: number[]): number {
   return distFromLatLng(arrayToLatLng(coord0), arrayToLatLng(coord1));
 }
 
-function arrayToLatLng (coordinateArray: Array<number, 2>): LatLng {
+function arrayToLatLng (coordinateArray: Array<number>): LatLng {
   // assuming [lng, lat];
   return {lng: coordinateArray[0], lat: coordinateArray[1]};
 }
@@ -295,47 +302,46 @@ export function randomColor () {
   return color;
 }
 
-export function getTotalLength (geometry) {
+export function getTotalLength (geometry: RoadGeometry): number {
+  let sum: number = 0;
+
   if (geometry.type === 'LineString') {
-    return geometry.coordinates.reduce((length, coordinate, index, coordinates) => {
+    sum = geometry.coordinates.reduce((length, coordinate, index, coordinates) => {
       if (index === 0) return 0;
       else {
         return length + distFromLatLngArray(coordinates[index - 1], coordinate);
       }
     }, 0);
   } else if (geometry.type === 'MultiLineString') {
-    return geometry.coordinates.reduce((length, lineString) => {
+    sum = geometry.coordinates.reduce((length, lineString) => {
       const lineStringLength = lineString.reduce((partialLength, coordinate, index, coordinates) => {
         if (index === 0) return 0;
         else {
-
           return partialLength + distFromLatLngArray(coordinates[index - 1], coordinate);
         }
       }, 0);
       return length + lineStringLength;
     }, 0);
   }
+
+  return sum;
 }
 
-export function getSingleLineStringLength (geometry, index = 0) {
+export function getSingleLineStringLength (geometry: RoadGeometry, index: number = 0): number {
   if (geometry.type === 'LineString') {
     return getTotalLength(geometry);
-  } else if (geometry.type === 'MultiLineString') {
+  } else {
     const newGeom = {type: 'LineString', coordinates: geometry.coordinates[index]};
     return getTotalLength(newGeom);
   }
 }
 
-export function getDomainLength (geometry, {index = 0, start, end}) {
+export function getDomainLength (geometry: RoadGeometry, {index = 0, start, end}: {[string]: number}) {
   const totalLength = getSingleLineStringLength(geometry, index);
   return totalLength * Math.abs(end - start);
 }
 
-export function refreshLatLng (timestamp) {
-  return Date.now() - timestamp >= minimalLatLngRefresh;
-}
-
-export function refreshCommute (timestamp) {
+export function refreshCommute (timestamp: number): boolean {
   return Date.now() - timestamp >= maxCommuteLife;
 }
 
@@ -344,10 +350,13 @@ export function clearStorage () {
   sessionStorage.clear();
 }
 
-export function insertAfter (newNode, refNode) {
-  refNode.parentNode.insertBefore(newNode, refNode.nextSibling);
+export function insertAfter (newNode: Node, refNode: Node): void {
+  const parentNode = refNode.parentNode;
+  if (parentNode) {
+    parentNode.insertBefore(newNode, refNode.nextSibling);
+  }
 }
 
-export function detectionGap (timestamp) {
+export function detectionGap (timestamp: number): boolean {
   return Date.now() - timestamp > dingDetectionGap;
 }

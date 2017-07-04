@@ -22,7 +22,7 @@ import {
 } from 'containers';
 
 function hashLinkScroll () {
-  if(!isProduction) return;
+  if (!isProduction) return;
   const { hash } = window.location;
   if (hash !== '') {
     setTimeout(() => {

@@ -80,7 +80,7 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
         .filter(key => filterStateVariables(key))
         .map(key => {
           const commute: Commute = ((nextProps.commutes.get(key):any): Map<any, any>).toJS();
-          const paths = plotCommute(commute, this.map);
+          plotCommute(commute, this.map);
           // paths.map((path) => path.bindPopup('hello'));
         });
 

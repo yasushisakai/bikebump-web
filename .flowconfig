@@ -2,6 +2,7 @@
 .*/dist/.*
 .*/node_modules/react-motion/*.
 .*/node_modules/fbjs/*.
+.*/private/tmp/flow/flowlib-11276bf7/*.
 
 [include]
 

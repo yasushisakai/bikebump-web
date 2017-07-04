@@ -1,5 +1,5 @@
 // @flow
-import type { LatLng } from './LatLng';
+import { LatLng } from 'leaflet';
 
 export type Ding = {
     radius: number;

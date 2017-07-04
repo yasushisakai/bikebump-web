@@ -120,7 +120,7 @@ function NavLinks ({isAuthed, isRecording, authedId}: Props) {
       <RecordButton isRecording={isRecording} />
       <MapButton isRecording={isRecording} />
       <SurveyButton isAuthed={isAuthed} isRecording={isRecording} authedId={authedId} />
-      <PrioritizeButton isAuthd={isAuthed} isRecording={isRecording} authedId={authedId} />
+      <PrioritizeButton isAuthed={isAuthed} isRecording={isRecording} authedId={authedId} />
     </div>
     : <div className={navLink}>
       <div className={divLink}>

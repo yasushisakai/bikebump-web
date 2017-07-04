@@ -17,7 +17,7 @@ export default class Pen {
 
   constructor (canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    this.ctx = this.canvas.getContext('2d');
+    this.ctx = ((this.canvas.getContext('2d'): any): CanvasRenderingContext2D);
     this.mouseX = this.mouseY = 0;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
@@ -39,7 +39,7 @@ export default class Pen {
   }
 
   resize () {
-    this.ctx = this.canvas.getContext('2d');
+    this.ctx = ((this.canvas.getContext('2d'): any): CanvasRenderingContext2D);
     this.width = this.canvas.width;
     this.height = this.canvas.height;
   }

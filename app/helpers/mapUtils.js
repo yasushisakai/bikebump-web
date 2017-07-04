@@ -1,8 +1,26 @@
 // @flow
-import leaflet, { polyline, Polyline, latLng, LatLng, latLngBounds, icon, Icon, point, Point, LineUtil, marker, Marker } from 'leaflet';
-import { Map } from 'immutable';
+import {
+  Path,
+  polyline,
+  Polyline,
+  PolylineOptions,
+  latLng, LatLng,
+  latLngBounds,
+  icon,
+  Icon,
+  point,
+  Point,
+  LineUtil,
+  marker,
+  circle,
+  CircleMarkerOptions,
+  Map,
+} from 'leaflet';
+
 import { imgRoot } from 'config/constants';
 import { randomColor, flipGeometry } from 'helpers/utils';
+
+import type { Commute, Ding, Road } from 'types';
 
 export const defaultStyle = {
   lineCap: 'butt',
@@ -19,15 +37,24 @@ export const crossIcon: Icon = icon({
   popUpAnchor: [3, 3],
 });
 
-export const popUpButtonStyleDisabled = 'cursor:pointer;padding:8px;font-size:1.5em;border:none;background-color:#fff;color:#ddd;';
+let popupStyleButton: CSSStyleDeclaration = new CSSStyleDeclaration();
 
-export const popUpButtonStyleEnabled = 'cursor:pointer;padding:8px;font-size:1.5em;border:none;background-color:#fff;color:#F7D008;';
+popupStyleButton.cursor = 'pointer';
+popupStyleButton.padding = '8px';
+popupStyleButton.fontSize = '1.5em';
+popupStyleButton.border = 'none';
+popupStyleButton.backgroundColor = '#fff';
+
+popupStyleButton.color = '#ddd';
+export const popUpButtonStyleDisabled: CSSStyleDeclaration = popupStyleButton;
+popupStyleButton.color = '#F7D008';
+export const popUpButtonStyleEnabled = popupStyleButton;
 
 function latLngToPoint (coordinate: LatLng): Point {
   return point(coordinate.lat, coordinate.lng);
 }
 
-export function roadLineStringToLatLngBound (road) {
+export function roadLineStringToLatLngBound (road: Road) {
   let latLngs: LatLng[] = [];
   if (road.geometry.type === 'LineString') {
     latLngs = road.geometry.coordinates;
@@ -42,11 +69,7 @@ export function roadLineStringToLatLngBound (road) {
   return latLngBounds(latLngs);
 }
 
-function pointToLatLng (point: Point): LatLng {
-  return latLng(point.x, point.y);
-}
-
-export function getClosestPoint (coordinate, road) {
+export function getClosestPoint (coordinate: LatLng, road: Road): Point {
   // no need to use leaflet Point,
 
   let closestDistance = 99999999999999999;
@@ -54,7 +77,7 @@ export function getClosestPoint (coordinate, road) {
 
   const basePoint = latLngToPoint(coordinate);
 
-  if (road.geometry.type == 'LineString') {
+  if (road.geometry.type === 'LineString') {
     road.geometry.coordinates.map((coord, index) => {
       if (index !== 0) {
         const p1 = latLngToPoint(road.geometry.coordinates[index - 1]);
@@ -94,21 +117,21 @@ export function getClosestPoint (coordinate, road) {
 // PLOT functions
 //
 
-export function plotRoad (road, _map, customStyle, callback) {
+export function plotRoad (road:Road, _map: Map, customStyle: PolylineOptions, callback: Function): Array<Polyline> {
   const style = {...defaultStyle, opacity: 0.4, weight: 20, ...customStyle};
   console.log('plotRoad', road);
 
   const geometry = flipGeometry(road.geometry);
 
   if (geometry.type === 'LineString') {
-    //const coordinates = road.geometry.coordinates.map((coordinate) => [coordinate[1], coordinate[0]]);
-    const path = leaflet.polyline(geometry.coordinates, style).addTo(_map);
+    // const coordinates = road.geometry.coordinates.map((coordinate) => [coordinate[1], coordinate[0]]);
+    const path = polyline(geometry.coordinates, style).addTo(_map);
     // path.addEventListener('click', () => callback(road.properties.id));
     path.addTo(_map);
     return [path];
   } else { // multilineString
     return geometry.coordinates.map((coordinates) => {
-      const path = leaflet.polyline(coordinates, style);
+      const path = polyline(coordinates, style);
       path.addEventListener('click', () => callback(road.properties.id));
       path.addTo(_map);
       return path;
@@ -116,12 +139,12 @@ export function plotRoad (road, _map, customStyle, callback) {
   }
 }
 
-export function plotPolyline (coords, _map, customStyle) {
+export function plotPolyline (coords: LatLng, _map: Map, customStyle: PolylineOptions): Path {
   const style = {...defaultStyle, opacity: 0.4, weight: 10, color: randomColor(), ...customStyle};
-  return leaflet.polyline(coords, style).addTo(_map);
+  return polyline(coords, style).addTo(_map);
 }
 
-export function plotCommute (commute, map, customStyle = {}) {
+export function plotCommute (commute: Commute, map: Map, customStyle: PolylineOptions = {}): Path {
   const coords = Object.keys(commute)
     .filter(key => key !== 'uid') // snip off uid value
     .sort()
@@ -134,26 +157,20 @@ export function plotCommute (commute, map, customStyle = {}) {
   polyline(coords, style).addTo(map);
 }
 
-export function plotDing (ding, map, customStyle = {}) {
+export function plotDing (ding: Ding, map: Map, customStyle:CircleMarkerOptions = {}): Path {
   const coords = ding.coordinates;
   const style = {...defaultStyle, clickable: false, weight: 2, opacity: 0.7, ...customStyle};
-  // marker
-  marker(coords, {icon: crossIcon, interaction: false, clickable: false}).addTo(map);
-  // circle
-  // leaflet.circle(coords,10,style).addTo(map)
-  // line to cp
-  // leaflet.polyline([coords,ding.closestRoadPoint],style,map).addTo(map)
 
-  let skip = false;
-  let cnt = 0;
+  marker(coords, {icon: crossIcon, interaction: false, clickable: false}).addTo(map);
+
   Object.keys(ding.timestamps).map((timestamp, index) => {
     let colored = style;
-    if (ding.timestamps[timestamp].value === 0) {
+    if (ding.timestamps[parseInt(timestamp)].value === 0) {
       colored.color = '#F20056';
     } else {
       colored.color = '#336699';
     }
 
-    leaflet.circle(coords, 10 + 3 * (index), style).addTo(map);
+    circle(coords, 10 + 3 * (index), style).addTo(map);
   });
 }

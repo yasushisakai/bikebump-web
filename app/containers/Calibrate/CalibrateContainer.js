@@ -26,7 +26,8 @@ type Props = {
 class CalibrateContainer extends React.Component<void, Props, void> {
   constructor (props) {
     super(props);
-    this.toggleCalibration = this.toggleCalibration.bind(this);
+
+    this.handleToggleCalibration = this.handleToggleCalibration.bind(this);
     this.toggleRingBell = this.toggleRingBell.bind(this);
     this.setup = this.setup.bind(this);
     this.draw = this.draw.bind(this);
@@ -84,7 +85,12 @@ class CalibrateContainer extends React.Component<void, Props, void> {
   targetFrequency: number;
   binWidth: number;
 
-  toggleCalibration () {
+  handleToggleCalibration: Function;
+  toggleRingBell: Function;
+  setup: Function;
+  draw: Function;
+
+  handleToggleCalibration () {
     this.props.toggleCalibration();
     if (!this.props.isCalibrating) {
       this.slopes = [0, 0]; // reset slopes
@@ -161,7 +167,7 @@ class CalibrateContainer extends React.Component<void, Props, void> {
       <Calibrate
         isFetching={this.props.isFetching}
         isCalibrating={this.props.isCalibrating}
-        toggleCalibration={this.toggleCalibration}
+        toggleCalibration={this.handleToggleCalibration}
         targetFrequency={this.props.settings.get('targetFrequency')}
         isRingBellEnabled={this.props.settings.get('useRingBells')}
         toggleRingBell={this.toggleRingBell} />
