@@ -36,11 +36,14 @@ type Props = {
     }
 }
 
+
 export default function Proposal ({ proposalId, userUnits, patternId, pattern, proposal }: Props) {
   const imageURL = `${imgRoot}patternBackgrounds/${pattern.image}.jpg`;
-  let backgroundImageStyle: CSSStyleDeclaration = new CSSStyleDeclaration();
-  backgroundImageStyle.background = `url(${imageURL}) center`;
-  backgroundImageStyle.backgroundSize = 'cover';
+
+  const backgroundImage: {[attribute: string]: string} = {
+    background: `url(${imageURL}) center`,
+    backgroundSize: 'cover',
+  };
 
   return (
     <div className={proposalContainer}>
@@ -49,7 +52,7 @@ export default function Proposal ({ proposalId, userUnits, patternId, pattern, p
         <div className={userInfo}>
           {`units left: ${userUnits}`}
         </div>
-        <div className={proposalBack} style={backgroundImageStyle} >
+        <div className={proposalBack} style={backgroundImage} >
           <div className={proposalMid}>
             <div className={proposalFore} >
               <div className={proposalInfo}>

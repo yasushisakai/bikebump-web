@@ -37,7 +37,7 @@ export const crossIcon: Icon = icon({
   popUpAnchor: [3, 3],
 });
 
-let popupStyleButton: CSSStyleDeclaration = new CSSStyleDeclaration();
+let popupStyleButton: Object = {};
 
 popupStyleButton.cursor = 'pointer';
 popupStyleButton.padding = '8px';
@@ -46,7 +46,7 @@ popupStyleButton.border = 'none';
 popupStyleButton.backgroundColor = '#fff';
 
 popupStyleButton.color = '#ddd';
-export const popUpButtonStyleDisabled: CSSStyleDeclaration = popupStyleButton;
+export const popUpButtonStyleDisabled = popupStyleButton;
 popupStyleButton.color = '#F7D008';
 export const popUpButtonStyleEnabled = popupStyleButton;
 

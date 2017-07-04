@@ -21,7 +21,7 @@ type Props = {
 export default function ProposalListItem (props: Props) {
   const imageURL: string = `${imgRoot}patternBackgrounds/${props.image}.jpg`;
 
-  const style: CSSStyleDeclaration = new CSSStyleDeclaration();
+  const style: Object = {};
   style.background = `url(${imageURL}) center`;
   style.backgroundSize = 'cover';
   const ratio: number = Math.floor(props.currentUnits / props.maxUnits * 100);
