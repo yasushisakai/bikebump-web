@@ -17,90 +17,90 @@ export default class FrequencyGraph {
   binWidth: number;
 
   constructor (_pen: Pen, _start: Point2D, _size: Point2D) {
-    this.pen = _pen;
-    this.startCoordinate = _start;
-    this.graphSize = _size;
+        this.pen = _pen;
+        this.startCoordinate = _start;
+        this.graphSize = _size;
 
-    this.minFreq = minFreq;
-    this.maxFreq = maxFreq;
-    this.maxValue = 10.0;
-    this.maxValueAverageBin = 5;
-    this.maxValues = [];
-    this.dataArray = new Uint8Array(fftSize / 2);
-    this.labels = {};
-    this.axis = [];
-  }
+        this.minFreq = minFreq;
+        this.maxFreq = maxFreq;
+        this.maxValue = 10.0;
+        this.maxValueAverageBin = 5;
+        this.maxValues = [];
+        this.dataArray = new Uint8Array(fftSize / 2);
+        this.labels = {};
+        this.axis = [];
+    }
 
   update (newDataArray: Uint8Array): void {
-    this.dataArray = newDataArray;
-    this.binWidth = this.graphSize.x / this.dataArray.length;
+        this.dataArray = newDataArray;
+        this.binWidth = this.graphSize.x / this.dataArray.length;
 
-    const maxValue = this.dataArray.reduce((prev, curr) => prev < curr ? curr : prev, 0);
-    this.maxValues.push(maxValue);
+        const maxValue = this.dataArray.reduce((prev, curr) => prev < curr ? curr : prev, 0);
+        this.maxValues.push(maxValue);
 
-    if (this.maxValues.length > this.maxValueAverageBin) {
-      this.maxValues.shift();
+        if (this.maxValues.length > this.maxValueAverageBin) {
+            this.maxValues.shift();
+        }
+
+        this.maxValue = this.maxValues.reduce((sum, cur) => (sum + cur), 0.0);
+        this.maxValue /= this.maxValues.length;
+        this.maxValue = Math.max(this.maxValue, 0.01);
     }
-
-    this.maxValue = this.maxValues.reduce((sum, cur) => (sum + cur), 0.0);
-    this.maxValue /= this.maxValues.length;
-    this.maxValue = Math.max(this.maxValue, 0.01);
-  }
 
   addLabel (frequency: number, verbose: string = '') {
-    if (verbose === '') {
-      verbose = `${frequency}`;
-    }
+        if (verbose === '') {
+            verbose = `${frequency}`;
+        }
 
-    if (frequency <= maxFreq && frequency >= minFreq) {
-      const parameter = (frequency - this.minFreq) / (this.maxFreq - this.minFreq);
-      this.labels[`${verbose}`] = this.startCoordinate.x + this.graphSize.x * parameter;
+        if (frequency <= maxFreq && frequency >= minFreq) {
+            const parameter = (frequency - this.minFreq) / (this.maxFreq - this.minFreq);
+            this.labels[`${verbose}`] = this.startCoordinate.x + this.graphSize.x * parameter;
+        }
     }
-  }
 
   addAxis (frequency: number, color: string = 'rgb(255, 0, 0, 0.2)') {
-    if (frequency <= maxFreq && frequency >= minFreq) {
-      const parameter = (frequency - this.minFreq) / (this.maxFreq - this.minFreq);
-      this.axis.push([color, this.startCoordinate.x + this.graphSize.x * parameter]);
+        if (frequency <= maxFreq && frequency >= minFreq) {
+            const parameter = (frequency - this.minFreq) / (this.maxFreq - this.minFreq);
+            this.axis.push([color, this.startCoordinate.x + this.graphSize.x * parameter]);
+        }
     }
-  }
 
   draw (targetFreq: ?number) {
-    this.pen.stroke('rgb(200, 200, 200)');
-    this.pen.beginPath();
+        this.pen.stroke('rgb(200, 200, 200)');
+        this.pen.beginPath();
 
-    const startPoint: Point2D = {
-      x: this.startCoordinate.x,
-      y: this.startCoordinate.y + this.graphSize.y,
-    };
+        const startPoint: Point2D = {
+            x: this.startCoordinate.x,
+            y: this.startCoordinate.y + this.graphSize.y,
+        };
 
-    if (typeof targetFreq === 'number') {
-      const x: number = this.startCoordinate.x + (targetFreq - minFreq) / (maxFreq - minFreq) * this.graphSize.x;
-      this.pen.text('*', x, this.startCoordinate.y + this.graphSize.y + 30);
-      this.pen.stroke('rgba(255, 0, 0, 0.3)');
-      this.pen.drawLine(x, this.startCoordinate.y, x, this.startCoordinate.y + this.graphSize.y);
+        if (typeof targetFreq === 'number') {
+            const x: number = this.startCoordinate.x + (targetFreq - minFreq) / (maxFreq - minFreq) * this.graphSize.x;
+            this.pen.text('*', x, this.startCoordinate.y + this.graphSize.y + 30);
+            this.pen.stroke('rgba(255, 0, 0, 0.3)');
+            this.pen.drawLine(x, this.startCoordinate.y, x, this.startCoordinate.y + this.graphSize.y);
+        }
+
+        this.pen.stroke('rgba(255, 255, 255, 0.3)');
+        this.pen.fill('rgba(0, 0, 0, 0)');
+        this.pen.moveTo(startPoint);
+
+        this.dataArray.map((data, index) => {
+            const x = index * this.binWidth + this.startCoordinate.x;
+            const y = this.startCoordinate.y + (1 - Math.min(data / this.maxValue, 1.0)) * this.graphSize.y;
+            this.pen.lineTo({x, y});
+            return x; // weird, we need to return some number
+        });
+
+        this.pen.lineTo(this.pen.addPoints(this.startCoordinate, this.graphSize));
+        this.pen.endPath();
+
+        this.pen.stroke('rgba(255,255,255,0.1)');
+        this.pen.drawRectangle(this.startCoordinate, this.graphSize);
+
+        // labels
+        Object.keys(this.labels).map((key) => {
+            this.pen.text(key, this.labels[key], this.startCoordinate.y + this.graphSize.y + 30);
+        });
     }
-
-    this.pen.stroke('rgba(255, 255, 255, 0.3)');
-    this.pen.fill('rgba(0, 0, 0, 0)');
-    this.pen.moveTo(startPoint);
-
-    this.dataArray.map((data, index) => {
-      const x = index * this.binWidth + this.startCoordinate.x;
-      const y = this.startCoordinate.y + (1 - Math.min(data / this.maxValue, 1.0)) * this.graphSize.y;
-      this.pen.lineTo({x, y});
-      return x; // weird, we need to return some number
-    });
-
-    this.pen.lineTo(this.pen.addPoints(this.startCoordinate, this.graphSize));
-    this.pen.endPath();
-
-    this.pen.stroke('rgba(255,255,255,0.1)');
-    this.pen.drawRectangle(this.startCoordinate, this.graphSize);
-
-    // labels
-    Object.keys(this.labels).map((key) => {
-      this.pen.text(key, this.labels[key], this.startCoordinate.y + this.graphSize.y + 30);
-    });
-  }
 }

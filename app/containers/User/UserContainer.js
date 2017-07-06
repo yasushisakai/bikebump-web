@@ -23,48 +23,48 @@ type Props = {
   }
 
 class UserContainer extends React.Component<void, Props, void> {
-  constructor (props, context) {
-    super(props);
-    context.router;
-  }
-
-  componentDidMount () {
-    if (this.context.router.params.uid !== this.props.authedId) { this.context.router.push('/signin'); }
-
-    // fetch user stuff
-    if (this.props.isAuthed === true) { // reload
-      this.props.handleFetchingUserDings();
-      this.props.handleFetchingUserVotes();
-      this.props.handleFetchingUserResponses();
+    constructor (props, context) {
+        super(props);
+        context.router;
     }
-  }
 
-  render () {
-    return this.props.isFetching === true
-      ? null
-      : (<User uid={this.props.authedId} dingIds={this.props.dingIds}/>);
-  }
+    componentDidMount () {
+        if (this.context.router.params.uid !== this.props.authedId) { this.context.router.push('/signin'); }
+
+        // fetch user stuff
+        if (this.props.isAuthed === true) { // reload
+            this.props.handleFetchingUserDings();
+            this.props.handleFetchingUserVotes();
+            this.props.handleFetchingUserResponses();
+        }
+    }
+
+    render () {
+        return this.props.isFetching === true
+            ? null
+            : (<User uid={this.props.authedId} dingIds={this.props.dingIds}/>);
+    }
 }
 
 UserContainer.contextTypes = {
-  router: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
 };
 
 function mapStateToProps ({users, userDings, userVotes, userResponses}, props) {
-  return {
-    isFetching: users.get('isFetching') || userDings.get('isFetching') || userVotes.get('isFetching'),
-    authedId: users.get('authedId'),
-    isAuthed: users.get('isAuthed'),
-    dingIds: userDings.get(props.routeParams.uid),
-  };
+    return {
+        isFetching: users.get('isFetching') || userDings.get('isFetching') || userVotes.get('isFetching'),
+        authedId: users.get('authedId'),
+        isAuthed: users.get('isAuthed'),
+        dingIds: userDings.get(props.routeParams.uid),
+    };
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
-  return bindActionCreators({
-    ...extractActionCreators(userDingsActionCreators),
-    ...extractActionCreators(userVotesActionCreators),
-    ...extractActionCreators(userResponsesActionCreators),
-  }, dispatch);
+    return bindActionCreators({
+        ...extractActionCreators(userDingsActionCreators),
+        ...extractActionCreators(userVotesActionCreators),
+        ...extractActionCreators(userResponsesActionCreators),
+    }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserContainer);

@@ -4,7 +4,7 @@ import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { contents } from 'styles/styles.css';
 import { Map } from 'immutable';
-import { lightURL } from 'config/constants';
+import { darkTile } from 'config/constants';
 import leaflet from 'leaflet';
 // import mapzen from 'mapzen.js'
 import { defaultStyle } from 'helpers/mapUtils';
@@ -25,62 +25,62 @@ type MapAndStreetViewProps = {
 }
 
 class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewProps, void> {
-  constructor (props) {
-    super(props);
-    this.drawCircles = this.drawCircles.bind(this);
-  }
+    constructor (props) {
+        super(props);
+        this.drawCircles = this.drawCircles.bind(this);
+    }
 
-  componentWillMount () {
+    componentWillMount () {
     // fetching
-    this.props.handleFetchingDing(this.props.dingId);
-  }
+        this.props.handleFetchingDing(this.props.dingId);
+    }
 
-  componentDidMount () {
+    componentDidMount () {
     // init map
-    let position;
-    if (isModuleStale(this.props.latestFetchAttempt)) {
-      // latest location fetch was long ago
-      position = [42.3602747, -71.0872227];
-    } else {
-      // fresh location!
-      position = [
-        parseFloat(this.props.latestLocation.lat),
-        parseFloat(this.props.latestLocation.lng),
-      ];
+        let position;
+        if (isModuleStale(this.props.latestFetchAttempt)) {
+            // latest location fetch was long ago
+            position = [42.3602747, -71.0872227];
+        } else {
+            // fresh location!
+            position = [
+                parseFloat(this.props.latestLocation.lat),
+                parseFloat(this.props.latestLocation.lng),
+            ];
+        }
+
+        this.map = leaflet.map('tinyMap', {zoomControl: false})
+            .setView(position, 16);
+
+        leaflet.tileLayer(darkTile, { maxZoom: 20 }).addTo(this.map);
+
+        if (!this.props.isFetching) {
+            // sometimes component never updates after mounting
+            this.drawCircles(this.props);
+        }
     }
 
-    this.map = leaflet.map('tinyMap', {zoomControl: false})
-      .setView(position, 16);
-
-    leaflet.tileLayer(lightURL, { maxZoom: 20 }).addTo(this.map);
-
-    if (!this.props.isFetching) {
-      // sometimes component never updates after mounting
-      this.drawCircles(this.props);
+    componentWillReceiveProps (nextProps: MapAndStreetViewProps) {
+        if (this.props.dingId !== nextProps.dingId) {
+            this.props.handleFetchingDing(nextProps.dingId);
+        }
     }
-  }
 
-  componentWillReceiveProps (nextProps: MapAndStreetViewProps) {
-    if (this.props.dingId !== nextProps.dingId) {
-      this.props.handleFetchingDing(nextProps.dingId);
-    }
-  }
-
-  shouldComponentUpdate (nextProps: MapAndStreetViewProps) {
+    shouldComponentUpdate (nextProps: MapAndStreetViewProps) {
     // only draw when
-    return !nextProps.isFetching || (this.props.dingId !== nextProps.dingId);
-  }
-
-  componentWillUpdate (nextProps: MapAndStreetViewProps) {
-    console.log('mapStreet', 'cwu', nextProps.dingId);
-    if (!nextProps.isFetching) {
-      this.drawCircles(nextProps);
+        return !nextProps.isFetching || (this.props.dingId !== nextProps.dingId);
     }
-  }
 
-  componentWillUnmount () {
-    this.map.remove();
-  }
+    componentWillUpdate (nextProps: MapAndStreetViewProps) {
+        console.log('mapStreet', 'cwu', nextProps.dingId);
+        if (!nextProps.isFetching) {
+            this.drawCircles(nextProps);
+        }
+    }
+
+    componentWillUnmount () {
+        this.map.remove();
+    }
 
   map: leaflet.Map;
   reportedLocation: leaflet.Circle;
@@ -88,66 +88,66 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
   drawCircles: Function;
 
   drawCircles (props: MapAndStreetViewProps) { // also focuses the map to the report
-    const coordinate: LatLng = props.ding.get('coordinates').toJS();
-    this.map.panTo(coordinate);
+        const coordinate: LatLng = props.ding.get('coordinates').toJS();
+        this.map.panTo(coordinate);
 
-    // remove previous dings
+        // remove previous dings
 
-    if (this.reportedLocation) this.map.removeLayer(this.reportedLocation);
-    if (this.closestRoad) this.map.removeLayer(this.closestRoad);
+        if (this.reportedLocation) this.map.removeLayer(this.reportedLocation);
+        if (this.closestRoad) this.map.removeLayer(this.closestRoad);
 
-    // draw the dings
-    this.reportedLocation = leaflet.circle(
-      coordinate,
-      props.ding.get('radius'),
-      {...defaultStyle, weight: 3, opacity: 0.8, color: '#f00'}
-    ).addTo(this.map);
+        // draw the dings
+        this.reportedLocation = leaflet.circle(
+            coordinate,
+            props.ding.get('radius'),
+            {...defaultStyle, weight: 3, opacity: 0.8, color: '#f00'}
+        ).addTo(this.map);
 
-    // if there is a road, draw that too
-    if (props.ding.has('road')) {
-      const {x, y} = ((props.ding.getIn(['road', 'point']): any): Map<string, number>).toJS();
-      const closestPoint = {lat: y, lng: x};
+        // if there is a road, draw that too
+        if (props.ding.has('road')) {
+            const {x, y} = ((props.ding.getIn(['road', 'point']): any): Map<string, number>).toJS();
+            const closestPoint = {lat: y, lng: x};
 
-      this.closestRoad = leaflet.circle(
-        closestPoint,
-        props.ding.get('radius'),
-        {...defaultStyle, weight: 1, opacity: 0.8, color: '#00f'}
-      ).addTo(this.map);
+            this.closestRoad = leaflet.circle(
+                closestPoint,
+                props.ding.get('radius'),
+                {...defaultStyle, weight: 1, opacity: 0.8, color: '#00f'}
+            ).addTo(this.map);
+        }
     }
-  }
 
   render () {
-    const style = {
-      height: '100%',
-      width: '100%',
-      margin: 0,
-      padding: 0,
-    };
-    return (
-      <div style={style}>
-        <div id='tinyMap' className={contents} style={{height: '100%'}}/>
-      </div>
-    );
-  }
+        const style = {
+            height: '100%',
+            width: '100%',
+            margin: 0,
+            padding: 0,
+        };
+        return (
+            <div style={style}>
+                <div id='tinyMap' className={contents} style={{height: '100%'}}/>
+            </div>
+        );
+    }
 }
 
 function mapStateToProps (state, props) {
-  const dingId: string = props.dingId;
-  const ding: Ding = state.dings.get(dingId);
+    const dingId: string = props.dingId;
+    const ding: Ding = state.dings.get(dingId);
 
-  return {
-    latestLocation: state.record.get('latestLocation').toJS(),
-    latestFetchAttempt: state.record.get('latestFetchAttempt'),
+    return {
+        latestLocation: state.record.get('latestLocation').toJS(),
+        latestFetchAttempt: state.record.get('latestFetchAttempt'),
 
-    isFetching: state.dings.get('isFetching') || !ding,
-    dingId,
-    ding,
-  };
+        isFetching: state.dings.get('isFetching') || !ding,
+        dingId,
+        ding,
+    };
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
-  return bindActionCreators(extractActionCreators(dingActionCreators), dispatch);
+    return bindActionCreators(extractActionCreators(dingActionCreators), dispatch);
 }
 
 export default connect(mapStateToProps,
-  mapDispatchToProps)(MapAndStreetViewContainer);
+    mapDispatchToProps)(MapAndStreetViewContainer);

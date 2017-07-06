@@ -24,54 +24,54 @@ type Props = {
 };
 
 class CalibrateContainer extends React.Component<void, Props, void> {
-  constructor (props) {
-    super(props);
+    constructor (props) {
+        super(props);
 
-    this.handleToggleCalibration = this.handleToggleCalibration.bind(this);
-    this.toggleRingBell = this.toggleRingBell.bind(this);
-    this.setup = this.setup.bind(this);
-    this.draw = this.draw.bind(this);
-  }
-  componentDidMount () {
-    this.calibrateElement = ((document.getElementById('calibrate'):any): HTMLElement);
-    this.canvas = document.createElement('canvas');
-    this.calibrateElement.insertBefore(this.canvas, this.calibrateElement.firstChild);
-    fitCanvas(this.canvas);
-    this.pen = new Pen(this.canvas);
-    if (this.props.noSettings) {
-      this.props.handleFetchingUserSettings(this.props.uid);
+        this.handleToggleCalibration = this.handleToggleCalibration.bind(this);
+        this.toggleRingBell = this.toggleRingBell.bind(this);
+        this.setup = this.setup.bind(this);
+        this.draw = this.draw.bind(this);
     }
-
-    this.maxSlopes = [0, 0];
-    this.audioContext = new AudioContext();
-    this.analyser = new Analyser(this.audioContext);
-    this.analyser.setIsInFocus(true);
-    // this sets will splice the raw data
-    // into a specific range to 2k - 4k
-
-    if (navigator.getUserMedia) {
-      navigator.getUserMedia(
-        { audio: true },
-        (stream) => {
-          let source = this.audioContext.createMediaStreamSource(stream);
-          source.connect(this.analyser.input);
-          this.analyser.connect();
-        },
-        (error) => {
-          console.error(error);
+    componentDidMount () {
+        this.calibrateElement = ((document.getElementById('calibrate'):any): HTMLElement);
+        this.canvas = document.createElement('canvas');
+        this.calibrateElement.insertBefore(this.canvas, this.calibrateElement.firstChild);
+        fitCanvas(this.canvas);
+        this.pen = new Pen(this.canvas);
+        if (this.props.noSettings) {
+            this.props.handleFetchingUserSettings(this.props.uid);
         }
-      );
-    } else {
-      console.error('user get media error');
+
+        this.maxSlopes = [0, 0];
+        this.audioContext = new AudioContext();
+        this.analyser = new Analyser(this.audioContext);
+        this.analyser.setIsInFocus(true);
+        // this sets will splice the raw data
+        // into a specific range to 2k - 4k
+
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia(
+                { audio: true },
+                (stream) => {
+                    let source = this.audioContext.createMediaStreamSource(stream);
+                    source.connect(this.analyser.input);
+                    this.analyser.connect();
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
+        } else {
+            console.error('user get media error');
+        }
+
+        this.setup();
+        this.draw();
     }
 
-    this.setup();
-    this.draw();
-  }
-
-  componentWillUnmount () {
-    window.cancelAnimationFrame(this.animation);
-  }
+    componentWillUnmount () {
+        window.cancelAnimationFrame(this.animation);
+    }
 
   // FIXME: clear any types up
   calibrateElement: HTMLElement;
@@ -91,105 +91,105 @@ class CalibrateContainer extends React.Component<void, Props, void> {
   draw: Function;
 
   handleToggleCalibration () {
-    this.props.toggleCalibration();
-    if (!this.props.isCalibrating) {
-      this.slopes = [0, 0]; // reset slopes
-    } else {
-      this.props.handleUpdateTargetFrequency(this.props.uid, this.targetFrequency);
+        this.props.toggleCalibration();
+        if (!this.props.isCalibrating) {
+            this.slopes = [0, 0]; // reset slopes
+        } else {
+            this.props.handleUpdateTargetFrequency(this.props.uid, this.targetFrequency);
+        }
     }
-  }
 
   toggleRingBell (value: boolean) {
-    if (value) {
-      this.props.disableRingBellMode(this.props.uid);
-    } else {
-      this.props.enableRingBellMode(this.props.uid);
-    }
+        if (value) {
+            this.props.disableRingBellMode(this.props.uid);
+        } else {
+            this.props.enableRingBellMode(this.props.uid);
+        }
 
-    updateUserSettings(this.props.uid, 'useRingBell', !value);
-  }
+        updateUserSettings(this.props.uid, 'useRingBell', !value);
+    }
 
   //
   // p5.js functions
   //
 
   setup () {
-    const dataArray = this.analyser.updateDataArray();
-    this.binWidth = this.canvas.width / dataArray.length;
-  }
-
-  draw () {
-    this.animation = window.requestAnimationFrame(this.draw);
-    this.pen.clear();
-
-    // update dataArray
-    const dataArray = this.analyser.updateDataArray();
-
-    // draw polyline
-    this.pen.stroke('white');
-    this.pen.ctx.beginPath();
-    dataArray.map((bin, index) => {
-      const x = index * this.binWidth;
-      const y = (this.canvas.height) * (1 - bin / 256);
-      this.pen.ctx.lineTo(x, y);
-    });
-    this.pen.ctx.stroke();
-
-    // draw peak
-    if (this.props.isCalibrating) {
-      const peakIndex = this.analyser.getPeakIndex();
-      this.pen.stroke('yellow');
-      this.pen.drawVerticalAxis(peakIndex * this.binWidth, this.canvas.height);
-
-      const tempSlope = this.analyser.getSlopes(peakIndex);
-      if (tempSlope[0] > this.maxSlopes[0] && tempSlope[1] > this.maxSlopes[1]) {
-        this.maxSlopes = tempSlope;
-        this.targetFrequency = this.analyser.indexToFrequency(peakIndex);
-      }
+        const dataArray = this.analyser.updateDataArray();
+        this.binWidth = this.canvas.width / dataArray.length;
     }
 
-    // draw current frequency setting
-    const currentFreqIndex = this.analyser.frequencyToIndex(this.targetFrequency);
-    this.pen.stroke('red');
-    this.pen.drawVerticalAxis(currentFreqIndex * this.binWidth, this.canvas.height);
+  draw () {
+        this.animation = window.requestAnimationFrame(this.draw);
+        this.pen.clear();
 
-    this.pen.fill('white');
-    this.pen.noStroke();
-    this.pen.ctx.fillText(
-      this.targetFrequency,
-      currentFreqIndex * this.binWidth,
-      this.canvas.height * 0.5
-    );
-  }
+        // update dataArray
+        const dataArray = this.analyser.updateDataArray();
+
+        // draw polyline
+        this.pen.stroke('white');
+        this.pen.ctx.beginPath();
+        dataArray.map((bin, index) => {
+            const x = index * this.binWidth;
+            const y = (this.canvas.height) * (1 - bin / 256);
+            this.pen.ctx.lineTo(x, y);
+        });
+        this.pen.ctx.stroke();
+
+        // draw peak
+        if (this.props.isCalibrating) {
+            const peakIndex = this.analyser.getPeakIndex();
+            this.pen.stroke('yellow');
+            this.pen.drawVerticalAxis(peakIndex * this.binWidth, this.canvas.height);
+
+            const tempSlope = this.analyser.getSlopes(peakIndex);
+            if (tempSlope[0] > this.maxSlopes[0] && tempSlope[1] > this.maxSlopes[1]) {
+                this.maxSlopes = tempSlope;
+                this.targetFrequency = this.analyser.indexToFrequency(peakIndex);
+            }
+        }
+
+        // draw current frequency setting
+        const currentFreqIndex = this.analyser.frequencyToIndex(this.targetFrequency);
+        this.pen.stroke('red');
+        this.pen.drawVerticalAxis(currentFreqIndex * this.binWidth, this.canvas.height);
+
+        this.pen.fill('white');
+        this.pen.noStroke();
+        this.pen.ctx.fillText(
+            this.targetFrequency,
+            currentFreqIndex * this.binWidth,
+            this.canvas.height * 0.5
+        );
+    }
 
   render () {
-    return (
-      <Calibrate
-        isFetching={this.props.isFetching}
-        isCalibrating={this.props.isCalibrating}
-        toggleCalibration={this.handleToggleCalibration}
-        targetFrequency={this.props.settings.get('targetFrequency')}
-        isRingBellEnabled={this.props.settings.get('useRingBells')}
-        toggleRingBell={this.toggleRingBell} />
-    );
-  }
+        return (
+            <Calibrate
+                isFetching={this.props.isFetching}
+                isCalibrating={this.props.isCalibrating}
+                toggleCalibration={this.handleToggleCalibration}
+                targetFrequency={this.props.settings.get('targetFrequency')}
+                isRingBellEnabled={this.props.settings.get('useRingBells')}
+                toggleRingBell={this.toggleRingBell} />
+        );
+    }
 }
 
 function mapStateToProps (state, props) {
-  const uid: string = props.params.uid;
-  return {
-    uid,
-    isCalibrating: state.userSettings.get('isCalibrating'),
-    // isRingBellEnabled : state.userSettings.getIn([uid,'useRingBells']),
-    isFetching: state.users.get('isFetching') || state.userSettings.get('isFetching') || !state.users.get('isAuthed'),
-    noSettings: !state.userSettings.get(uid),
-    settings: state.userSettings.get(uid) || new Map(),
-  };
+    const uid: string = props.params.uid;
+    return {
+        uid,
+        isCalibrating: state.userSettings.get('isCalibrating'),
+        // isRingBellEnabled : state.userSettings.getIn([uid,'useRingBells']),
+        isFetching: state.users.get('isFetching') || state.userSettings.get('isFetching') || !state.users.get('isAuthed'),
+        noSettings: !state.userSettings.get(uid),
+        settings: state.userSettings.get(uid) || new Map(),
+    };
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
-  return bindActionCreators(userSettingsActionCreators, dispatch);
+    return bindActionCreators(userSettingsActionCreators, dispatch);
 }
 
 export default connect(mapStateToProps,
-  mapDispatchToProps)(CalibrateContainer);
+    mapDispatchToProps)(CalibrateContainer);

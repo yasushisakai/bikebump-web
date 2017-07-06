@@ -36,11 +36,11 @@ export const apiRoot: string = isProduction ? 'https://bikebump.media.mit.edu/ap
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: 'AIzaSyAZE26Lxuw35m7ZmYZHYLacfOgw8x9cyng',
-  authDomain: 'bikebump-ea3b1.firebaseapp.com',
-  databaseURL: 'https://bikebump-ea3b1.firebaseio.com',
-  storageBucket: 'bikebump-ea3b1.appspot.com',
-  messagingSenderId: '642352920574',
+    apiKey: 'AIzaSyAZE26Lxuw35m7ZmYZHYLacfOgw8x9cyng',
+    authDomain: 'bikebump-ea3b1.firebaseapp.com',
+    databaseURL: 'https://bikebump-ea3b1.firebaseio.com',
+    storageBucket: 'bikebump-ea3b1.appspot.com',
+    messagingSenderId: '642352920574',
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -55,20 +55,16 @@ export const isRemote: boolean = false;
 //
 const mapboxURL: string = 'https://api.mapbox.com/styles/v1/yasushisakai/';
 const mapboxToken: string = 'pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAwNjUzM28weHRuMnJ4a2kifQ.ooHi0pGR-SdDraWzTRCoVA';
-export const tileURL: string = `${mapboxURL}ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=${mapboxToken}`;
-export const tinyTileURL: string = `${mapboxURL}cizesntvz00c52sqirwrxlivb/tiles/256/{z}/{x}/{y}?access_token=${mapboxToken}`;
-export const lightURL: string = `${mapboxURL}cj14tdytp000s2ro72nd7nipf/tiles/256/{z}/{x}/{y}?access_token=${mapboxToken}`;
+export const darkTile: string = `${mapboxURL}ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=${mapboxToken}`;
 
 export const attribution: string = '&copy; Mapbox &copy; OpenStreetMap &copy; DigitalGlobe';
-export const tinyAttribution: string = '&copy; Mapbox &copy; OpenStreetMap';
-
 //
 // MISC
 //
 
 export const initialState = fromJS({
-  isFetching: false,
-  error: '',
-  lastUpdated: 0,
+    isFetching: false,
+    error: '',
+    lastUpdated: 0,
 });
 

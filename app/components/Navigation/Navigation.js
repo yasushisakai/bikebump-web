@@ -18,23 +18,23 @@ type Props = {
 
 const iconSize: number = 41;
 const respondDivStyle: any = {
-  background: `url(${imgRoot}choose.png)`,
-  backgroundSize: `${iconSize}px ${iconSize}px`,
-  backgroundRepeat: 'no-repeat',
-  width: `${iconSize}px`,
-  height: `${iconSize}px`,
-  display: 'inline-block',
-  margin: 'auto',
-  verticalAlign: 'middle',
+    background: `url(${imgRoot}choose.png)`,
+    backgroundSize: `${iconSize}px ${iconSize}px`,
+    backgroundRepeat: 'no-repeat',
+    width: `${iconSize}px`,
+    height: `${iconSize}px`,
+    display: 'inline-block',
+    margin: 'auto',
+    verticalAlign: 'middle',
 };
 
 const respondDivDisabled: any = {
-  // background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${imgRoot}choose.png)`,
-  background: `url(${imgRoot}choose_dark.png)`,
+    // background: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${imgRoot}choose.png)`,
+    background: `url(${imgRoot}choose_dark.png)`,
 };
 
 function vibrate () {
-  window.navigator.vibrate(50);
+    window.navigator.vibrate(50);
 }
 
 type IconProps = {
@@ -42,140 +42,140 @@ type IconProps = {
 }
 
 function RecordButton ({isRecording}: IconProps) {
-  if (isRecording) {
-    return (<div className={divLink}>
-      <Record className={`${icon} ${recording}`}/>
-      <div className={`${captionText} ${recording}`}>{`record`}</div>
-    </div>);
-  } else {
-    return (<div className={divLink}>
-      <Link className={link} onClick={vibrate} to='/record'>
-        <Record className={icon}/>
-      </Link>
-      <div className={captionText}>{`record`}</div>
-    </div>);
-  }
+    if (isRecording) {
+        return (<div className={divLink}>
+            <Record className={`${icon} ${recording}`}/>
+            <div className={`${captionText} ${recording}`}>{`record`}</div>
+        </div>);
+    } else {
+        return (<div className={divLink}>
+            <Link className={link} onClick={vibrate} to='/record'>
+                <Record className={icon}/>
+            </Link>
+            <div className={captionText}>{`record`}</div>
+        </div>);
+    }
 }
 
 function MapButton ({isRecording}: IconProps) {
-  const label: string = 'map';
-  if (isRecording) {
-    return (<div className={divLink}>
-      <MapIcon className={`${icon} ${disabled}`}/>
-      <div className={`${captionText} ${disabled}`}>{label}</div>
-    </div>);
-  } else {
-    return (<div className={divLink}>
-      <Link className={link} onClick={vibrate} to={label}>
-        <MapIcon className={icon}/>
-      </Link>
-      <div className={captionText}>{label}</div>
-    </div>);
-  }
+    const label: string = 'map';
+    if (isRecording) {
+        return (<div className={divLink}>
+            <MapIcon className={`${icon} ${disabled}`}/>
+            <div className={`${captionText} ${disabled}`}>{label}</div>
+        </div>);
+    } else {
+        return (<div className={divLink}>
+            <Link className={link} onClick={vibrate} to={label}>
+                <MapIcon className={icon}/>
+            </Link>
+            <div className={captionText}>{label}</div>
+        </div>);
+    }
 }
 
 function SurveyButton ({isAuthed, isRecording, authedId}: Props) {
-  if (isRecording) {
-    return (
-      <div className={divLink}>
-        <div style={{...respondDivStyle, ...respondDivDisabled}} />
-        <div className={`${captionText} ${disabled}`}>{'survey'}</div>
-      </div>
-    );
-  } else {
-    return (
-      <div className={divLink}>
-        <Link className={link} onClick={vibrate} to={`/user/${authedId}/respond`}>
-          <div style={respondDivStyle} />
-        </Link>
-        <div className={captionText}>{'survey'}</div>
-      </div>
-    );
-  }
+    if (isRecording) {
+        return (
+            <div className={divLink}>
+                <div style={{...respondDivStyle, ...respondDivDisabled}} />
+                <div className={`${captionText} ${disabled}`}>{'survey'}</div>
+            </div>
+        );
+    } else {
+        return (
+            <div className={divLink}>
+                <Link className={link} onClick={vibrate} to={`/user/${authedId}/respond`}>
+                    <div style={respondDivStyle} />
+                </Link>
+                <div className={captionText}>{'survey'}</div>
+            </div>
+        );
+    }
 }
 
 function PrioritizeButton ({isAuthed, isRecording, authedId}: Props) {
-  if (isRecording) {
-    return (
-      <div className={divLink}>
-        <PrioritizeIcon className={`${icon} ${disabled}`}/>
-        <div className={`${captionText} ${disabled}`}>{'prioritize'}</div>
-      </div>
-    );
-  } else {
-    return (
-      <div className={divLink}>
-        <Link className={link} onClick={vibrate} to={`/proposals`}>
-          <PrioritizeIcon className={icon} />
-        </Link>
-        <div className={captionText}>{'prioritize'}</div>
-      </div>
-    );
-  }
+    if (isRecording) {
+        return (
+            <div className={divLink}>
+                <PrioritizeIcon className={`${icon} ${disabled}`}/>
+                <div className={`${captionText} ${disabled}`}>{'prioritize'}</div>
+            </div>
+        );
+    } else {
+        return (
+            <div className={divLink}>
+                <Link className={link} onClick={vibrate} to={`/proposals`}>
+                    <PrioritizeIcon className={icon} />
+                </Link>
+                <div className={captionText}>{'prioritize'}</div>
+            </div>
+        );
+    }
 }
 
 function NavLinks ({isAuthed, isRecording, authedId}: Props) {
-  return isAuthed
-    ? <div className={navLink}>
-      <RecordButton isRecording={isRecording} />
-      <MapButton isRecording={isRecording} />
-      <SurveyButton isAuthed={isAuthed} isRecording={isRecording} authedId={authedId} />
-      <PrioritizeButton isAuthed={isAuthed} isRecording={isRecording} authedId={authedId} />
-    </div>
-    : <div className={navLink}>
-      <div className={divLink}>
-        <Link className={link} onClick={vibrate} to='/'><Home className={icon}/></Link>
-        <div className={captionText}>{`bikebump`}</div>
-      </div>
-      <div className={divLink}>
-        <Link className={link} onClick={vibrate} to='/map'><MapIcon className={icon}/></Link>
-        <div className={captionText}>{'map'}</div>
-      </div>
-    </div>;
+    return isAuthed
+        ? <div className={navLink}>
+            <RecordButton isRecording={isRecording} />
+            <MapButton isRecording={isRecording} />
+            <SurveyButton isAuthed={isAuthed} isRecording={isRecording} authedId={authedId} />
+            <PrioritizeButton isAuthed={isAuthed} isRecording={isRecording} authedId={authedId} />
+        </div>
+        : <div className={navLink}>
+            <div className={divLink}>
+                <Link className={link} onClick={vibrate} to='/'><Home className={icon}/></Link>
+                <div className={captionText}>{`bikebump`}</div>
+            </div>
+            <div className={divLink}>
+                <Link className={link} onClick={vibrate} to='/map'><MapIcon className={icon}/></Link>
+                <div className={captionText}>{'map'}</div>
+            </div>
+        </div>;
 }
 
 function ActionLinks ({isAuthed, isRecording, authedId}: Props) {
-  const accountLink = `/user/${authedId}`;
+    const accountLink = `/user/${authedId}`;
 
-  function disableWhenRecording () {
-    if (isRecording) {
-      return (
-        <div className={divLink}>
-          <Account className={`${icon} ${disabled}`}/>
-          <div className={`${captionText} ${disabled}`}>{'mystuff'}</div>
-        </div>
-      );
-    } else {
-      return (
-        <div className={divLink}>
-          <Link className={link} onClick={vibrate} to={accountLink}>
-            <Account className={icon}/>
-          </Link>
-          <div className={captionText}>{'mystuff'}</div>
-        </div>
-      );
+    function disableWhenRecording () {
+        if (isRecording) {
+            return (
+                <div className={divLink}>
+                    <Account className={`${icon} ${disabled}`}/>
+                    <div className={`${captionText} ${disabled}`}>{'mystuff'}</div>
+                </div>
+            );
+        } else {
+            return (
+                <div className={divLink}>
+                    <Link className={link} onClick={vibrate} to={accountLink}>
+                        <Account className={icon}/>
+                    </Link>
+                    <div className={captionText}>{'mystuff'}</div>
+                </div>
+            );
+        }
     }
-  }
 
-  return isAuthed
-    ? <div className={actionLink}>
-      <div className={divLink}>
-        {disableWhenRecording()}
-      </div>
-    </div>
-    : <div className={actionLink}>
-      <div className={divLink}>
-        <Link className={link} onClick={vibrate} to='/signin'><SignIn className={icon}/></Link>
-        <div className={captionText}>{'sign in'}</div>
-      </div>
-    </div>;
+    return isAuthed
+        ? <div className={actionLink}>
+            <div className={divLink}>
+                {disableWhenRecording()}
+            </div>
+        </div>
+        : <div className={actionLink}>
+            <div className={divLink}>
+                <Link className={link} onClick={vibrate} to='/signin'><SignIn className={icon}/></Link>
+                <div className={captionText}>{'sign in'}</div>
+            </div>
+        </div>;
 }
 
 export default function Navigation ({isAuthed, isRecording, authedId}: Props) {
-  return (
-    <div id={'navigation'} className={navigation}>
-      <NavLinks isAuthed={isAuthed} isRecording={isRecording} authedId={authedId}/>
-      <ActionLinks isAuthed={isAuthed} isRecording={isRecording} authedId={authedId}/>
-    </div>
-  );
+    return (
+        <div id={'navigation'} className={navigation}>
+            <NavLinks isAuthed={isAuthed} isRecording={isRecording} authedId={authedId}/>
+            <ActionLinks isAuthed={isAuthed} isRecording={isRecording} authedId={authedId}/>
+        </div>
+    );
 }

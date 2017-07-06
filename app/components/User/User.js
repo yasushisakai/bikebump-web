@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { userContents } from './styles.css';
 
 User.propTypes = {
-  uid: PropTypes.string.isRequired,
+    uid: PropTypes.string.isRequired,
 };
 
 type Props = {
@@ -11,16 +11,16 @@ type Props = {
 }
 
 export default function User ({uid}: Props) {
-  console.log(uid);
-  const calibrateLink = `/user/${uid}/calibrate`;
-  return (
-    <div className={userContents}>
-      {'User'}
-      <h2> {'Settings'} </h2>
-      <Link to='/tests/recordSound'> {'record sound'} </Link>
-      <Link to={calibrateLink}><div> {'calibrate'} </div> </Link>
-      <Link to='/logout'> {'Logout'} </Link>
-      <Link to='/proposals#road-12116724'> {`jump test`} </Link>
-    </div>
-  );
+    console.log(uid);
+    const calibrateLink = `/user/${uid}/calibrate`;
+    return (
+        <div className={userContents}>
+            {'User'}
+            <h2> {'Settings'} </h2>
+            <Link to='/tests/recordSound'> {'record sound'} </Link>
+            <Link to={calibrateLink}><div> {'calibrate'} </div> </Link>
+            <Link to='/logout'> {'Logout'} </Link>
+            <Link to='/proposals#road-12116724'> {`jump test`} </Link>
+        </div>
+    );
 }

@@ -6,19 +6,19 @@ import QuestionIcon from 'react-icons/lib/fa/question';
 import {ProposalMapContainer} from 'containers';
 
 import {
-  proposalContainer,
-  overlayInfo,
-  userInfo,
-  proposalBack,
-  proposalMid,
-  proposalFore,
-  proposalInfo,
-  patternTitle,
-  smallMetaInfo,
-  patternDetails,
-  voteSelecter,
-  option,
-  optionText,
+    proposalContainer,
+    overlayInfo,
+    userInfo,
+    proposalBack,
+    proposalMid,
+    proposalFore,
+    proposalInfo,
+    patternTitle,
+    smallMetaInfo,
+    patternDetails,
+    voteSelecter,
+    option,
+    optionText,
 } from './styles.css';
 
 type Props = {
@@ -36,41 +36,40 @@ type Props = {
     }
 }
 
-
 export default function Proposal ({ proposalId, userUnits, patternId, pattern, proposal }: Props) {
-  const imageURL = `${imgRoot}patternBackgrounds/${pattern.image}.jpg`;
+    const imageURL = `${imgRoot}patternBackgrounds/${pattern.image}.jpg`;
 
-  const backgroundImage: {[attribute: string]: string} = {
-    background: `url(${imageURL}) center`,
-    backgroundSize: 'cover',
-  };
+    const backgroundImage: {[attribute: string]: string} = {
+        background: `url(${imageURL}) center`,
+        backgroundSize: 'cover',
+    };
 
-  return (
-    <div className={proposalContainer}>
-      <ProposalMapContainer roadId={8615571} domain={{start: 0.1, end: 0.6}}/>
-      <div className={overlayInfo}>
-        <div className={userInfo}>
-          {`units left: ${userUnits}`}
-        </div>
-        <div className={proposalBack} style={backgroundImage} >
-          <div className={proposalMid}>
-            <div className={proposalFore} >
-              <div className={proposalInfo}>
-                <div className={patternDetails}><Link to={`/details/${patternId}`}><QuestionIcon /></Link></div>
-                <div className={patternTitle}>{`${pattern.title}`}</div>
-                <div className={smallMetaInfo}>{`${pattern.description}`}</div>
-                {`${proposal.currentUnits / proposal.maxUnits}`}
-                {`${proposal.maxUnits}`}
-              </div>
-              <div className={voteSelecter}>
-                <div className={option}><span className={optionText}>{`${0}`}</span></div>
-                <div className={option}><span className={optionText}>{`${10}`}</span></div>
-                <div className={option}><span className={optionText}>{`${20}`}</span></div>
-              </div>
+    return (
+        <div className={proposalContainer}>
+            <ProposalMapContainer roadId={8615571} domain={{start: 0.1, end: 0.6}}/>
+            <div className={overlayInfo}>
+                <div className={userInfo}>
+                    {`units left: ${userUnits}`}
+                </div>
+                <div className={proposalBack} style={backgroundImage} >
+                    <div className={proposalMid}>
+                        <div className={proposalFore} >
+                            <div className={proposalInfo}>
+                                <div className={patternDetails}><Link to={`/details/${patternId}`}><QuestionIcon /></Link></div>
+                                <div className={patternTitle}>{`${pattern.title}`}</div>
+                                <div className={smallMetaInfo}>{`${pattern.description}`}</div>
+                                {`${proposal.currentUnits / proposal.maxUnits}`}
+                                {`${proposal.maxUnits}`}
+                            </div>
+                            <div className={voteSelecter}>
+                                <div className={option}><span className={optionText}>{`${0}`}</span></div>
+                                <div className={option}><span className={optionText}>{`${10}`}</span></div>
+                                <div className={option}><span className={optionText}>{`${20}`}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

@@ -7,12 +7,12 @@ type Props = {
 };
 
 export default function Auth ({children}: Props) {
-  return (
-    <div className={contents}>
-      <h1>{'Sign in to bikebump'}</h1>
-      <div>
-        {children}
-      </div>
-    </div>
-  );
+    return (
+        <div className={contents}>
+            <h1>{'Sign in to bikebump'}</h1>
+            <div>
+                {children}
+            </div>
+        </div>
+    );
 }

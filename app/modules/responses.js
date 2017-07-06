@@ -9,80 +9,80 @@ export const ADD_RESPONSE = 'ADD_RESPONSE';
 export const ADD_RESPONSE_ERROR = 'ADD_RESPONSE_ERROR';
 
 function fetchingResponses () {
-  return {
-    type: FETCHING_RESPONSES,
-  };
+    return {
+        type: FETCHING_RESPONSES,
+    };
 }
 
 function fetchingResponsesError (error) {
-  console.warn(error);
-  return {
-    type: FETCHING_RESPONSES_ERROR,
-    error: 'error fetching responses',
-  };
+    console.warn(error);
+    return {
+        type: FETCHING_RESPONSES_ERROR,
+        error: 'error fetching responses',
+    };
 }
 
 function fetchingResponsesSuccess (responses) {
-  return {
-    type: FETCHING_RESPONSES_SUCCESS,
-    responses,
-  };
+    return {
+        type: FETCHING_RESPONSES_SUCCESS,
+        responses,
+    };
 }
 
 export function handleFetchingResponses () {
-  return function (dispatch) {
-    dispatch(fetchingResponses());
-    fetchAll('responses')
-      .then((responses) => dispatch(fetchingResponsesSuccess(responses)))
-      .catch((error) => dispatch(fetchingResponsesError(error)));
-  };
+    return function (dispatch) {
+        dispatch(fetchingResponses());
+        fetchAll('responses')
+            .then((responses) => dispatch(fetchingResponsesSuccess(responses)))
+            .catch((error) => dispatch(fetchingResponsesError(error)));
+    };
 }
 
 function addResponse (response) {
-  return {
-    type: ADD_RESPONSE,
-    response,
-  };
+    return {
+        type: ADD_RESPONSE,
+        response,
+    };
 }
 
 function addResponseErrorr (error) {
-  console.warn(error);
-  return {
-    type: ADD_RESPONSE_ERROR,
-    error: 'error adding Response',
-  };
+    console.warn(error);
+    return {
+        type: ADD_RESPONSE_ERROR,
+        error: 'error adding Response',
+    };
 }
 
 export function handleAddResponse (response) {
-  console.log(response);
-  return function (dispatch) {
-    saveResponse(response)
-      .then((responseWithId) => dispatch(addResponse(responseWithId)))
-      .catch((error) => dispatch(addResponseError(error)));
-  };
+    console.log(response);
+    return function (dispatch) {
+        saveResponse(response)
+            .then((responseWithId) => dispatch(addResponse(responseWithId)))
+            .catch((error) => dispatch(addResponseError(error)));
+    };
 }
 
 export default function responses (state = initialState, action) {
-  switch (action.type) {
+    switch (action.type) {
     case FETCHING_RESPONSES:
-      return state.set('isFetching', true);
+        return state.set('isFetching', true);
     case FETCHING_RESPONSES_SUCCESS:
-      return state.merge({
-        isFetching: false,
-        error: '',
-      }).merge(action.responses);
+        return state.merge({
+            isFetching: false,
+            error: '',
+        }).merge(action.responses);
     case ADD_RESPONSE_ERROR:
     case FETCHING_RESPONSES_ERROR:
-      return state.merge({
-        isFetching: false,
-        erro: action.error,
-      });
+        return state.merge({
+            isFetching: false,
+            erro: action.error,
+        });
     case ADD_RESPONSE:
-      return state.merge({
-        isFetching: false,
-        error: '',
-      }).setIn([action.response.dingId, action.response.questionId, action.response.responseId], action.response);
+        return state.merge({
+            isFetching: false,
+            error: '',
+        }).setIn([action.response.dingId, action.response.questionId, action.response.responseId], action.response);
     default:
-      return state;
-  }
+        return state;
+    }
 }

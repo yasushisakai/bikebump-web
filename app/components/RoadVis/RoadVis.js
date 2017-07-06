@@ -13,14 +13,14 @@ type Props={
 }
 
 export default function RoadVis ({roadId}:Props) {
-  return (
-    <div className={contents}>
-      <div className={midMapContents}>
-        <MidMapContainer roadId={roadId} />
-      </div>
-      <div className={roadInfoContents}>
-        {'Choose one proposal for each segment. The influence of one vote is increased by answering surveys (paw button). Costly options will damp your vote.'}
-      </div>
-    </div>
-  );
+    return (
+        <div className={contents}>
+            <div className={midMapContents}>
+                <MidMapContainer roadId={roadId} />
+            </div>
+            <div className={roadInfoContents}>
+                {'Choose one proposal for each segment. The influence of one vote is increased by answering surveys (paw button). Costly options will damp your vote.'}
+            </div>
+        </div>
+    );
 }

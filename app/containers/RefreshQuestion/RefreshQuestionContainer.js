@@ -9,13 +9,13 @@ type Props = {
 }
 
 class RefreshQuestionContainer extends React.Component<void, Props, void> {
-  componentDidMount () {
-  }
-  componentWillUpdate () {
-  }
-  render () {
-    return null;
-  }
+    componentDidMount () {
+    }
+    componentWillUpdate () {
+    }
+    render () {
+        return null;
+    }
 }
 
 /*

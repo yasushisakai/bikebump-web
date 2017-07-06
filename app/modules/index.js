@@ -12,5 +12,7 @@ export questions from './questions';
 export responses from './responses';
 export userVotes from './userVotes';
 export userResponses from './userResponses';
+export userProposals from './userProposals';
 export userDings from './userDings';
 export userSettings from './userSettings';
+export roadProposals from './roadProposals';

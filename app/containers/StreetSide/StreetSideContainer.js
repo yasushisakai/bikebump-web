@@ -19,102 +19,102 @@ type Props = {
 }
 
 class StreetSideContainer extends React.Component<void, Props, void> {
-  componentDidMount () {
-    this.element = document.getElementById('streetSide');
+    componentDidMount () {
+        this.element = document.getElementById('streetSide');
 
-    // load bing
-    // let bingMaps = document.createElement('script')
-    // bingMaps.type='text/javascript';
-    // bingMaps.src = 'https://www.bing.com/api/maps/mapcontrol?'
-    // document.head.append(bingMaps)
+        // load bing
+        // let bingMaps = document.createElement('script')
+        // bingMaps.type='text/javascript';
+        // bingMaps.src = 'https://www.bing.com/api/maps/mapcontrol?'
+        // document.head.append(bingMaps)
 
-    // console.log(this.props.dingId)
+        // console.log(this.props.dingId)
 
-    // this.getBingMap(this.element)
-    if (this.props.dingId !== '' && this.props.ding !== new Map() && this.element) {
-      let location: LatLng;
-      if (this.props.ding.closestRoadPoint !== undefined) {
-        location = this.props.ding.closestRoadPoint.cp;
-        const arrayLocation = [location.lat, location.lng];
-        /*
+        // this.getBingMap(this.element)
+        if (this.props.dingId !== '' && this.props.ding !== new Map() && this.element) {
+            let location: LatLng;
+            if (this.props.ding.closestRoadPoint !== undefined) {
+                location = this.props.ding.closestRoadPoint.cp;
+                const arrayLocation = [location.lat, location.lng];
+                /*
         const direction = this.props.ding.get('direction').toJS();
         const angle = Math.atan2(direction.y, direction.x) * (180 / Math.PI);
         */
-        // console.log(direction,angle)
-        // console.log(arrayLocation)
-        this.getBingMap(this.element, arrayLocation);
-      } else {
-        location = this.props.ding.coordinates;
-        const arrayLocation = [location.lat, location.lng];
-        this.getBingMap(this.element, arrayLocation, null);
-      }
+                // console.log(direction,angle)
+                // console.log(arrayLocation)
+                this.getBingMap(this.element, arrayLocation);
+            } else {
+                location = this.props.ding.coordinates;
+                const arrayLocation = [location.lat, location.lng];
+                this.getBingMap(this.element, arrayLocation, null);
+            }
+        }
     }
-  }
 
-  componentWillUpdate () {
-    let location: LatLng;
-    if (this.props.ding.closestRoadPoint) {
-      location = this.props.ding.closestRoadPoint.cp;
-      const arrayLocation = [location.lat, location.lng];
-      /*
+    componentWillUpdate () {
+        let location: LatLng;
+        if (this.props.ding.closestRoadPoint) {
+            location = this.props.ding.closestRoadPoint.cp;
+            const arrayLocation = [location.lat, location.lng];
+            /*
       const direction = this.props.ding.get('direction').toJS();
       const angle = Math.atan2(direction.y, direction.x) * (180 / Math.PI);
       */
-      this.map.setView({center: new Microsoft.Maps.Location(arrayLocation[0], arrayLocation[1])});
-    } else {
-      // console.log(this.props.ding.toJS());
-      location = this.props.ding.coordinates;
-      const arrayLocation = [location.lat, location.lng];
-      this.map.setView({center: new Microsoft.Maps.Location(arrayLocation[0], arrayLocation[1])});
+            this.map.setView({center: new Microsoft.Maps.Location(arrayLocation[0], arrayLocation[1])});
+        } else {
+            // console.log(this.props.ding.toJS());
+            location = this.props.ding.coordinates;
+            const arrayLocation = [location.lat, location.lng];
+            this.map.setView({center: new Microsoft.Maps.Location(arrayLocation[0], arrayLocation[1])});
+        }
     }
-  }
 
   map: any;
   element: any;
 
   getBingMap (element, location, heading = null) {
-    let bingMapInitOptions = {
-      credentials: 'AoVnu-gjYPGDRnY4hHsyRfjTekMrsKUT3kRhMePEcIzzxknHOGCSKHyGQO3PFJbB',
-      mapTypeId: Microsoft.Maps.MapTypeId.streetside,
-      zoom: 18,
-      center: new Microsoft.Maps.Location(location[0], location[1]),
-    };
+        let bingMapInitOptions = {
+            credentials: 'AoVnu-gjYPGDRnY4hHsyRfjTekMrsKUT3kRhMePEcIzzxknHOGCSKHyGQO3PFJbB',
+            mapTypeId: Microsoft.Maps.MapTypeId.streetside,
+            zoom: 18,
+            center: new Microsoft.Maps.Location(location[0], location[1]),
+        };
 
-    if (heading !== null) {
-      bingMapInitOptions = {...bingMapInitOptions, heading};
+        if (heading !== null) {
+            bingMapInitOptions = {...bingMapInitOptions, heading};
+        }
+
+        this.map = new Microsoft.Maps.Map(element, bingMapInitOptions);
+
+        this.map.setOptions({ streetsideOptions: { overviewMapMode: Microsoft.Maps.OverviewMapMode.hidden,
+            showCurrentAddress: false,
+            showProblemReporting: false,
+            showExitButton: false,
+            disablePanoramaNavigation: true,
+            showHeadingCompass: false,
+            showZoomButtons: false },
+        });
     }
-
-    this.map = new Microsoft.Maps.Map(element, bingMapInitOptions);
-
-    this.map.setOptions({ streetsideOptions: { overviewMapMode: Microsoft.Maps.OverviewMapMode.hidden,
-      showCurrentAddress: false,
-      showProblemReporting: false,
-      showExitButton: false,
-      disablePanoramaNavigation: true,
-      showHeadingCompass: false,
-      showZoomButtons: false },
-    });
-  }
   render () {
-    return (<div id='streetSide' className={streetSideMap} />);
-  }
+        return (<div id='streetSide' className={streetSideMap} />);
+    }
 }
 
 function mapStateToProps (state, props) {
-  const rawDing: Map<any, any> = (state.dings.get(props.dingId) || new Map());
-  return {
-    isFetching: state.dings.get('isFetching') || state.dingFeed.get('isFetching'),
-    dingId: props.dingId,
-    ding: rawDing.toJS(),
-    nextResponsePair: state.userResponses.get('nextResponsePair'),
-  };
+    const rawDing: Map<any, any> = (state.dings.get(props.dingId) || new Map());
+    return {
+        isFetching: state.dings.get('isFetching') || state.dingFeed.get('isFetching'),
+        dingId: props.dingId,
+        ding: rawDing.toJS(),
+        nextResponsePair: state.userResponses.get('nextResponsePair'),
+    };
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
-  return bindActionCreators({
-    ...dingActionCreators,
-  }, dispatch);
+    return bindActionCreators({
+        ...dingActionCreators,
+    }, dispatch);
 }
 
 export default connect(mapStateToProps,
-  mapDispatchToProps)(StreetSideContainer);
+    mapDispatchToProps)(StreetSideContainer);

@@ -16,4 +16,7 @@ export Option from './Option/Option';
 export Proposal from './Proposal/Proposal';
 export ProposalList from './ProposalList/ProposalList';
 export ProposalListItem from './ProposalList/ProposalListItem';
+export CreateProposal from './CreateProposal/CreateProposal';
+export CreatePanel from './CreatePanel/CreatePanel.js';
+export CreateMap from './CreateMap/CreateMap.js';
 

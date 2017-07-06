@@ -16,7 +16,12 @@ export MapAndStreetViewContainer from './MapAndStreetView/MapAndStreetViewContai
 export RecordSoundContainer from './RecordSound/RecordSoundContainer';
 export ProposalContainer from './Proposal/ProposalContainer';
 export ProposalListContainer from './ProposalList/ProposalListContainer';
+export CreateProposalContainer from './CreateProposal/CreateProposalContainer';
 // sub components
 export SurveyContainer from './Survey/SurveyContainer';
 export ProposalListItemContainer from './ProposalList/ProposalListItemContainer';
 export ProposalMapContainer from './ProposalMap/ProposalMapContainer';
+export CreateMapContainer from './CreateMap/CreateMapContainer';
+export CreatePanelContainer from './CreatePanel/CreatePanelContainer';
+export RangeSliderContainer from './RangeSlider/RangeSliderContainer';
+

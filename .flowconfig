@@ -7,10 +7,11 @@
 [include]
 
 [libs]
-./flow-typed
-# interfaces/
+./flow-typed/
 
 
 [options]
 module.system.node.resolve_dirname=app
-# module.name_mapper='(Microsoft\)' -> '<PROJECT_ROOT>/flow-typed/GeneralStub.js.flow'
+# module.name_mapper='\(lodash/isFunction\)'->'<PROJECT_ROOT>/flow-typed/GeneralStub.js.flow'
+# module.name_mapper='\(lodash/pickBy\)'->'<PROJECT_ROOT>/flow-typed/GeneralStub.js.flow'
+# module.name_mapper='\(Microsoft\)' -> '<PROJECT_ROOT>/flow-typed/GeneralStub.js.flow'

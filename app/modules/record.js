@@ -28,9 +28,9 @@ const FETCHING_LATLNG_ERROR = 'FETCHING_LATLNG_ERROR';
 const FETCHING_LATLNG_SUCCESS = 'FETCHING_LATLNG_SUCCESS';
 
 const detectionStatus = {
-  INITIAL: 0,
-  WAITING: 1,
-  LEAVING: 2,
+    INITIAL: 0,
+    WAITING: 1,
+    LEAVING: 2,
 };
 
 /*
@@ -42,78 +42,78 @@ const dingType = {
 */
 
 function stopRecording () {
-  return {
-    type: STOP_RECORDING,
-  };
+    return {
+        type: STOP_RECORDING,
+    };
 }
 
 function startRecording (commuteId) {
-  return {
-    type: START_RECORDING,
-    commuteId,
-  };
+    return {
+        type: START_RECORDING,
+        commuteId,
+    };
 }
 
 function waitDetection () {
-  return {
-    type: WAIT_DETECTION,
-  };
+    return {
+        type: WAIT_DETECTION,
+    };
 }
 
 export function handleDetection (slopes) {
-  return function (dispatch, getState) {
-    const status = getState().record.get('detectionStatus');
-    if (slopes[0] > threshold && slopes[1] > threshold) {
-      if (status === detectionStatus.INITIAL) {
-        dispatch(waitDetection());
-      } else if (status === detectionStatus.WAITING) {
-        if (Date.now() - getState().record.get('lastTimeOverThreshold') > thresholdLength) {
-          // detection!
-          console.log('DING');
-          dispatch(leaveDetection());
-          return true;
+    return function (dispatch, getState) {
+        const status = getState().record.get('detectionStatus');
+        if (slopes[0] > threshold && slopes[1] > threshold) {
+            if (status === detectionStatus.INITIAL) {
+                dispatch(waitDetection());
+            } else if (status === detectionStatus.WAITING) {
+                if (Date.now() - getState().record.get('lastTimeOverThreshold') > thresholdLength) {
+                    // detection!
+                    console.log('DING');
+                    dispatch(leaveDetection());
+                    return true;
+                } else {
+                    // waiting...
+                    return false;
+                }
+            } else { // status === detectionStatus.LEAVING
+                return false;
+            }
         } else {
-          // waiting...
-          return false;
+            if (status !== detectionStatus.INITIAL) {
+                // console.log(Date.now() - getState().record.get('lastDetection'));
+                dispatch(returnDetection());
+            }
+            return false;
         }
-      } else { // status === detectionStatus.LEAVING
-        return false;
-      }
-    } else {
-      if (status !== detectionStatus.INITIAL) {
-        // console.log(Date.now() - getState().record.get('lastDetection'));
-        dispatch(returnDetection());
-      }
-      return false;
-    }
-  };
+    };
 }
 
 function leaveDetection () {
-  return {
-    type: LEAVE_DETECTION,
-  };
+    return {
+        type: LEAVE_DETECTION,
+    };
 }
 
 function returnDetection () {
-  return {
-    type: RETURN_DETECTION,
-  };
+    return {
+        type: RETURN_DETECTION,
+    };
 }
 
 function addPending (lat, lng, timestamp) {
-  return {
-    type: ADD_PENDING,
-    lat,
-    lng,
-    timestamp,
-  };
+    return {
+        type: ADD_PENDING,
+        lat,
+        lng,
+        timestamp,
+    };
 }
 
 function removePending () {
-  return {
-    type: REMOVE_PENDING,
-  };
+    return {
+        type: REMOVE_PENDING,
+    };
 }
 
 /*
@@ -128,267 +128,267 @@ export function handleReleasePending (timestamp) {
 */
 
 export function uploadingClip () {
-  return {
-    type: UPLOADING_CLIP,
-  };
+    return {
+        type: UPLOADING_CLIP,
+    };
 }
 
 export function uploadingClipError (error) {
-  console.warn(error);
-  return {
-    error: 'error uploading clip',
-    type: UPLOADING_CLIP_ERROR,
-  };
+    console.warn(error);
+    return {
+        error: 'error uploading clip',
+        type: UPLOADING_CLIP_ERROR,
+    };
 }
 
 export function uploadingClipSuccess () {
-  return {
-    type: UPLOADING_CLIP_SUCCESS,
-  };
+    return {
+        type: UPLOADING_CLIP_SUCCESS,
+    };
 }
 
 export function handleUpload (recorder, location, timestamp) {
-  return function (dispatch, getState) {
-    if (getState().record.get('isUploading')) return;
+    return function (dispatch, getState) {
+        if (getState().record.get('isUploading')) return;
 
-    dispatch(uploadingClip());
-    recorder.exportWAV((blob) => {
-      const filename = formatWavFileName(timestamp, location);
-      console.log(filename);
-      storeBlob(filename, blob)
-        .then(() => dispatch(uploadingClipSuccess()));
-    });
-  };
+        dispatch(uploadingClip());
+        recorder.exportWAV((blob) => {
+            const filename = formatWavFileName(timestamp, location);
+            console.log(filename);
+            storeBlob(filename, blob)
+                .then(() => dispatch(uploadingClipSuccess()));
+        });
+    };
 }
 
 export function handleRecordInitiation (uid) {
-  return function (dispatch, getState) {
-    return createCommute(uid)
-      .then((commuteId) => dispatch(startRecording(commuteId)));
-  };
+    return function (dispatch, getState) {
+        return createCommute(uid)
+            .then((commuteId) => dispatch(startRecording(commuteId)));
+    };
 }
 export function toggleRecording () {
-  return function (dispatch, getState) {
-    if (
-      getState().record.get('isRecording') === true ||
+    return function (dispatch, getState) {
+        if (
+            getState().record.get('isRecording') === true ||
         getState().users.get('isAuthed') === false
-    ) {
-      dispatch(stopRecording());
-      return Promise.resolve({isRecording: false});
-    } else {
-      const authedId = getState().users.get('authedId');
-      return dispatch(handleRecordInitiation(authedId))
-        .then((action) => Promise.resolve({isRecording: true, commuteId: action.commuteId}));
-    }
-  };
+        ) {
+            dispatch(stopRecording());
+            return Promise.resolve({isRecording: false});
+        } else {
+            const authedId = getState().users.get('authedId');
+            return dispatch(handleRecordInitiation(authedId))
+                .then((action) => Promise.resolve({isRecording: true, commuteId: action.commuteId}));
+        }
+    };
 }
 
 function fetchingLatLng () {
-  return {
-    type: FETCHING_LATLNG,
-  };
+    return {
+        type: FETCHING_LATLNG,
+    };
 }
 
 function fetchingLatLngError (error) {
-  console.warn(error);
-  return {
-    type: FETCHING_LATLNG_ERROR,
-    error: 'error fetching latlng',
-  };
+    console.warn(error);
+    return {
+        type: FETCHING_LATLNG_ERROR,
+        error: 'error fetching latlng',
+    };
 }
 
 function fetchingLatLngSuccess (location, timestamp = Date.now()) {
-  return {
-    type: FETCHING_LATLNG_SUCCESS,
-    location,
-    timestamp,
-  };
+    return {
+        type: FETCHING_LATLNG_SUCCESS,
+        location,
+        timestamp,
+    };
 }
 
 function insideDing (dingId) {
-  return {
-    type: INSIDE_DING,
-    dingId,
-  };
+    return {
+        type: INSIDE_DING,
+        dingId,
+    };
 }
 
 function outsideDing () {
-  return {
-    type: OUTSIDE_DING,
-  };
+    return {
+        type: OUTSIDE_DING,
+    };
 }
 
 export function handleFetchLatLng (commuteId) {
-  return function (dispatch, getState) {
-    if (!getState().record.get('isRecording')) {
-      return Promise.resolve(null);
-    }
+    return function (dispatch, getState) {
+        if (!getState().record.get('isRecording')) {
+            return Promise.resolve(null);
+        }
 
-    const commuteId = getState().record.get('currentCommuteId');
+        const commuteId = getState().record.get('currentCommuteId');
 
-    dispatch(fetchingLatLng());
-    return fetchGeoLocation()
-      .then((coordinates) => dispatch(fetchingLatLngSuccess(coordinates)))
-      .then(({location, timestamp}) => {
-        // detects whether its inside a existing geo fence
-        let isInside = false;
-        let whichDing = '';
+        dispatch(fetchingLatLng());
+        return fetchGeoLocation()
+            .then((coordinates) => dispatch(fetchingLatLngSuccess(coordinates)))
+            .then(({location, timestamp}) => {
+                // detects whether its inside a existing geo fence
+                let isInside = false;
+                let whichDing = '';
 
-        // run through the dings to see which dings are we including
-        // rule: each fetch should only add one passed by ding
-        getState().dingFeed.get('dingIds').toJS().map(dingId => {
-          const ding = getState().dings.get(dingId);
-          const distance = distFromLatLng(ding.get('coordinates').toJS(), location);
+                // run through the dings to see which dings are we including
+                // rule: each fetch should only add one passed by ding
+                getState().dingFeed.get('dingIds').toJS().map(dingId => {
+                    const ding = getState().dings.get(dingId);
+                    const distance = distFromLatLng(ding.get('coordinates').toJS(), location);
 
-          if (distance < ding.get('radius')) {
-            // append as passed by to userDings (+server)
-            isInside = true;
-            whichDing = dingId;
-            const uid = getState().users.get('authedId');
+                    if (distance < ding.get('radius')) {
+                        // append as passed by to userDings (+server)
+                        isInside = true;
+                        whichDing = dingId;
+                        const uid = getState().users.get('authedId');
 
-            // console.log(getState().userDings.getIn([uid, dingId]).toJS())
+                        // console.log(getState().userDings.getIn([uid, dingId]).toJS())
 
-            const currentStats = getState().userDings.getIn([uid, dingId, 'status']);
+                        const currentStats = getState().userDings.getIn([uid, dingId, 'status']);
 
-            // console.log(currentStats)
+                        // console.log(currentStats)
 
-            if (
-              currentStats !== userDingStatus.DINGED &&
+                        if (
+                            currentStats !== userDingStatus.DINGED &&
               currentStats !== userDingStatus.PASSEDBY
-            ) {
-              // add this ding as my user ding
-              createUserDing(uid, dingId, userDingStatus.PASSEDBY, commuteId, timestamp)
-                .then(dispatch(addUserDing(uid, dingId, userDingStatus.PASSEDBY, commuteId, timestamp)));
-            }
-          }
-        });
+                        ) {
+                            // add this ding as my user ding
+                            createUserDing(uid, dingId, userDingStatus.PASSEDBY, commuteId, timestamp)
+                                .then(dispatch(addUserDing(uid, dingId, userDingStatus.PASSEDBY, commuteId, timestamp)));
+                        }
+                    }
+                });
 
-        // mutate state according to
-        if (isInside) {
-          if (
-            !getState().record.get('isInside') || // we weren't inside and,
+                // mutate state according to
+                if (isInside) {
+                    if (
+                        !getState().record.get('isInside') || // we weren't inside and,
             getState().record.get('whichDing') !== whichDing // or were inside of a different ding
-          ) { dispatch(insideDing(whichDing)); }
-        } else {
-          if (getState().record.get('isInside')) dispatch(outsideDing());
-        }
-        return {location, timestamp};
-      })
-      .then(({location, timestamp}) => {
-        if (refreshCommute(timestamp)) {
-          // if the commutee is too old reinitiate it
-          if (getState().record.get('breadcrumbNum') < 2) {
-            deleteCommute(commuteId);
-          }
+                    ) { dispatch(insideDing(whichDing)); }
+                } else {
+                    if (getState().record.get('isInside')) dispatch(outsideDing());
+                }
+                return {location, timestamp};
+            })
+            .then(({location, timestamp}) => {
+                if (refreshCommute(timestamp)) {
+                    // if the commutee is too old reinitiate it
+                    if (getState().record.get('breadcrumbNum') < 2) {
+                        deleteCommute(commuteId);
+                    }
 
-          dispatch(stopRecording());
-          // handleRecordInitiation()
-        } else {
-          // else, the commute is still alive = append
-          appendBreadcrumb(commuteId, location, timestamp);
-        }
-      })
-      .catch((error) => dispatch(fetchingLatLngError(error)));
-  };
+                    dispatch(stopRecording());
+                    // handleRecordInitiation()
+                } else {
+                    // else, the commute is still alive = append
+                    appendBreadcrumb(commuteId, location, timestamp);
+                }
+            })
+            .catch((error) => dispatch(fetchingLatLngError(error)));
+    };
 }
 
 const initialState = fromJS({
-  isFetchingLatLng: false,
-  isRecording: false,
-  detectionStatus: detectionStatus.INITIAL,
-  isCapturing: false,
-  isUploading: false,
-  isInside: false,
-  whichDing: '',
-  currentCommuteId: '',
-  latestLocation: {
-    lat: 0,
-    lng: 0,
-  },
-  latestFetchAttempt: 0,
-  lastTimeOverThreshold: 0,
-  lastDetection: 0,
-  latestFetch: 0,
-  error: '',
-  isPending: false,
-  pending: {
-    dingId: '',
-    timestamp: 0,
-  },
+    isFetchingLatLng: false,
+    isRecording: false,
+    detectionStatus: detectionStatus.INITIAL,
+    isCapturing: false,
+    isUploading: false,
+    isInside: false,
+    whichDing: '',
+    currentCommuteId: '',
+    latestLocation: {
+        lat: 0,
+        lng: 0,
+    },
+    latestFetchAttempt: 0,
+    lastTimeOverThreshold: 0,
+    lastDetection: 0,
+    latestFetch: 0,
+    error: '',
+    isPending: false,
+    pending: {
+        dingId: '',
+        timestamp: 0,
+    },
 });
 
 export default function record (state = initialState, action) {
-  switch (action.type) {
+    switch (action.type) {
     case STOP_RECORDING:
-      return state.merge({
-        isRecording: false,
-        currentCommuteId: '',
-      });
+        return state.merge({
+            isRecording: false,
+            currentCommuteId: '',
+        });
     case START_RECORDING:
-      return state.merge({
-        isRecording: true,
-        currentCommuteId: action.commuteId,
-      });
+        return state.merge({
+            isRecording: true,
+            currentCommuteId: action.commuteId,
+        });
     case WAIT_DETECTION:
-      return state.merge({
-        detectionStatus: detectionStatus.WAITING,
-        lastTimeOverThreshold: Date.now(),
-      });
+        return state.merge({
+            detectionStatus: detectionStatus.WAITING,
+            lastTimeOverThreshold: Date.now(),
+        });
     case LEAVE_DETECTION:
-      return state.merge({
-        detectionStatus: detectionStatus.LEAVING,
-        lastTimeOverThreshold: Date.now(),
-        lastDetection: Date.now(),
-      });
+        return state.merge({
+            detectionStatus: detectionStatus.LEAVING,
+            lastTimeOverThreshold: Date.now(),
+            lastDetection: Date.now(),
+        });
     case RETURN_DETECTION:
-      return state.merge({
-        detectionStatus: detectionStatus.INITIAL,
-        lastTimeOverThreshold: Date.now(),
-      });
+        return state.merge({
+            detectionStatus: detectionStatus.INITIAL,
+            lastTimeOverThreshold: Date.now(),
+        });
     case ADD_PENDING:
-      return state.merge({
-        isPending: true,
-        pending: {
-          dingId: action.dingId,
-          timestamp: action.timestamp,
-        },
-      });
+        return state.merge({
+            isPending: true,
+            pending: {
+                dingId: action.dingId,
+                timestamp: action.timestamp,
+            },
+        });
     case REMOVE_PENDING:
-      return state.merge({
-        isPending: false,
-        pending: {
-          dingId: '',
-          timestamp: 0,
-        },
-      });
+        return state.merge({
+            isPending: false,
+            pending: {
+                dingId: '',
+                timestamp: 0,
+            },
+        });
     case UPLOADING_CLIP:
-      return state.set('isUploading', true);
+        return state.set('isUploading', true);
     case UPLOADING_CLIP_SUCCESS:
-      return state.set('isUploading', false);
+        return state.set('isUploading', false);
     case FETCHING_LATLNG:
-      return state.merge({
-        isFetchingLatLng: true,
-        latestFetchAttempt: Date.now(),
-      });
+        return state.merge({
+            isFetchingLatLng: true,
+            latestFetchAttempt: Date.now(),
+        });
     case INSIDE_DING:
-      return state.set('isInside', true).set('whichDing', action.dingId);
+        return state.set('isInside', true).set('whichDing', action.dingId);
     case OUTSIDE_DING:
-      return state.set('isInside', false).set('whichDing', '');
+        return state.set('isInside', false).set('whichDing', '');
     case UPLOADING_CLIP_ERROR:
     case RECORD_ERROR:
     case FETCHING_LATLNG_ERROR:
-      return state.merge({
-        isRecording: false,
-        isFetchingLatLng: false,
-        error: action.error,
-      });
+        return state.merge({
+            isRecording: false,
+            isFetchingLatLng: false,
+            error: action.error,
+        });
     case FETCHING_LATLNG_SUCCESS:
-      return state.merge({
-        isFetchingLatLng: false,
-        latestFetch: action.timestamp,
-        latestLocation: action.location,
-      });
+        return state.merge({
+            isFetchingLatLng: false,
+            latestFetch: action.timestamp,
+            latestLocation: action.location,
+        });
     default:
-      return state;
-  }
+        return state;
+    }
 }

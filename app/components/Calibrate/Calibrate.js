@@ -11,23 +11,23 @@ type Props = {
 }
 
 export default function Calibrate ({isFetching, isCalibrating, toggleCalibration, targetFrequency}: Props) {
-  const buttonStyle = {
-    backgroundColor: isCalibrating ? '#ff0000' : '#444444',
-  };
+    const buttonStyle = {
+        backgroundColor: isCalibrating ? '#ff0000' : '#444444',
+    };
 
-  const status: string = isCalibrating ? 'calibrating' : `target frequency: ${targetFrequency}`;
+    const status: string = isCalibrating ? 'calibrating' : `target frequency: ${targetFrequency}`;
 
-  return (
-    isFetching
-      ? <div id='calibrate' className={callibrateContents} />
-      : (<div id='calibrate' className={callibrateContents}>
-        { status }
-        <div className={largeButton} style={buttonStyle} onClick={toggleCalibration}>
-          { isCalibrating === true
-            ? 'stop calibration'
-            : 'start calibration'
-          }
-        </div>
-      </div>)
-  );
+    return (
+        isFetching
+            ? <div id='calibrate' className={callibrateContents} />
+            : (<div id='calibrate' className={callibrateContents}>
+                { status }
+                <div className={largeButton} style={buttonStyle} onClick={toggleCalibration}>
+                    { isCalibrating === true
+                        ? 'stop calibration'
+                        : 'start calibration'
+                    }
+                </div>
+            </div>)
+    );
 }

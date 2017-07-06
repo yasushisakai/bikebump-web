@@ -21,85 +21,85 @@ type AuthContainerProps = {
 }
 
 function AuthButton ({service, onClick}: AuthButtonProps) {
-  return (
-    <div
-      className={button}
-      onClick={onClick.bind(this, service)} >
-      {`login with ${service} account`}
-    </div>
-  );
+    return (
+        <div
+            className={button}
+            onClick={onClick.bind(this, service)} >
+            {`login with ${service} account`}
+        </div>
+    );
 }
 
 class AuthContainer extends React.Component<void, AuthContainerProps, void> {
-  constructor (props, context) {
-    super(props);
-    context.router;
-  }
-
-  componentDidMount () {
-    if (sessionStorage.getItem('redirectAuth') === 'true') {
-      this.props.handleUserAuthReturn();
+    constructor (props, context) {
+        super(props);
+        context.router;
     }
-  }
 
-  componentDidUpdate () {
-    this.props.isAuthed
-      ? this.context.router.push('record')
-      : null;
-  }
-
-  signInButtons () {
-    const getProvider = () => {
-      let getItem: ?string = localStorage.getItem('provider');
-      if (typeof getItem === 'string') {
-        return getItem;
-      } else {
-        console.error('no provider found');
-        return 'none';
-      }
-    };
-
-    if (typeof localStorage.getItem('provider') !== 'string') {
-      return Object.keys(services).map((key) => {
-        // Inigo bug: chrome ver:51.02704, Android ver 5.1.1
-        // Object.values is from chrome ver.54 and later
-        const service = services[key];
-        return <AuthButton
-          onClick={this.props.handleUserAuthRedirect}
-          service={service}
-          key={service} />;
-      });
-    } else {
-      const serviceProvider: string = getProvider();
-      return <AuthButton
-        service={serviceProvider}
-        onClick={this.props.handleUserAuthRedirect}/>;
+    componentDidMount () {
+        if (sessionStorage.getItem('redirectAuth') === 'true') {
+            this.props.handleUserAuthReturn();
+        }
     }
-  }
 
-  render () {
-    return (
-      <Auth>
-        {this.signInButtons()}
-      </Auth>
-    );
-  }
+    componentDidUpdate () {
+        this.props.isAuthed
+            ? this.context.router.push('record')
+            : null;
+    }
+
+    signInButtons () {
+        const getProvider = () => {
+            let getItem: ?string = localStorage.getItem('provider');
+            if (typeof getItem === 'string') {
+                return getItem;
+            } else {
+                console.error('no provider found');
+                return 'none';
+            }
+        };
+
+        if (typeof localStorage.getItem('provider') !== 'string') {
+            return Object.keys(services).map((key) => {
+                // Inigo bug: chrome ver:51.02704, Android ver 5.1.1
+                // Object.values is from chrome ver.54 and later
+                const service = services[key];
+                return <AuthButton
+                    onClick={this.props.handleUserAuthRedirect}
+                    service={service}
+                    key={service} />;
+            });
+        } else {
+            const serviceProvider: string = getProvider();
+            return <AuthButton
+                service={serviceProvider}
+                onClick={this.props.handleUserAuthRedirect}/>;
+        }
+    }
+
+    render () {
+        return (
+            <Auth>
+                {this.signInButtons()}
+            </Auth>
+        );
+    }
 }
 
 AuthContainer.contextTypes = {
-  router: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
 };
 
 function mapStateToProps ({users}) {
-  return {
-    isFetching: users.get('isFetching'),
-    isAuthed: users.get('isAuthed'),
-    error: users.get('error'),
-  };
+    return {
+        isFetching: users.get('isFetching'),
+        isAuthed: users.get('isAuthed'),
+        error: users.get('error'),
+    };
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
-  return bindActionCreators(usersActionCreators, dispatch);
+    return bindActionCreators(usersActionCreators, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthContainer);

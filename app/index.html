@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <script src="https://use.fontawesome.com/1013055c6d.js"></script>
@@ -14,17 +15,56 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="mobile-web-app-capable" content="yes">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  
+
   <script type='text/javascript' src='//www.bing.com/api/maps/mapcontrol' async defer></script>
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css">
+  <link href="https://unpkg.com/@blueprintjs/core@^1.11.0/dist/blueprint.css" rel="stylesheet" />
   <style>
-    .leflet-container .leaflet-control-attribution{
-      font-size:9px;
+    .leflet-container .leaflet-control-attribution {
+      font-size: 9px;
+    }
+
+    .mapButton {
+      box-shadow: inset 0px 1px 0px 0px #ffffff;
+      background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      border: 1px solid #dcdcdc;
+      display: inline-block;
+      cursor: pointer;
+      color: #333333;
+      font-family: Arial;
+      font-size: 2em;
+      margin: 10px 0;
+      font-weight: bold;
+      padding: 10px 24px;
+      text-decoration: none;
+      width: 270px;
+      text-align: center;
+      text-shadow: 0px 1px 0px #ffffff;
+    }
+
+    .disabled {
+      background: none !important;
+      background-color: none !important;
+      background-color: #999;
+      color: #666;
+    }
+
+    .mapButton:hover {
+      background-color: #e9e9e9;
+    }
+
+    .mapButton:active {
+      position: relative;
+      top: 1px;
     }
   </style>
   <title>bikebump</title>
 </head>
+
 <body>
   <div id="app"></div>
 </body>
+
 </html>

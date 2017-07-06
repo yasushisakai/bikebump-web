@@ -21,6 +21,7 @@
     "no-console": [2, {"allow": ["log", "warn", "error"]}],
     "comma-dangle" : [2, "always-multiline"],
     "semi": [2, "always"],
+    "indent": [2, 4],
     "jsx-quotes": [2, "prefer-single"],
     "react/jsx-boolean-value": [2, "always"],
     "react/jsx-closing-bracket-location": [2, {"selfClosing": "after-props", "nonEmpty": "after-props"}],
@@ -28,7 +29,7 @@
     "react/jsx-max-props-per-line": [2, {"maximum": 3}],
     "react/jsx-no-literals": 2,
     "react/self-closing-comp": 2,
-    "react/sort-comp": 2,
-    "react/prop-types": 0,
+    "react/sort-comp": 0,
+    "react/prop-types": 0
   }
 }

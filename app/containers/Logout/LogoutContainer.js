@@ -11,8 +11,8 @@ class LogoutContainer extends React.Component {
   }
 
   componentDidMount () {
-    this.props.handleUserLogout();
-  }
+        this.props.handleUserLogout();
+    }
 
   props: {
     isAuthed: boolean,
@@ -20,21 +20,21 @@ class LogoutContainer extends React.Component {
   }
 
   render () {
-    return (
-      <Logout isAuthed={this.props.isAuthed} />
-    );
-  }
+        return (
+            <Logout isAuthed={this.props.isAuthed} />
+        );
+    }
 }
 
 function mapStateToProps (state) {
-  return {
-    isAuthed: state.users.get('isAuthed'),
-  };
+    return {
+        isAuthed: state.users.get('isAuthed'),
+    };
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
-  return bindActionCreators(userActionCreators, dispatch);
+    return bindActionCreators(userActionCreators, dispatch);
 }
 
 export default connect(mapStateToProps,
-  mapDispatchToProps)(LogoutContainer);
+    mapDispatchToProps)(LogoutContainer);

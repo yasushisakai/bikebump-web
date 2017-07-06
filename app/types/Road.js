@@ -5,13 +5,13 @@ export type Road = {
 };
 
 const unitLineString: LineString = {
-  type: 'LineString',
-  coordinates: [[0, 0]],
+    type: 'LineString',
+    coordinates: [[0, 0]],
 };
 
 export const emptyRoad: Road = {
-  geometry: unitLineString,
-  properties: {},
+    geometry: unitLineString,
+    properties: {},
 };
 
 export type LineString = {

@@ -10,22 +10,22 @@ class RoadVisContainer extends React.Component {
     roadId: string
   }
   render () {
-    return (<RoadVis roadId={this.props.roadId}/>);
-  }
+        return (<RoadVis roadId={this.props.roadId}/>);
+    }
 }
 
 function mapStateToProps (state, props) {
-  const roadId = props.params.roadId;
-  return {
-    roadId,
-  };
+    const roadId = props.params.roadId;
+    return {
+        roadId,
+    };
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
-  return bindActionCreators({
-    ...roadsActionCreators,
-  }, dispatch);
+    return bindActionCreators({
+        ...roadsActionCreators,
+    }, dispatch);
 }
 
 export default connect(mapStateToProps,
-  mapDispatchToProps)(RoadVisContainer);
+    mapDispatchToProps)(RoadVisContainer);
