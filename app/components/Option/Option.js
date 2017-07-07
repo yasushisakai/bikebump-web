@@ -20,7 +20,6 @@ class Option extends React.Component<void, Props, void> {
             color: this.props.color,
         };
 
-        console.log(this.props.background);
         if (this.props.background.startsWith('#')) {
             style = {...style, backgroundColor: this.props.background};
         } else {
@@ -31,7 +30,6 @@ class Option extends React.Component<void, Props, void> {
             };
         }
 
-        console.log(this.props.size);
 
         return (
             <div className={option} onClick={this.props.onClick} style={style}>

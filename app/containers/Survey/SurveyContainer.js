@@ -43,7 +43,6 @@ class SurveyContainer extends React.Component<void, Props, void> {
         this.optionsHeight = window.innerHeight * 0.192;
     }
     componentDidMount () {
-        console.log('hi, there');
         const optionsElement = document.getElementById('options');
         if (optionsElement) {
             this.optionsWidth = optionsElement.clientWidth;
@@ -59,10 +58,8 @@ class SurveyContainer extends React.Component<void, Props, void> {
 
   getOptionSize () {
         const optionNum = this.props.question.values.length;
-        console.log(this.optionsWidth, this.optionsHeight);
         const unitHeight = this.optionsHeight - 5;
         const unitWidth = this.optionsWidth * (1 - ((optionNum - 1) * 0.05)) / optionNum;
-        console.log(unitWidth, unitHeight);
         this.optionSize = unitHeight < unitWidth ? unitHeight : unitWidth;
     }
 

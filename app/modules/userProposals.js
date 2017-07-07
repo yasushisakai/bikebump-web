@@ -42,7 +42,6 @@ export function handleFetchingUserProposals (uid) {
         dispatch(fetchingUserProposals());
         fetchUserProposals(uid)
             .then((userProposals) => {
-                console.log(userProposals);
                 dispatch(fetchingUserProposalsSuccess(userProposals));
             })
             .catch((error) => {

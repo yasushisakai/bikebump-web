@@ -46,7 +46,6 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 
     componentDidMount () {
-        console.log('mounted');
         // initiating the map
         this.map = map('mainMap').setView([42.355596, -71.101363], 17);
         tileLayer(darkTile, { attribution, maxZoom: 20 }).addTo(this.map);
@@ -72,7 +71,6 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 
     shouldComponentUpdate (nextProps) {
-        // console.log(nextProps.isFetching);
         // return !nextProps.isFetching;
         return true;
     }
@@ -107,7 +105,6 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
 
     componentWillUpdate (nextProps: MapVisContaierProps) {
         // once everthing is ready plot!
-        console.log(nextProps.isFetching, this.mapHasLayers);
         if (!nextProps.isFetching && !this.mapHasLayers) {
             // roads~
             nextProps.roads.keySeq().toArray()
@@ -149,7 +146,6 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 
     handleClickRoad (roadId) {
-        console.log(this.props);
     // this.props.router.push(`/create/${roadId}`);
     }
 
