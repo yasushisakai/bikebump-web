@@ -5,8 +5,6 @@ import { fetchRoadProposals } from 'helpers/api';
 const FETCHING_ROAD_PROPOSAL = 'FETCHING_ROAD_PROPOSAL';
 const FETCHING_ROAD_PROPOSAL_ERROR = 'FETCHING_ROAD_PROPOSAL_ERROR';
 const FETCHING_ROAD_PROPOSAL_SUCCESS = 'FETCHING_ROAD_PROPOSAL_SUCCESS';
-const REMOVE_FETCHING_ROAD_PROPOSAL = 'REMOVE_FETCHING_ROAD_PROPOSAL';
-
 function fetchingRoadProposals () {
     return {
         type: FETCHING_ROAD_PROPOSAL,
@@ -28,12 +26,6 @@ function fetchingRoadProposalsSuccess (roadProposals) {
     };
 }
 
-function removeFetchingRoadProposals () {
-    return {
-        type: REMOVE_FETCHING_ROAD_PROPOSAL,
-    };
-}
-
 export function handleFetchingRoadProposals () {
     return function (dispatch, getState) {
         if (getState().roadProposals.get('isFetching')) {
@@ -44,7 +36,7 @@ export function handleFetchingRoadProposals () {
             // dispatch(removeFetchingRoadProposals());
             return;
         }
-        
+
         dispatch(fetchingRoadProposals());
         return fetchRoadProposals()
             .then((roadProposals) => dispatch(fetchingRoadProposalsSuccess(roadProposals)))

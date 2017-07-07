@@ -193,8 +193,9 @@ export function updateUserSettings (uid, variable, value) {
 }
 
 export function fetchUserProposals (uid) {
+    console.log(uid);
     return ref.child(`userProposals/${uid}`).once('value')
-        .then((snapshot) => snapshot.val() || []);
+        .then((snapshot) => snapshot.val() || {});
 }
 
 export function fetchRoadProposals () {

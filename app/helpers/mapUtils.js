@@ -35,13 +35,20 @@ export const defaultCircleStyle = {
     weight: 10,
     opacity: 0.8,
     color: '#ff69b4',
-}
+};
 
 export const defaultRoadStyle = {
     ...defaultStyle,
     color: '#f3f315',
     opacity: 0.8,
     weight: 12,
+};
+
+export const roadSelectedStyle = {
+    ...defaultStyle,
+    color: '#111',
+    opacity: 0.8,
+    weight: 6,
 };
 
 export const defaultCommuteStyle = {

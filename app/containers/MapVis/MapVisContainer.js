@@ -161,10 +161,6 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
 }
 
 function mapStateToProps ({ roads, dingFeed, dings, commutes, roadProposals }) {
-    console.log('dingFeed', dingFeed.get('isFetching'));
-    console.log('roads', roads.get('isFetching'));
-    console.log('commutes', commutes.get('isFetching'));
-    console.log('roadProposals', roadProposals.get('isFetching'));
     const isFetching: boolean =
         dingFeed.get('isFetching') ||
         roads.get('isFetching') ||

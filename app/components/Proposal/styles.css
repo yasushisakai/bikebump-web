@@ -51,6 +51,7 @@
     width: 100%;
     height: 100%;
     justify-content: space-between;
+    margin-bottom: 10px;
 }
 
 .patternTitle {
@@ -72,14 +73,19 @@
 }
 
 .option {
-    flex: 0 1;
+    flex: 1;
+    border: 1px #fff;
     height: 100%;
+    max-width: 30%;
+    /*width: 30px;*/
     background: rgba(0, 0, 0, 0.2);
-    display: table;
     text-align: center;
 }
 
 .optionText {
-    display: table-cell;
-    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    font-weight: 600;
+    font-size: 1.2em;
 }
+

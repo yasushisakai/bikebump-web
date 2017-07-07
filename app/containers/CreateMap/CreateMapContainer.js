@@ -6,6 +6,7 @@ import { handleFetchSingleRoad } from 'modules/roads';
 
 import { darkTile, attribution } from 'config/constants';
 import { spliceRoad, arrayToLatLng } from 'helpers/utils';
+import { defaultRoadStyle } from 'helpers/mapUtils';
 import { map, Map, LatLng, polyline, Polyline, tileLayer } from 'leaflet';
 
 import { type Road, emptyRoad } from 'types';
@@ -25,8 +26,30 @@ type Props = {
 class CreateMapContainer extends React.Component<void, Props, void> {
     constructor (props: Props) {
         super(props);
-        this.targetRoad = polyline([]);
-        this.road = polyline([], {color: '#ffff00', opacity: 0.8, weight: 10});
+
+        const roadStyle = {
+            ...defaultRoadStyle,
+            opacity: 0.3,
+            weight: 30,
+        };
+
+        const targetBackStyle = {
+            ...defaultRoadStyle,
+            opacity: 0.8,
+            weight: 15,
+            color: '#111',
+        };
+
+        const targetForeStyle = {
+            ...defaultRoadStyle,
+            opacity: 1,
+            weight: 5,
+            color: '#eee',
+        };
+
+        this.targetRoadBack = polyline([], targetBackStyle);
+        this.targetRoadFore = polyline([], targetForeStyle);
+        this.road = polyline([], roadStyle);
     }
 
     componentDidMount () {
@@ -38,18 +61,18 @@ class CreateMapContainer extends React.Component<void, Props, void> {
         this.map = map('createMap', {zoomControl: false}).setView(location, 18);
         tileLayer(darkTile, {attribution}).addTo(this.map);
         this.road.addTo(this.map);
-        this.targetRoad.addTo(this.map);
+        this.targetRoadBack.addTo(this.map);
+        this.targetRoadFore.addTo(this.map);
     }
 
     componentWillUpdate (nextProps: Props) {
         if (!nextProps.isFetching) {
-            console.log(nextProps.road);
             const roadLatLngs: LatLng[] = nextProps.road.geometry.coordinates.map((array) => arrayToLatLng(array));
             this.road.setLatLngs(roadLatLngs);
 
             const partialGeom = spliceRoad(nextProps.road.geometry, nextProps.domain);
-            console.log(partialGeom);
-            this.targetRoad.setLatLngs(partialGeom);
+            this.targetRoadBack.setLatLngs(partialGeom);
+            this.targetRoadFore.setLatLngs(partialGeom);
             this.map.fitBounds(this.road.getBounds());
         }
     }
@@ -60,7 +83,8 @@ class CreateMapContainer extends React.Component<void, Props, void> {
 
     map: Map;
     road: Polyline;
-    targetRoad: Polyline;
+    targetRoadBack: Polyline;
+    targetRoadFore: Polyline;
     mapHasLayers: boolean;
 
     render () {

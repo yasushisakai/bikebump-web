@@ -58,13 +58,12 @@ export default function Proposal ({ proposalId, userUnits, patternId, pattern, p
                                 <div className={patternDetails}><Link to={`/details/${patternId}`}><QuestionIcon /></Link></div>
                                 <div className={patternTitle}>{`${pattern.title}`}</div>
                                 <div className={smallMetaInfo}>{`${pattern.description}`}</div>
-                                {`${proposal.currentUnits / proposal.maxUnits}`}
-                                {`${proposal.maxUnits}`}
+                                <div>{`${proposal.currentUnits} / ${proposal.maxUnits}`}</div>
                             </div>
                             <div className={voteSelecter}>
-                                <div className={option}><span className={optionText}>{`${0}`}</span></div>
-                                <div className={option}><span className={optionText}>{`${10}`}</span></div>
-                                <div className={option}><span className={optionText}>{`${20}`}</span></div>
+                                <div className={option}><button className={`pt-button ${optionText}`}>{`${0}`}</button></div>
+                                <div className={option}><button className={`pt-button ${optionText}`}>{`${10}`}</button></div>
+                                <div className={option}><button className={`pt-button ${optionText}`}>{`${20}`}</button></div>
                             </div>
                         </div>
                     </div>

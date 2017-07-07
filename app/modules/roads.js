@@ -39,13 +39,11 @@ export function handleFetchSingleRoad (roadId) {
     return function (dispatch, getState) {
         if (getState().roads.get('isFetching')) return;
 
-        dispatch(fetchingRoad());
-
         if (getState().roads.get(`${roadId}`)) {
-            dispatch(removeFetchingRoad());
-            return Promise.resolve(getState().roads.get(roadId).toJS());
+            return;
         }
-
+        
+        dispatch(fetchingRoad());
         return fetchRoad(roadId)
             .then((road) => {
                 dispatch(fetchSingleRoad(roadId, road));

@@ -42,6 +42,7 @@ export function handleFetchingUserProposals (uid) {
         dispatch(fetchingUserProposals());
         fetchUserProposals(uid)
             .then((userProposals) => {
+                console.log(userProposals);
                 dispatch(fetchingUserProposalsSuccess(userProposals));
             })
             .catch((error) => {
@@ -68,6 +69,10 @@ const initialState = fromJS({
     isFetching: false,
     error: '',
     lastUpdated: 0,
+    domain: {
+        start: 0,
+        end: 1,
+    },
     proposals: {},
     votes: {},
 });

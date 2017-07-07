@@ -4,7 +4,7 @@ import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import { handleFetchSingleRoad } from 'modules/roads';
-import { plotRoad } from 'helpers/mapUtils';
+import { plotRoad, defaultRoadStyle, roadSelectedStyle } from 'helpers/mapUtils';
 import { spliceRoad, flipGeometry } from 'helpers/utils';
 import { map, Map, tileLayer, polyline, Polyline, latLngBounds, LatLngBounds, LatLng } from 'leaflet';
 import { darkTile, attribution } from 'config/constants';
@@ -37,7 +37,7 @@ class ProposalMapContainer extends React.Component<void, Props, void> {
     componentWillUpdate (nextProps: Props) {
         if (!nextProps.isFetching && !this.mapHasLayers) {
             let road = nextProps.road.toJS();
-            plotRoad(road, this.map, {}, () => {});
+            plotRoad(road, this.map, defaultRoadStyle, () => {});
 
             const geometry = flipGeometry(road.geometry);
 
@@ -45,7 +45,7 @@ class ProposalMapContainer extends React.Component<void, Props, void> {
             const splicedRoadGeometry: LatLng[] = spliceRoad(geometry, { ...nextProps.domain, index: 0 });
             // console.log(splicedRoadGeometry);
 
-            const splicedRoadPolyline: Polyline = polyline(splicedRoadGeometry, {color: '#000'});
+            const splicedRoadPolyline: Polyline = polyline(splicedRoadGeometry, roadSelectedStyle);
             splicedRoadPolyline.addTo(this.map);
 
             const bounds: LatLngBounds = latLngBounds(splicedRoadGeometry);

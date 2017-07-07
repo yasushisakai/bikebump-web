@@ -91,12 +91,10 @@ class ProposalListItemContainer extends React.Component<void, Props, void> {
                 image={this.pattern.image}
                 start={this.proposal.domain.start}
                 end={this.proposal.domain.end}
-                isMine={false}
                 currentUnits={this.proposal.currentUnits}
                 maxUnits={this.proposal.maxUnits}
                 userUnits={this.myUnits}
-                isMine={this.isMine}
-                />;
+                isMine={this.isMine}/>;
         }
     }
 }
