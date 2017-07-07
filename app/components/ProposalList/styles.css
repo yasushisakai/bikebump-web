@@ -16,7 +16,7 @@
     text-align: right;
     position:absolute;
     font-size: 0.8em;
-    top:15%;
+    top: 3px;
     right: 5%;
     width: 30%;
 }
@@ -63,6 +63,9 @@
     font-size: 1.0em;
 }
 
+.disabled {
+    pointer-events: none;
+}
 
 .smallMetaInfo {
     font-size: 0.65em;

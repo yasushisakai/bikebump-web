@@ -1,16 +1,17 @@
 import { fromJS } from 'immutable';
 import { fetchPatterns, fetchPattern, savePattern } from 'helpers/api';
-import { checkLastUpdate } from 'helpers/utils';
+import { isModuleStale } from 'helpers/utils';
 
 const FETCHING_PATTERNS = 'FETCHING_PATTERNS';
 const FETCHING_PATTERNS_ERROR = 'FETCHING_PATTERNS_ERROR';
 const FETCHING_PATTERNS_SUCCESS = 'FETCHING_PATTERNS_SUCCESS';
+const REMOVE_FETCHING_PATTERNS = 'REMOVE_FETCHING_PATTERNS';
 
 const ADD_PATTERN = 'ADD_PATTERN';
 const ADD_PATTERN_ERROR = 'ADD_PATTERN_ERROR';
 
 const initialState = fromJS({
-    isFetching: true,
+    isFetching: false,
     error: '',
     lastUpdated: 0,
 });
@@ -25,6 +26,12 @@ function fetchingPatternsError (error) {
     return {
         type: FETCHING_PATTERNS_ERROR,
         error: 'error fetching patterns',
+    };
+}
+
+function removeFetchingPatterns () {
+    return {
+        type: REMOVE_FETCHING_PATTERNS,
     };
 }
 
@@ -52,13 +59,17 @@ function addPattern (pattern) {
 
 export function handleFetchingPatterns () {
     return function (dispatch, getState) {
-        if (!checkLastUpdate(getState().patterns.get('lastUpdated'), 10)) {
-            const justPatterns = getState().patterns.keySeq().toArray()
-                .filter(key => (key !== 'isFetching' && key !== 'error' && key !== 'lastUpdated'))
-                .map(key => getState().patterns.get(key));
-            return Promise.resolve(justPatterns);
+        if (getState().patterns.get('isFetching')) {
+            return;
         }
+
         dispatch(fetchingPatterns());
+
+        if (!isModuleStale(getState().patterns.get('lastUpdated'))) {
+            dispatch(removeFetchingPatterns());
+            return;
+        }
+
         return fetchPatterns()
             .then((patterns) => dispatch(fetchingPatternsSuccess(patterns)))
             .catch((error) => dispatch(fetchingPatternsError(error)));
@@ -77,7 +88,7 @@ export function handleAddPattern (pattern) {
 export default function patterns (state = initialState, action) {
     switch (action.type) {
     case FETCHING_PATTERNS:
-        return state.set('inFetching', true);
+        return state.set('isFetching', true);
     case ADD_PATTERN_ERROR:
     case FETCHING_PATTERNS_ERROR:
         return state.merge({
@@ -87,8 +98,11 @@ export default function patterns (state = initialState, action) {
     case FETCHING_PATTERNS_SUCCESS:
         return state.merge({
             isFetching: false,
+            error: '',
             lastUpdated: Date.now(),
         }).merge(action.patterns);
+    case REMOVE_FETCHING_PATTERNS:
+        return state.set('isFetching', false);
     case ADD_PATTERN:
         return state.set(action.pattern.patternId, action.pattern);
     default:

@@ -7,7 +7,7 @@ import { Map } from 'immutable';
 import { darkTile } from 'config/constants';
 import leaflet from 'leaflet';
 // import mapzen from 'mapzen.js'
-import { defaultStyle } from 'helpers/mapUtils';
+import { defaultCircleStyle, defaultRoadStyle } from 'helpers/mapUtils';
 import { extractActionCreators, isModuleStale } from 'helpers/utils';
 
 import * as dingActionCreators from 'modules/dings';
@@ -50,7 +50,7 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
         }
 
         this.map = leaflet.map('tinyMap', {zoomControl: false})
-            .setView(position, 16);
+            .setView(position, 17);
 
         leaflet.tileLayer(darkTile, { maxZoom: 20 }).addTo(this.map);
 
@@ -100,7 +100,7 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
         this.reportedLocation = leaflet.circle(
             coordinate,
             props.ding.get('radius'),
-            {...defaultStyle, weight: 3, opacity: 0.8, color: '#f00'}
+            defaultCircleStyle
         ).addTo(this.map);
 
         // if there is a road, draw that too
@@ -111,7 +111,7 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
             this.closestRoad = leaflet.circle(
                 closestPoint,
                 props.ding.get('radius'),
-                {...defaultStyle, weight: 1, opacity: 0.8, color: '#00f'}
+                defaultRoadStyle
             ).addTo(this.map);
         }
     }

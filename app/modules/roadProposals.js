@@ -40,11 +40,12 @@ export function handleFetchingRoadProposals () {
             return;
         }
 
-        dispatch(fetchingRoadProposals());
         if (!isModuleStale(getState().roadProposals.get('lastUpdated'))) {
-            dispatch(removeFetchingRoadProposals());
+            // dispatch(removeFetchingRoadProposals());
+            return;
         }
-
+        
+        dispatch(fetchingRoadProposals());
         return fetchRoadProposals()
             .then((roadProposals) => dispatch(fetchingRoadProposalsSuccess(roadProposals)))
             .catch((error) => dispatch(fetchingRoadProposalsError(error)));

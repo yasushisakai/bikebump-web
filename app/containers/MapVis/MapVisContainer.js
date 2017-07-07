@@ -46,6 +46,7 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 
     componentDidMount () {
+        console.log('mounted');
         // initiating the map
         this.map = map('mainMap').setView([42.355596, -71.101363], 17);
         tileLayer(darkTile, { attribution, maxZoom: 20 }).addTo(this.map);
@@ -71,7 +72,9 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 
     shouldComponentUpdate (nextProps) {
-        return !nextProps.isFetching;
+        // console.log(nextProps.isFetching);
+        // return !nextProps.isFetching;
+        return true;
     }
 
     checkRoadProposals (roadId, props: MapVisContaierProps): number {
@@ -104,6 +107,7 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
 
     componentWillUpdate (nextProps: MapVisContaierProps) {
         // once everthing is ready plot!
+        console.log(nextProps.isFetching, this.mapHasLayers);
         if (!nextProps.isFetching && !this.mapHasLayers) {
             // roads~
             nextProps.roads.keySeq().toArray()
@@ -157,6 +161,10 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
 }
 
 function mapStateToProps ({ roads, dingFeed, dings, commutes, roadProposals }) {
+    console.log('dingFeed', dingFeed.get('isFetching'));
+    console.log('roads', roads.get('isFetching'));
+    console.log('commutes', commutes.get('isFetching'));
+    console.log('roadProposals', roadProposals.get('isFetching'));
     const isFetching: boolean =
         dingFeed.get('isFetching') ||
         roads.get('isFetching') ||

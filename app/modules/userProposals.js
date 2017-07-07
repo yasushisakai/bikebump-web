@@ -22,32 +22,30 @@ function fetchingUserProposalsError (error) {
     };
 }
 
-function fetchingUserProposalsSuccess (proposalIds) {
+function fetchingUserProposalsSuccess (userProposals) {
     return {
         type: FETCHING_USER_PROPOSALS_SUCCESS,
-        proposalIds,
+        userProposals,
     };
 }
 
 export function handleFetchingUserProposals (uid) {
     return function (dispatch, getState) {
         if (getState().userProposals.get('isFetching')) {
-            return Promise.resolve(null);
+            return;
         }
 
-        if (!isModuleStale(getState().userProposals.get('lastUpdated'), 10)) {
-            return Promise.resolve(getState.userProposals.get('proposals'));
+        if (!isModuleStale(getState().userProposals.get('lastUpdated'))) {
+            return;
         }
 
         dispatch(fetchingUserProposals());
         fetchUserProposals(uid)
-            .then((proposalIds) => {
-                dispatch(fetchingUserProposalsSuccess(proposalIds));
-                return Promise.resolve(proposalIds);
+            .then((userProposals) => {
+                dispatch(fetchingUserProposalsSuccess(userProposals));
             })
             .catch((error) => {
                 dispatch(fetchingUserProposalsError(error));
-                return Promise.resolve(null);
             });
     };
 }
@@ -69,8 +67,9 @@ export function addUserProposal (proposalId) {
 const initialState = fromJS({
     isFetching: false,
     error: '',
-    domain: {start: 0.0, end: 1.0},
-    proposals: [],
+    lastUpdated: 0,
+    proposals: {},
+    votes: {},
 });
 
 export default function userProposals (state = initialState, action) {
@@ -85,7 +84,9 @@ export default function userProposals (state = initialState, action) {
     case FETCHING_USER_PROPOSALS_SUCCESS:
         return state.merge({
             isFetching: false,
-            proposals: action.proposalIds,
+            error: '',
+            lastUpdated: Date.now(),
+            ...action.userProposals,
         });
     case SET_DOMAIN:
         console.log(action.domain);

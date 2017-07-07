@@ -26,13 +26,14 @@ function RoadCategory ({roadId, roads, children}: RoadCategoryType) {
 }
 
 export default function ProposalList ({ roadProposals, roads, unitsLeft }: Props) {
-    console.log(roadProposals);
-    const contents = Object.keys(roadProposals).map((key) => (
-        <RoadCategory key={`road-${key}`} roadId={key} roads={roads} >
-            {roadProposals[key].map((proposalId, index) => (
-                <ProposalListItemContainer key={`${index}-${proposalId}`} proposalId={proposalId}/>)
-            )}
-        </RoadCategory>));
+    const contents = Object.keys(roadProposals)
+        .filter((key) => key !== 'isFetching' && key !== 'error' && key !== 'lastUpdated')
+        .map((key) => (
+            <RoadCategory key={`road-${key}`} roadId={key} roads={roads} >
+                {roadProposals[key].map((proposalId, index) => (
+                    <ProposalListItemContainer key={`${index}-${proposalId}`} roadId={key} proposalId={proposalId}/>)
+                )}
+            </RoadCategory>));
     //   const proposalList = proposalIds.map((proposalId, index) => {
     //     return (
     //       <ProposalListItemContainer proposalId={proposalId} key={`proposal-${index}`}/>
@@ -40,7 +41,7 @@ export default function ProposalList ({ roadProposals, roads, unitsLeft }: Props
     //   });
     return (
         <div className={proposalListContainer}>
-            <div>
+            <div style={{position: 'relative'}}>
                 <div className={roadCategory}>{`Proposal List`}</div>
                 <div className={userUnits}>{`units left: `}{unitsLeft}</div>
             </div>

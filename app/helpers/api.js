@@ -157,16 +157,6 @@ export function fetchAll (branchName) {
         .then((snapshot) => snapshot.val());
 }
 
-export function fetchPropsals (roadId) {
-    return ref.child(`proposals/${roadId}`).once('value')
-        .then((snapshot) => (snapshot.val() || {}));
-}
-
-export function fetchProposalsAll () {
-    return ref.child(`proposals`).once('value')
-        .then((snapshot) => (snapshot.val() || {}));
-}
-
 export function fetchUserVotes (uid) {
     return ref.child(`userVotes/${uid}`).once('value')
         .then((snapshot) => (snapshot.val() || {}));
