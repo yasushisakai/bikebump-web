@@ -86,14 +86,15 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
 
     roadPopUp (name: ?string, kind: string, id: number, num: number): HTMLElement {
         const popupContent: HTMLElement = document.createElement('div');
+        popupContent.className = 'popup-wrapper';
         const proposalLink = document.createElement('div');
-        proposalLink.className = num === 0 ? 'mapButton disabled' : 'mapButton';
+        proposalLink.className = num === 0 ? 'map-button pt-button disabled' : 'map-button pt-button';
         proposalLink.innerHTML = num === 0 ? 'no plans' : `view plans (${num})`;
         proposalLink.onclick = () => num === 0 ? null : this.props.router.push(`proposals#${id}`);
         popupContent.appendChild(proposalLink);
         const createLink = document.createElement('div');
         createLink.innerHTML = 'create new plan';
-        createLink.className = 'mapButton';
+        createLink.className = 'map-button pt-button';
         createLink.onclick = () => this.props.router.push(`create/${id}`);
         popupContent.appendChild(createLink);
         const roadInfo = document.createElement('div');

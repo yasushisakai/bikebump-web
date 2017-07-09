@@ -1,9 +1,13 @@
 // @flow
 import React from 'react';
-import { mapContents } from './styles.css';
+import { map, mapVisContainer } from './styles.css';
+import { BikeCoinBadgeContainer } from 'containers';
 
 export default function MapVis () {
     return (
-        <div id='mainMap' className={mapContents} />
+       <div className={mapVisContainer}>
+            <BikeCoinBadgeContainer/>
+            <div id='mainMap' className={map}/>
+        </div>
     );
 }

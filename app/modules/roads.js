@@ -42,7 +42,7 @@ export function handleFetchSingleRoad (roadId) {
         if (getState().roads.get(`${roadId}`)) {
             return;
         }
-        
+
         dispatch(fetchingRoad());
         return fetchRoad(roadId)
             .then((road) => {

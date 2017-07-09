@@ -18,5 +18,6 @@ export ProposalList from './ProposalList/ProposalList';
 export ProposalListItem from './ProposalList/ProposalListItem';
 export CreateProposal from './CreateProposal/CreateProposal';
 export CreatePanel from './CreatePanel/CreatePanel.js';
-export CreateMap from './CreateMap/CreateMap.js';
+export CreateMap from './CreateMap/CreateMap';
+export CoinProgress from './CoinProgress/CoinProgress';
 

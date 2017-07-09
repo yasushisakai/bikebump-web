@@ -52,13 +52,12 @@ class ProposalContainer extends React.Component<void, Props, void> {
     render () {
         if (!this.props.isFetching && this.proposal && this.pattern && this.props.userProposals) {
             // console.log(this.props.userProposals.toJS());
-            console.log(this.props.userProposals.getIn([this.props.uid, 'units']));
-            const {image, title, description} = this.pattern;
+            const {image, title, description, per, units} = this.pattern;
             const {currentUnits, maxUnits} = this.proposal;
             return <Proposal
                 proposalId={this.props.proposalId}
                 userUnits={this.props.userProposals.getIn([this.props.uid, 'units'])}
-                pattern={{image, title, description}}
+                pattern={{image, title, description, per, units}}
                 proposal={{currentUnits, maxUnits}}/>;
         } else {
             return <div>{'loading'}</div>;

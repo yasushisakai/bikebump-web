@@ -20,8 +20,8 @@ class MainContainer extends React.Component {
                     user.photoURL,
                     user.uid
                 );
-                this.props.fetchingUserSuccess(user.uid, userInfo, Date.now());
                 this.props.authUser(user.uid);
+                this.props.fetchingUserSuccess(user.uid, userInfo, Date.now());
             } else {
                 // user is not signed
                 this.props.removeFetchingUser();

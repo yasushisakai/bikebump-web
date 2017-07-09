@@ -115,11 +115,26 @@ export function fetchProposal (proposalId) {
         .then((snapshot) => (snapshot.val() || {}));
 }
 
+/*
+function appendProposal (roadId, proposalId) {
+    return ref.child(`roadProposals/${roadId}`).once('value')
+        .then((snapshot) => snapshot.val() || [])
+        .then((ary) => ary.push(proposalId))
+        .then((newAry) => ref.child(`roadProposals/`))
+}
+*/
+
 export function saveProposal (proposal) {
     const proposalId = ref.child(`proposals/${proposal.roadId}`).push().key;
-    const proposalWithId = {...proposal, proposalId};
-    return ref.child(`proposals/${proposal.roadId}/${proposalId}`).set(proposalWithId)
-        .then(() => proposalWithId);
+    const proposalWithId = {...proposal, proposalId, currentUnits: 0};
+
+    const promises = [
+        ref.child(`proposals/${proposalId}`).set(proposalWithId),
+        ref.child(`roadProposals/${proposal.roadId}/${proposalId}`).set(true),
+        ref.child(`userProposals/${proposal.uid}/proposals/${proposal.roadId}/${proposalId}`).set
+        (true),
+    ];
+    return Promise.all(promises).then(() => proposalWithId);
 }
 
 export function saveResponse (response) {
@@ -193,13 +208,37 @@ export function updateUserSettings (uid, variable, value) {
 }
 
 export function fetchUserProposals (uid) {
-    console.log(uid);
     return ref.child(`userProposals/${uid}`).once('value')
-        .then((snapshot) => snapshot.val() || {});
+        .then((snapshot) => snapshot.val());
 }
 
 export function fetchRoadProposals () {
     return ref.child(`roadProposals/`).once('value')
         .then((snapshot) => snapshot.val())
         .catch((error) => console.log(error));
+}
+
+export function modifyBikecoin (userId, proposalId, value) {
+    let deltaCoins = 0;
+    return ref.child(`userProposals/${userId}`).once('value')
+        .then((snapshot) => snapshot.val().votes)
+        .then((votes) => {
+            if (votes) {
+                const currBCUserProposal = votes[proposalId] ? votes[proposalId] : 0;
+                deltaCoins = value - currBCUserProposal;
+            } else {
+                deltaCoins = value;
+            }
+        })
+        .then(() => ref.child(`userProposals/${userId}/votes/${proposalId}`).set(value))
+        .then(() => ref.child(`userProposals/${userId}/units`).once('value'))
+        .then((ss) => ss.val())
+        .then((currentUserValue) => ref.child(`userProposals/${userId}/units`).set(currentUserValue - deltaCoins))
+        .then(() => ref.child(`proposals/${proposalId}/currentUnits`).once('value'))
+        .then((ss) => ss.val())
+        .then((currentValue) => {
+            const newValue = currentValue + deltaCoins;
+            ref.child(`proposals/${proposalId}/currentUnits`).set(newValue);
+            return deltaCoins;
+        });
 }

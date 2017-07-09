@@ -1,0 +1,29 @@
+.bikeCoinContainer {
+    z-index: 100;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 100px;
+    height: 30px;
+    border-radius: 15px;
+    background: rgba(25, 25, 25, 0.95);
+    display: flex;
+    flex-flow: row;
+}
+
+.units {
+    flex: 1;
+    padding-right: 15px;
+    line-height: 30px;
+    letter-spacing: 0.1em;
+    font-size: 1.0em;
+    font-weight: 600;
+    text-align: right;
+}
+
+.icon {
+    background: url('/static/img/bc.png') no-repeat center;
+    background-size: 22px 22px;
+    flex: 0 1 30px;
+    margin-right: 5px;
+}

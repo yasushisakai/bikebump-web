@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { ProposalListItemContainer } from 'containers';
+import { ProposalListItemContainer, BikeCoinBadgeContainer } from 'containers';
 import { Map } from 'immutable';
 import { proposalListContainer, listContainer, roadCategory, userUnits } from './styles.css';
 import type { Road } from 'types';
@@ -42,8 +42,7 @@ export default function ProposalList ({ roadProposals, roads, unitsLeft }: Props
     return (
         <div className={proposalListContainer}>
             <div style={{position: 'relative'}}>
-                <div className={roadCategory}>{`Proposal List`}</div>
-                <div className={userUnits}>{`units left: `}{unitsLeft}</div>
+                <BikeCoinBadgeContainer />
             </div>
             <div className={listContainer}>
                 {contents}

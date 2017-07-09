@@ -1,12 +1,22 @@
-import {fromJS} from 'immutable';
+import {fromJS, List} from 'immutable';
 import {isModuleStale} from 'helpers/utils';
-import {fetchUserProposals} from 'helpers/api';
+import { fetchUserProposals } from 'helpers/api';
 const FETCHING_USER_PROPOSALS = 'FETCHING_USER_PROPOSALS';
 const FETCHING_USER_PROPOSALS_ERROR = 'FETCHING_USER_PROPOSALS_ERROR';
 const FETCHING_USER_PROPOSALS_SUCCESS = 'FETCHING_USER_PROPOSALS_SUCCESS';
 
 const SET_DOMAIN = 'SET_DOMAIN';
-const ADD_USER_PROPOSAL = 'ADD_USER_PROPOSAL';
+const SET_PATTERN_ID = 'SET_PATTERN_ID';
+const SET_SLIDER_DISABLED = 'SET_SLIDER_DISABLED';
+const SET_SUBMIT_DISABLED = 'SET_SUBMIT_DISABLED';
+const SET_REQUIRED_POINTS = 'SET_REQUIRED_POINTS';
+
+import {
+    ADD_PROPOSAL,
+    ADD_PROPOSAL_ERROR,
+    BIKECOIN_TRANSACTION,
+    BIKECOIN_TRANSACTION_ERROR
+} from 'modules/proposals';
 
 function fetchingUserProposals () {
     return {
@@ -41,7 +51,13 @@ export function handleFetchingUserProposals (uid) {
 
         dispatch(fetchingUserProposals());
         fetchUserProposals(uid)
-            .then((userProposals) => {
+            .then((rawUserProposals) => {
+                let tempConversion = {};
+                //console.log(rawUserProposals[`${uid}`]);
+                Object.keys(rawUserProposals.proposals).map((roadId) => {
+                    tempConversion[roadId] = Object.keys(rawUserProposals.proposals[roadId]);
+                });
+                const userProposals = {...rawUserProposals, proposals: tempConversion};
                 dispatch(fetchingUserProposalsSuccess(userProposals));
             })
             .catch((error) => {
@@ -57,29 +73,70 @@ export function setDomain (domain) {
     };
 }
 
-export function addUserProposal (proposalId) {
+export function setPatternId (patternId) {
     return {
-        type: ADD_USER_PROPOSAL,
-        proposalId,
+        type: SET_PATTERN_ID,
+        id: patternId,
     };
+}
+
+export function setSliderDisabled (flag) {
+    return {
+        type: SET_SLIDER_DISABLED,
+        flag,
+    };
+}
+
+export function setSubmitDisabled (flag) {
+    return {
+        type: SET_SUBMIT_DISABLED,
+        flag,
+    };
+}
+
+export function setRequiredPoints (points) {
+    return {
+        type: SET_REQUIRED_POINTS,
+        points,
+    };
+}
+
+function singleUserProposal (state = fromJS([]), action) {
+    switch (action.type) {
+    case ADD_PROPOSAL:
+        let roadList = state.get(action.proposal.roadId);
+        roadList = roadList ? roadList.push(action.proposal.proposalId) : fromJS([action.proposal.proposalId]);
+        return state.set(action.proposal.roadId, roadList);
+    default:
+        return state;
+    }
 }
 
 const initialState = fromJS({
     isFetching: false,
     error: '',
     lastUpdated: 0,
-    domain: {
-        start: 0,
-        end: 1,
-    },
+    units: 0,
     proposals: {},
     votes: {},
+    create: {
+        domain: {
+            start: 0,
+            end: 1,
+        },
+        patternId: '',
+        sliderDisabled: true,
+        submitDisabled: true,
+        requiredPoints: 0,
+    },
 });
 
 export default function userProposals (state = initialState, action) {
     switch (action.type) {
     case FETCHING_USER_PROPOSALS:
         return state.set('isFetching', true);
+    case ADD_PROPOSAL_ERROR:
+    case BIKECOIN_TRANSACTION_ERROR:
     case FETCHING_USER_PROPOSALS_ERROR:
         return state.merge({
             error: action.error,
@@ -93,10 +150,19 @@ export default function userProposals (state = initialState, action) {
             ...action.userProposals,
         });
     case SET_DOMAIN:
-        console.log(action.domain);
-        return state.set('domain', fromJS(action.domain));
-    case ADD_USER_PROPOSAL:
-        return state.update('proposals', (ary) => ary.push(action.proposalId));
+        return state.setIn(['create', 'domain'], fromJS(action.domain));
+    case SET_PATTERN_ID:
+        return state.setIn(['create', 'patternId'], action.id);
+    case SET_SLIDER_DISABLED:
+        return state.setIn(['create', 'sliderDisabled'], action.flag);
+    case SET_SUBMIT_DISABLED:
+        return state.setIn(['create', 'submitDisabled'], action.flag);
+    case SET_REQUIRED_POINTS:
+        return state.setIn(['create', 'requiredPoints'], action.points);
+    case ADD_PROPOSAL:
+        return state.set('proposals', singleUserProposal(state.get('proposals'), action));
+    case BIKECOIN_TRANSACTION:
+        return state.update('units', curr => curr - action.value);
     default :
         return state;
     }

@@ -1,4 +1,13 @@
-.mapContents{
-  composes: contents from 'styles/styles.css';
+.mapVisContainer{
+  flex: 1;
+  position: relative;
+  width: 100%;
+}
+
+.map{
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
   background-color: #111111;
 }

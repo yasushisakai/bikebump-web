@@ -63,10 +63,10 @@ class ProposalListItemContainer extends React.Component<void, Props, void> {
     getUserUnits (props: Props) {
         // console.log(this.props.roadId, this.props.proposalId);
 
-        const votes = props.userProposals.getIn(['votes', `${props.roadId}`]);
+        const votes = props.userProposals.get('votes');
         if (votes) {
             const points = votes.get(props.proposalId);
-            return points || 0;
+            return points | 0;
         } else {
             return 0;
         }
@@ -94,7 +94,9 @@ class ProposalListItemContainer extends React.Component<void, Props, void> {
                 currentUnits={this.proposal.currentUnits}
                 maxUnits={this.proposal.maxUnits}
                 userUnits={this.myUnits}
-                isMine={this.isMine}/>;
+                isMine={this.isMine}
+                per={this.pattern.per}
+                patternUnits={this.pattern.units}/>;
         }
     }
 }

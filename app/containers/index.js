@@ -24,4 +24,5 @@ export ProposalMapContainer from './ProposalMap/ProposalMapContainer';
 export CreateMapContainer from './CreateMap/CreateMapContainer';
 export CreatePanelContainer from './CreatePanel/CreatePanelContainer';
 export RangeSliderContainer from './RangeSlider/RangeSliderContainer';
-
+export BikeCoinBadgeContainer from './BikeCoinBadge/BikeCoinBadgeContainer';
+export ProposalOptionContainer from './ProposalOption/ProposalOptionContainer';

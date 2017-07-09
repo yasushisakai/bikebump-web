@@ -4,56 +4,131 @@
     bottom: 0%;
     width: 100%;
     height: 50%;
-    background-color: #111;
+    /*background-color: #111;*/
     display: flex;
     flex-flow: column;
 }
 
+
 .patternSelector {
-    flex: 1;
-    padding: 15px 5%;
+    height: 20%;
+    margin: 15px 5%;
+    display: flex;
+    flex-flow: row;
 }
 
-.patternSelector select {
+.selector {
+    flex: 4;
+}
+
+.selector select {
     height: 100%;
     width: 100%;
-    padding-left: 20px;
+    padding-left: 10%;
     font-size: 1.2em;
+    font-weight: 600;
     color: #fff;
     text-align: center;
     background-color: #111;
-    border-radius: 10px;
+    border-radius: 3px;
+    border: 1px solid #333;
+    -webkit-appearance: none;
+}
+
+.moreInfo {
+    flex: 0 1 15%;
+    font-size: 2em;
+    text-align: center;
+}
+
+.questionMark {
+    width:100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.questionMark .mark{
+    flex: 1;
+    width:100%;
+    height:100%;
+    padding-left: 15px;
 }
 
 .createSlider {
-    flex: 1 1;
     width: 100%;
     /*background: #3426f5;*/
 }
 
 .createSliderInner {
-    padding: 20px 6%;
+    padding: 20px 10%;
+    width: 98%;
 }
 
 .infoAndBtn {
     flex:1;
     display: flex;
     flex-flow: row;
-    padding: 15px 5% 10px 5%;
+    margin: 15px 5% 10px 5%;
+    align-content: space-between;
+    justify-content: space-between;
 }
 
 .proposalInfo {
-    flex: 1;
-    font-size: 0.7em;
-    text-align: right;
+    flex: 1 1 50%;
+    font-size: 1em;
     /*background: #123456;*/
+    display: flex;
+    flex-flow: column;
 }
 
-.submitButton {
-    flex: 1;
+.totalUnits {
+    flex:2;
+    display: flex;
+    flex-flow: row;
+}
+
+.units {
+    flex: 2;
+    font-size: 1.3em;
+    height: 30px;
+    font-weight: 600;
     text-align: right;
+    margin-top: -0.01em;
+    padding-right: 10px;
+}
+
+.unitIcon {
+    flex: 0 1 30px;
+    height: 30px;
+    background: url("/static/img/bc.png") no-repeat center left;
+    background-size: 25px 25px;
+
+}
+
+.otherText {
+    flex: 1;
+    font-size: 0.6em;
+    text-align: right;
+}
+
+
+.submitButton {
+    flex: 0 1 45%;
+    padding-left: 5%;
+    height: 100%;
 }
 
 .button {
-    width: 80%;
+    background: #f8e71c !important;
+    text-align: center;
+    padding-top: 6.5% !important;
+    height: 100%;
+}
+
+.disabled {
+    pointer-events: none;
+    background: #171717 !important;
 }

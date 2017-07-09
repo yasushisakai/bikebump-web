@@ -1,0 +1,20 @@
+.proposalOption {
+    flex: 0 1 23.5%;
+    display: flex;
+    flex-flow: column;
+    text-align: right;
+}
+
+.optionText {
+    padding: 5px 2px;
+    flex: 0 1 40%;
+    font-size: 0.65em;
+    line-height: 0.7em;
+}
+
+.optionValue {
+    flex: 1 1;
+    font-size: 1.5em;
+    font-weight: 700;
+    line-height: 100%;
+}

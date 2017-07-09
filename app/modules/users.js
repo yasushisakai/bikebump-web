@@ -66,8 +66,10 @@ export function handleUserAuthReturn (service) {
     return function (dispatch) {
         dispatch(fetchingUser);
         return redirectAuth(service)
-            .then((user) => dispatch(fetchingUserSuccess(user.uid, user, Date.now())))
-            .then((user) => dispatch(authUser(user.uid)))
+            .then((user) => {
+                dispatch(authUser(user.uid));
+                return dispatch(fetchingUserSuccess(user.uid, user, Date.now()));
+            })
             .catch((error) => dispatch(fetchingUserError(error)));
     };
 }
@@ -120,7 +122,7 @@ function user (state = initialUserState, action) {
 const initialState = fromJS({
     isAuthed: false,
     authedId: '',
-    isFetching: false,
+    isFetching: true,
     error: '',
 });
 

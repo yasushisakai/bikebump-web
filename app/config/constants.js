@@ -68,3 +68,11 @@ export const initialState = fromJS({
     lastUpdated: 0,
 });
 
+export const yellow = '#f8e71c';
+export const red = '#d0021b';
+export const orange = '#f5a623';
+export const blue = '#4a90e2';
+export const green = '#7ed321';
+export const black = '#252525';
+export const white = '#f0f0f0';
+

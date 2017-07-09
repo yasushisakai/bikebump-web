@@ -99,7 +99,7 @@ function mapStateToProps ({ roads, userProposals }, props) {
         isFetching: roads.get('isFetching'),
         roadId: props.roadId,
         road,
-        domain: userProposals.get('domain').toJS(),
+        domain: userProposals.getIn(['create', 'domain']).toJS(),
     };
 }
 
