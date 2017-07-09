@@ -127,7 +127,7 @@ class CreatePanelContainer extends React.Component<void, Props, void> {
             domain,
             maxUnits: requiredPoints,
         };
-
+        console.log(this.props);
         this.props.handleAddProposal(proposal);
     }
 

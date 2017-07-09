@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { RangeSliderContainer } from 'containers';
-import { Button } from '@blueprintjs/core';
 import QuestionIcon from 'react-icons/lib/fa/question';
 import { Link } from 'react-router';
 import { imgRoot } from 'config/constants';
@@ -82,9 +81,10 @@ export default function CreatePanel ({requiredUnits, backgroundImage, submitDisa
                         <div className={otherText}>{'for community approval'} </div>
                     </div>
                     <div className={submitButton}>
-                        <div className={submitButtonClassName} onClick={onClickSubmit}>
+                        <Link to='/proposals' style={submitDisabled ? {pointerEvents: 'none'} : {}}><div className={submitButtonClassName} onClick={onClickSubmit}>
                             {'submit!'}
                         </div>
+                        </Link>
                     </div>
                 </div>
             </div>
