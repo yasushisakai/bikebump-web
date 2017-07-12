@@ -80,12 +80,10 @@ class CreatePanelContainer extends React.Component<void, Props, void> {
     getCoinsRequired (perUnit: number, domain: {start: number, end: number}) {
         // get road length
         if (!this.props.road) {
-            this.props.setSubmitDisabled(true);
             return 0;
         } else {
             const roadLength: number = getTotalLength(this.props.road.get('geometry').toJS());
             const p = domain.end - domain.start;
-            this.props.setSubmitDisabled(false);
             return Math.floor(roadLength * p * perUnit);
         }
     }
@@ -102,9 +100,9 @@ class CreatePanelContainer extends React.Component<void, Props, void> {
             this.props.setSliderDisabled(true);
             this.props.setSubmitDisabled(true);
         } else {
+            this.props.setSubmitDisabled(false);
             this.props.setPatternId(patternId);
             // this.props.setDomain({start: 0, end: 1});
-            this.props.setSubmitDisabled(false);
             const pattern = ((this.props.patterns.get(patternId): any): Map<any, any>);
             this.backgroundImage = pattern.get('image');
             const perWhat: ?string = pattern.get('per');
