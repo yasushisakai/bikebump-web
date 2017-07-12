@@ -75,7 +75,7 @@ export default function roadProposal (state = initialState, action) {
     case ADD_PROPOSAL:
         return state.setIn([action.proposal.roadId, action.proposal.proposalId], 0);
     case BIKECOIN_TRANSACTION:
-        return state.updateIn([action.roadId, action.proposalId], (value) => value + action.deltaCoins);
+        return state.updateIn([action.roadId, action.proposalId], (value) => value + action.value);
     default :
         return state;
     }
