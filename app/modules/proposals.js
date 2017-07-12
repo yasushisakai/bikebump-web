@@ -49,12 +49,13 @@ function addProposalError (error) {
     };
 }
 
-function bikecoinTransaction (uid, proposalId, value) {
+function bikecoinTransaction (uid, roadId, proposalId, value) {
     return {
         type: BIKECOIN_TRANSACTION,
         uid,
+        roadId,
         proposalId,
-        value,
+        value, //deltaValue
     };
 }
 
@@ -63,7 +64,7 @@ function bikecoinTransactionError (error) {
     return {
         type: BIKECOIN_TRANSACTION_ERROR,
         error: 'error changing bikecoin',
-    }
+    };
 }
 
 export function handleFetchingProposals () {
@@ -93,8 +94,9 @@ export function handleAddProposal (proposal) {
 
 export function handleBikecoinTransaction (uid, proposalId, value) {
     return function (dispatch, getState) {
+        // the following changes the db side all at once
         modifyBikecoin(uid, proposalId, value)
-            .then((deltaCoins) => dispatch(bikecoinTransaction(uid, proposalId, deltaCoins)))
+            .then(({deltaCoins, roadId}) => dispatch(bikecoinTransaction(uid, roadId, proposalId, deltaCoins)))
             .catch((error) => dispatch(bikecoinTransactionError(error)));
     };
 }

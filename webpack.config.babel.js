@@ -46,11 +46,11 @@ const base = {
 const developmentConfig = {
     devtool: 'cheap-module-inline-source-map',
     devServer: {
-    // historyApiFallback: {
-    //   rewrites: [
-    //     { from: /./, to: '/index.html' },
-    //   ],
-    // },
+        historyApiFallback: {
+            rewrites: [
+                { from: /./, to: '/index.html' },
+            ],
+        },
         contentBase: PATHS.build,
         hot: true,
         inline: true,
@@ -58,6 +58,9 @@ const developmentConfig = {
         port: 8081,
         proxy: {
             '/api/*': {
+                target: 'http://localhost:8080',
+            },
+            '/static/*': {
                 target: 'http://localhost:8080',
             },
         },

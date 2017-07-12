@@ -7,9 +7,6 @@ const FETCHING_PATTERNS_ERROR = 'FETCHING_PATTERNS_ERROR';
 const FETCHING_PATTERNS_SUCCESS = 'FETCHING_PATTERNS_SUCCESS';
 const REMOVE_FETCHING_PATTERNS = 'REMOVE_FETCHING_PATTERNS';
 
-const ADD_PATTERN = 'ADD_PATTERN';
-const ADD_PATTERN_ERROR = 'ADD_PATTERN_ERROR';
-
 const initialState = fromJS({
     isFetching: false,
     error: '',
@@ -35,25 +32,10 @@ function removeFetchingPatterns () {
     };
 }
 
-function addPatternError (error) {
-    console.warn(error);
-    return {
-        type: ADD_PATTERN_ERROR,
-        error: 'error adding pattern',
-    };
-}
-
 function fetchingPatternsSuccess (patterns) {
     return {
         type: FETCHING_PATTERNS_SUCCESS,
         patterns,
-    };
-}
-
-function addPattern (pattern) {
-    return {
-        type: ADD_PATTERN,
-        pattern,
     };
 }
 
@@ -76,20 +58,10 @@ export function handleFetchingPatterns () {
     };
 }
 
-export function handleAddPattern (pattern) {
-    return function (dispatch) {
-        dispatch(fetchingPatterns);
-        savePattern(pattern)
-            .then((patternWithId) => dispatch(addPattern(patternWithId)))
-            .catch((error) => dispatch(addPatternError(error)));
-    };
-}
-
 export default function patterns (state = initialState, action) {
     switch (action.type) {
     case FETCHING_PATTERNS:
         return state.set('isFetching', true);
-    case ADD_PATTERN_ERROR:
     case FETCHING_PATTERNS_ERROR:
         return state.merge({
             isFetching: false,
@@ -103,8 +75,6 @@ export default function patterns (state = initialState, action) {
         }).merge(action.patterns);
     case REMOVE_FETCHING_PATTERNS:
         return state.set('isFetching', false);
-    case ADD_PATTERN:
-        return state.set(action.pattern.patternId, action.pattern);
     default:
         return state;
     }

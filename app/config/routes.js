@@ -23,16 +23,18 @@ import {
 } from 'containers';
 
 function hashLinkScroll () {
-    if (!isProduction) return;
+    console.log('isProduction', !isProduction);
+    // if (!isProduction) return;
     const { hash } = window.location;
     if (hash !== '') {
         setTimeout(() => {
             const id = hash.replace('#', '');
+            // console.log(id);
             const element = document.getElementById(id);
             if (element) {
-                element.scrollIntoView();
+                element.scrollIntoView({block: 'start', behavior: 'instant'});
             }
-        }, 0);
+        }, 50);
     }
 }
 

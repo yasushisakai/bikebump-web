@@ -5,7 +5,7 @@ import { fetchRoadProposals } from 'helpers/api';
 const FETCHING_ROAD_PROPOSAL = 'FETCHING_ROAD_PROPOSAL';
 const FETCHING_ROAD_PROPOSAL_ERROR = 'FETCHING_ROAD_PROPOSAL_ERROR';
 const FETCHING_ROAD_PROPOSAL_SUCCESS = 'FETCHING_ROAD_PROPOSAL_SUCCESS';
-import { ADD_PROPOSAL, ADD_PROPOSAL_ERROR } from 'modules/proposals';
+import { ADD_PROPOSAL, ADD_PROPOSAL_ERROR, BIKECOIN_TRANSACTION, BIKECOIN_TRANSACTION_ERROR } from 'modules/proposals';
 
 function fetchingRoadProposals () {
     return {
@@ -21,16 +21,10 @@ function fetchingRoadProposalsError (error) {
     };
 }
 
-function fetchingRoadProposalsSuccess (rawRoadProposals) {
-    let tempConversion = {};
-    console.log(rawRoadProposals);
-    Object.keys(rawRoadProposals).map(roadId => {
-        const arry = Object.keys(rawRoadProposals[`${roadId}`]);
-        tempConversion[`${roadId}`] = arry;
-    });
+function fetchingRoadProposalsSuccess (roadProposals) {
     return {
         type: FETCHING_ROAD_PROPOSAL_SUCCESS,
-        roadProposals: tempConversion,
+        roadProposals,
     };
 }
 
@@ -52,15 +46,6 @@ export function handleFetchingRoadProposals () {
     };
 }
 
-function roadProposalEntry (state = fromJS([]), action) {
-    switch (action.type) {
-    case ADD_PROPOSAL:
-        return state.push(action.proposal.proposalId);
-    default:
-        return state;
-    }
-}
-
 const initialState = fromJS(
     {
         isFetching: false,
@@ -75,6 +60,7 @@ export default function roadProposal (state = initialState, action) {
         return state.set('isFetching', true);
     case ADD_PROPOSAL_ERROR:
     case FETCHING_ROAD_PROPOSAL_ERROR:
+    case BIKECOIN_TRANSACTION_ERROR:
         return state.merge({
             error: action.error,
             isFetching: false,
@@ -87,7 +73,9 @@ export default function roadProposal (state = initialState, action) {
             lastUpdated: Date.now(),
         });
     case ADD_PROPOSAL:
-        return state.set(action.proposal.roadId, roadProposalEntry(state.get(action.proposal.roadId), action));
+        return state.setIn([action.proposal.roadId, action.proposal.proposalId], 0);
+    case BIKECOIN_TRANSACTION:
+        return state.updateIn([action.roadId, action.proposalId], (value) => value + action.deltaCoins);
     default :
         return state;
     }

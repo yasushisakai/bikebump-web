@@ -46,6 +46,7 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 
     componentDidMount () {
+        console.log(this.props.router);
         // initiating the map
         this.map = map('mainMap').setView([42.355596, -71.101363], 17);
         tileLayer(darkTile, { attribution, maxZoom: 20 }).addTo(this.map);
@@ -90,12 +91,12 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
         const proposalLink = document.createElement('div');
         proposalLink.className = num === 0 ? 'map-button pt-button disabled' : 'map-button pt-button';
         proposalLink.innerHTML = num === 0 ? 'no plans' : `view plans (${num})`;
-        proposalLink.onclick = () => num === 0 ? null : this.props.router.push(`proposals#${id}`);
+        proposalLink.onclick = () => num === 0 ? null : this.props.router.replace(`proposals#road-${id}`);
         popupContent.appendChild(proposalLink);
         const createLink = document.createElement('div');
         createLink.innerHTML = 'create new plan';
         createLink.className = 'map-button pt-button';
-        createLink.onclick = () => this.props.router.push(`create/${id}`);
+        createLink.onclick = () => this.props.router.replace(`create/${id}`);
         popupContent.appendChild(createLink);
         const roadInfo = document.createElement('div');
         roadInfo.innerHTML = name !== null ? `<b>${name}</b>` : '';

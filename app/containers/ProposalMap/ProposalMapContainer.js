@@ -37,7 +37,6 @@ class ProposalMapContainer extends React.Component<void, Props, void> {
     componentWillUpdate (nextProps: Props) {
         if (!nextProps.isFetching && !this.mapHasLayers) {
             let road = nextProps.road.toJS();
-            console.log('cwu', road);
             plotRoad(road, this.map, defaultRoadStyle, () => {});
 
             const geometry = flipGeometry(road.geometry);

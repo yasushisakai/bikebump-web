@@ -52,12 +52,17 @@ export function handleFetchingUserProposals (uid) {
         dispatch(fetchingUserProposals());
         fetchUserProposals(uid)
             .then((rawUserProposals) => {
-                let tempConversion = {};
+                let userProposals = {};
                 //console.log(rawUserProposals[`${uid}`]);
-                Object.keys(rawUserProposals.proposals).map((roadId) => {
-                    tempConversion[roadId] = Object.keys(rawUserProposals.proposals[roadId]);
-                });
-                const userProposals = {...rawUserProposals, proposals: tempConversion};
+                if (rawUserProposals) {
+                    let tempConversion = {};
+                    Object.keys(rawUserProposals.proposals).map((roadId) => {
+                        tempConversion[roadId] = Object.keys(rawUserProposals.proposals[roadId]);
+                    });
+                    userProposals = {...rawUserProposals, proposals: tempConversion};
+                } else {
+                    userProposals = {proposals: {}};
+                }
                 dispatch(fetchingUserProposalsSuccess(userProposals));
             })
             .catch((error) => {
@@ -101,12 +106,10 @@ export function setRequiredPoints (points) {
     };
 }
 
-function singleUserProposal (state = fromJS([]), action) {
+function singleUserProposal (state = fromJS({}), action) {
     switch (action.type) {
     case ADD_PROPOSAL:
-        let roadList = state.get(action.proposal.roadId);
-        roadList = roadList ? roadList.push(action.proposal.proposalId) : fromJS([action.proposal.proposalId]);
-        return state.set(action.proposal.roadId, roadList);
+        return state.set(action.proposal.proposalId, 0);
     default:
         return state;
     }
@@ -116,7 +119,7 @@ const initialState = fromJS({
     isFetching: false,
     error: '',
     lastUpdated: 0,
-    units: 0,
+    units: 100,
     proposals: {},
     votes: {},
     create: {
@@ -162,7 +165,7 @@ export default function userProposals (state = initialState, action) {
     case ADD_PROPOSAL:
         return state.set('proposals', singleUserProposal(state.get('proposals'), action));
     case BIKECOIN_TRANSACTION:
-        return state.update('units', curr => curr - action.value);
+        return state.updateIn(['proposals', action.proposalId], curr => curr + action.value).update('units', curr => curr - action.value);
     default :
         return state;
     }

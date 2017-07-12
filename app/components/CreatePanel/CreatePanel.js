@@ -81,10 +81,9 @@ export default function CreatePanel ({requiredUnits, backgroundImage, submitDisa
                         <div className={otherText}>{'for community approval'} </div>
                     </div>
                     <div className={submitButton}>
-                        <Link to='/proposals' style={submitDisabled ? {pointerEvents: 'none'} : {}}><div className={submitButtonClassName} onClick={onClickSubmit}>
+                        <div className={submitButtonClassName} onClick={onClickSubmit}>
                             {'submit!'}
                         </div>
-                        </Link>
                     </div>
                 </div>
             </div>

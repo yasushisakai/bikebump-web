@@ -30,7 +30,7 @@ export default function ProposalList ({ roadProposals, roads, unitsLeft }: Props
         .filter((key) => key !== 'isFetching' && key !== 'error' && key !== 'lastUpdated')
         .map((key) => (
             <RoadCategory key={`road-${key}`} roadId={key} roads={roads} >
-                {roadProposals[key].map((proposalId, index) => (
+                {Object.keys(roadProposals[key]).map((proposalId, index) => (
                     <ProposalListItemContainer key={`${index}-${proposalId}`} roadId={key} proposalId={proposalId}/>)
                 )}
             </RoadCategory>));

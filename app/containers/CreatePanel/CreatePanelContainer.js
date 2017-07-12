@@ -36,6 +36,7 @@ type Props = {
     setSliderDisabled: Function;
     setSubmitDisabled: Function;
     setRequiredPoints: Function;
+    router: Object;
 }
 
 class CreatePanelContainer extends React.Component<void, Props, void> {
@@ -54,6 +55,7 @@ class CreatePanelContainer extends React.Component<void, Props, void> {
     requiredUnits: number;
     backgroundImage: string;
 
+    router: Object;
     handleSliderUpdate: Function;
     handleSelectPattern: Function;
     handleClickSubmit: Function;
@@ -127,8 +129,8 @@ class CreatePanelContainer extends React.Component<void, Props, void> {
             domain,
             maxUnits: requiredPoints,
         };
-        console.log(this.props);
         this.props.handleAddProposal(proposal);
+        this.props.router.replace(`/proposals#road-${roadId}`);
     }
 
     render () {
@@ -157,6 +159,7 @@ function mapStateToProps ({ users, roads, patterns, userProposals }, props) {
         patternId: userProposals.getIn(['create', 'patternId']),
         patterns,
         requiredPoints: userProposals.getIn(['create', 'requiredPoints']),
+        router: props.router,
     };
 }
 

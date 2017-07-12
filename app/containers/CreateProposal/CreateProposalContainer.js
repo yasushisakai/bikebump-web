@@ -6,11 +6,12 @@ import { CreateProposal } from 'components';
 
 type Props ={
     roadId: string;
+    router: Object;
 };
 
 class CreateProposalContainer extends React.Component<void, Props, void> {
     render () {
-        return <CreateProposal roadId={this.props.roadId}/>;
+        return <CreateProposal roadId={this.props.roadId} router={this.props.router}/>;
     }
 }
 
