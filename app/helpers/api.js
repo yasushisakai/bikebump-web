@@ -236,8 +236,9 @@ export function modifyBikecoin (userId: string, proposalId: string, value: numbe
         .then(() => ref.child(`userProposals/${userId}/votes/${proposalId}`).set(value))
         .then(() => getChild(`userProposals/${userId}/units`))
         .then((currentUserValue) => {
-            console.log('currentUserValue', currentUserValue);
-            if (!currentUserValue) {
+            console.log('currentUserValue0', currentUserValue);
+            if (!currentUserValue && currentUserValue !== 0) {
+                console.log('currentUserValue1', currentUserValue);
                 currentUserValue = 100;
             }
             ref.child(`userProposals/${userId}/units`).set(currentUserValue - deltaCoins);

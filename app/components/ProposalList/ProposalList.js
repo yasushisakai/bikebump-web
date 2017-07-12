@@ -2,13 +2,12 @@
 import React from 'react';
 import { ProposalListItemContainer, BikeCoinBadgeContainer } from 'containers';
 import { Map } from 'immutable';
-import { proposalListContainer, listContainer, roadCategory, userUnits } from './styles.css';
+import { proposalListContainer, listContainer, roadCategory } from './styles.css';
 import type { Road } from 'types';
 
 type Props = {
     roadProposals: any;
     roads: Map<any, any>;
-    unitsLeft: string;
 }
 
 type RoadCategoryType = {
@@ -25,13 +24,16 @@ function RoadCategory ({roadId, roads, children}: RoadCategoryType) {
     </div>);
 }
 
-export default function ProposalList ({ roadProposals, roads, unitsLeft }: Props) {
+export default function ProposalList ({ roadProposals, roads }: Props) {
     const contents = Object.keys(roadProposals)
         .filter((key) => key !== 'isFetching' && key !== 'error' && key !== 'lastUpdated')
         .map((key) => (
             <RoadCategory key={`road-${key}`} roadId={key} roads={roads} >
                 {Object.keys(roadProposals[key]).map((proposalId, index) => (
-                    <ProposalListItemContainer key={`${index}-${proposalId}`} roadId={key} proposalId={proposalId}/>)
+                    <ProposalListItemContainer
+                        key={`${index}-${proposalId}`}
+                        roadId={key}
+                        proposalId={proposalId}/>)
                 )}
             </RoadCategory>));
     //   const proposalList = proposalIds.map((proposalId, index) => {

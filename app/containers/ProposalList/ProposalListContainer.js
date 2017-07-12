@@ -4,14 +4,13 @@ import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import { ProposalList } from 'components';
-import { Map, fromJS } from 'immutable';
+import { Map } from 'immutable';
 
 import { handleFetchingRoads } from 'modules/roads';
 import { handleFetchingRoadProposals } from 'modules/roadProposals';
 
 type Props = {
         roads: Map<any, any>;
-        unitsLeft: number;
         roadProposals: Map<any, any>;
         handleFetchingRoads: Function;
         handleFetchingRoadProposals: Function;
@@ -24,31 +23,21 @@ class ProposalListContainer extends React.Component<void, Props, void> {
     }
 
     componentWillUpdate (nextProps: Props) {
+        if (!nextProps.isFetching) {
+            console.log('next props', nextProps.roadProposals.toJS());
+        }
     }
 
     render () {
         return <ProposalList
-            unitsLeft={this.props.unitsLeft}
             roads={this.props.roads}
             roadProposals={this.props.roadProposals.toJS()} />;
     }
 }
 
 function mapStateToProps ({roads, roadProposals}, props) {
-
-    const userProposals = fromJS({
-        proposals: {
-            '861557': {
-                anotherProposalId: 20,
-                sampleProposalId: 10,
-            },
-        },
-        units: 70,
-    });
-
     return {
-        isFetching: roads.get('isFetching') || userProposals.get('isFetching'),
-        unitsLeft: userProposals.get('units'),
+        isFetching: roads.get('isFetching'),
         roadProposals,
         roads,
     };

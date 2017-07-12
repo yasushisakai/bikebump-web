@@ -165,7 +165,7 @@ export default function userProposals (state = initialState, action) {
     case ADD_PROPOSAL:
         return state.set('proposals', singleUserProposal(state.get('proposals'), action));
     case BIKECOIN_TRANSACTION:
-        return state.updateIn(['votes', action.proposalId], curr => curr + action.value).update('units', curr => curr - action.value);
+        return state.updateIn(['votes', action.proposalId], curr => (curr || 0) + action.value).update('units', curr => curr - action.value);
     default :
         return state;
     }
