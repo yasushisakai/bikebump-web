@@ -1,3 +1,13 @@
 .userContents{
   composes: contents from 'styles/styles.css';
 }
+
+.rankings {
+  display: flex;
+  flex-flow: row;
+}
+
+.ranking {
+  flex: 1;
+  text-align: center;
+}

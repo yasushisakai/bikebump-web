@@ -16,6 +16,9 @@ type Props = {
     isFetching: boolean;
     isAuthed: boolean;
     authedId: string;
+    dingRank: number;
+    responseRank: number;
+    proposalRank: number;
     handleFetchingUserDings: Function;
     handleFetchingUserResponses: Function;
     handleFetchingUserProposals: Function;
@@ -44,7 +47,12 @@ class UserContainer extends React.Component<void, Props, void> {
     render () {
         return this.props.isFetching === true
             ? null
-            : (<User uid={this.props.authedId} dingIds={this.props.dingIds}/>);
+            : (<User
+                uid={this.props.authedId}
+                dingIds={this.props.dingIds}
+                dingRank={this.props.dingRank}
+                responseRank={this.props.responseRank}
+                proposalRank={this.props.proposalRank}/>);
     }
 }
 
@@ -63,8 +71,8 @@ function mapStateToProps ({users, userDings, userProposals, userResponses, ranki
         isAuthed: users.get('isAuthed'),
         dingIds: userDings.get(props.routeParams.uid),
         dingRank: rankings.get('dingRanking'),
-        responseRanking: rankings.get('responseRanking'),
-        proposalRanking: rankings.get('proposalRanking'),
+        responseRank: rankings.get('responseRanking'),
+        proposalRank: rankings.get('proposalRanking'),
     };
 }
 
