@@ -34,7 +34,7 @@ export const defaultCircleStyle = {
     ...defaultStyle,
     weight: 10,
     opacity: 0.8,
-    color: '#ff69b4',
+    color: '#f8e71c',
 };
 
 export const defaultRoadStyle = {

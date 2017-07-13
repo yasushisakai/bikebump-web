@@ -1,13 +1,60 @@
-.userContents{
-  composes: contents from 'styles/styles.css';
+.userContainer{
+  /* composes: contents from 'styles/styles.css'; */
+  padding: 5px 5%;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.title {
+  flex:1;
+  padding-top: 5px;
+}
+
+.result {
+  flex: 0;
+  font-size: 1.3em;
+  font-weight: 700;
+}
+
+.entry {
+  display: flex;
+  
+}
+
+
+.header {
+  font-size: 1.2em;
+  font-weight: 600;
+  padding-bottom: 20px;
 }
 
 .rankings {
-  display: flex;
-  flex-flow: row;
+  flex: 2;
+  display:flex;
+  flex-flow: column;
+  padding-bottom: 25px;
 }
 
-.ranking {
-  flex: 1;
-  text-align: center;
+.small {
+  padding: 0px 4px;
+  font-size: 0.6em;
+  font-weight: 300;
 }
+
+.ranks {
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+}
+
+.rank {
+  flex: 1;
+  font-size: 1.2em;
+  padding-bottom: 20px;
+}
+
+.settings {
+  flex: 1;
+}
+

@@ -1,9 +1,16 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import {
-    userContents,
+    userContainer,
+    rank,
+    ranks,
+    small,
     rankings,
-    ranking,
+    settings,
+    header,
+    entry,
+    result,
+    title,
 } from './styles.css';
 import BikeIcon from 'react-icons/lib/fa/bicycle';
 import DiamondIcon from 'react-icons/lib/fa/diamond';
@@ -40,18 +47,42 @@ export default function User ({uid, dingIds, dingRank, responseRank, proposalRan
     console.log(uid);
     const calibrateLink = `/user/${uid}/calibrate`;
     return (
-        <div className={userContents}>
-            {'User'}
-            <h2> {'Rankings'} </h2>
+        <div className={userContainer}>
             <div className={rankings}>
-                <div className={ranking}><BikeIcon /> {addAfter(dingRank)}</div>
-                <div className={ranking}><DiamondIcon /> {addAfter(proposalRank)}</div>
-                <div className={ranking}><EyeIcon /> {addAfter(responseRank)}</div>
+                <div className={header}> {'Rankings'} </div>
+                <div className={ranks}>
+                    <div className={rank}>
+                        <div className={entry}><div className={title}><BikeIcon /> {'Ding Collector'}</div>
+                            <div className={result}>{addAfter(dingRank)}</div>
+                        </div>
+                        <div className={small}>
+                            {'the total number of your reports and ding areas passed.'}
+                        </div>
+                    </div>
+                    <div className={rank}>
+                        <div className={entry}><div className={title}><DiamondIcon /> {'Grassroot Planner'}</div>
+                            <div className={result}>{addAfter(proposalRank)}</div>
+                        </div>
+                        <div className={small}>
+                            {'the number of bike coins that was collected though improvements created by you.'}
+                        </div>
+                    </div>
+                    <div className={rank}>
+                        <div className={entry}><div className={title}><EyeIcon /> {'Reporter'}</div>
+                            <div className={result}>{addAfter(responseRank)}</div>
+                        </div>
+                        <div className={small}>
+                            {'the number of surveys answered to provide detailed information of the current state.'}
+                        </div>
+                    </div >
+                </div>
             </div>
-            <h2> {'Settings'} </h2>
-            <Link to='/tests/recordSound'> {'record sound'} </Link>
-            <Link to={calibrateLink}><div> {'calibrate'} </div> </Link>
-            <Link to='/logout'> {'Logout'} </Link>
+            <div className={settings}>
+                <div className={header}> {'Settings'} </div>
+                {/* <Link to='/tests/recordSound'> {'record sound'} </Link> */}
+                <Link to={calibrateLink}><div className={`pt-button pt-large`}> {'recalibrate your bell'} </div> </Link>
+                <Link to='/logout'><div className={`pt-button pt-large`}>{'logout'}</div></Link>
+            </div>
         </div>
     );
 }
