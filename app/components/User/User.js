@@ -20,7 +20,6 @@ export default function User ({uid}: Props) {
             <Link to='/tests/recordSound'> {'record sound'} </Link>
             <Link to={calibrateLink}><div> {'calibrate'} </div> </Link>
             <Link to='/logout'> {'Logout'} </Link>
-            <Link to='/proposals#road-12116724'> {`jump test`} </Link>
         </div>
     );
 }

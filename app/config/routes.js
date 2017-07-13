@@ -23,7 +23,6 @@ import {
 } from 'containers';
 
 function hashLinkScroll () {
-    console.log('isProduction', !isProduction);
     // if (!isProduction) return;
     const { hash } = window.location;
     if (hash !== '') {

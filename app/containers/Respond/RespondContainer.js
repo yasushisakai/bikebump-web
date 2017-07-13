@@ -61,8 +61,6 @@ class RespondContainer extends React.Component<void, Props, void> {
     }
 
   componentWillUpdate (nextProps: Props) {
-        console.log('cwu', nextProps.isFetching);
-
         const nextPair: Map<any, any> = this.props.nextPair ? ((this.props.nextPair:any): Map<any, any>) : new Map();
 
         if (!nextProps.isFetching && nextPair.get('dingId') === '') {

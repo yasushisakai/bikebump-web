@@ -16,22 +16,39 @@ type Props = {
         handleFetchingRoadProposals: Function;
 }
 
+function compareRoadTotalPointGain (keya:number, keyb: number): number {
+
+}
+
 class ProposalListContainer extends React.Component<void, Props, void> {
+    constructor (props) {
+        super(props);
+        this.roadOrder = [];
+    }
+
+    roadOrder: Array<number>;
+
     componentWillMount () {
         this.props.handleFetchingRoads();
         this.props.handleFetchingRoadProposals();
     }
 
-    componentWillUpdate (nextProps: Props) {
-        if (!nextProps.isFetching) {
-            console.log('next props', nextProps.roadProposals.toJS());
-        }
+    sortRoadOrder (roadProposals: Object) {
+        return Object.keys(roadProposals)
+            .filter((key) => key !== 'isFetching' && key !== 'lastUpdated' && key !== 'error')
+            .sort((keyA: string, keyB: string) => {
+                const totalA = Object.keys(roadProposals[keyA]).reduce((prev, curr) => prev + roadProposals[keyA][curr], 0);
+                const totalB = Object.keys(roadProposals[keyB]).reduce((prev, curr) => prev + roadProposals[keyB][curr], 0);
+                return totalB - totalA;
+            });
     }
 
     render () {
+        const roadProposals = this.props.roadProposals.toJS();
         return <ProposalList
             roads={this.props.roads}
-            roadProposals={this.props.roadProposals.toJS()} />;
+            roadProposals={roadProposals}
+            roadOrder={this.sortRoadOrder(roadProposals)}/>;
     }
 }
 

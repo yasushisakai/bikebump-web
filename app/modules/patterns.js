@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable';
-import { fetchPatterns, savePattern } from 'helpers/api';
+import { fetchPatterns } from 'helpers/api';
 import { isModuleStale } from 'helpers/utils';
 
 const FETCHING_PATTERNS = 'FETCHING_PATTERNS';

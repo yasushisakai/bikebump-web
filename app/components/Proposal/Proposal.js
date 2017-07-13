@@ -72,7 +72,7 @@ export default function Proposal ({ proposalId, userUnits, patternId, pattern, p
                                 <ProposalOptionContainer value={20} color={black} backgroundColor={orange} id={proposalId} text={'critical'}/>
                                 <ProposalOptionContainer value={50} color={black} backgroundColor={red} id={proposalId} text={'must'}/>
                             </div>
-                            <div className={progressBar}><CoinProgress currentPoints={proposal.currentUnits} maxPoints={proposal.maxUnits}/></div>
+                            <div className={progressBar}><CoinProgress currentPoints={proposal.currentUnits} maxPoints={proposal.maxUnits} showInfo={true}/></div>
                         </div>
                     </div>
                 </div>

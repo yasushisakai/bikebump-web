@@ -72,7 +72,6 @@ class MapAndStreetViewContainer extends React.Component<void, MapAndStreetViewPr
     }
 
     componentWillUpdate (nextProps: MapAndStreetViewProps) {
-        console.log('mapStreet', 'cwu', nextProps.dingId);
         if (!nextProps.isFetching) {
             this.drawCircles(nextProps);
         }

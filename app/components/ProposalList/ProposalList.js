@@ -6,7 +6,8 @@ import { proposalListContainer, listContainer, roadCategory } from './styles.css
 import type { Road } from 'types';
 
 type Props = {
-    roadProposals: any;
+    roadProposals: Object;
+    roadOrder: Array<string>;
     roads: Map<any, any>;
 }
 
@@ -24,17 +25,18 @@ function RoadCategory ({roadId, roads, children}: RoadCategoryType) {
     </div>);
 }
 
-export default function ProposalList ({ roadProposals, roads }: Props) {
-    const contents = Object.keys(roadProposals)
-        .filter((key) => key !== 'isFetching' && key !== 'error' && key !== 'lastUpdated')
+export default function ProposalList ({ roadProposals, roads, roadOrder }: Props) {
+    const contents = roadOrder
         .map((key) => (
             <RoadCategory key={`road-${key}`} roadId={key} roads={roads} >
-                {Object.keys(roadProposals[key]).map((proposalId, index) => (
-                    <ProposalListItemContainer
-                        key={`${index}-${proposalId}`}
-                        roadId={key}
-                        proposalId={proposalId}/>)
-                )}
+                {Object.keys(roadProposals[key])
+                    .sort((a, b) => roadProposals[key][b] - roadProposals[key][a])
+                    .map((proposalId, index) => (
+                        <ProposalListItemContainer
+                            key={`${index}-${proposalId}`}
+                            roadId={key}
+                            proposalId={proposalId}/>)
+                    )}
             </RoadCategory>));
     //   const proposalList = proposalIds.map((proposalId, index) => {
     //     return (

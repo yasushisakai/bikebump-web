@@ -44,20 +44,22 @@ class ProposalListItemContainer extends React.Component<void, Props, void> {
     }
 
     componentWillUpdate (nextProps: Props) {
-        const proposal = nextProps.proposals.get(nextProps.proposalId);
-        if (proposal) {
-            this.proposal = proposal.toJS();
-        }
-
-        if (this.proposal) {
-            const pattern = nextProps.patterns.get(this.proposal.patternId);
-            if (pattern) {
-                this.pattern = pattern.toJS();
+        if (!nextProps.isFetching) {
+            const proposal = nextProps.proposals.get(nextProps.proposalId);
+            if (proposal) {
+                this.proposal = proposal.toJS();
             }
-        }
 
-        this.myUnits = this.getUserUnits(nextProps);
-        this.isMine = this.checkIfMine();
+            if (this.proposal) {
+                const pattern = nextProps.patterns.get(this.proposal.patternId);
+                if (pattern) {
+                    this.pattern = pattern.toJS();
+                }
+            }
+
+            this.myUnits = this.getUserUnits(nextProps);
+            this.isMine = this.checkIfMine();
+        }
     }
 
     getUserUnits (props: Props) {

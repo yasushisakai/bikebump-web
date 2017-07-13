@@ -223,7 +223,14 @@ export function modifyBikecoin (userId: string, proposalId: string, value: numbe
     let roadId = '';
     let newValue = 0;
     return ref.child(`userProposals/${userId}`).once('value')
-        .then((snapshot) => snapshot.val().votes)
+        .then((snapshot) => snapshot.val())
+        .then((value) => {
+            if (value) {
+                return value.votes || {};
+            } else {
+                return {};
+            }
+        })
         .then((votes) => {
             if (votes) {
                 const currBCUserProposal = votes[proposalId] ? votes[proposalId] : 0;
