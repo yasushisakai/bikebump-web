@@ -11,7 +11,6 @@ export PlaySoundContainer from './PlaySound/PlaySoundContainer';
 export RoadVisContainer from './RoadVis/RoadVisContainer';
 export CalibrateContainer from './Calibrate/CalibrateContainer';
 export LayoutContainer from './Layout/LayoutContainer';
-export MidMapContainer from './MidMap/MidMapContainer';
 export MapAndStreetViewContainer from './MapAndStreetView/MapAndStreetViewContainer';
 export RecordSoundContainer from './RecordSound/RecordSoundContainer';
 export ProposalContainer from './Proposal/ProposalContainer';

@@ -4,21 +4,22 @@ import { User } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators, type Dispatch } from 'redux';
 
-import * as userDingsActionCreators from 'modules/userDings';
-import * as userVotesActionCreators from 'modules/userVotes';
-import * as userResponsesActionCreators from 'modules/userResponses';
-
-import { extractActionCreators } from 'helpers/utils';
+import { handleFetchingUserDings } from 'modules/userDings';
+import { handleFetchingUserResponses } from 'modules/userResponses';
+import { handleFetchingUserProposals } from 'modules/userProposals';
+import { handleFetchingRankings } from 'modules/rankings';
 
 import type { Ding } from 'types';
 
 type Props = {
+    uid: string;
     isFetching: boolean;
     isAuthed: boolean;
     authedId: string;
     handleFetchingUserDings: Function;
     handleFetchingUserResponses: Function;
-    handleFetchingUserVotes: Function;
+    handleFetchingUserProposals: Function;
+    handleFetchingRankings: Function;
     dingIds: {[string]: Ding};
   }
 
@@ -34,8 +35,9 @@ class UserContainer extends React.Component<void, Props, void> {
         // fetch user stuff
         if (this.props.isAuthed === true) { // reload
             this.props.handleFetchingUserDings();
-            this.props.handleFetchingUserVotes();
+            this.props.handleFetchingUserProposals(this.props.uid);
             this.props.handleFetchingUserResponses();
+            this.props.handleFetchingRankings(this.props.uid);
         }
     }
 
@@ -50,20 +52,28 @@ UserContainer.contextTypes = {
     router: PropTypes.object.isRequired,
 };
 
-function mapStateToProps ({users, userDings, userVotes, userResponses}, props) {
+function mapStateToProps ({users, userDings, userProposals, userResponses, rankings}, props) {
     return {
-        isFetching: users.get('isFetching') || userDings.get('isFetching') || userVotes.get('isFetching'),
+        uid: users.get('authedId'),
+        isFetching: users.get('isFetching') ||
+        userDings.get('isFetching') ||
+        userProposals.get('isFetching') ||
+        rankings.get('isFetching'),
         authedId: users.get('authedId'),
         isAuthed: users.get('isAuthed'),
         dingIds: userDings.get(props.routeParams.uid),
+        dingRank: rankings.get('dingRanking'),
+        responseRanking: rankings.get('responseRanking'),
+        proposalRanking: rankings.get('proposalRanking'),
     };
 }
 
 function mapDispatchToProps (dispatch: Dispatch<*>) {
     return bindActionCreators({
-        ...extractActionCreators(userDingsActionCreators),
-        ...extractActionCreators(userVotesActionCreators),
-        ...extractActionCreators(userResponsesActionCreators),
+        handleFetchingUserDings,
+        handleFetchingUserProposals,
+        handleFetchingUserResponses,
+        handleFetchingRankings,
     }, dispatch);
 }
 

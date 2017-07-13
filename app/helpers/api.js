@@ -210,7 +210,7 @@ export function fetchRoadProposals () {
         .catch((error) => console.log(error));
 }
 
-function getChild (path: string): Promise<Object> {
+function getChild (path: string): Promise<any> {
     return ref.child(path).once('value')
         .then((snapshot) => snapshot.val())
         .catch((error) => {
@@ -264,4 +264,38 @@ export function modifyBikecoin (userId: string, proposalId: string, value: numbe
         .then(() => ref.child(`roadProposals/${roadId}/${proposalId}`).set(newValue))
         .then(() => ({deltaCoins, roadId}))
         .catch((error) => { console.log(error); });
+}
+
+export function getRankings (userId: string): Promise<any> {
+    let dingRanking = 0;
+    let proposalRanking = 0;
+    let responseRanking = 0;
+    let latest = 0;
+    return getChild(`rankings/head`)
+        .then((timestamp) => { latest = timestamp; })
+        .then(() => getChild(`rankings/${latest}/dingRanking/${userId}`))
+        .then((dingRank) => {
+            if (!dingRank && dingRank !== 0) {
+                dingRanking = 0;
+            } else {
+                dingRanking = dingRank + 1;
+            }
+        })
+        .then(() => getChild(`rankings/${latest}/proposalRanking/${userId}`))
+        .then((proposalRank) => {
+            if (!proposalRank && proposalRank !== 0) {
+                proposalRanking = 0;
+            } else {
+                proposalRanking = proposalRank + 1;
+            }
+        })
+        .then(() => getChild(`rankings/${latest}/responseRanking/${userId}`))
+        .then((responseRank) => {
+            if (!responseRank && responseRank !== 0) {
+                responseRanking = 0;
+            } else {
+                responseRanking = responseRank + 1;
+            }
+        })
+        .then((): any => ({dingRanking, proposalRanking, responseRanking}));
 }
