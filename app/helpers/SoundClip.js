@@ -34,7 +34,7 @@ export default class SoundClip {
 
         // mic test
 
-        navigator.getUserMedia({audio: true})
+        navigator.mediaDevices.getUserMedia({audio: true})
             .then((stream) => {
                 // Recorder
                 const input = audioContext.createMediaStreamSource(stream);
@@ -49,7 +49,7 @@ export default class SoundClip {
                 this.highpassFilter.connect(this.analyzer);
             })
             .catch((error) => console.error(error));
-            
+
         this.a_indexies = [27.5, 55, 110, 220, 440, 880, 1760, 3520, 7040, 14080].map(v => {
             return this.getIndexFromFrequency(v);
         });
