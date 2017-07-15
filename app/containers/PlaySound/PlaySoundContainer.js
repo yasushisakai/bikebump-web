@@ -4,6 +4,7 @@ import React from 'react';
 // import { bindActionCreators } from 'redux';
 // import { connect } from 'react-redux';
 import { PlaySound } from 'components';
+import { AudioContext } from 'config/constants';
 
 import TonePlayer from 'helpers/Sound/Synth';
 

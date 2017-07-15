@@ -7,7 +7,7 @@ import FrequencyGraph from 'helpers/FrequencyGraph';
 import { fitCanvas, extractActionCreators, vibrate } from 'helpers/utils';
 import { Record } from 'components';
 import { Analyser, Recorder } from 'helpers/Sound';
-import { updateCycleDuration, threshold, bufferAveraging } from 'config/constants';
+import { AudioContext, updateCycleDuration, threshold, bufferAveraging } from 'config/constants';
 import * as userSettingsActionCreators from 'modules/userSettings';
 import * as recordActionCreators from 'modules/record';
 import * as dingsActionCreators from 'modules/dings';
@@ -44,7 +44,7 @@ class RecordContainer extends React.Component {
         // plot to html5 canvas (p5 replacement) this.pen = new Pen(this.canvas)
 
         // audio
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.audioContext = new AudioContext();
         this.analyser = new Analyser(this.audioContext);
         this.analyser.setIsInFocus(true);
 

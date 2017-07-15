@@ -1,6 +1,7 @@
 // @flow
 import firebase from 'firebase';
 import { fromJS } from 'immutable';
+
 //
 // THRESHOLDS
 //
@@ -78,4 +79,10 @@ export const blue = '#4a90e2';
 export const green = '#7ed321';
 export const black = '#252525';
 export const white = '#f0f0f0';
+
+//
+// AudioContext
+//
+
+export const AudioContext = window.AudioContext || window.webkitAudioContext;
 

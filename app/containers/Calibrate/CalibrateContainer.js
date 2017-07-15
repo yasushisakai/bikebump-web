@@ -9,7 +9,7 @@ import * as userSettingsActionCreators from 'modules/userSettings';
 import { Analyser } from 'helpers/Sound';
 import Pen from 'helpers/Pen';
 import { updateUserSettings } from 'helpers/api';
-import { red, yellow, white, bufferAveraging } from 'config/constants';
+import { AudioContext, red, yellow, white, bufferAveraging } from 'config/constants';
 
 type Props = {
     uid: string;
@@ -45,6 +45,7 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         }
 
         this.maxSlopes = [0, 0];
+
         this.audioContext = new AudioContext();
         this.analyser = new Analyser(this.audioContext);
         this.analyser.setIsInFocus(true);

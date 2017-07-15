@@ -6,6 +6,7 @@ import { Recorder } from 'helpers/Sound';
 import { storeBlob } from 'helpers/storage';
 import { bindActionCreators, type Dispatch } from 'redux';
 import * as recordSoundActionCreators from 'modules/recordSound';
+import { AudioContext } from 'config/constants';
 
 type Props = {
     isRecording: boolean;
@@ -16,7 +17,7 @@ type Props = {
 class RecordSoundContainer extends React.Component<void, Props, void> {
     componentDidMount () {
     // audio
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.audioContext = new AudioContext();
 
         if (navigator.getUserMedia) {
             navigator.getUserMedia(
