@@ -4,8 +4,16 @@ import { Auth } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators, type Dispatch } from 'redux';
 import * as usersActionCreators from 'modules/users';
-import { button } from 'styles/styles.css';
 import { services } from 'helpers/auth';
+import GoogleIcon from 'react-icons/lib/fa/google';
+import GithubIcon from 'react-icons/lib/fa/github';
+import FacebookIcon from 'react-icons/lib/fa/facebook';
+
+import {
+    loginButton,
+    loginIcon,
+    text,
+} from 'components/Auth/styles.css';
 
 type AuthButtonProps = {
   service: string;
@@ -18,14 +26,30 @@ type AuthContainerProps = {
   error: string;
   handleUserAuthRedirect: Function;
   handleUserAuthReturn: Function;
+  router: Object;
 }
 
 function AuthButton ({service, onClick}: AuthButtonProps) {
+    let icon;
+    let bgColor;
+
+    switch (service) {
+    case 'google':
+        icon = <GoogleIcon/>;
+        break;
+    case 'github':
+        icon = <GithubIcon />;
+        break;
+    case 'facebook':
+        icon = <FacebookIcon />;
+        break;
+    }
+
     return (
-        <div
-            className={button}
-            onClick={onClick.bind(this, service)} >
-            {`login with ${service} account`}
+        <div className={`pt-button pt-large ${loginButton}`}
+            style={{fontSize: '1.2em', lineHeight: '2.5em', fontWeight: 400}} onClick={onClick.bind(this, service)} >
+            <div className={loginIcon}> {icon} </div>
+            <div className={text}> {`login with ${service}`}</div>
         </div>
     );
 }
@@ -39,6 +63,10 @@ class AuthContainer extends React.Component<void, AuthContainerProps, void> {
     componentDidMount () {
         if (sessionStorage.getItem('redirectAuth') === 'true') {
             this.props.handleUserAuthReturn();
+        }
+
+        if (this.props.isAuthed) {
+            this.props.router.push('/record');
         }
     }
 

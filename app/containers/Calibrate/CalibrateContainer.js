@@ -9,7 +9,7 @@ import * as userSettingsActionCreators from 'modules/userSettings';
 import { Analyser } from 'helpers/Sound';
 import Pen from 'helpers/Pen';
 import { updateUserSettings } from 'helpers/api';
-import { AudioContext, red, yellow, white, bufferAveraging } from 'config/constants';
+import { AudioContext, threshold, red, yellow, white, bufferAveraging } from 'config/constants';
 
 type Props = {
     uid: string;
@@ -52,19 +52,33 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         // this sets will splice the raw data
         // into a specific range to 2k - 4k
 
-        navigator.mediaDevices.getUserMedia({ audio: true })
+        navigator.mediaDevices.getUserMedia({ video: false, audio: true })
             .then((stream) => {
                 let source = this.audioContext.createMediaStreamSource(stream);
                 source.connect(this.analyser.input);
                 this.analyser.connect();
             })
-            .catch((error) => console.error(error));
+            .catch((error) => {
+                console.error('user media error');
+                console.error(error);
+                // disable microphone
+            });
 
         this.setup();
         this.draw();
     }
 
     componentWillUnmount () {
+        this.props.disableRingBellMode(this.props.uid);
+        if (this.maxDuration > 100 && this.props.isCalibrating) {
+            this.props.handleUpdateTargetFrequency(
+                this.props.uid,
+                this.targetFrequency,
+                this.maxSlopes,
+                this.maxDuration,
+            );
+        }
+        this.audioContext.close();
         window.cancelAnimationFrame(this.animation);
     }
 
@@ -100,7 +114,7 @@ class CalibrateContainer extends React.Component<void, Props, void> {
             this.isTempPeak = false;
             this.maxDuration = 0;
         } else {
-            if (this.maxDuration > 300) {
+            if (this.maxDuration > 100) {
                 this.props.handleUpdateTargetFrequency(
                     this.props.uid,
                     this.targetFrequency,
@@ -171,7 +185,7 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         if (this.props.isCalibrating) {
             const newPeakIndex = this.analyser.getPeakIndex();
             const tempSlope = this.analyser.getSlopes(newPeakIndex, 2, dataArray);
-            if ((this.maxSlopes[0] * 0.8 > tempSlope[0] || this.maxSlopes[1] * 0.8 > tempSlope[1]) && this.isTempPeak) {
+            if ((this.maxSlopes[0] * threshold > tempSlope[0] || this.maxSlopes[1] * threshold > tempSlope[1]) && this.isTempPeak) {
                 this.isTempPeak = false;
                 this.maxDuration = Date.now() - this.peakTimeStamp;
                 console.log(this.maxDuration);

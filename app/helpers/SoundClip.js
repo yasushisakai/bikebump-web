@@ -34,7 +34,7 @@ export default class SoundClip {
 
         // mic test
 
-        navigator.mediaDevices.getUserMedia({audio: true})
+        navigator.mediaDevices.getUserMedia({video: false, audio: true})
             .then((stream) => {
                 // Recorder
                 const input = audioContext.createMediaStreamSource(stream);

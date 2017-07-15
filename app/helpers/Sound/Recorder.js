@@ -19,9 +19,9 @@ import InlineWorker from 'inline-worker';
 export default class Recorder {
   config = {
       recordDuration: 4000, // in milliseconds
+      cut: 1000,
       bufferLen: 4096,
       numChannels: 1,
-      // totalLength: 44, // Math.ceil((4 * 44100) / 4096)
       mimeType: 'audio/wav',
   };
 
@@ -61,9 +61,9 @@ export default class Recorder {
         this.worker = new InlineWorker(function () {
             let sampleRate; // this is handled by the context
             let recordDuration;
+            let cut;
             let recLength;
             let recBuffers; // meat part!!
-            let testBuffer;
             let pivot;
             let totalLength;
             let numChannels;
@@ -94,6 +94,7 @@ export default class Recorder {
                 // initiation of values
                 sampleRate = config.sampleRate;
                 recordDuration = config.recordDuration;
+                cut = config.cut;
                 pivot = 0;
                 // fixed buffer that will be constantly overwritten
                 recBuffers = [];
@@ -123,7 +124,9 @@ export default class Recorder {
 
                 for (let channel = 0; channel < numChannels; channel++) {
                     const developed = develop(recBuffers[channel], pivot);
-                    buffers.push(mergeBuffers(developed, recLength));
+                    const cutBin = Math.floor((cut * sampleRate / 1000.0) / bufferLen);
+                    const snipped = developed.slice(0, -cutBin);
+                    buffers.push(mergeBuffers(snipped, recLength));
                 }
 
                 let interleaved;
@@ -256,6 +259,7 @@ export default class Recorder {
             config: {
                 sampleRate: this.context.sampleRate,
                 recordDuration: this.config.recordDuration,
+                cut: this.config.cut,
                 numChannels: this.config.numChannels,
                 bufferLen: this.config.bufferLen,
             },

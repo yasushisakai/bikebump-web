@@ -231,7 +231,7 @@ export function formatUser (name: string, email: string, avatar: string, uid: st
     };
 }
 
-export function formatWavFileName (timestamp: number, location: LatLng): string {
+export function formatWavFileName (timestamp: number, location: LatLng, value: number|string = 0): string {
     // const now = new Date(timestamp)
     // const day = zeroAdd(now.getDate())
     // const month = zeroAdd(now.getMonth() + 1)
@@ -244,7 +244,7 @@ export function formatWavFileName (timestamp: number, location: LatLng): string 
     const lng = location.lng;
 
     // return `soundClipsWeb/${day}-${month}-${year}-${hour}-${minute}-${seconds}_lat=${lat}_long=${lng}.wav`
-    return `soundClipsWeb/${timestamp}_${lat}_${lng}.wav`;
+    return `soundClipsWeb/${timestamp}_${lat}_${lng}_${value}.wav`;
 }
 
 export function updateTimeConstrain (timestamp: number): boolean {

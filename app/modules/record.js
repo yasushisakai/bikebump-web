@@ -3,7 +3,7 @@ import { fetchGeoLocation, refreshCommute, formatWavFileName, distFromLatLng } f
 import { createCommute, appendBreadcrumb, createUserDing, deleteCommute } from 'helpers/api';
 import { storeBlob } from 'helpers/storage';
 import { addUserDing, userDingStatus } from 'modules/userDings';
-import { doubleDingDuration, threshold, thresholdLength } from 'config/constants';
+import { threshold } from 'config/constants';
 
 const STOP_RECORDING = 'STOP_RECORDING';
 const START_RECORDING = 'START_RECORDING';
@@ -12,9 +12,6 @@ const RECORD_ERROR = 'RECORD_ERROR';
 const WAIT_DETECTION = 'WAIT_DETECTION';
 const LEAVE_DETECTION = 'LEAVE_DETECTION';
 const RETURN_DETECTION = 'RETURN_DETECTION';
-
-const ADD_PENDING = 'ADD_PENDING_DING';
-const REMOVE_PENDING = 'REMOVE_PENDING';
 
 const INSIDE_DING = 'INSIDE_DING';
 const OUTSIDE_DING = 'OUTSIDE_DING';
@@ -67,13 +64,12 @@ export function handleDetection (slopes) {
         const slope0 = getState().userSettings.getIn([uid, 'maxSlopes0']);
         const slope1 = getState().userSettings.getIn([uid, 'maxSlopes1']);
         const status = getState().record.get('detectionStatus');
-        if (slopes[0] > slope0 * threshold && slopes[1] > slope1 * threshold) {
+        if (slopes[0] > slope0 * threshold * 0.8 && slopes[1] > slope1 * threshold * 0.8) {
             if (status === detectionStatus.INITIAL) {
                 dispatch(waitDetection());
             } else if (status === detectionStatus.WAITING) {
                 if (Date.now() - getState().record.get('lastTimeOverThreshold') > maxDuration * 0.5) {
                     // detection!
-                    console.log('TEMP DING');
                     dispatch(leaveDetection());
                     return true;
                 } else {
@@ -102,21 +98,6 @@ function leaveDetection () {
 function returnDetection () {
     return {
         type: RETURN_DETECTION,
-    };
-}
-
-function addPending (lat, lng, timestamp) {
-    return {
-        type: ADD_PENDING,
-        lat,
-        lng,
-        timestamp,
-    };
-}
-
-function removePending () {
-    return {
-        type: REMOVE_PENDING,
     };
 }
 
@@ -162,6 +143,21 @@ export function handleUpload (recorder, location, timestamp) {
             storeBlob(filename, blob)
                 .then(() => dispatch(uploadingClipSuccess()));
         });
+    };
+}
+
+export function handleUploadBlobWithValue (blob, timestamp, value) {
+    return function (dispatch, getState) {
+        if (getState().record.get('isUploading')) return;
+
+        const location = getState().record.get('latestLocation').toJS();
+        const filename = formatWavFileName(timestamp, location, value);
+        console.log(filename);
+        dispatch(uploadingClip());
+        // console.log('NOT UPLOADING');
+        storeBlob(filename, blob)
+            .then(() => dispatch(uploadingClipSuccess()))
+            .catch((error) => dispatch(uploadingClipError(error)));
     };
 }
 
@@ -314,11 +310,6 @@ const initialState = fromJS({
     lastDetection: 0,
     latestFetch: 0,
     error: '',
-    isPending: false,
-    pending: {
-        dingId: '',
-        timestamp: 0,
-    },
 });
 
 export default function record (state = initialState, action) {
@@ -348,22 +339,6 @@ export default function record (state = initialState, action) {
         return state.merge({
             detectionStatus: detectionStatus.INITIAL,
             lastTimeOverThreshold: Date.now(),
-        });
-    case ADD_PENDING:
-        return state.merge({
-            isPending: true,
-            pending: {
-                dingId: action.dingId,
-                timestamp: action.timestamp,
-            },
-        });
-    case REMOVE_PENDING:
-        return state.merge({
-            isPending: false,
-            pending: {
-                dingId: '',
-                timestamp: 0,
-            },
         });
     case UPLOADING_CLIP:
         return state.set('isUploading', true);

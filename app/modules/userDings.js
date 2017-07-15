@@ -57,7 +57,6 @@ export function handleFetchingUserDings (uid) {
 }
 
 export function addUserDing (uid, dingId, status, commuteId, timestamp) {
-    console.log(commuteId);
     return {
         type: ADD_USER_DING,
         uid,

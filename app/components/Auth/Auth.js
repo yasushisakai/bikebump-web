@@ -1,6 +1,10 @@
 // @flow
 import React from 'react';
-import {contents} from 'styles/styles.css';
+import {
+    header,
+    authContainer,
+    loginButtons,
+} from './styles.css';
 
 type Props = {
   children?: React.Element<*>
@@ -8,9 +12,10 @@ type Props = {
 
 export default function Auth ({children}: Props) {
     return (
-        <div className={contents}>
-            <h1>{'Sign in to bikebump'}</h1>
-            <div>
+        <div className={authContainer}>
+            <div className={header}>{'Sign in to bikebump'}</div>
+            {`select account for sign up`}
+            <div className={loginButtons}>
                 {children}
             </div>
         </div>

@@ -46,7 +46,6 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 
     componentDidMount () {
-        console.log(this.props.router);
         // initiating the map
         this.map = map('mainMap').setView([42.355596, -71.101363], 17);
         tileLayer(darkTile, { attribution, maxZoom: 20 }).addTo(this.map);

@@ -1,6 +1,6 @@
 import { initialState as baseState } from 'config/constants';
 import { fromJS } from 'immutable';
-import { fetchUserSettings, updateUserBellInfo } from 'helpers/api';
+import { fetchUserSettings, updateUserBellInfo, updateUserBellUse } from 'helpers/api';
 import { isModuleStale } from 'helpers/utils';
 
 const FETCHING_USER_SETTINGS = 'FETCHING_USER_SETTINGS';
@@ -95,9 +95,23 @@ export function handleUpdateTargetFrequency (uid, frequency, maxSlopes, maxDurat
     };
 }
 
+export function handleChangeBellUse (uid, flag) {
+    return function (dispatch, getState) {
+        const currentFlag = getState().userSettings.getIn([uid, 'useRingBell']);
+        if (flag !== currentFlag) {
+            if (flag) {
+                dispatch(enableRingBellMode(uid));
+            } else {
+                dispatch(disableRingBellMode(uid));
+            }
+            return updateUserBellUse(flag);
+        }
+    };
+}
+
 const initialSettingState = fromJS({
-    useRingBells: true,
-    targetFrequency: 3000,
+    useRingBell: false,
+    targetFrequency: 9999,
 });
 
 function settings (state = initialSettingState, action) {
@@ -107,9 +121,9 @@ function settings (state = initialSettingState, action) {
     case UPDATE_USER_TARGET_FREQUENCY:
         return state.set('targetFrequency', action.frequency);
     case DISABLE_RING_BELL_MODE:
-        return state.set('useRingBells', false);
+        return state.set('useRingBell', false);
     case ENABLE_RING_BELL_MODE:
-        return state.set('useRingBells', true);
+        return state.set('useRingBell', true);
     default:
         return state;
     }

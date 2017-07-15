@@ -35,7 +35,7 @@ function checkAuth (nextState, replace) {
         }
     } else {
         if (nextPath === '/record') {
-            replace('/signin');
+            replace('/');
         }
     }
 }

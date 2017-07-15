@@ -7,7 +7,7 @@ import FrequencyGraph from 'helpers/FrequencyGraph';
 import { fitCanvas, extractActionCreators, vibrate } from 'helpers/utils';
 import { Record } from 'components';
 import { Analyser, Recorder } from 'helpers/Sound';
-import { AudioContext, updateCycleDuration, threshold, bufferAveraging } from 'config/constants';
+import { AudioContext, updateCycleDuration, threshold, doubleDingDuration, bufferAveraging } from 'config/constants';
 import * as userSettingsActionCreators from 'modules/userSettings';
 import * as recordActionCreators from 'modules/record';
 import * as dingsActionCreators from 'modules/dings';
@@ -51,16 +51,17 @@ class RecordContainer extends React.Component {
         // console.log(navigator.mediaDevices);
         // console.log(navigator.mediaDevices.getUserMedia);
 
-        navigator.mediaDevices.getUserMedia({ audio: true })
+        navigator.mediaDevices.getUserMedia({ video: false, audio: true })
             .then((stream) => {
                 let source = this.audioContext.createMediaStreamSource(stream);
                 source.connect(this.analyser.input);
                 this.analyser.connect();
-                this.recorder = new Recorder(source);
+                this.recorder = new Recorder(source, {recordDuration: 5000, cut: 1000});
                 this.recorder.record();
             })
             .catch((error) => {
                 console.error(error);
+                this.props.handleChangeBellUse(this.props.authedId, false);
             });
         // } else {
         //     console.error('user get media error');
@@ -73,6 +74,7 @@ class RecordContainer extends React.Component {
     }
 
     componentWillUnmount () {
+        this.audioContext.close();
         window.cancelAnimationFrame(this.animation);
 
         if (this.latLngInterval !== null) {
@@ -115,6 +117,8 @@ class RecordContainer extends React.Component {
 
     dataArrays: Uint8Array[];
 
+    blob: Blob;
+
     draw: Function;
     setup: Function;
     mouseMoved: Function;
@@ -139,15 +143,17 @@ class RecordContainer extends React.Component {
         targetSlope0: number;
         targetSlope1: number;
         detectionStatus: number;
+        router: Object;
 
         handleSetDingListener: Function;
         handleFetchingUserSettings: Function;
+        handleChangeBellUse: Function;
         handleFetchingUserDings: Function;
         toggleRecording: Function;
         handleFetchLatLng: Function;
         handleComplieDing: Function;
         uploadingClip: Function;
-        handleUpload: Function;
+        handleUploadBlobWithValue: Function;
         handleDetection: Function;
     }
 
@@ -206,9 +212,15 @@ class RecordContainer extends React.Component {
         this.singleCycleDuration = 3 * 1000; // ms (1min)
         this.snakeLength = 1000;
         this.snakePointList = [];
+
+        this.blob = new Blob();
     }
 
     draw () {
+        if (this.props.targetFrequency === 9999) {
+            this.props.router.push(`user/${this.props.authedId}/calibrate`);
+        }
+
         this.animation = requestAnimationFrame(this.draw);
         if (this.props.isFetching) {
             return;
@@ -217,30 +229,46 @@ class RecordContainer extends React.Component {
         this.pen.clear();
 
         if (this.props.isRecording) {
-            const timeElapsed = Date.now() - this.msStarted;
+            const now = Date.now();
+            const timeElapsed = now - this.msStarted;
             const cyclePosition = (timeElapsed % this.singleCycleDuration) / this.singleCycleDuration;
             const rad = (cyclePosition * 360) / 180 * Math.PI - 0.5 * Math.PI;
 
             const freqIndex: number = this.analyser.frequencyToIndex(this.props.targetFrequency);
             const slopes: Array<number> = this.analyser.getSlopes(freqIndex).map((v) => Math.max(0, v));
-            if (this.props.handleDetection(slopes)) {
-                console.log('hello detection');
-                const now = Date.now();
-                if (this.detectionList.length !== 0) {
-                    const lastDetection = now - this.detectionList[this.detectionList.length - 1][0];
-                    console.log(lastDetection);
-                    if (lastDetection < 1500) {
-                        console.log('DOUBLE');
-                        this.detectionList = [];
-                    }
+
+            if (this.detectionList.length === 1) {
+                if (now - this.detectionList[0][0] > doubleDingDuration) {
+                    // 
+                    // SINGLE DING!!
+                    //
+                    this.props.handleComplieDing(this.detectionList[0][0], 0);
+                    this.props.handleUploadBlobWithValue(this.blob, this.detectionList[0][0], 0);
+                    this.detectionList = [];
                 }
-                this.detectionList.push([Date.now(), rad]);
+            }
+
+            if (this.props.handleDetection(slopes)) {
+                this.detectionList.push([now, rad]);
+                
+                if (this.detectionList.length !== 1) {
+                    //
+                    // DOUBLE DING!!
+                    //
+                    this.props.handleComplieDing(this.detectionList[0][0], 1);
+                    this.props.handleUploadBlobWithValue(this.blob, this.detectionList[0][0], 1);
+                    this.detectionList = [];
+                } else {
+                    // first ding
+                    // we don't know whether it's a single or double ding
+                    this.recorder.exportWAV((blob) => { this.blob = blob; });
+                }
             }
 
             if (this.props.isInside) {
                 const start = { x: 15, y: 15 };
                 const size = { x: this.canvas.width - 30, y: this.canvas.height - 30 };
-                this.pen.stroke('white');
+                this.pen.stroke(`rgb(${Pen.white})`);
                 this.pen.drawRectangle(start, size);
             }
 
@@ -249,7 +277,7 @@ class RecordContainer extends React.Component {
             this.frequencyGraph.update(dataArray);
             this.frequencyGraph.draw(this.props.targetFrequency);
 
-            this.pen.stroke('rgba(255, 255, 255, 0.1)');
+            this.pen.stroke(`rgba(${Pen.white}, 0.1)`);
             this.pen.ctx.setLineDash([4, 8]);
             const threshold0 = this.props.targetSlope0 * threshold;
             const threshold1 = this.props.targetSlope1 * threshold;
@@ -270,13 +298,13 @@ class RecordContainer extends React.Component {
 
             switch (this.props.detectionStatus) {
             case 0: // initial
-                this.pen.stroke('rgb(255, 255, 255)');
+                this.pen.stroke(`rgb(${Pen.white})`);
                 break;
             case 1: // waiting
-                this.pen.stroke('rgb(0, 255, 0)');
+                this.pen.stroke(`rgb(${Pen.yellow})`);
                 break;
             case 2: // cooling
-                this.pen.stroke('rgb(255, 0, 0)');
+                this.pen.stroke(`rgb(${Pen.red})`);
                 break;
             default:
                 this.pen.stroke('rgb(255, 255, 255)');
@@ -287,16 +315,16 @@ class RecordContainer extends React.Component {
 
             switch (this.props.detectionStatus) {
             case 0: // initial
-                this.pen.stroke('rgba(255, 255, 255, 0.05)');
+                this.pen.stroke(`rgba(${Pen.white}, 0.05)`);
                 break;
             case 1: // waiting
-                this.pen.stroke('rgba(0, 255, 0, 0.2)');
+                this.pen.stroke(`rgba(${Pen.yellow}, 0.2)`);
                 break;
             case 2: // cooling
-                this.pen.stroke('rgba(255, 0, 0, 0.2)');
+                this.pen.stroke(`rgba(${Pen.red}, 0.2)`);
                 break;
             default:
-                this.pen.stroke('rgba(255, 255, 255, 0.1)');
+                this.pen.stroke(`rgba(${Pen.white}, 0.1)`);
             }
             // damp alpha :(
             // this.fill('rgba(0,0,0,0)');

@@ -212,6 +212,10 @@ export function updateUserBellInfo (uid: string, freq: number, slopes: number[],
     return Promise.all(promises);
 }
 
+export function updateUserBellUse (uid: string, flag:boolean) {
+    return ref.child(`userSettings/${uid}/useRingBell`).set(flag);
+}
+
 export function fetchUserProposals (uid: string) {
     return ref.child(`userProposals/${uid}`).once('value')
         .then((snapshot) => snapshot.val());

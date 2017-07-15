@@ -91,15 +91,18 @@ export function addMultipleDings (dings) {
 // ding, updates the server, the state will be notified by the listener(dingFeed)
 // + it adds (to both FB and state) and userDing with the status of 'DINGED'
 //
-export function handleComplieDing (uid, coordinates, commuteId, timestamp, radius, value) {
+export function handleComplieDing (timestamp, value) {
     return function (dispatch, getState) {
+        const uid = getState().users.get('authedId');
+        const coordinates = getState().record.get('latestLocation').toJS();
+        const commuteId = getState().record.get('currentCommuteId');
         return createDing(coordinates.lat, coordinates.lng, uid, timestamp, value)
             .then(dingId => {
                 if (dingId !== null) {
                     return createUserDing(uid, dingId, userDingStatus.DINGED, commuteId, timestamp)
                         .then((response) => {
                             const {uid, dingId, status} = response;
-                            return dispatch(addUserDing(uid, dingId, status));
+                            return dispatch(addUserDing(uid, dingId, status, commuteId, timestamp));
                         });
                 }
             });

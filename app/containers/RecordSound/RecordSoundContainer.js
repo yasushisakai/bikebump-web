@@ -19,7 +19,7 @@ class RecordSoundContainer extends React.Component<void, Props, void> {
     // audio
         this.audioContext = new AudioContext();
 
-        navigator.mediaDevices.getUserMedia({audio: true})
+        navigator.mediaDevices.getUserMedia({video: false, audio: true})
             .then((stream) => {
                 let source = this.audioContext.createMediaStreamSource(stream);
                 const config = {

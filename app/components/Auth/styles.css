@@ -1,0 +1,32 @@
+.header {
+    font-size: 1.5em;   
+    font-weight: 600;
+}
+.authContainer {
+    margin: 0 5%;
+    height: 100%;
+}
+
+.loginButtons {
+    margin-top: 25px;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.loginButton {
+    font-size: 1.2em;
+    font-weight: 500;
+    display: flex;
+    flex-flow: row;
+    margin-bottom: 50px;
+}
+
+.loginButton .loginIcon {
+    flex: 0;   
+}
+
+.loginButton .text {
+    flex: 1;
+    text-align: center;
+}

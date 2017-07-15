@@ -6,7 +6,7 @@ import { fromJS } from 'immutable';
 // THRESHOLDS
 //
 
-export const threshold: number = 0.8;
+export const threshold: number = 0.85;
 export const thresholdLength: number = 500; // ms
 export const doubleDingDuration: number = 1500; // ms
 export const maxCommuteLife: number = 20000; // ms
