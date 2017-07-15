@@ -195,8 +195,21 @@ export function fetchUserSettings (uid: string) {
         .then((snapshot) => snapshot.val() || {});
 }
 
-export function updateUserSettings (uid: string, variable: string, value: string | number) {
+function updateUserSettings (uid: string, variable: string, value: string | number) {
     return ref.child(`userSettings/${uid}/${variable}`).set(value);
+}
+
+export function updateUserBellInfo (uid: string, freq: number, slopes: number[], duration: number) {
+
+    const promises = [
+        updateUserSettings(uid, 'targetFrequency', freq),
+        updateUserSettings(uid, 'maxSlopes0', slopes[0]),
+        updateUserSettings(uid, 'maxSlopes1', slopes[1]),
+        updateUserSettings(uid, 'maxDuration', duration),
+        ref.child('bellData/').push({freq, slopes, duration}),
+    ];
+
+    return Promise.all(promises);
 }
 
 export function fetchUserProposals (uid: string) {

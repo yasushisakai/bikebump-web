@@ -14,7 +14,7 @@ export default class Analyser {
         this.analyser.fftSize = fftSize;
         this.analyser.minDecibels = minDecibels;
         this.analyser.maxDecibels = maxDecibels;
-        this.analyser.smoothingTimeConstant = 0.5;
+        this.analyser.smoothingTimeConstant = 0.8;
         this.unitFrequency = audioContext.sampleRate / this.analyser.fftSize;
 
         this.bufferLength = this.analyser.frequencyBinCount;
@@ -60,11 +60,11 @@ export default class Analyser {
             ) + start;
     }
 
-    getSlopes (target, range = 2) {
-        const targetValue = this.dataArray[target];
+    getSlopes (target, range = 2, dataArray = this.dataArray) {
+        const targetValue = dataArray[target];
         let result = [
-            this.dataArray[target - range - 1], // TODO: why -1?
-            this.dataArray[target + range],
+            dataArray[target - range - 1], // TODO: why -1?
+            dataArray[target + range],
         ];
         return result.map((value) => (targetValue - value) / range);
     }

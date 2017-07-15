@@ -62,14 +62,18 @@ function waitDetection () {
 
 export function handleDetection (slopes) {
     return function (dispatch, getState) {
+        const uid = getState().users.get('authedId');
+        const maxDuration = getState().userSettings.getIn([uid, 'maxDuration']);
+        const slope0 = getState().userSettings.getIn([uid, 'maxSlopes0']);
+        const slope1 = getState().userSettings.getIn([uid, 'maxSlopes1']);
         const status = getState().record.get('detectionStatus');
-        if (slopes[0] > threshold && slopes[1] > threshold) {
+        if (slopes[0] > slope0 * threshold && slopes[1] > slope1 * threshold) {
             if (status === detectionStatus.INITIAL) {
                 dispatch(waitDetection());
             } else if (status === detectionStatus.WAITING) {
-                if (Date.now() - getState().record.get('lastTimeOverThreshold') > thresholdLength) {
+                if (Date.now() - getState().record.get('lastTimeOverThreshold') > maxDuration * 0.5) {
                     // detection!
-                    console.log('DING');
+                    console.log('TEMP DING');
                     dispatch(leaveDetection());
                     return true;
                 } else {

@@ -9,6 +9,7 @@ import MapIcon from 'react-icons/lib/fa/map-o';
 import Record from 'react-icons/lib/md/radio-button-checked';
 import PrioritizeIcon from 'react-icons/lib/fa/list-ol';
 import Home from 'react-icons/lib/md/home';
+import { vibrate } from 'helpers/utils';
 
 type Props = {
   isAuthed: boolean;
@@ -33,10 +34,6 @@ const respondDivDisabled: any = {
     background: `url(${imgRoot}choose_dark.png)`,
 };
 
-function vibrate () {
-    window.navigator.vibrate(50);
-}
-
 type IconProps = {
   isRecording : boolean
 }
@@ -49,7 +46,7 @@ function RecordButton ({isRecording}: IconProps) {
         </div>);
     } else {
         return (<div className={divLink}>
-            <Link className={link} onClick={vibrate} to='/record'>
+            <Link className={link} onClick={vibrate(50)} to='/record'>
                 <Record className={icon}/>
             </Link>
             <div className={captionText}>{`record`}</div>
@@ -66,7 +63,7 @@ function MapButton ({isRecording}: IconProps) {
         </div>);
     } else {
         return (<div className={divLink}>
-            <Link className={link} onClick={vibrate} to={label}>
+            <Link className={link} onClick={vibrate(50)} to={label}>
                 <MapIcon className={icon}/>
             </Link>
             <div className={captionText}>{label}</div>
@@ -85,7 +82,7 @@ function SurveyButton ({isAuthed, isRecording, authedId}: Props) {
     } else {
         return (
             <div className={divLink}>
-                <Link className={link} onClick={vibrate} to={`/user/${authedId}/respond`}>
+                <Link className={link} onClick={vibrate(50)} to={`/user/${authedId}/respond`}>
                     <div style={respondDivStyle} />
                 </Link>
                 <div className={captionText}>{'survey'}</div>
@@ -105,7 +102,7 @@ function PrioritizeButton ({isAuthed, isRecording, authedId}: Props) {
     } else {
         return (
             <div className={divLink}>
-                <Link className={link} onClick={vibrate} to={`/proposals`}>
+                <Link className={link} onClick={vibrate(50)} to={`/proposals`}>
                     <PrioritizeIcon className={icon} />
                 </Link>
                 <div className={captionText}>{'prioritize'}</div>
@@ -124,11 +121,11 @@ function NavLinks ({isAuthed, isRecording, authedId}: Props) {
         </div>
         : <div className={navLink}>
             <div className={divLink}>
-                <Link className={link} onClick={vibrate} to='/'><Home className={icon}/></Link>
+                <Link className={link} onClick={vibrate(50)} to='/'><Home className={icon}/></Link>
                 <div className={captionText}>{`bikebump`}</div>
             </div>
             <div className={divLink}>
-                <Link className={link} onClick={vibrate} to='/map'><MapIcon className={icon}/></Link>
+                <Link className={link} onClick={vibrate(50)} to='/map'><MapIcon className={icon}/></Link>
                 <div className={captionText}>{'map'}</div>
             </div>
         </div>;
@@ -148,7 +145,7 @@ function ActionLinks ({isAuthed, isRecording, authedId}: Props) {
         } else {
             return (
                 <div className={divLink}>
-                    <Link className={link} onClick={vibrate} to={accountLink}>
+                    <Link className={link} onClick={vibrate(50)} to={accountLink}>
                         <Account className={icon}/>
                     </Link>
                     <div className={captionText}>{'mystuff'}</div>
@@ -165,7 +162,7 @@ function ActionLinks ({isAuthed, isRecording, authedId}: Props) {
         </div>
         : <div className={actionLink}>
             <div className={divLink}>
-                <Link className={link} onClick={vibrate} to='/signin'><SignIn className={icon}/></Link>
+                <Link className={link} onClick={vibrate(50)} to='/signin'><SignIn className={icon}/></Link>
                 <div className={captionText}>{'sign in'}</div>
             </div>
         </div>;

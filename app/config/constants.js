@@ -5,8 +5,8 @@ import { fromJS } from 'immutable';
 // THRESHOLDS
 //
 
-export const threshold: number = 5;
-export const thresholdLength: number = 100; // ms
+export const threshold: number = 0.8;
+export const thresholdLength: number = 500; // ms
 export const doubleDingDuration: number = 1500; // ms
 export const maxCommuteLife: number = 20000; // ms
 export const updateCycleDuration: number = 5000; // ms
@@ -15,6 +15,8 @@ export const recordDuration: number = 5000; // ms
 export const waitDuration: number = 3000; // ms
 export const dingDetectionGap: number = 120;
 export const updateDuration: number = 1 * 60 * 1000; // 1min
+
+export const bufferAveraging: number = 2;
 
 // the range of frequency in consideration
 export const minFreq: number = 1950;
@@ -58,6 +60,7 @@ const mapboxToken: string = 'pk.eyJ1IjoieWFzdXNoaXNha2FpIiwiYSI6ImNpdThwajN1ZTAw
 export const darkTile: string = `${mapboxURL}ciu8srn4u002v2jrxc81ty7as/tiles/256/{z}/{x}/{y}?access_token=${mapboxToken}`;
 
 export const attribution: string = '&copy; Mapbox &copy; OpenStreetMap &copy; DigitalGlobe';
+
 //
 // MISC
 //

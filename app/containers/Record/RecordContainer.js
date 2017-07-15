@@ -4,10 +4,10 @@ import { bindActionCreators, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import Pen, { type Point2D } from 'helpers/Pen';
 import FrequencyGraph from 'helpers/FrequencyGraph';
-import { fitCanvas, extractActionCreators } from 'helpers/utils';
+import { fitCanvas, extractActionCreators, vibrate } from 'helpers/utils';
 import { Record } from 'components';
 import { Analyser, Recorder } from 'helpers/Sound';
-import { updateCycleDuration, threshold } from 'config/constants';
+import { updateCycleDuration, threshold, bufferAveraging } from 'config/constants';
 import * as userSettingsActionCreators from 'modules/userSettings';
 import * as recordActionCreators from 'modules/record';
 import * as dingsActionCreators from 'modules/dings';
@@ -24,10 +24,11 @@ class RecordContainer extends React.Component {
         this.updatePosition = this.updatePosition.bind(this);
         this.mousePressed = this.mousePressed.bind(this);
         this.resize = this.resize.bind(this);
+        this.dataArrays = [];
     }
 
     componentDidMount () {
-    // setting dom elements
+        // setting dom elements
         this.canvas = document.createElement('canvas');
         this.recordElement = ((document.getElementById('record'): any): HTMLElement);
         this.recordElement.appendChild(this.canvas);
@@ -49,7 +50,7 @@ class RecordContainer extends React.Component {
 
         if (navigator.getUserMedia) {
             navigator.getUserMedia(
-                {audio: true},
+                { audio: true },
                 (stream) => {
                     let source = this.audioContext.createMediaStreamSource(stream);
                     source.connect(this.analyser.input);
@@ -85,68 +86,89 @@ class RecordContainer extends React.Component {
         }
     }
 
-  // FIXME: fix any stuff
-  recordElement: HTMLElement;
-  canvas: HTMLCanvasElement;
-  pen: Pen;
-  frequencyGraph: FrequencyGraph;
-  audioContext: any;
-  analyser: any;
-  recorder: any;
-  animation: number;
-  latLngInterval: ?number;
-  binWidth: number;
-  circleRadius: number;
+    // FIXME: fix any stuff
+    recordElement: HTMLElement;
+    canvas: HTMLCanvasElement;
+    pen: Pen;
+    frequencyGraph: FrequencyGraph;
+    audioContext: any;
+    analyser: any;
+    recorder: any;
+    animation: number;
+    latLngInterval: ?number;
+    binWidth: number;
+    circleRadius: number;
 
-  transitionParameter: number;
-  transitionDirection: number;
+    transitionParameter: number;
+    transitionDirection: number;
 
-  firstFlag: boolean;
-  secondFlag: boolean;
-  isDing: boolean;
-  previousSpike: number;
+    firstFlag: boolean;
+    secondFlag: boolean;
+    isDing: boolean;
+    previousSpike: number;
 
-  msStarted: number;
-  singleCycleDuration: number;
-  snakeLength: number;
-  snakePointList: Array<Point2D>;
-  detectionList: Array<Array<number>>;
+    msStarted: number;
+    singleCycleDuration: number;
+    snakeLength: number;
+    snakePointList: Array<Point2D>;
+    detectionList: Array<Array<number>>;
 
-  draw: Function;
-  setup: Function;
-  mouseMoved: Function;
-  updatePosition: Function;
-  mousePressed: Function;
-  resize: Function;
+    dataArrays: Uint8Array[];
 
-  props:{
-    isFetching: bool;
-    isAuthed: bool;
-    authedId: string;
-    isRecording: bool;
-    isUploading: bool;
-    isInside: bool;
-    whichDing: string;
-    latestLocation: LatLng;
-    currentCommuteId: string;
-    latestFetch: number;
-    lastDetection: number;
-    targetFrequency: number;
-    detectionStatus: number;
+    draw: Function;
+    setup: Function;
+    mouseMoved: Function;
+    updatePosition: Function;
+    mousePressed: Function;
+    resize: Function;
 
-    handleSetDingListener: Function;
-    handleFetchingUserSettings: Function;
-    handleFetchingUserDings: Function;
-    toggleRecording: Function;
-    handleFetchLatLng: Function;
-    handleComplieDing: Function;
-    uploadingClip: Function;
-    handleUpload: Function;
-    handleDetection: Function;
-  }
+    props: {
+        isFetching: bool;
+        isAuthed: bool;
+        authedId: string;
+        isRecording: bool;
+        isUploading: bool;
+        isInside: bool;
+        whichDing: string;
+        latestLocation: LatLng;
+        currentCommuteId: string;
+        latestFetch: number;
+        lastDetection: number;
+        targetFrequency: number;
+        targetDuration: number;
+        targetSlope0: number;
+        targetSlope1: number;
+        detectionStatus: number;
 
-  setup () {
-        const dataArray = this.analyser.updateDataArray();
+        handleSetDingListener: Function;
+        handleFetchingUserSettings: Function;
+        handleFetchingUserDings: Function;
+        toggleRecording: Function;
+        handleFetchLatLng: Function;
+        handleComplieDing: Function;
+        uploadingClip: Function;
+        handleUpload: Function;
+        handleDetection: Function;
+    }
+
+    pushDataArray (dataArray: Uint8Array) {
+        if (this.dataArrays.length < bufferAveraging) {
+            this.dataArrays.push(dataArray);
+        } else {
+            this.dataArrays.shift();
+            this.dataArrays.push(dataArray);
+        }
+
+        const sum = this.dataArrays.reduce((currentTotal, array) => {
+            return array.map((value, index) => (currentTotal[index] || 0) + value);
+        }, []);
+
+        return sum.map((value) => value / this.dataArrays.length);
+    }
+
+    setup () {
+        this.dataArrays = [];
+        const dataArray = this.pushDataArray(this.analyser.updateDataArray());
         this.binWidth = this.canvas.width / dataArray.length;
         this.circleRadius = this.canvas.width * 0.3;
 
@@ -186,7 +208,7 @@ class RecordContainer extends React.Component {
         this.snakePointList = [];
     }
 
-  draw () {
+    draw () {
         this.animation = requestAnimationFrame(this.draw);
         if (this.props.isFetching) {
             return;
@@ -202,46 +224,58 @@ class RecordContainer extends React.Component {
             const freqIndex: number = this.analyser.frequencyToIndex(this.props.targetFrequency);
             const slopes: Array<number> = this.analyser.getSlopes(freqIndex).map((v) => Math.max(0, v));
             if (this.props.handleDetection(slopes)) {
-                console.log('hello detection', [Date.now(), rad]);
+                console.log('hello detection');
+                const now = Date.now();
+                if (this.detectionList.length !== 0) {
+                    const lastDetection = now - this.detectionList[this.detectionList.length - 1][0];
+                    console.log(lastDetection);
+                    if (lastDetection < 1500) {
+                        console.log('DOUBLE');
+                        this.detectionList = [];
+                    }
+                }
                 this.detectionList.push([Date.now(), rad]);
             }
 
             if (this.props.isInside) {
-                const start = {x: 15, y: 15};
-                const size = {x: this.canvas.width - 30, y: this.canvas.height - 30};
+                const start = { x: 15, y: 15 };
+                const size = { x: this.canvas.width - 30, y: this.canvas.height - 30 };
                 this.pen.stroke('white');
                 this.pen.drawRectangle(start, size);
             }
 
             // draw the polyline
-            const dataArray = this.analyser.updateDataArray();
+            const dataArray = this.pushDataArray(this.analyser.updateDataArray());
             this.frequencyGraph.update(dataArray);
             this.frequencyGraph.draw(this.props.targetFrequency);
 
             this.pen.stroke('rgba(255, 255, 255, 0.1)');
             this.pen.ctx.setLineDash([4, 8]);
-            this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius - threshold);
-            this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius + threshold);
+            const threshold0 = this.props.targetSlope0 * threshold;
+            const threshold1 = this.props.targetSlope1 * threshold;
+            this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius - (threshold0 * 0.5));
+            this.pen.drawCircle(this.canvas.width * 0.5, this.canvas.height * 0.5, this.circleRadius + (threshold1 * 0.5));
+
             this.pen.ctx.setLineDash([0]);
 
             const inner: Point2D = {
-                x: Math.cos(rad) * (this.circleRadius - slopes[0]) + this.pen.width * 0.5,
-                y: Math.sin(rad) * (this.circleRadius - slopes[0]) + this.pen.height * 0.5,
+                x: Math.cos(rad) * (this.circleRadius - (slopes[0] * 0.5)) + this.pen.width * 0.5,
+                y: Math.sin(rad) * (this.circleRadius - (slopes[0] * 0.5)) + this.pen.height * 0.5,
             };
 
             const outer: Point2D = {
-                x: Math.cos(rad) * (this.circleRadius + slopes[1]) + this.pen.width * 0.5,
-                y: Math.sin(rad) * (this.circleRadius + slopes[1]) + this.pen.height * 0.5,
+                x: Math.cos(rad) * (this.circleRadius + (slopes[1] * 0.5)) + this.pen.width * 0.5,
+                y: Math.sin(rad) * (this.circleRadius + (slopes[1] * 0.5)) + this.pen.height * 0.5,
             };
 
             switch (this.props.detectionStatus) {
-            case 0 : // initial
+            case 0: // initial
                 this.pen.stroke('rgb(255, 255, 255)');
                 break;
-            case 1 : // waiting
+            case 1: // waiting
                 this.pen.stroke('rgb(0, 255, 0)');
                 break;
-            case 2 : // cooling
+            case 2: // cooling
                 this.pen.stroke('rgb(255, 0, 0)');
                 break;
             default:
@@ -252,13 +286,13 @@ class RecordContainer extends React.Component {
             this.pen.drawLinePoints(inner, outer);
 
             switch (this.props.detectionStatus) {
-            case 0 : // initial
+            case 0: // initial
                 this.pen.stroke('rgba(255, 255, 255, 0.05)');
                 break;
-            case 1 : // waiting
+            case 1: // waiting
                 this.pen.stroke('rgba(0, 255, 0, 0.2)');
                 break;
-            case 2 : // cooling
+            case 2: // cooling
                 this.pen.stroke('rgba(255, 0, 0, 0.2)');
                 break;
             default:
@@ -317,12 +351,11 @@ class RecordContainer extends React.Component {
         });
     }
 
-  updatePosition (commuteId: string) {
-    // window.navigator.vibrate(100)
+    updatePosition (commuteId: string) {
         this.props.handleFetchLatLng();
     }
 
-  mousePressed (event: MouseEvent) {
+    mousePressed (event: MouseEvent) {
         const distanceFromCenter = this.pen.distance(
             this.pen.mouseX,
             this.pen.mouseY,
@@ -331,7 +364,7 @@ class RecordContainer extends React.Component {
         );
 
         if (distanceFromCenter < this.circleRadius) {
-            window.navigator.vibrate(50);
+            vibrate(50);
             this.props.toggleRecording()
                 .then(response => {
                     if (response.isRecording) { // takes change immediately
@@ -352,18 +385,17 @@ class RecordContainer extends React.Component {
         }
     }
 
-  mouseMoved (event: MouseEvent) {
+    mouseMoved (event: MouseEvent) {
         this.pen.updateMouse(event);
     }
 
-  resize () {
-        console.log('hello');
+    resize () {
         this.pen.resize();
     }
 
-  render () {
+    render () {
         return (
-            <Record/>
+            <Record />
         );
     }
 }
@@ -374,9 +406,9 @@ function mapStateToProps (state) {
         isAuthed: state.users.get('isAuthed'),
         authedId,
         isFetching:
-      state.users.get('isFetching') ||
-      state.userSettings.get('isFetching') ||
-      state.dingFeed.get('isFetching'),
+        state.users.get('isFetching') ||
+        state.userSettings.get('isFetching') ||
+        state.dingFeed.get('isFetching'),
         isRecording: state.record.get('isRecording'),
         isInside: state.record.get('isInside'),
         whichDing: state.record.get('whichDing'),
@@ -387,6 +419,10 @@ function mapStateToProps (state) {
         lastDetection: state.record.get('lastDetection'),
         detectionStatus: state.record.get('detectionStatus'),
         targetFrequency: state.userSettings.getIn([authedId, 'targetFrequency']),
+        targetDuration: state.userSettings.getIn([authedId, 'maxDuration']),
+        targetSlope0: state.userSettings.getIn([authedId, 'maxSlopes0']),
+        targetSlope1: state.userSettings.getIn([authedId, 'maxSlopes0']),
+
     };
 }
 

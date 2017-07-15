@@ -6,5 +6,6 @@ dist/
 app/containers/Record/RingDetectionContainer.js
 server/config/
 
+out/
 
 *~

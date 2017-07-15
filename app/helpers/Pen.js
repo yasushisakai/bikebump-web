@@ -65,7 +65,6 @@ export default class Pen {
         this.lineTo(a);
         this.endPath();
     }
-
   clear (): void {
         this.fill('rgba(0, 0, 0, 0)');
         this.ctx.clearRect(0, 0, this.width, this.height);

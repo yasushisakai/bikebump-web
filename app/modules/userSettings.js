@@ -1,6 +1,6 @@
 import { initialState as baseState } from 'config/constants';
 import { fromJS } from 'immutable';
-import { fetchUserSettings, updateUserSettings } from 'helpers/api';
+import { fetchUserSettings, updateUserBellInfo } from 'helpers/api';
 import { isModuleStale } from 'helpers/utils';
 
 const FETCHING_USER_SETTINGS = 'FETCHING_USER_SETTINGS';
@@ -87,9 +87,9 @@ export function handleFetchingUserSettings (uid) {
     };
 }
 
-export function handleUpdateTargetFrequency (uid, frequency) {
+export function handleUpdateTargetFrequency (uid, frequency, maxSlopes, maxDuration) {
     return function (dispatch) {
-        return updateUserSettings(uid, 'targetFrequency', frequency)
+        return updateUserBellInfo(uid, frequency, maxSlopes, maxDuration)
             .then(() => dispatch(updateUserTargetFrequency(uid, frequency)))
             .catch((error) => dispatch(fetchingUserSettingsError(error)));
     };

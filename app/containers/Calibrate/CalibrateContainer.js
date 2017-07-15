@@ -9,6 +9,7 @@ import * as userSettingsActionCreators from 'modules/userSettings';
 import { Analyser } from 'helpers/Sound';
 import Pen from 'helpers/Pen';
 import { updateUserSettings } from 'helpers/api';
+import { red, yellow, white, bufferAveraging } from 'config/constants';
 
 type Props = {
     uid: string;
@@ -31,11 +32,12 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         this.toggleRingBell = this.toggleRingBell.bind(this);
         this.setup = this.setup.bind(this);
         this.draw = this.draw.bind(this);
+
+        this.dataArrays = [];
     }
     componentDidMount () {
-        this.calibrateElement = ((document.getElementById('calibrate'):any): HTMLElement);
-        this.canvas = document.createElement('canvas');
-        this.calibrateElement.insertBefore(this.canvas, this.calibrateElement.firstChild);
+        this.canvas = ((document.getElementById('calibrate'): any): HTMLCanvasElement);
+        // this.calibrateElement.appendChild(this.canvas);
         fitCanvas(this.canvas);
         this.pen = new Pen(this.canvas);
         if (this.props.noSettings) {
@@ -73,33 +75,50 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         window.cancelAnimationFrame(this.animation);
     }
 
-  // FIXME: clear any types up
-  calibrateElement: HTMLElement;
-  canvas: HTMLCanvasElement;
-  pen: any;
-  slopes: Array<number>;
-  maxSlopes: Array<number>;
-  audioContext: any;
-  analyser: any;
-  animation: ?number;
-  targetFrequency: number;
-  binWidth: number;
+    // FIXME: clear any types up
+    calibrateElement: HTMLElement;
+    canvas: HTMLCanvasElement;
+    pen: any;
+    slopes: Array<number>;
+    maxSlopes: Array<number>;
+    audioContext: any;
+    analyser: any;
+    animation: ?number;
+    targetFrequency: number;
+    binWidth: number;
+    dataArrays: Uint8Array[];
 
-  handleToggleCalibration: Function;
-  toggleRingBell: Function;
-  setup: Function;
-  draw: Function;
+    peakIndex: number;
+    isTempPeak: boolean;
+    peakTimeStamp: number;
+    maxDuration: number;
 
-  handleToggleCalibration () {
+    handleToggleCalibration: Function;
+    toggleRingBell: Function;
+    setup: Function;
+    draw: Function;
+
+    handleToggleCalibration () {
         this.props.toggleCalibration();
         if (!this.props.isCalibrating) {
             this.slopes = [0, 0]; // reset slopes
+            this.maxSlopes = this.slopes;
+            this.peakIndex = 0;
+            this.isTempPeak = false;
+            this.maxDuration = 0;
         } else {
-            this.props.handleUpdateTargetFrequency(this.props.uid, this.targetFrequency);
+            if (this.maxDuration > 300) {
+                this.props.handleUpdateTargetFrequency(
+                    this.props.uid,
+                    this.targetFrequency,
+                    this.maxSlopes,
+                    this.maxDuration
+                );
+            }
         }
     }
 
-  toggleRingBell (value: boolean) {
+    toggleRingBell (value: boolean) {
         if (value) {
             this.props.disableRingBellMode(this.props.uid);
         } else {
@@ -109,24 +128,44 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         updateUserSettings(this.props.uid, 'useRingBell', !value);
     }
 
-  //
-  // p5.js functions
-  //
+    pushDataArray (dataArray: Uint8Array) {
+        if (this.dataArrays.length < bufferAveraging) {
+            this.dataArrays.push(dataArray);
+        } else {
+            this.dataArrays.shift();
+            this.dataArrays.push(dataArray);
+        }
 
-  setup () {
-        const dataArray = this.analyser.updateDataArray();
-        this.binWidth = this.canvas.width / dataArray.length;
+        const sum = this.dataArrays.reduce((currentTotal, array, index) => {
+            return index === 0
+                ? array
+                : array.map((value, index) => (currentTotal[index] || 0) + value);
+        }, []);
+
+        return sum.map((value) => value / this.dataArrays.length);
     }
 
-  draw () {
+    //
+    // p5.js functions
+    //
+
+    setup () {
+        const dataArray = this.pushDataArray(this.analyser.updateDataArray());
+        this.binWidth = this.canvas.width / dataArray.length;
+        this.peakIndex = 0;
+        this.maxDuration = 0;
+        this.peakIndex = Date.now();
+    }
+
+    draw () {
         this.animation = window.requestAnimationFrame(this.draw);
         this.pen.clear();
 
         // update dataArray
-        const dataArray = this.analyser.updateDataArray();
+        const dataArray = this.pushDataArray(this.analyser.updateDataArray());
 
         // draw polyline
-        this.pen.stroke('white');
+        this.pen.stroke(white);
         this.pen.ctx.beginPath();
         dataArray.map((bin, index) => {
             const x = index * this.binWidth;
@@ -137,32 +176,47 @@ class CalibrateContainer extends React.Component<void, Props, void> {
 
         // draw peak
         if (this.props.isCalibrating) {
-            const peakIndex = this.analyser.getPeakIndex();
-            this.pen.stroke('yellow');
-            this.pen.drawVerticalAxis(peakIndex * this.binWidth, this.canvas.height);
+            const newPeakIndex = this.analyser.getPeakIndex();
+            const tempSlope = this.analyser.getSlopes(newPeakIndex, 2, dataArray);
+            if ((this.maxSlopes[0] * 0.8 > tempSlope[0] || this.maxSlopes[1] * 0.8 > tempSlope[1]) && this.isTempPeak) {
+                this.isTempPeak = false;
+                this.maxDuration = Date.now() - this.peakTimeStamp;
+                console.log(this.maxDuration);
+            }
+            this.pen.stroke(yellow);
+            this.pen.drawVerticalAxis(newPeakIndex * this.binWidth, this.canvas.height);
 
-            const tempSlope = this.analyser.getSlopes(peakIndex);
             if (tempSlope[0] > this.maxSlopes[0] && tempSlope[1] > this.maxSlopes[1]) {
+                this.isTempPeak = true;
+                this.peakIndex = newPeakIndex;
+                this.peakTimeStamp = Date.now();
                 this.maxSlopes = tempSlope;
-                this.targetFrequency = this.analyser.indexToFrequency(peakIndex);
+                this.targetFrequency = this.analyser.indexToFrequency(this.peakIndex);
             }
         }
 
         // draw current frequency setting
         const currentFreqIndex = this.analyser.frequencyToIndex(this.targetFrequency);
-        this.pen.stroke('red');
+        this.pen.stroke(red);
         this.pen.drawVerticalAxis(currentFreqIndex * this.binWidth, this.canvas.height);
 
-        this.pen.fill('white');
+        this.pen.fill(white);
         this.pen.noStroke();
         this.pen.ctx.fillText(
-            this.targetFrequency,
+            `${Math.floor(this.targetFrequency)} Hz`,
             currentFreqIndex * this.binWidth,
-            this.canvas.height * 0.5
+            this.canvas.height * 0.1
+        );
+        const duration = this.isTempPeak ? Date.now() - this.peakTimeStamp : this.maxDuration;
+
+        this.pen.ctx.fillText(
+            `${Math.floor(duration)} ms`,
+            currentFreqIndex * this.binWidth,
+            this.canvas.height * 0.1 + 20,
         );
     }
 
-  render () {
+    render () {
         return (
             <Calibrate
                 isFetching={this.props.isFetching}

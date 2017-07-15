@@ -116,8 +116,9 @@ export function removeQuery (queries: Queries, dingId: string, questionId: strin
 export function fitCanvas (canvas: HTMLCanvasElement): void {
     canvas.style.width = '100%';
     canvas.style.height = '100%';
-
     const boundingRect = canvas.getBoundingClientRect();
+    canvas.style.width = 'auto';
+    canvas.style.height = 'auto';
     canvas.width = boundingRect.width;
     canvas.height = boundingRect.height;
 }
@@ -359,4 +360,10 @@ export function insertAfter (newNode: Node, refNode: Node): void {
 
 export function detectionGap (timestamp: number): boolean {
     return Date.now() - timestamp > dingDetectionGap;
+}
+
+export function vibrate (duration: number): void {
+    if (window.navigator.vibrate) {
+        window.navigator.vibrate(duration);
+    }
 }
