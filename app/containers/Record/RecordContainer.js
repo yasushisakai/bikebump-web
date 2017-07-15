@@ -48,24 +48,24 @@ class RecordContainer extends React.Component {
         this.analyser = new Analyser(this.audioContext);
         this.analyser.setIsInFocus(true);
 
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia(
-                { audio: true },
-                (stream) => {
-                    let source = this.audioContext.createMediaStreamSource(stream);
-                    source.connect(this.analyser.input);
-                    this.analyser.connect();
-                    this.recorder = new Recorder(source);
-                    this.recorder.record();
-                },
-                (error) => {
-                    console.error(error);
-                }
-            );
-        } else {
-            console.error('user get media error');
-            // switch to button mode
-        }
+        // console.log(navigator.mediaDevices);
+        // console.log(navigator.mediaDevices.getUserMedia);
+
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then((stream) => {
+                let source = this.audioContext.createMediaStreamSource(stream);
+                source.connect(this.analyser.input);
+                this.analyser.connect();
+                this.recorder = new Recorder(source);
+                this.recorder.record();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        // } else {
+        //     console.error('user get media error');
+        //     // switch to button mode
+        // }
 
         // canvas functions
         this.setup();

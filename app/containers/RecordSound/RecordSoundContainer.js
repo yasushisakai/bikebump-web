@@ -19,26 +19,16 @@ class RecordSoundContainer extends React.Component<void, Props, void> {
     // audio
         this.audioContext = new AudioContext();
 
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia(
-                {audio: true},
-                (stream) => {
-                    let source = this.audioContext.createMediaStreamSource(stream);
-                    const config = {
-                        recordDuration: 6000,
-                        numChannels: 1, // mono
-                    };
-                    this.recorder = new Recorder(source, config);
-                    this.recorder.record();
-                },
-                (error) => {
-                    console.error(error);
-                }
-            );
-        } else {
-            console.error('user get media error');
-            // switch to button mode
-        }
+        navigator.mediaDevices.getUserMedia({audio: true})
+            .then((stream) => {
+                let source = this.audioContext.createMediaStreamSource(stream);
+                const config = {
+                    recordDuration: 6000,
+                    numChannels: 1, // mono
+                };
+                this.recorder = new Recorder(source, config);
+                this.recorder.record();
+            }).catch((error) => console.error(error));
     }
 
   // FIXME: resove any things

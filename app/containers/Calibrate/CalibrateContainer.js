@@ -52,21 +52,13 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         // this sets will splice the raw data
         // into a specific range to 2k - 4k
 
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia(
-                { audio: true },
-                (stream) => {
-                    let source = this.audioContext.createMediaStreamSource(stream);
-                    source.connect(this.analyser.input);
-                    this.analyser.connect();
-                },
-                (error) => {
-                    console.error(error);
-                }
-            );
-        } else {
-            console.error('user get media error');
-        }
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then((stream) => {
+                let source = this.audioContext.createMediaStreamSource(stream);
+                source.connect(this.analyser.input);
+                this.analyser.connect();
+            })
+            .catch((error) => console.error(error));
 
         this.setup();
         this.draw();

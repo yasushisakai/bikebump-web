@@ -33,35 +33,23 @@ export default class SoundClip {
         this.dataArray = new Uint8Array(this.analyzer.frequencyBinCount); // half of fft size
 
         // mic test
-        navigator.getUserMedia = (navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia);
 
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia(
-                { audio: true },
-                (stream) => {
-                    // Recorder
-                    const input = audioContext.createMediaStreamSource(stream);
-                    this.recorder = new Recorder(input);
-                    this.record();
-                    console.log('recording...');
+        navigator.getUserMedia({audio: true})
+            .then((stream) => {
+                // Recorder
+                const input = audioContext.createMediaStreamSource(stream);
+                this.recorder = new Recorder(input);
+                this.record();
+                console.log('recording...');
 
-                    // Ding Detection
-                    this.source = audioContext.createMediaStreamSource(stream);
-                    this.source.connect(this.bandpassFilter);
-                    this.bandpassFilter.connect(this.highpassFilter);
-                    this.highpassFilter.connect(this.analyzer);
-                },
-                (error) => {
-                    // error callback
-                    console.error(error);
-                }
-            );
-        } else {
-            console.log('getUserMedia not supported on your browser!');
-        }
+                // Ding Detection
+                this.source = audioContext.createMediaStreamSource(stream);
+                this.source.connect(this.bandpassFilter);
+                this.bandpassFilter.connect(this.highpassFilter);
+                this.highpassFilter.connect(this.analyzer);
+            })
+            .catch((error) => console.error(error));
+            
         this.a_indexies = [27.5, 55, 110, 220, 440, 880, 1760, 3520, 7040, 14080].map(v => {
             return this.getIndexFromFrequency(v);
         });
