@@ -143,13 +143,16 @@ class CalibrateContainer extends React.Component<void, Props, void> {
             this.dataArrays.push(dataArray);
         }
 
-        const sum = this.dataArrays.reduce((currentTotal, array, index) => {
-            return index === 0
-                ? array
-                : array.map((value, index) => (currentTotal[index] || 0) + value);
-        }, []);
+        let sumArray = [];
 
-        return sum.map((value) => value / this.dataArrays.length);
+        for (let i = 0; i < this.dataArrays.length; i++) {
+            for (let j = 0; j < this.dataArrays[0].length; j++) {
+                const current = sumArray[j] || 0;
+                sumArray[j] = current + this.dataArrays[i][j];
+            }
+        }
+
+        return sumArray.map((value) => value / this.dataArrays.length);
     }
 
     //

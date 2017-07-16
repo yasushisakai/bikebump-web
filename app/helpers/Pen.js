@@ -6,6 +6,7 @@ export type Point2D = {
 export default class Pen {
     static red: string = '208, 2, 27';
     static yellow: string = '248, 231, 28';
+    static blue: string ='74, 144, 226';
     static white: string = '240, 240, 240';
     static black: string= '17, 17, 17';
     static clear: string= 'rgba(0, 0, 0, 0)';

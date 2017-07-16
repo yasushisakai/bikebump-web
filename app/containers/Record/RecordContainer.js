@@ -114,6 +114,7 @@ class RecordContainer extends React.Component {
     snakeLength: number;
     snakePointList: Array<Point2D>;
     detectionList: Array<Array<number>>;
+    dingList: Array<Array<number>>;
 
     dataArrays: Uint8Array[];
 
@@ -165,11 +166,16 @@ class RecordContainer extends React.Component {
             this.dataArrays.push(dataArray);
         }
 
-        const sum = this.dataArrays.reduce((currentTotal, array) => {
-            return array.map((value, index) => (currentTotal[index] || 0) + value);
-        }, []);
+        let sumArray = [];
 
-        return sum.map((value) => value / this.dataArrays.length);
+        for (let i = 0; i < this.dataArrays.length; i++) {
+            for (let j = 0; j < this.dataArrays[0].length; j++) {
+                const current = sumArray[j] || 0;
+                sumArray[j] = current + this.dataArrays[i][j];
+            }
+        }
+
+        return sumArray.map((value) => value / this.dataArrays.length);
     }
 
     setup () {
@@ -203,13 +209,14 @@ class RecordContainer extends React.Component {
         this.isDing = false;
         this.previousSpike = Date.now();
         this.detectionList = [];
+        this.dingList = []
 
         this.canvas.onclick = this.mousePressed;
         this.canvas.addEventListener('mousemove', this.mouseMoved);
         this.canvas.addEventListener('resize', this.resize);
 
         this.msStarted = 0;
-        this.singleCycleDuration = 3 * 1000; // ms (1min)
+        this.singleCycleDuration = doubleDingDuration;
         this.snakeLength = 1000;
         this.snakePointList = [];
 
@@ -217,6 +224,7 @@ class RecordContainer extends React.Component {
     }
 
     draw () {
+        const now = Date.now();
         if (this.props.targetFrequency === 9999) {
             this.props.router.push(`user/${this.props.authedId}/calibrate`);
         }
@@ -229,7 +237,6 @@ class RecordContainer extends React.Component {
         this.pen.clear();
 
         if (this.props.isRecording) {
-            const now = Date.now();
             const timeElapsed = now - this.msStarted;
             const cyclePosition = (timeElapsed % this.singleCycleDuration) / this.singleCycleDuration;
             const rad = (cyclePosition * 360) / 180 * Math.PI - 0.5 * Math.PI;
@@ -244,19 +251,21 @@ class RecordContainer extends React.Component {
                     //
                     this.props.handleComplieDing(this.detectionList[0][0], 0);
                     this.props.handleUploadBlobWithValue(this.blob, this.detectionList[0][0], 0);
+                    this.dingList.push([...this.detectionList[0], 0]);
                     this.detectionList = [];
                 }
             }
 
             if (this.props.handleDetection(slopes)) {
                 this.detectionList.push([now, rad]);
-                
+
                 if (this.detectionList.length !== 1) {
                     //
                     // DOUBLE DING!!
                     //
                     this.props.handleComplieDing(this.detectionList[0][0], 1);
                     this.props.handleUploadBlobWithValue(this.blob, this.detectionList[0][0], 1);
+                    this.dingList.push([...this.detectionList[0], 1]);
                     this.detectionList = [];
                 } else {
                     // first ding
@@ -360,7 +369,6 @@ class RecordContainer extends React.Component {
         const status = this.props.isRecording ? 'push to stop' : 'push to start';
         this.pen.text(status, this.canvas.width * 0.5, this.canvas.height * 0.5 - this.circleRadius - 75);
 
-        const now = Date.now();
         this.pen.stroke('rgba(255, 255, 255, 0.4)');
         this.detectionList.map((detection) => {
             if ((now - detection[0]) < this.singleCycleDuration) {
@@ -377,6 +385,25 @@ class RecordContainer extends React.Component {
                 this.pen.drawLinePoints(innerDetectionCoordinate, outerDetectionCoordinate);
             }
         });
+
+        this.dingList.map((ding) => {
+            if ((now - ding[0]) < this.singleCycleDuration * 2) {
+                const innerDingCoordinate = {
+                    x: Math.cos(ding[1]) * (this.circleRadius * 0.85) + this.pen.width * 0.5,
+                    y: Math.sin(ding[1]) * (this.circleRadius * 0.85) + this.pen.height * 0.5,
+                };
+                const outerDingCoordinate = {
+                    x: Math.cos(ding[1]) * (this.circleRadius * 1.15) + this.pen.width * 0.5,
+                    y: Math.sin(ding[1]) * (this.circleRadius * 1.15) + this.pen.height * 0.5,
+                };
+
+                const color = ding[2] === 0 ? `rgba(${Pen.red}, 0.8)` : `rgba(${Pen.blue}, 0.8)`;
+                this.pen.stroke(color);
+                this.pen.strokeWeight(8);
+                this.pen.drawLinePoints(innerDingCoordinate, outerDingCoordinate);
+            }
+        });
+        this.pen.strokeWeight(1);
     }
 
     updatePosition (commuteId: string) {

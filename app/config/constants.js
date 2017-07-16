@@ -8,7 +8,7 @@ import { fromJS } from 'immutable';
 
 export const threshold: number = 0.85;
 export const thresholdLength: number = 500; // ms
-export const doubleDingDuration: number = 1500; // ms
+export const doubleDingDuration: number = 4000; // ms
 export const maxCommuteLife: number = 20000; // ms
 export const updateCycleDuration: number = 5000; // ms
 export const renderTimeConstrain: number = 10000; // ms
