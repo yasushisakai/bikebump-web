@@ -218,6 +218,19 @@ function outsideDing () {
     };
 }
 
+export function handleFetchingLocation () {
+    return function (dispatch, getState) {
+        if (getState().record.get('isFetchingLatLng')) {
+            return;
+        }
+
+        dispatch(fetchingLatLng());
+        return fetchGeoLocation()
+            .then(coordinates => dispatch(fetchingLatLngSuccess(coordinates)))
+            .catch(error => dispatch(fetchingLatLngError(error)));
+    };
+}
+
 export function handleFetchLatLng (commuteId) {
     return function (dispatch, getState) {
         if (!getState().record.get('isRecording')) {

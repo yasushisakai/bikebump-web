@@ -6,6 +6,7 @@ import { isModuleStale } from 'helpers/utils';
 const FETCHING_PROPOSALS = 'FETCHING_PROPOSALS';
 const FETCHING_PROPOSALS_ERROR = 'FETCHING_PROPOSALS_ERROR';
 const FETCHING_PROPOSALS_SUCCESS = 'FETCHING_PROPOSALS_SUCCESS';
+const REMOVE_FETCHING_PROPOSALS = 'REMOVE_FETCHING_PROPOSALS';
 
 export const ADD_PROPOSAL = 'ADD_PROPOSAL';
 export const ADD_PROPOSAL_ERROR = 'ADD_PROPOSAL_ERROR';
@@ -31,6 +32,12 @@ function fetchingProposalsSuccess (proposals) {
     return {
         type: FETCHING_PROPOSALS_SUCCESS,
         proposals,
+    };
+}
+
+function removeFetchingProposals () {
+    return {
+        type: REMOVE_FETCHING_PROPOSALS,
     };
 }
 
@@ -72,12 +79,11 @@ export function handleFetchingProposals () {
         if (getState().proposals.get('isFetching')) {
             return;
         }
-
+        dispatch(fetchingProposals());
         if (!isModuleStale(getState().proposals.get('lastUpdated'))) {
+            dispatch(removeFetchingProposals());
             return;
         }
-
-        dispatch(fetchingProposals());
         fetchProposals()
             .then((proposals) => dispatch(fetchingProposalsSuccess(proposals)))
             .catch((error) => dispatch(fetchingProposalsError(error)));
@@ -125,6 +131,8 @@ export default function proposals (state = initialState, action) {
             lastUpdated: Date.now(),
             ...action.proposals,
         });
+    case REMOVE_FETCHING_PROPOSALS:
+        return state.set('isFetching', false);
     case ADD_PROPOSAL:
         return state.merge({
             [action.proposal.proposalId]: action.proposal,

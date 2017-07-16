@@ -50,13 +50,12 @@ export default function Proposal ({ proposalId, userUnits, patternId, pattern, p
     };
 
     const proposalLength = pattern.per !== 'road' ? Math.floor(3.28084 * proposal.maxUnits / pattern.units): 0;
-
     const proposalLengthInfo = pattern.per === 'road' ? 'for this road is...' : `for ${proposalLength}ft is...`;
 
     return (
         <div className={proposalContainer}>
             <BikeCoinBadgeContainer />
-            <ProposalMapContainer roadId={8615571} domain={{start: 0.1, end: 0.6}}/>
+            <ProposalMapContainer proposalId={proposalId}/>
             <div className={overlayInfo}>
                 <div className={proposalBack} style={backgroundImage} >
                     <div className={proposalMid}>

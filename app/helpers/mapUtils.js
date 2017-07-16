@@ -53,7 +53,7 @@ export const roadSelectedStyle = {
 
 export const defaultCommuteStyle = {
     ...defaultStyle,
-    color: '#67c8ff',
+    color: '#f8e71c',
     opacity: 0.1,
     weight: 1,
 };
@@ -191,9 +191,9 @@ export function plotDing (ding: Ding, map: Map, customStyle:CircleMarkerOptions 
     Object.keys(ding.timestamps).map((timestamp, index) => {
         let colored = style;
         if (ding.timestamps[parseInt(timestamp)].value === 0) {
-            colored.color = '#F20056';
+            colored.color = '#d0021b';
         } else {
-            colored.color = '#336699';
+            colored.color = '#4a90e2';
         }
 
         circle(coords, 10 + 3 * (index), style).addTo(map);

@@ -12,6 +12,7 @@ import { plotCommute, plotDing, defaultRoadStyle } from 'helpers/mapUtils';
 import * as dingFeedActionCreators from 'modules/dingFeed';
 import * as roadsActionCreators from 'modules/roads';
 import * as commutesActionCreators from 'modules/commutes';
+import { handleFetchingLocation } from 'modules/record';
 import { handleFetchingRoadProposals } from 'modules/roadProposals';
 
 import type { Commute, Ding, Road } from 'types';
@@ -24,11 +25,13 @@ type MapVisContaierProps = {
     dingIds: Array<string>;
     commutes: Map<string, Commute>;
     roadProposals: Map<any, any>;
+    latestLocation: {lat: number, lng:number};
 
     handleFetchingRoads: Function;
     handleFetchingCommutes: Function;
     handleSetDingListener: Function;
     handleFetchingRoadProposals: Function;
+    handleFetchingLocation: Function;
 }
 
 class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
@@ -68,11 +71,8 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
 
         // fetch the road - proposals
         this.props.handleFetchingRoadProposals();
-    }
 
-    shouldComponentUpdate (nextProps) {
-        // return !nextProps.isFetching;
-        return true;
+        this.props.handleFetchingLocation();
     }
 
     checkRoadProposals (roadId, props: MapVisContaierProps): number {
@@ -105,6 +105,11 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 
     componentWillUpdate (nextProps: MapVisContaierProps) {
+        const {lng, lat} = this.props.latestLocation;
+        if (lng !== 0 && lat !== 0) {
+            this.map.panTo({lat, lng});
+        }
+
         // once everthing is ready plot!
         if (!nextProps.isFetching && !this.mapHasLayers) {
             // roads~
@@ -157,7 +162,7 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
     }
 }
 
-function mapStateToProps ({ roads, dingFeed, dings, commutes, roadProposals }) {
+function mapStateToProps ({ record, roads, dingFeed, dings, commutes, roadProposals }) {
     const isFetching: boolean =
         dingFeed.get('isFetching') ||
         roads.get('isFetching') ||
@@ -165,6 +170,7 @@ function mapStateToProps ({ roads, dingFeed, dings, commutes, roadProposals }) {
         roadProposals.get('isFetching');
     return {
         isFetching,
+        latestLocation: record.get('latestLocation').toJS(),
         roads,
         dings,
         commutes,
@@ -179,6 +185,7 @@ function mapDispatchToProps (dispatch: Dispatch<*>) {
         ...dingFeedActionCreators,
         ...commutesActionCreators,
         handleFetchingRoadProposals,
+        handleFetchingLocation,
     }, dispatch);
 }
 
