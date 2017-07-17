@@ -369,7 +369,8 @@ class RecordContainer extends React.Component {
         const status = this.props.isRecording ? 'push to stop' : 'push to start';
         this.pen.text(status, this.canvas.width * 0.5, this.canvas.height * 0.5 - this.circleRadius - 75);
 
-        this.pen.stroke('rgba(255, 255, 255, 0.4)');
+        this.pen.stroke('rgba(255, 255, 255, 0.8)');
+        this.pen.strokeWeight(9);
         this.detectionList.map((detection) => {
             if ((now - detection[0]) < this.singleCycleDuration) {
                 const innerDetectionCoordinate = {
@@ -380,8 +381,6 @@ class RecordContainer extends React.Component {
                     x: Math.cos(detection[1]) * (this.circleRadius * 1.15) + this.pen.width * 0.5,
                     y: Math.sin(detection[1]) * (this.circleRadius * 1.15) + this.pen.height * 0.5,
                 };
-                this.pen.drawCircle(innerDetectionCoordinate.x, innerDetectionCoordinate.y, 4);
-                this.pen.drawCircle(outerDetectionCoordinate.x, outerDetectionCoordinate.y, 4);
                 this.pen.drawLinePoints(innerDetectionCoordinate, outerDetectionCoordinate);
             }
         });
@@ -399,11 +398,10 @@ class RecordContainer extends React.Component {
 
                 const color = ding[2] === 0 ? `rgba(${Pen.red}, 0.8)` : `rgba(${Pen.blue}, 0.8)`;
                 this.pen.stroke(color);
-                this.pen.strokeWeight(8);
                 this.pen.drawLinePoints(innerDingCoordinate, outerDingCoordinate);
             }
         });
-        this.pen.strokeWeight(1);
+        this.pen.strokeWeight(2);
     }
 
     updatePosition (commuteId: string) {

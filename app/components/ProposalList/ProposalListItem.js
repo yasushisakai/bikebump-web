@@ -6,7 +6,7 @@ import ChildIcon from 'react-icons/lib/fa/child';
 
 import {CoinProgress} from 'components';
 
-import { disabled, entryBack, entryMid, entryFore, patternTitle, userUnits, smallMetaInfo } from './styles.css';
+import { entryBack, entryMid, entryFore, patternTitle, userUnits, smallMetaInfo } from './styles.css';
 
 type Props = {
     patternTitle: string;
@@ -34,7 +34,7 @@ export default function ProposalListItem (props: Props) {
     const lengthInfo = props.per === 'road' ? ' ' : `length: ${length}ft`;
 
     return (
-        <Link to={`/proposals/${props.proposalId}`} className={props.isMine ? disabled : ''} style={{textDecoration: 'none'}}>
+        <Link to={`/proposals/${props.proposalId}`} style={{textDecoration: 'none'}}>
             <div className={entryBack} style={style}>
                 <div className={entryMid}>
                     <div className={entryFore}>

@@ -52,9 +52,10 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         // this sets will splice the raw data
         // into a specific range to 2k - 4k
 
-        navigator.mediaDevices.getUserMedia({ video: false, audio: true })
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then((stream) => {
-                let source = this.audioContext.createMediaStreamSource(stream);
+                const source = this.audioContext.createMediaStreamSource(stream);
+                window.horrible_hack_for_mozilla = source;
                 source.connect(this.analyser.input);
                 this.analyser.connect();
             })
@@ -173,6 +174,8 @@ class CalibrateContainer extends React.Component<void, Props, void> {
 
         // update dataArray
         const dataArray = this.pushDataArray(this.analyser.updateDataArray());
+
+        console.log(dataArray);
 
         // draw polyline
         this.pen.stroke(white);

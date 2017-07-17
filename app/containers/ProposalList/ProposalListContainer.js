@@ -16,10 +16,6 @@ type Props = {
         handleFetchingRoadProposals: Function;
 }
 
-function compareRoadTotalPointGain (keya:number, keyb: number): number {
-
-}
-
 class ProposalListContainer extends React.Component<void, Props, void> {
     constructor (props) {
         super(props);

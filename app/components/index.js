@@ -20,4 +20,5 @@ export CreateProposal from './CreateProposal/CreateProposal';
 export CreatePanel from './CreatePanel/CreatePanel.js';
 export CreateMap from './CreateMap/CreateMap';
 export CoinProgress from './CoinProgress/CoinProgress';
+export MapCommutes from './MapCommutes/MapCommutes';
 

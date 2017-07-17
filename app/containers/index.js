@@ -16,6 +16,7 @@ export RecordSoundContainer from './RecordSound/RecordSoundContainer';
 export ProposalContainer from './Proposal/ProposalContainer';
 export ProposalListContainer from './ProposalList/ProposalListContainer';
 export CreateProposalContainer from './CreateProposal/CreateProposalContainer';
+export MapCommutesContainer from './MapCommutes/MapCommutesContainer';
 // sub components
 export SurveyContainer from './Survey/SurveyContainer';
 export ProposalListItemContainer from './ProposalList/ProposalListItemContainer';

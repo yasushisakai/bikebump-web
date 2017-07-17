@@ -20,6 +20,7 @@ import {
     ProposalListContainer,
     ProposalContainer,
     CreateProposalContainer,
+    MapCommutesContainer,
 } from 'containers';
 
 function hashLinkScroll () {
@@ -59,6 +60,7 @@ export default function getRoutes (checkAuth, history) {
                     <Route path='playSound' component={PlaySoundContainer} onEnter={checkAuth}/>
                     <Route path='layout' component={LayoutContainer} onEnter={checkAuth}/>
                     <Route path='recordSound' component={RecordSoundContainer}/>
+                    <Route path='commutes' component={MapCommutesContainer}/>
                 </Route>
                 <IndexRoute component={HomeContainer} onEnter={checkAuth}/>
             </Route>
