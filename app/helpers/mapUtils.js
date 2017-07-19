@@ -54,8 +54,8 @@ export const roadSelectedStyle = {
 export const defaultCommuteStyle = {
     ...defaultStyle,
     color: '#f8e71c',
-    opacity: 0.1,
-    weight: 1,
+    opacity: 0.05,
+    weight: 20,
 };
 
 export const crossIcon: Icon = icon({
@@ -173,7 +173,7 @@ export function plotPolyline (coords: LatLng, _map: Map, customStyle: PolylineOp
 
 export function plotCommute (commute: Commute, map: Map, customStyle: PolylineOptions = {}): Path {
     const coords = Object.keys(commute)
-        .filter(key => key !== 'uid') // snip off uid value
+        .filter(key => key !== 'uid' && key !== 'origin') // snip off uid value
         .sort()
         .map(key => {
             return commute[key];
@@ -184,18 +184,20 @@ export function plotCommute (commute: Commute, map: Map, customStyle: PolylineOp
 
 export function plotDing (ding: Ding, map: Map, customStyle:CircleMarkerOptions = {}): Path {
     const coords = ding.coordinates;
-    const style = {...defaultStyle, clickable: false, weight: 2, opacity: 0.7, ...customStyle};
+    const style = {...defaultStyle, clickable: false, interactive: false, weight: 2, opacity: 0.7, ...customStyle};
 
-    marker(coords, {icon: crossIcon, interaction: false, clickable: false}).addTo(map);
+    const crossMark = marker(coords, {icon: crossIcon, interactive: true, clickable: false}).addTo(map);
+    crossMark.addEventListener('click', () => { console.log(ding); });
+    if (ding.timestamps) {
+        Object.keys(ding.timestamps).map((timestamp, index) => {
+            let colored = style;
+            if (ding.timestamps[parseInt(timestamp)].value === 0) {
+                colored.color = '#d0021b';
+            } else {
+                colored.color = '#4a90e2';
+            }
 
-    Object.keys(ding.timestamps).map((timestamp, index) => {
-        let colored = style;
-        if (ding.timestamps[parseInt(timestamp)].value === 0) {
-            colored.color = '#d0021b';
-        } else {
-            colored.color = '#4a90e2';
-        }
-
-        circle(coords, 10 + 3 * (index), style).addTo(map);
-    });
+            circle(coords, 10 + 3 * (index), style).addTo(map);
+        });
+    }
 }

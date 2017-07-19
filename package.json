@@ -21,6 +21,7 @@
   "homepage": "https://github.com/yasushisakai/bikebump#readme",
   "dependencies": {
     "@blueprintjs/core": "^1.21.0",
+    "@mapbox/geojson-tidy": "^1.0.1",
     "axios": "^0.15.3",
     "bingmaps": "^1.0.13",
     "firebase": "^3.6.5",

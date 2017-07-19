@@ -112,6 +112,11 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
 
         // once everthing is ready plot!
         if (!nextProps.isFetching && !this.mapHasLayers) {
+            // dings!
+            nextProps.dingIds.map(key => {
+                const ding: Ding = ((nextProps.dings.get(key):any): Map<any, any>).toJS();
+                plotDing(ding, this.map);
+            });
             // roads~
             nextProps.roads.keySeq().toArray()
                 .filter(key => filterStateVariables(key))
@@ -125,13 +130,6 @@ class MapVisContainer extends React.Component<void, MapVisContaierProps, void> {
                     roadPath.on('popupopen', (e) => { this.map.fitBounds(roadPath.getBounds()); });
                     roadPath.addTo(this.map);
                 });
-
-            // dings!
-            nextProps.dingIds.map(key => {
-                const ding: Ding = ((nextProps.dings.get(key):any): Map<any, any>).toJS();
-                plotDing(ding, this.map);
-            });
-
             // commutes
             nextProps.commutes.keySeq().toArray()
                 .filter(key => filterStateVariables(key))
