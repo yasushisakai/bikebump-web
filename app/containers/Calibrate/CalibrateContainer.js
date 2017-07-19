@@ -52,7 +52,7 @@ class CalibrateContainer extends React.Component<void, Props, void> {
         // this sets will splice the raw data
         // into a specific range to 2k - 4k
 
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        navigator.mediaDevices.getUserMedia({ video: false, audio: true })
             .then((stream) => {
                 const source = this.audioContext.createMediaStreamSource(stream);
                 window.horrible_hack_for_mozilla = source;
