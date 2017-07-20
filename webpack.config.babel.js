@@ -31,6 +31,7 @@ const base = {
     output: {
         path: PATHS.build,
         filename: 'index_bundle.js',
+        publicPath: '/',
     },
     module: {
         loaders: [
